@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Photoshop
+Ps/
+
 # User-specific files
 *.suo
 *.user

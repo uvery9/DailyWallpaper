@@ -12,7 +12,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DailyWallpaper
 {
-    class NotifyIconManager
+    class NotifyIconManager:IDisposable
     {
         private static NotifyIconManager _instance;
         public System.Windows.Forms.NotifyIcon notifyIcon;
@@ -36,7 +36,7 @@ namespace DailyWallpaper
         private System.ComponentModel.IContainer _components;
         private ConfigIni _ini;
         //            _ini.RunAtStartup();
-        public NotifyIconManager() {
+        private NotifyIconManager() {
             _ini = ConfigIni.GetInstance();
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
             _components = new System.ComponentModel.Container();
@@ -143,7 +143,6 @@ namespace DailyWallpaper
             );
             _Icon_RunAtStartUpMenuItem = ToolStripMenuItemWithHandler(
                         TranslationHelper.Get("Icon_RunAtStartup"),
-                        TranslationHelper.Get("Icon_RunAtStartupTit"),
                         _Icon_RunAtStartupMenuItem_Click);
             _Icon_QuitMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Quit"),
@@ -167,8 +166,26 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_RunAtStartUpMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_QuitMenuItem);
             InitializeAllChecked();
+            // notifyIcon.KeyPreview = true;
         }
 
+        private void ChangeIconStatus()
+        {
+            if (_Icon_DisableShortcutKeysMenuItem.Checked)
+            {
+                notifyIcon.Icon = Properties.Resources.icon32x32_ban;
+            }
+            else if (_Icon_RunAtStartUpMenuItem.Checked)
+            {
+                notifyIcon.Icon = Properties.Resources.icon32x32_good;
+            } else if(!_Icon_RunAtStartUpMenuItem.Checked)
+            {
+                notifyIcon.Icon = Properties.Resources.icon32x32_exclamation;
+            } else
+            {
+                notifyIcon.Icon = Properties.Resources.icon32x32;
+            }          
+        }
         private void InitializeAllChecked()
         {
             var startFeatures = _ini.GetCfgFromIni();
@@ -179,9 +196,11 @@ namespace DailyWallpaper
             if (AutoStartupHelper.IsAutorun())
             {
                 _Icon_RunAtStartUpMenuItem.Checked = true;
+                notifyIcon.Icon = Properties.Resources.icon32x32_good;
             } else
             {
                 _Icon_RunAtStartUpMenuItem.Checked = false;
+                notifyIcon.Icon = Properties.Resources.icon32x32_exclamation;
             }
 
              
@@ -214,7 +233,6 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("RunAtStartUp", "no");
                 AutoStartupHelper.RemoveAutorunShortcut();
             }
-            
             // actually
             _Icon_RunAtStartUpMenuItem.Checked = AutoStartupHelper.IsAutorun();
             if (_Icon_RunAtStartUpMenuItem.Checked)
@@ -224,6 +242,7 @@ namespace DailyWallpaper
                 ShowNotification("", string.Format(TranslationHelper.Get("Notify_RunAtStartup"), 
                     Environment.NewLine));
             }
+            ChangeIconStatus();
         }
         private void ActionRegister()
         {
@@ -242,7 +261,8 @@ namespace DailyWallpaper
         }
 
         private async void DailyWallpaperConsSetWallpaper(){
-        
+
+            notifyIcon.Icon = Properties.Resources.icon32x32_timer;
             bool res = await DailyWallpaperCons.ShowDialog();
             System.Threading.Thread.Sleep(500);
             if (!res)
@@ -254,6 +274,7 @@ namespace DailyWallpaper
                     $"{TranslationHelper.Get("Notify_SetWallpaper_Succeed")} " +
                     $"{_ini.Read("wallpaperInLog", "LOG")}");
             }
+            ChangeIconStatus();
         }
         private void _Icon_ChangeWallpaperMenuItem_Click(object sender, EventArgs e) 
         {
@@ -266,7 +287,6 @@ namespace DailyWallpaper
             {
                 _Icon_DisableShortcutKeysMenuItem.Checked = false;
                 _Icon_ChangeWallpaperMenuItem.ShowShortcutKeys = true;
-                notifyIcon.Icon = Properties.Resources.icon32x32;
                 _ini.UpdateIniItem("UseShortcutKeys", "yes");
             }
             else
@@ -274,8 +294,8 @@ namespace DailyWallpaper
                 _Icon_DisableShortcutKeysMenuItem.Checked = true;
                 _Icon_ChangeWallpaperMenuItem.ShowShortcutKeys = false;
                 _ini.UpdateIniItem("UseShortcutKeys", "no");
-                notifyIcon.Icon = Properties.Resources.icon32x32_ban;
             }
+            ChangeIconStatus();
         }
         private void ContextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -285,7 +305,7 @@ namespace DailyWallpaper
         // Has BUG.
         private void ContextMenuStrip_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
-
+            ChangeIconStatus();
             //ToolStripDropDownClosingEventHandler
             if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
             {
@@ -326,26 +346,40 @@ namespace DailyWallpaper
             return item;
         }
 
-        public void ShowNotification(string title, string content, bool isError = false, int timeout = 5000,
+        /// <summary>
+        /// timeout unit: milliseconds
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="content">
+        ///             The content you want to show
+        /// </param>
+        /// <param name="isError"></param>
+        /// <param name="timeout"></param>
+        /// <param name="clickEvent"></param>
+        /// <param name="closeEvent"></param>
+        /// <example> ShowNotification("","Show me something."); </example>
+        public void ShowNotification(
+            string title,
+            string content,
+            bool isError = false,
+            int timeout = 5000,
             Action clickEvent = null,
             Action closeEvent = null)
         {
-            var icon = notifyIcon;
-            // var icon = GetInstance()._icon;
-            icon.ShowBalloonTip(timeout, title, content, isError ? ToolTipIcon.Error : ToolTipIcon.Info);
-            icon.BalloonTipClicked += OnIconOnBalloonTipClicked;
-            icon.BalloonTipClosed += OnIconOnBalloonTipClosed;
+            notifyIcon.ShowBalloonTip(timeout, title, content, isError ? ToolTipIcon.Error : ToolTipIcon.Info);
+            notifyIcon.BalloonTipClicked += OnIconOnBalloonTipClicked;
+            notifyIcon.BalloonTipClosed += OnIconOnBalloonTipClosed;
 
             void OnIconOnBalloonTipClicked(object sender, EventArgs e)
             {
                 clickEvent?.Invoke();
-                icon.BalloonTipClicked -= OnIconOnBalloonTipClicked;
+                notifyIcon.BalloonTipClicked -= OnIconOnBalloonTipClicked;
             }
 
             void OnIconOnBalloonTipClosed(object sender, EventArgs e)
             {
                 closeEvent?.Invoke();
-                icon.BalloonTipClosed -= OnIconOnBalloonTipClosed;
+                notifyIcon.BalloonTipClosed -= OnIconOnBalloonTipClosed;
             }
         }
 
@@ -479,6 +513,12 @@ namespace DailyWallpaper
         public static NotifyIconManager GetInstance()
         {
             return _instance ?? (_instance = new NotifyIconManager());
+        }
+
+        public void Dispose()
+        {
+            notifyIcon.Visible = false;
+            notifyIcon.Dispose();
         }
     }
 }

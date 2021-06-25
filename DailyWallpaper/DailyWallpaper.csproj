@@ -146,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DailyWallpaper.ico" />
+    <None Include="res\icon32x32_timer.ico" />
+    <None Include="res\icon32x32_exclamation.ico" />
+    <None Include="res\icon32x32_good.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
