@@ -20,7 +20,7 @@ build:
 after_build:
 - ps: >-
      7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\DailyWallpaper\bin\Release
-artifacts:  
+artifacts:
   - path: '**\*.7z'
     name: DailyWallpaper
 on_success:
