@@ -1,8 +1,12 @@
-version: '{build}'
+version: 1.0.{build}
 branches:
   only:
   - master
-skip_branch_with_pr: true
+environment:
+  STATIC_SITE_REPO: https://github.com/JaredDC/DailyWallpaperUI
+  TARGET_BRANCH: master
+  GIT_USER_EMAIL: jared.dcx@gmail.com
+  GIT_USER_NAME: JaredDC
 image: Visual Studio 2019
 configuration: Release
 platform: Any CPU
@@ -11,7 +15,12 @@ before_build:
 - ps: >-
      nuget restore -verbosity detailed
 build:
-  parallel: true
   verbosity: normal
+after_build:
+- ps: >-
+     7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\DailyWallpaper\bin\Release
+artifacts:  
+  - path: '**\*.7z'
+  - name: DailyWallpaper
 on_success:
-    - echo "succeed"
+    - echo succeed
