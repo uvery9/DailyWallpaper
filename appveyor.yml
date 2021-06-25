@@ -18,7 +18,7 @@ build:
   parallel: true
   verbosity: normal
 after_build:
-- ps: >-
+- cmd: >-
      echo %APPVEYOR_BUILD_FOLDER%
      dir
      7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\dailywallpaperui\DailyWallpaper\bin\Release
