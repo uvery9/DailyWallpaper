@@ -17,6 +17,7 @@ namespace DailyWallpaper
             Environment.GetFolderPath(Environment.SpecialFolder.Startup),
             Path.ChangeExtension(Path.GetFileName(appFullPath), ".lnk"));
 
+        // Force Update shortcutlnk
         internal static void CreateAutorunShortcut()
         {
             try
@@ -53,7 +54,6 @@ namespace DailyWallpaper
                 Console.Error.WriteLine($"Failed to delete DailyWallpaper startup shortcut.{e.ToString()}");
             }
         }
-
         internal static bool IsAutorun()
         {
             return File.Exists(startupFullPath);

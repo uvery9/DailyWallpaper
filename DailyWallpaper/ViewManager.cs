@@ -20,7 +20,7 @@ namespace DailyWallpaper
 
             _deviceManager = deviceManager;
 
-            var notifyIconHelper = NotifyIconHelper.GetInstance();
+            var notifyIconHelper = NotifyIconManager.GetInstance();
             _notifyIcon = notifyIconHelper.notifyIcon;
              // _notifyIcon.MouseUp += notifyIcon_MouseUp;
 

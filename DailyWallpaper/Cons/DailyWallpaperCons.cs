@@ -67,8 +67,7 @@ namespace DailyWallpaper
         {
             // = new ConfigIni(exeName: exeName);
             var iniFile = ConfigIni.GetInstance();
-            iniFile.RunAtStartup();
-            
+            // iniFile.RunAtStartup();  Console Mode shouldn't do it.
 
             if (iniFile.Read("alwaysDLBingWallpaper", "Online").ToLower().Equals("yes"))
             {

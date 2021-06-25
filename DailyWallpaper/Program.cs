@@ -22,7 +22,7 @@ namespace DailyWallpaper
             {
                 if (!createdNew)
                 {
-                    MessageBox.Show("Only allow one instance", "Error");
+                    // MessageBox.Show("Only allow one instance", "Tips", MessageBoxButtons.OK);
                     return;
                 }
 

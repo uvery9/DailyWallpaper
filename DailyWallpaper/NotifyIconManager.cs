@@ -10,11 +10,11 @@ using System.Drawing;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace DailyWallpaper.Helpers
+namespace DailyWallpaper
 {
-    class NotifyIconHelper
+    class NotifyIconManager
     {
-        private static NotifyIconHelper _instance;
+        private static NotifyIconManager _instance;
         public System.Windows.Forms.NotifyIcon notifyIcon;
         private ToolStripMenuItem _Icon_RunAtStartUpMenuItem;
         private ToolStripMenuItem _Icon_ChangeWallpaperMenuItem;
@@ -35,7 +35,8 @@ namespace DailyWallpaper.Helpers
         private bool NotCloseMenu = false;
         private System.ComponentModel.IContainer _components;
         private ConfigIni _ini;
-        public NotifyIconHelper() {
+        //            _ini.RunAtStartup();
+        public NotifyIconManager() {
             _ini = ConfigIni.GetInstance();
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
             _components = new System.ComponentModel.Container();
@@ -175,10 +176,15 @@ namespace DailyWallpaper.Helpers
             {
                 _Icon_BingMenuItem.Checked = true;
             }
-            if (startFeatures["RunAtStartUp"].ToLower().Equals("yes"))
+            if (AutoStartupHelper.IsAutorun())
             {
                 _Icon_RunAtStartUpMenuItem.Checked = true;
+            } else
+            {
+                _Icon_RunAtStartUpMenuItem.Checked = false;
             }
+
+             
             if (startFeatures["Spotlight"].ToLower().Equals("yes"))
             {
                 _Icon_SpotlightMenuItem.Checked = true;
@@ -191,6 +197,32 @@ namespace DailyWallpaper.Helpers
             if (startFeatures["UseShortcutKeys"].ToLower().Equals("yes"))
             {
                 _Icon_DisableShortcutKeysMenuItem.Checked = false;
+            }
+        }
+        private void _Icon_RunAtStartupMenuItem_Click(object sender, EventArgs e)
+        {
+            // May be unsuccessful due to permissions
+            var next_action = !AutoStartupHelper.IsAutorun();
+            if (next_action)
+            {
+                _ini.UpdateIniItem("RunAtStartUp", "yes");
+                // Force Update ShortCut: delete and create.
+                AutoStartupHelper.CreateAutorunShortcut();               
+            }
+            else
+            {
+                _ini.UpdateIniItem("RunAtStartUp", "no");
+                AutoStartupHelper.RemoveAutorunShortcut();
+            }
+            
+            // actually
+            _Icon_RunAtStartUpMenuItem.Checked = AutoStartupHelper.IsAutorun();
+            if (_Icon_RunAtStartUpMenuItem.Checked)
+            {
+                // Only succeed will ShowNotification.
+                System.Threading.Thread.Sleep(300);
+                ShowNotification("", string.Format(TranslationHelper.Get("Notify_RunAtStartup"), 
+                    Environment.NewLine));
             }
         }
         private void ActionRegister()
@@ -212,6 +244,7 @@ namespace DailyWallpaper.Helpers
         private async void DailyWallpaperConsSetWallpaper(){
         
             bool res = await DailyWallpaperCons.ShowDialog();
+            System.Threading.Thread.Sleep(500);
             if (!res)
             {
                 ShowNotification("", TranslationHelper.Get("Notify_SetWallpaper_Failed"));
@@ -309,7 +342,6 @@ namespace DailyWallpaper.Helpers
                 icon.BalloonTipClicked -= OnIconOnBalloonTipClicked;
             }
 
-
             void OnIconOnBalloonTipClosed(object sender, EventArgs e)
             {
                 closeEvent?.Invoke();
@@ -370,8 +402,6 @@ namespace DailyWallpaper.Helpers
                 MessageBox.Show($"folderPath: {folderPath}");
                 // ...
             }*/
-
-
             /*  Note that you need to install the Microsoft.WindowsAPICodePack.Shell package 
                 through NuGet before you can use this CommonOpenFileDialog
                 
@@ -413,9 +443,6 @@ namespace DailyWallpaper.Helpers
                     }
                 }
             }
-            
-
-
         }
 
         private void _Icon_QuitMenuItem_Click(object sender, EventArgs e)
@@ -440,20 +467,6 @@ namespace DailyWallpaper.Helpers
                 _ini.UpdateIniItem("Spotlight", "yes", "Online");
             }
         }
-
-        private void _Icon_RunAtStartupMenuItem_Click(object sender, EventArgs e)
-        {
-
-            if (_Icon_RunAtStartUpMenuItem.Checked)
-            {
-                _Icon_RunAtStartUpMenuItem.Checked = false;
-            }
-            else
-            {
-                _Icon_RunAtStartUpMenuItem.Checked = true;
-                notifyIcon.ContextMenuStrip.Show();
-            }
-        }
         private void notifyIcon_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -463,9 +476,9 @@ namespace DailyWallpaper.Helpers
             }
         }
 
-        public static NotifyIconHelper GetInstance()
+        public static NotifyIconManager GetInstance()
         {
-            return _instance ?? (_instance = new NotifyIconHelper());
+            return _instance ?? (_instance = new NotifyIconManager());
         }
     }
 }
