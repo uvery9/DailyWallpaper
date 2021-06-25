@@ -1,0 +1,57 @@
+Usage for DailyWallpaper.exe
+AUTHOR: HDC <jared.dcx@gmail.com>
+-----------------------------------------
+Notice: there is only ONE file you need to configure: config.ini, 
+        it should be with DailyWallpaper.exe
+-----------------------------------------
+here is a sample of config.ini:
+
+[DailyWallpaper]
+useLocal=no
+useOnline=yes
+createUsageStat=no
+want2AutoRun=yes/no
+[Online]
+saveDir=C:\Users\jared\Pictures\DailyWallpaper
+bingChina=yes
+alwaysDLBingWallpaper=yes
+dailySpotlight=yes
+dailySpotlightDir=AUTO
+[Local]
+imgDir=C:\Users\jared\Pictures
+scan=yes
+copyFolder=None
+want2Copy=no
+mTime=NULL
+lastImgDir=NULL
+[LOG]
+wallpaper=C:\Users\jared\Pictures\DailyWallpaper\2021-0622_11-44-45.jpeg    2021-06-22 23:52:59
+
+---------------------
+Section DailyWallpaper
+1. useLocal                       Use local image, which means use "Section WallpaperSetter" feature.
+2. useOnline                      Download the image and set it as wallpaper.
+3. createUsageStat                Create and usage file flag: yes, once, no
+                                    once:   when 'USAGE.TXT' doesn't exist, create once, you can delete, it won't create next time.
+                                    yes:   when 'USAGE.TXT' doesn't exist, create
+                                    no:     literally.
+4. want2AutoRun                   copy .lnk to startup folder: autorun DailyWallpaper.exe when windows starup.
+--------
+Section Online
+1. saveDir                        Where the image will be saved.
+2. bingChina                      Download "bingchina" 's image and set it as wallpaper
+3. alwaysDLBingWallpaper          Always download bingchina wallpaper
+4. dailySpotlight                 Copy the image from daily.spotlight folder and set it as wallpaper 
+                                    [You have to open the feature in Windows10]
+5. dailySpotlightDir              Set to AUTO, or set by yourself.
+--------
+Section Local
+1. imgDir:                       The program will scan this folder and select a image as wallpaper
+2. scan:                         Controlling the action of SCANNING, it has three options: yes, no, force
+                                    yes:   when 'img_dir' has been modified by OS, scan and update '_img_list.txt'
+                                    no:    never scan 'img_dir' unless '_img_list.txt' doesn't exist.
+                                    force: Mandatory scan 'img_dir' and update '_img_list.txt'
+3. copyFolder:                   Copy all suitable pictures to this folder from copy_folder, control by 'want2copy'
+4. want2Copy:                    Controlling the action of COPYING, it has two options: yes, no
+-----------------------------------------
+FOR FREEDOM!

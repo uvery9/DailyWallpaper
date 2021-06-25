@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31402.337
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyWallpaper", "DailyWallpaper\DailyWallpaper.csproj", "{D60E24F0-FC47-4490-ACD6-3157C26AFF39}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC9652C9-AEEC-48EA-BD5D-F00E3C80EABB} = {EC9652C9-AEEC-48EA-BD5D-F00E3C80EABB}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyWallpaperWpfLib", "DailyWallpaperWpfLib\DailyWallpaperWpfLib.csproj", "{EC9652C9-AEEC-48EA-BD5D-F00E3C80EABB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D60E24F0-FC47-4490-ACD6-3157C26AFF39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC9652C9-AEEC-48EA-BD5D-F00E3C80EABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC9652C9-AEEC-48EA-BD5D-F00E3C80EABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC9652C9-AEEC-48EA-BD5D-F00E3C80EABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC9652C9-AEEC-48EA-BD5D-F00E3C80EABB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E581C61C-1EC5-49BD-950C-E5AFDE29D9E7}
+	EndGlobalSection
+EndGlobal
