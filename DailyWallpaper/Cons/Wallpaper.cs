@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System;
 using System.Net;
 using System.Drawing.Imaging;
+using DailyWallpaper.Helpers;
 
 public class Wallpaper
 {
@@ -28,7 +29,6 @@ public class Wallpaper
     {
         int count = 0;
         Regex regex = new Regex(@"^[\u4E00-\u9FA5]{0,}$");
-
         for (int i = 0; i < str.Length; i++)
         {
             if (regex.IsMatch(str[i].ToString()))
@@ -36,7 +36,6 @@ public class Wallpaper
                 count++;
             }
         }
-
         return count;
     }
     public static void AddWaterMark(string sourceFile, string destFile, string waterMark, bool deleteSrc=false)
@@ -44,9 +43,20 @@ public class Wallpaper
         
         using (var bitmap = Bitmap.FromFile(sourceFile)){
             // Font font = new Font("Microsoft YaHei", 20, FontStyle.Regular, GraphicsUnit.Pixel);
-            int fontSize = 20;
-            Font font = new Font("Microsoft YaHei", fontSize, FontStyle.Regular);
-
+            int fontSize;
+            if (bitmap.Width < 2000)
+            {
+                fontSize = 15;
+            } else if (bitmap.Width < 2800)
+            {
+                fontSize = 18;
+            }
+            else
+            {
+                fontSize = 20;
+            }
+            Console.WriteLine($"fontSize: {fontSize}");
+            Font font = new Font(TranslationHelper.Get("DRAW_FontFamily"), fontSize, FontStyle.Regular);
             //Color color = FromArgb(255, 255, 0, 0);
             // bitmap.Width - font_len - 50
             int font_len = waterMark.Length + GetHanNumFromString(waterMark);
@@ -55,8 +65,8 @@ public class Wallpaper
             System.Console.WriteLine("font_len:" + font_len);
             System.Console.WriteLine("GetHanNumFromString:" + GetHanNumFromString(waterMark));*/
 
-            int wid = bitmap.Width - font_len * fontSize / 2 + 80;
-            int hei = bitmap.Height - fontSize - 100;
+            int wid = bitmap.Width - font_len * fontSize / 2 + fontSize*4;
+            int hei = bitmap.Height - fontSize - fontSize*5;
             Point atpoint = new Point(wid, hei);
             Console.WriteLine("[" + wid + "," + hei + "]");
             Console.WriteLine("[" + bitmap.Width + "," + bitmap.Height + "]");
