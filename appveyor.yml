@@ -20,16 +20,14 @@ build:
 after_build:
 - cmd: >-
      echo https://www.appveyor.com/docs/environment-variables/
-     7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\dailywallpaperui\DailyWallpaper\bin\Release
-     cd /d %APPVEYOR_BUILD_FOLDER%\dailywallpaperui\DailyWallpaper\bin
-     7z a DailyWallpaper.zip Release
+     cd /d %APPVEYOR_BUILD_FOLDER%\dailywallpaperui
+     7z a DailyWallpaper.zip DailyWallpaper\bin\Release
 artifacts:
-- path: DailyWallpaper.7z
-  name: DailyWallpaper-7z
 - path: DailyWallpaper.zip
-  name: DailyWallpaper-zip
-- path: '**\*'
-  name: KnowWhere
-
+  name: DailyWallpaper
+- path: DailyWallpaper\bin\Release
+  name: Release
+- path: "DailyWallpaper\bin\Release\*.exe"
+  name: DailyWallpaper.exe
 on_success:
     - echo succeed
