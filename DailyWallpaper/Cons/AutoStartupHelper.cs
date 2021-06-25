@@ -56,6 +56,7 @@ namespace DailyWallpaper
         }
         internal static bool IsAutorun()
         {
+            // should check more, such as the link of file.
             return File.Exists(startupFullPath);
         }
     }

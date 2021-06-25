@@ -65,7 +65,7 @@ namespace DailyWallpaper
                     TranslationHelper.Get("Icon_ChangeWallpaperTit"),
                     _Icon_ChangeWallpaperMenuItem_Click);
             var defFont = Control.DefaultFont;
-            _Icon_ChangeWallpaperMenuItem.Font = new Font(defFont.Name, defFont.Size + 2, FontStyle.Bold);
+            _Icon_ChangeWallpaperMenuItem.Font = new Font(defFont.Name, defFont.Size + 1, FontStyle.Bold);
             _Icon_ChangeWallpaperMenuItem.ShowShortcutKeys = true;
             _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString = 
                 TranslationHelper.Get("TrayIcon_ShortcutKeys"); // "Alt + F"

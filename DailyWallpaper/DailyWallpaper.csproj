@@ -23,7 +23,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <PublisherName>JaredDC</PublisherName>
-    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -147,10 +147,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\icon32x32_ban.ico" />
-    <None Include="res\icon16x16_ban.ico" />
     <None Include="res\DailyWallpaper.ico" />
     <None Include="res\icon32x32.ico" />
-    <None Include="res\icon16x16.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

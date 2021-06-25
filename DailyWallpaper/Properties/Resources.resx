@@ -121,12 +121,6 @@
   <data name="DailyWallpaper" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\DailyWallpaper.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="icon16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon16x16.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon16x16_ban" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon16x16_ban.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="icon32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\icon32x32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
