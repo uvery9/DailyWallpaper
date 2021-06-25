@@ -15,6 +15,7 @@ before_build:
 - ps: >-
      nuget restore -verbosity detailed
 build:
+  parallel: true
   verbosity: normal
 after_build:
 - ps: >-
