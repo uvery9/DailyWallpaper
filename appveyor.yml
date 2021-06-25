@@ -19,11 +19,11 @@ build:
   verbosity: normal
 after_build:
 - cmd: >-
-     echo %APPVEYOR_BUILD_FOLDER%
-     dir
+     echo https://www.appveyor.com/docs/environment-variables/
      7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\dailywallpaperui\DailyWallpaper\bin\Release
+     move DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%
 artifacts:
-  - path: '**\*.7z'
+  - path: DailyWallpaper.7z
     name: DailyWallpaper
 on_success:
     - echo succeed
