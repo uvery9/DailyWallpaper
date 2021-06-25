@@ -28,7 +28,7 @@ artifacts:
   name: DailyWallpaper-7z
 - path: DailyWallpaper.zip
   name: DailyWallpaper-zip
-- path: **\*.*
+- path: '**\*'
   name: KnowWhere
 
 on_success:
