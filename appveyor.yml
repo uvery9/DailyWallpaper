@@ -15,10 +15,5 @@ before_build:
 build:
   parallel: true
   verbosity: normal
-
-install:
-	- node --version
-	- npm --version
-
 on_success:
     - echo "succeed"
