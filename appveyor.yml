@@ -19,7 +19,9 @@ build:
   verbosity: normal
 after_build:
 - ps: >-
-     7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\DailyWallpaper\bin\Release
+     echo %APPVEYOR_BUILD_FOLDER%
+     dir
+     7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\dailywallpaperui\DailyWallpaper\bin\Release
 artifacts:
   - path: '**\*.7z'
     name: DailyWallpaper
