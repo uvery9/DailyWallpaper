@@ -1,7 +1,6 @@
 environment:
 access_token:
     secure: jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD
-    
 version: '{build}'
 branches:
   only:
@@ -11,25 +10,14 @@ image: Visual Studio 2019
 configuration: Release
 platform: Any CPU
 test: off
-
-
-
-cache:
-- packages -> **\packages.config
-- '%USERPROFILE%\.nuget\packages -> **\project.json'
-
 before_build:
 - ps: >-
      nuget Install-Package Microsoft.WindowsAPICodePack-Shell
-
 build:
   parallel: true
   verbosity: normal
-
 install:
 	- node --version
 	- npm --version
-
 on_success:
     - echo "succeed"
-
