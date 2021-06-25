@@ -20,7 +20,6 @@ build:
 after_build:
 - cmd: >-
      echo https://www.appveyor.com/docs/environment-variables/
-     cd /d %APPVEYOR_BUILD_FOLDER%\dailywallpaperui
      7z a DailyWallpaper.zip DailyWallpaper\bin\Release
 artifacts:
 - path: DailyWallpaper.zip
