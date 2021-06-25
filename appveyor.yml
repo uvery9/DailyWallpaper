@@ -23,7 +23,9 @@ after_build:
      7z a DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%\dailywallpaperui\DailyWallpaper\bin\Release
      move DailyWallpaper.7z %APPVEYOR_BUILD_FOLDER%
 artifacts:
-  - path: DailyWallpaper.7z
+  - path: dailywallpaperui\DailyWallpaper\bin\Release
     name: DailyWallpaper
+  - path: dailywallpaperui/DailyWallpaper/bin/Debug
+    name: DailyWallpaperDebug
 on_success:
     - echo succeed
