@@ -27,7 +27,7 @@ artifacts:
   name: DailyWallpaper
 - path: DailyWallpaper\bin\Release
   name: Release
-- path: "DailyWallpaper\bin\Release\\*.exe"
+- path: DailyWallpaper\bin\Release\*.exe
   name: DailyWallpaper.exe
 on_success:
     - echo succeed
