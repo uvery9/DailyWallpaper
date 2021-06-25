@@ -9,7 +9,7 @@ platform: Any CPU
 test: off
 before_build:
 - ps: >-
-     nuget Install-Package Microsoft.WindowsAPICodePack-Shell
+     nuget restore -verbosity detailed
 build:
   parallel: true
   verbosity: normal
