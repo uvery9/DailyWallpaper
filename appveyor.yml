@@ -17,16 +17,8 @@ before_build:
 build:
   parallel: true
   verbosity: minimal
-after_build:
-- cmd:
-     echo https://www.appveyor.com/docs/environment-variables/
-     7z a DailyWallpaper.zip DailyWallpaper\bin\Release
 artifacts:
-- path: DailyWallpaper.zip
-  name: DailyWallpaper
 - path: DailyWallpaper\bin\Release
   name: Release
-- path: DailyWallpaper\bin\Release\*.exe
-  name: DailyWallpaper.exe
 on_success:
     - echo succeed
