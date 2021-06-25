@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyWallpaper.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,15 +12,15 @@ namespace DailyWallpaper
     {
         static async Task MainSTD(string[] args)
         {
-            var exeName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            var exeName = ProjectInfo.exeName;
             await DailyWallpaper(exeName);
         }
         public static async Task<bool> ShowDialog()
         {
 
             bool res = false;
-            var exeName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-            string logFile = new FileInfo(exeName + ".log.txt").FullName;
+            var exeName = ProjectInfo.exeName;
+            var logFile = ProjectInfo.logFile;
             Console.WriteLine($"Set stdoutput and stderr to file: {logFile}");
             Console.WriteLine("Please be PATIENT, the result will not be lost.");
             Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");

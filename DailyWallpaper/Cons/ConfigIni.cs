@@ -24,7 +24,7 @@ namespace DailyWallpaper
 
         public ConfigIni(string congfigOfLog="Config", string IniPath = null, string exeName=null)
         {
-            this.exeName = exeName ?? Assembly.GetExecutingAssembly().GetName().Name;
+            this.exeName = exeName ?? Helpers.ProjectInfo.exeName;
             iniPath = new FileInfo(IniPath ?? "config.ini").FullName;
             logIniPath = new FileInfo(IniPath ?? "configlog.ini").FullName;
             if (!File.Exists(iniPath))

@@ -9,10 +9,11 @@ using DailyWallpaper.Helpers;
 using System.Drawing;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Diagnostics;
 
 namespace DailyWallpaper
 {
-    class NotifyIconManager:IDisposable
+    class NotifyIconManager : IDisposable
     {
         private static NotifyIconManager _instance;
         public System.Windows.Forms.NotifyIcon notifyIcon;
@@ -67,7 +68,7 @@ namespace DailyWallpaper
             var defFont = Control.DefaultFont;
             _Icon_ChangeWallpaperMenuItem.Font = new Font(defFont.Name, defFont.Size + 1, FontStyle.Bold);
             _Icon_ChangeWallpaperMenuItem.ShowShortcutKeys = true;
-            _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString = 
+            _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString =
                 TranslationHelper.Get("TrayIcon_ShortcutKeys"); // "Alt + F"
             // _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString.
 
@@ -128,7 +129,7 @@ namespace DailyWallpaper
                     _Icon_IssueAndFeedbackMenuItem_Click);
             _Icon_ShowLogMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_ShowLog"),
-                    (e, s) => { });
+                    _Icon_ShowLogMenuItem_Click);
             _Icon_AboutMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_About"),
                     (e, s) => { }); //ShowAboutView();
@@ -178,13 +179,13 @@ namespace DailyWallpaper
             else if (_Icon_RunAtStartUpMenuItem.Checked)
             {
                 notifyIcon.Icon = Properties.Resources.icon32x32_good;
-            } else if(!_Icon_RunAtStartUpMenuItem.Checked)
+            } else if (!_Icon_RunAtStartUpMenuItem.Checked)
             {
                 notifyIcon.Icon = Properties.Resources.icon32x32_exclamation;
             } else
             {
                 notifyIcon.Icon = Properties.Resources.icon32x32;
-            }          
+            }
         }
         private void InitializeAllChecked()
         {
@@ -203,7 +204,7 @@ namespace DailyWallpaper
                 notifyIcon.Icon = Properties.Resources.icon32x32_exclamation;
             }
 
-             
+
             if (startFeatures["Spotlight"].ToLower().Equals("yes"))
             {
                 _Icon_SpotlightMenuItem.Checked = true;
@@ -226,7 +227,7 @@ namespace DailyWallpaper
             {
                 _ini.UpdateIniItem("RunAtStartUp", "yes");
                 // Force Update ShortCut: delete and create.
-                AutoStartupHelper.CreateAutorunShortcut();               
+                AutoStartupHelper.CreateAutorunShortcut();
             }
             else
             {
@@ -239,7 +240,7 @@ namespace DailyWallpaper
             {
                 // Only succeed will ShowNotification.
                 System.Threading.Thread.Sleep(300);
-                ShowNotification("", string.Format(TranslationHelper.Get("Notify_RunAtStartup"), 
+                ShowNotification("", string.Format(TranslationHelper.Get("Notify_RunAtStartup"),
                     Environment.NewLine));
             }
             ChangeIconStatus();
@@ -260,7 +261,7 @@ namespace DailyWallpaper
             }
         }
 
-        private async void DailyWallpaperConsSetWallpaper(){
+        private async void DailyWallpaperConsSetWallpaper() {
 
             notifyIcon.Icon = Properties.Resources.icon32x32_timer;
             bool res = await DailyWallpaperCons.ShowDialog();
@@ -270,13 +271,13 @@ namespace DailyWallpaper
                 ShowNotification("", TranslationHelper.Get("Notify_SetWallpaper_Failed"));
             } else
             {
-                ShowNotification("", 
+                ShowNotification("",
                     $"{TranslationHelper.Get("Notify_SetWallpaper_Succeed")} " +
                     $"{_ini.Read("wallpaperInLog", "LOG")}");
             }
             ChangeIconStatus();
         }
-        private void _Icon_ChangeWallpaperMenuItem_Click(object sender, EventArgs e) 
+        private void _Icon_ChangeWallpaperMenuItem_Click(object sender, EventArgs e)
         {
             DailyWallpaperConsSetWallpaper();
         }
@@ -384,7 +385,7 @@ namespace DailyWallpaper
         }
 
         private void _Icon_BingMenuItem_Click(object sender, EventArgs e)
-        {           
+        {
             if (_Icon_BingMenuItem.Checked)
             {
                 _Icon_BingMenuItem.Checked = false;
@@ -399,8 +400,13 @@ namespace DailyWallpaper
         }
         private void _Icon_IssueAndFeedbackMenuItem_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(ProjectInfo.NewIssue);
+            Process.Start(ProjectInfo.NewIssue);
 
+        }
+
+        private void _Icon_ShowLogMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(ProjectInfo.logFile);
         }
 
         private void _Icon_LocalPathMenuItem_Click(object sender, EventArgs e)

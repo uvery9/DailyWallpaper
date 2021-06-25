@@ -1,6 +1,12 @@
 # DailyWallpaperUI
 Change the wallpaper daily from Bing,Spotlight or LocalPath
 
+[![license](https://img.shields.io/github/license/QL-Win/QuickLook.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![AppVeyor](https://img.shields.io/appveyor/ci/xupefei/QuickLook.svg)](https://ci.appveyor.com/project/JaredDC/dailywallpaperui)
+[![Github All Releases](https://img.shields.io/github/downloads/QL-Win/QuickLook/total.svg)](https://github.com/JaredDC/DailyWallpaperUI/releases)
+[![GitHub release](https://img.shields.io/github/release/QL-Win/QuickLook.svg)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
+
+
 
 
 Official website is: [DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI)
