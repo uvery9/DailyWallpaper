@@ -7,6 +7,8 @@ Official website is: [DailyWallpaper](https://github.com/JaredDC/DailyWallpaperU
 
 FOR GITHUB
 
+
+
 <img src="https://user-images.githubusercontent.com/42594123/123409679-07ca7a00-d5e1-11eb-9e00-122197c7ed5d.png" alt="main-interface_en" style="zoom: 67%;" />
 
 <img src="https://user-images.githubusercontent.com/42594123/123409675-0731e380-d5e1-11eb-891f-06af34083743.png" alt="main-interface" style="zoom:80%;" />
@@ -19,6 +21,9 @@ FOR GITHUB
 
 
 FOR LOCAL PATH.
+
+
+
 <img src=".\Donate\main-interface.png" alt="main-interface" style="zoom:80%;" />
 <img src=".\Donate\main-interface_en.png" alt="main-interface_en" style="zoom: 67%;" />
 <img src=".\Donate\icon_status.png" alt="icon_status" style="zoom: 95%;" />
