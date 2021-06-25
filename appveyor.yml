@@ -18,7 +18,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-- cmd: >-
+- cmd:
      echo https://www.appveyor.com/docs/environment-variables/
      7z a DailyWallpaper.zip DailyWallpaper\bin\Release
 artifacts:
