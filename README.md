@@ -11,6 +11,16 @@ Change the wallpaper daily from Bing,Spotlight or LocalPath
 
 Official website is: [DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI)
 
+Language support list: (Or you could modify the **Translations.config** to support your language,  even executable version.
+
+The code will detect your location and select the appropriate language. If you don't want to do this, the default is English.
+
+There may be many syntax errors in the **Translations.config**, help me improve it
+
+)
+
+<img src="https://user-images.githubusercontent.com/42594123/123509339-71ad5700-d6a7-11eb-9eb4-1a56aebdd3fe.png" alt="main-interface_en" style="zoom: 100%;" />
+
 FOR GITHUB
 
 
