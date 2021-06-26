@@ -110,7 +110,8 @@ namespace DailyWallpaper
             Write("localPathScan", "AUTO", "Local");
             Write("localPathMtime", "NULL", "Local");
             Write("lastLocalPathSetting", "NULL", "Local");
-
+            
+            Write("TimerSetWallpaper", "false", "LOG");
             //Write("appExitTime", "NULL", "LOG");
             //Write("wallpaperInLog", "NULL", "LOG");
         }

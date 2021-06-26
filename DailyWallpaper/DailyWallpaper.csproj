@@ -99,6 +99,7 @@
     <Compile Include="DeviceStatus.cs" />
     <Compile Include="Helpers\FolderPicker.cs" />
     <Compile Include="Helpers\ProjectInfo.cs" />
+    <Compile Include="Helpers\TimerHelper.cs" />
     <Compile Include="Helpers\TranslationHelper.cs" />
     <Compile Include="IDeviceManager.cs" />
     <Compile Include="NotifyIconManager.cs" />

@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
+using System.Timers;
 
 namespace DailyWallpaper
 {
@@ -44,7 +45,8 @@ namespace DailyWallpaper
         private bool NotCloseMenu = false;
         private System.ComponentModel.IContainer _components;
         private ConfigIni _ini;
-        //            _ini.RunAtStartup();
+        private TimerHelper _timerHelper;
+
         private NotifyIconManager() {
             _ini = ConfigIni.GetInstance();
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
@@ -57,10 +59,19 @@ namespace DailyWallpaper
                                 Application.ProductVersion),
                 Visible = true,
             };
+            _timerHelper = TimerHelper.GetInstance(233, timer_Elapsed);
             textFromHoursTextBox = "72";
             TrayIconInitializeComponent();
             ActionRegister();
-            InitializeAllChecked();
+            InitializeCheckedAndTimer();
+        }
+
+        // call back by timer.
+        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            DailyWallpaperConsSetWallpaper();
+            _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
+            // _ini.UpdateIniItem("TimerSetWallpaper", "false", "LOG");
         }
 
         private void TrayIconInitializeComponent()
@@ -243,6 +254,7 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("Timer", 12.ToString());
                 hoursTextBox.Enabled = false;
                 notifyIcon.ContextMenuStrip.Close();
+                _timerHelper.SetTimer(12 * 60);
             }
         }
         private void h24RadioButton_CheckedChanged(object sender, EventArgs e)
@@ -252,6 +264,7 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("Timer", 24.ToString());
                 hoursTextBox.Enabled = false;
                 notifyIcon.ContextMenuStrip.Close();
+                _timerHelper.SetTimer(24 * 60);
             }
         }
         private void h48RadioButton_CheckedChanged(object sender, EventArgs e)
@@ -261,6 +274,7 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("Timer", 48.ToString());
                 hoursTextBox.Enabled = false;
                 notifyIcon.ContextMenuStrip.Close();
+                _timerHelper.SetTimer(48 * 60);
             }
         }
         private void customRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -272,6 +286,8 @@ namespace DailyWallpaper
                 {
                     _ini.UpdateIniItem("Timer", textFromHoursTextBox.ToString());
                 }
+                int.TryParse(textFromHoursTextBox, out int res);
+                _timerHelper.SetTimer(res * 60);
             }
            
         }
@@ -367,7 +383,7 @@ namespace DailyWallpaper
                 notifyIcon.Icon = Properties.Resources.icon32x32;
             }
         }
-        private void InitializeAllChecked()
+        private void InitializeCheckedAndTimer()
         {
             var startFeatures = _ini.GetCfgFromIni();
             if (startFeatures["bingChina"].ToLower().Equals("yes"))
@@ -427,13 +443,44 @@ namespace DailyWallpaper
                 hoursTextBox.Text = timerStr;
                 textFromHoursTextBox = timerStr;
             }
+
+            if (int.TryParse(timerStr, out int res))
+            {
+                if (_ini.Read("TimerSetWallpaper", "LOG").ToLower().Equals("true"))
+                {
+                    _timerHelper.SetTimer(res * 60);
+                }
+                else
+                {
+                    var appStartTime = DateTime.Parse(_ini.Read("appStartTime", "LOG"));
+                    var appExitTime  = DateTime.Parse(_ini.Read("appExitTime", "LOG"));
+
+                    // var localPathMtime = new FileInfo(this.path).LastWriteTime;
+                    var timeDiff = (int)(appExitTime - appStartTime).TotalMinutes;
+                    var timeDiffinHours = (int)(appExitTime - appStartTime).TotalHours;
+                    _ini.UpdateIniItem("LastExitSubStartTimeDiff", $"{timeDiffinHours} hours");
+                    if (timeDiff > res * 60)
+                    {
+                        // something wrong. never mind.
+                        _timerHelper.SetTimer(res * 60);
+                        _ini.UpdateIniItem("TimerNotWorkProperly ", $"{DateTime.Now.ToString()}");
+                    } else
+                    {
+                        // rest time = 60 * res - lastTimeNotFinishe.
+                        _timerHelper.SetTimer(res * 60 - timeDiff);
+                    }
+                    
+                }
+            }
+            else
+            {
+                _ini.UpdateIniItem("Timer", "24");
+                _timerHelper.SetTimer(24 * 60);
+            }
+
         }
 
-        private delegate void HoursHandler(int num);
-        private void UpdateEveryHoursInConfig(int hours)
-        {
 
-        }
         private void _Icon_RunAtStartupMenuItem_Click(object sender, EventArgs e)
         {
             // May be unsuccessful due to permissions
