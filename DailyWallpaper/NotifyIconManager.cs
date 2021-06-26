@@ -19,6 +19,12 @@ namespace DailyWallpaper
         public System.Windows.Forms.NotifyIcon notifyIcon;
         private ToolStripMenuItem _Icon_RunAtStartUpMenuItem;
         private ToolStripMenuItem _Icon_ChangeWallpaperMenuItem;
+        private ToolStripMenuItem _Icon_EveryHoursAutoChangeMenuItem;
+        private RadioButton h12Button;
+        private RadioButton h24RadioButton;
+        private RadioButton h48RadioButton;
+        private RadioButton customRadioButton;
+        private TextBox hoursTextBox;
         private ToolStripMenuItem _Icon_BingMenuItem;
         private ToolStripMenuItem _Icon_LocalPathMenuItem;
         private ToolStripMenuItem _Icon_LocalPathSettingMenuItem;
@@ -59,7 +65,12 @@ namespace DailyWallpaper
             {
                 return;
             }
-            var _Icon_TitleMenuItem = new ToolStripMenuItem(Application.ProductName + " by " + ProjectInfo.author) { Enabled = false };
+            // notifyIcon.ContextMenuStrip.ShowCheckMargin = true;
+            //notifyIcon.ContextMenuStrip.RenderMode = ToolStripRenderMode.System;
+
+
+            var contextMenuStripTitle = Application.ProductName + " by " + ProjectInfo.author;
+            var _Icon_TitleMenuItem = new ToolStripMenuItem(contextMenuStripTitle) { Enabled = false };
 
             _Icon_ChangeWallpaperMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_ChangeWallpaper"),
@@ -72,6 +83,20 @@ namespace DailyWallpaper
                 TranslationHelper.Get("TrayIcon_ShortcutKeys"); // "Alt + F"
             // _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString.
 
+            _Icon_EveryHoursAutoChangeMenuItem = ToolStripMenuItemWithHandler(
+                    "    " + TranslationHelper.Get("Icon_AutoChange"),
+                    eventHandler: null);
+            _Icon_EveryHoursAutoChangeMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            //_Icon_EveryHoursAutoChangeMenuItem.DisplayStyle
+
+            _Icon_EveryHoursAutoChangeMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                CustomHoursTextboxWithButtonAndUnit(
+                    TranslationHelper.Get("Icon_Custom"),
+                    TranslationHelper.Get("Icon_Unit"))
+            });
+
+            // BingWaterMark Flag
+            // alwaysDownload in options
             _Icon_BingMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Bing"),
                     TranslationHelper.Get("Icon_BingTit"),
@@ -98,6 +123,7 @@ namespace DailyWallpaper
                     _Icon_DisableShortcutKeysMenuItem_Click);
 
 
+            // TODO
             _Icon_OptionsMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Options"),
                     (e, s) => { });
@@ -151,6 +177,7 @@ namespace DailyWallpaper
 
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_TitleMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_ChangeWallpaperMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_EveryHoursAutoChangeMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_BingMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_LocalPathMenuItem);
@@ -168,6 +195,89 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_QuitMenuItem);
             InitializeAllChecked();
             // notifyIcon.KeyPreview = true;
+        }
+        private void customRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+        
+        private void hoursTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddDivIntoPanel(Panel panel,
+                                    RadioButton radioButton, 
+                                    int height,
+                                    string unitText,
+                                    int hours = 0,
+                                    string buttonStr = null
+                                    )
+        {
+            radioButton.AutoSize = true;
+            radioButton.Location = new System.Drawing.Point(3, height - 2);
+            var unitLabel = new Label();
+            unitLabel.AutoSize = true;
+            var column = (int)radioButton.Font.Size;
+            if (hours == 0)
+            {
+                radioButton.Name = "customRadioButton";
+                radioButton.Text = !string.IsNullOrEmpty(buttonStr)? buttonStr:"Custom";
+                hoursTextBox.Name = "hoursTextBox";
+                hoursTextBox.Width = 28;
+                hoursTextBox.Location = new System.Drawing.Point(radioButton.Right + column, height);
+                hoursTextBox.Text = "72";
+                hoursTextBox.TextAlign = HorizontalAlignment.Center;
+                hoursTextBox.TextChanged += new System.EventHandler(hoursTextBox_TextChanged);
+                unitLabel.Name = "customUnitLabel";
+                unitLabel.Location = new System.Drawing.Point(hoursTextBox.Right + column, height);
+                unitLabel.Text = unitText;
+                panel.Controls.Add(hoursTextBox);
+            }
+            else
+            {
+                //radioButton.Width -= 50;
+                radioButton.Name = "radioButton" + hours.ToString();
+                unitLabel.Name = "unitLabel" + hours.ToString();
+                unitLabel.Location = new System.Drawing.Point(radioButton.Right + column, height);
+                unitLabel.Text = hours.ToString() + "  "+ unitText;
+            }
+            // MessageBox.Show(radioButton.Width.ToString()); default is 104
+            panel.Controls.Add(radioButton);
+            panel.Controls.Add(unitLabel);
+        }
+        private ToolStripControlHost CustomHoursTextboxWithButtonAndUnit(string buttonStr, string unitText, bool custom=false)
+        {
+            var backColor = SystemColors.Window;
+            hoursTextBox = new System.Windows.Forms.TextBox();
+            
+            h12Button = new System.Windows.Forms.RadioButton();
+            h24RadioButton = new System.Windows.Forms.RadioButton();
+            h48RadioButton = new System.Windows.Forms.RadioButton();
+            customRadioButton = new System.Windows.Forms.RadioButton();
+            
+            
+            // h12Button.CheckedChanged += customRadioButton_CheckedChanged;
+            // h24RadioButton.CheckedChanged += customRadioButton_CheckedChanged;
+            // h48RadioButton.CheckedChanged += customRadioButton_CheckedChanged;
+            // radioButton.CheckedChanged += customRadioButton_CheckedChanged;
+
+            var panel = new System.Windows.Forms.Panel();
+            panel.SuspendLayout(); // IS NOT DIFF ?
+            var unit = TranslationHelper.Get("Icon_Unit");
+            AddDivIntoPanel(panel, h12Button, 5, unit, 12);
+            AddDivIntoPanel(panel, h24RadioButton, 35, unit, 24);
+            AddDivIntoPanel(panel, h48RadioButton, 65, unit, 48);
+            AddDivIntoPanel(panel, customRadioButton, 95, unit, buttonStr:TranslationHelper.Get("Icon_Custom"));
+            panel.Name = "combine";
+            panel.AutoSize = true;
+            // panel.Size = new System.Drawing.Size(241, 37);
+            //MessageBox.Show(_Icon_Every24HoursMenuItem.); // 32, 19
+            // panel.TabIndex = 7;
+            var panelHost = new ToolStripControlHost(panel);
+            panelHost.BackColor = backColor;
+
+            return panelHost;
         }
 
         private void ChangeIconStatus()
@@ -218,6 +328,12 @@ namespace DailyWallpaper
             {
                 _Icon_DisableShortcutKeysMenuItem.Checked = false;
             }
+        }
+
+        private delegate void HoursHandler(int num);
+        private void UpdateEveryHoursInConfig(int hours)
+        {
+
         }
         private void _Icon_RunAtStartupMenuItem_Click(object sender, EventArgs e)
         {
@@ -321,6 +437,7 @@ namespace DailyWallpaper
                 }
             }
         }
+
         private ToolStripMenuItem ToolStripMenuItemWithHandler(string displayText, EventHandler eventHandler)
         {
             var item = new ToolStripMenuItem(displayText);
