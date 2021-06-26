@@ -70,11 +70,14 @@ namespace DailyWallpaper
             var iniFile = ConfigIni.GetInstance();
             // iniFile.RunAtStartup();  Console Mode shouldn't do it.
 
-            if (iniFile.Read("alwaysDLBingWallpaper", "Online").ToLower().Equals("yes"))
+            
+            if (iniFile.Read("bingChina", "Online").ToLower().Equals("yes"))
             {
-                await new OnlineImage(iniFile).BingChina();
+                if (iniFile.Read("alwaysDLBingWallpaper", "Online").ToLower().Equals("yes"))
+                {
+                    await new OnlineImage(iniFile).BingChina();
+                }
             }
-
             var choiceDict = new Dictionary<string, string>();
             choiceDict.Add("bingChina", iniFile.Read("bingChina", "Online"));
             choiceDict.Add("Spotlight", iniFile.Read("Spotlight", "Online"));

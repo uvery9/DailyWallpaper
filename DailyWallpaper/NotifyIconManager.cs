@@ -27,6 +27,7 @@ namespace DailyWallpaper
         private TextBox hoursTextBox;
         private string textFromHoursTextBox;
         private ToolStripMenuItem _Icon_BingMenuItem;
+        private ToolStripMenuItem _Icon_AlwaysDownLoadBingPictureMenuItem;
         private ToolStripMenuItem _Icon_LocalPathMenuItem;
         private ToolStripMenuItem _Icon_LocalPathSettingMenuItem;
         private ToolStripMenuItem _Icon_SpotlightMenuItem;
@@ -87,7 +88,7 @@ namespace DailyWallpaper
             // _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString.
 
             _Icon_EveryHoursAutoChangeMenuItem = ToolStripMenuItemWithHandler(
-                    "    " + TranslationHelper.Get("Icon_AutoChange"),
+                    "    " + TranslationHelper.Get("Icon_AutoChangeWallpaper"),
                     eventHandler: null);
             _Icon_EveryHoursAutoChangeMenuItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             //_Icon_EveryHoursAutoChangeMenuItem.DisplayStyle
@@ -104,6 +105,10 @@ namespace DailyWallpaper
                     TranslationHelper.Get("Icon_Bing"),
                     TranslationHelper.Get("Icon_BingTit"),
                     _Icon_BingMenuItem_Click);
+
+            _Icon_AlwaysDownLoadBingPictureMenuItem = ToolStripMenuItemWithHandler(
+                    "    "+ TranslationHelper.Get("Icon_AlwaysDownLoadBingPicture"),
+                    _Icon_AlwaysDownLoadBingPictureMenuItem_Click);
 
             _Icon_LocalPathMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_LocalPath"),
@@ -183,6 +188,7 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_EveryHoursAutoChangeMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_BingMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_AlwaysDownLoadBingPictureMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_LocalPathMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_LocalPathSettingMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_SpotlightMenuItem);
@@ -296,7 +302,7 @@ namespace DailyWallpaper
                 //hoursTextBox.TextChanged += hoursTextBox_TextChanged;
                 unitLabel.Name = "customUnitLabel";
                 unitLabel.Location = new System.Drawing.Point(hoursTextBox.Right + column, height);
-                unitLabel.Text = unitText;
+                unitLabel.Text = "  " + unitText;
                 panel.Controls.Add(hoursTextBox);
 
             }
@@ -367,7 +373,14 @@ namespace DailyWallpaper
             if (startFeatures["bingChina"].ToLower().Equals("yes"))
             {
                 _Icon_BingMenuItem.Checked = true;
+                _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = true;
             }
+
+            if (startFeatures["alwaysDLBingWallpaper"].ToLower().Equals("yes"))
+            {
+                _Icon_AlwaysDownLoadBingPictureMenuItem.Checked = true;
+            }
+
             if (AutoStartupHelper.IsAutorun())
             {
                 _Icon_RunAtStartUpMenuItem.Checked = true;
@@ -592,15 +605,33 @@ namespace DailyWallpaper
             if (_Icon_BingMenuItem.Checked)
             {
                 _Icon_BingMenuItem.Checked = false;
+                _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = false;
                 _ini.UpdateIniItem("bingChina", "no", "Online");
             }
             else
             {
                 _Icon_BingMenuItem.Checked = true;
                 _ini.UpdateIniItem("bingChina", "yes", "Online");
+                _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = true;
                 notifyIcon.ContextMenuStrip.Show();
             }
         }
+        private void _Icon_AlwaysDownLoadBingPictureMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = _Icon_AlwaysDownLoadBingPictureMenuItem;
+            if (item.Checked)
+            {
+                item.Checked = false;
+                _ini.UpdateIniItem("alwaysDLBingWallpaper", "no", "Online");
+            }
+            else
+            {
+                item.Checked = true;
+                _ini.UpdateIniItem("alwaysDLBingWallpaper", "yes", "Online");
+                notifyIcon.ContextMenuStrip.Show();
+            }
+        }
+
         private void _Icon_IssueAndFeedbackMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(ProjectInfo.NewIssue);
@@ -670,6 +701,7 @@ namespace DailyWallpaper
                 dialog.EnsurePathExists = true;
                 dialog.Multiselect = false;
                 dialog.Title = TranslationHelper.Get("Icon_LocalPathSetting");
+                // maybe add some log TODO
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     // MessageBox.Show("You selected: " + dialog.FileName);

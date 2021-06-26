@@ -52,7 +52,13 @@ namespace DailyWallpaper.Helpers
             var s = GetStringFromXml(nav, id, locale);
             if (s != null)
                 return s;
-
+  
+            if (locale.ToString().ToLower().Contains("pt"))
+            {
+                s = GetStringFromXml(nav, id, CultureInfo.GetCultureInfo("pt"));
+                if (s != null)
+                    return s;
+            }
             // try again for parent language
             if (locale.Parent.Name != string.Empty)
                 s = GetStringFromXml(nav, id, locale.Parent);
