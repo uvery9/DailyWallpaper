@@ -20,11 +20,12 @@ namespace DailyWallpaper
         private ToolStripMenuItem _Icon_RunAtStartUpMenuItem;
         private ToolStripMenuItem _Icon_ChangeWallpaperMenuItem;
         private ToolStripMenuItem _Icon_EveryHoursAutoChangeMenuItem;
-        private RadioButton h12Button;
+        private RadioButton h12RadioButton;
         private RadioButton h24RadioButton;
         private RadioButton h48RadioButton;
         private RadioButton customRadioButton;
         private TextBox hoursTextBox;
+        private string textFromHoursTextBox;
         private ToolStripMenuItem _Icon_BingMenuItem;
         private ToolStripMenuItem _Icon_LocalPathMenuItem;
         private ToolStripMenuItem _Icon_LocalPathSettingMenuItem;
@@ -55,8 +56,10 @@ namespace DailyWallpaper
                                 Application.ProductVersion),
                 Visible = true,
             };
+            textFromHoursTextBox = "72";
             TrayIconInitializeComponent();
             ActionRegister();
+            InitializeAllChecked();
         }
 
         private void TrayIconInitializeComponent()
@@ -193,17 +196,78 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_RunAtStartUpMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_QuitMenuItem);
-            InitializeAllChecked();
-            // notifyIcon.KeyPreview = true;
+        }
+
+        private void hoursTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) // && (e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+            // only allow one decimal point
+            /*if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }*/
+        }
+
+        // Press Enter Key when focus on hoursTextBox      
+        private void hoursTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                //Enter key is down
+                //Capture the text
+                if (sender is TextBox)
+                {
+                    int result;
+                    if (int.TryParse(((TextBox)sender).Text, out result))
+                    {
+                        textFromHoursTextBox = ((TextBox)sender).Text;
+                        _ini.UpdateIniItem("Timer", textFromHoursTextBox);
+                    }
+                }
+                notifyIcon.ContextMenuStrip.Close();
+            }
+        }
+        private void h12RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (h12RadioButton.Checked)
+            {
+                _ini.UpdateIniItem("Timer", 12.ToString());
+                hoursTextBox.Enabled = false;
+                notifyIcon.ContextMenuStrip.Close();
+            }
+        }
+        private void h24RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (h24RadioButton.Checked)
+            {
+                _ini.UpdateIniItem("Timer", 24.ToString());
+                hoursTextBox.Enabled = false;
+                notifyIcon.ContextMenuStrip.Close();
+            }
+        }
+        private void h48RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (h48RadioButton.Checked)
+            {
+                _ini.UpdateIniItem("Timer", 48.ToString());
+                hoursTextBox.Enabled = false;
+                notifyIcon.ContextMenuStrip.Close();
+            }
         }
         private void customRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-
-        }
-        
-        private void hoursTextBox_TextChanged(object sender, EventArgs e)
-        {
-
+            if (customRadioButton.Checked)
+            {
+                hoursTextBox.Enabled = true;                
+                if (!_ini.Read("Timer").Equals(textFromHoursTextBox))
+                {
+                    _ini.UpdateIniItem("Timer", textFromHoursTextBox.ToString());
+                }
+            }
+           
         }
 
         private void AddDivIntoPanel(Panel panel,
@@ -226,13 +290,15 @@ namespace DailyWallpaper
                 hoursTextBox.Name = "hoursTextBox";
                 hoursTextBox.Width = 28;
                 hoursTextBox.Location = new System.Drawing.Point(radioButton.Right + column, height);
-                hoursTextBox.Text = "72";
                 hoursTextBox.TextAlign = HorizontalAlignment.Center;
-                hoursTextBox.TextChanged += new System.EventHandler(hoursTextBox_TextChanged);
+                hoursTextBox.KeyDown += hoursTextBox_KeyDown;
+                hoursTextBox.KeyPress += hoursTextBox_KeyPress;
+                //hoursTextBox.TextChanged += hoursTextBox_TextChanged;
                 unitLabel.Name = "customUnitLabel";
                 unitLabel.Location = new System.Drawing.Point(hoursTextBox.Right + column, height);
                 unitLabel.Text = unitText;
                 panel.Controls.Add(hoursTextBox);
+
             }
             else
             {
@@ -251,21 +317,19 @@ namespace DailyWallpaper
             var backColor = SystemColors.Window;
             hoursTextBox = new System.Windows.Forms.TextBox();
             
-            h12Button = new System.Windows.Forms.RadioButton();
-            h24RadioButton = new System.Windows.Forms.RadioButton();
-            h48RadioButton = new System.Windows.Forms.RadioButton();
-            customRadioButton = new System.Windows.Forms.RadioButton();
-            
-            
-            // h12Button.CheckedChanged += customRadioButton_CheckedChanged;
-            // h24RadioButton.CheckedChanged += customRadioButton_CheckedChanged;
-            // h48RadioButton.CheckedChanged += customRadioButton_CheckedChanged;
-            // radioButton.CheckedChanged += customRadioButton_CheckedChanged;
+            h12RadioButton = new RadioButton();
+            h24RadioButton = new RadioButton();
+            h48RadioButton = new RadioButton();
+            customRadioButton = new RadioButton();
+            h12RadioButton.CheckedChanged += h12RadioButton_CheckedChanged;
+            h24RadioButton.CheckedChanged += h24RadioButton_CheckedChanged;
+            h48RadioButton.CheckedChanged += h48RadioButton_CheckedChanged;
+            customRadioButton.CheckedChanged += customRadioButton_CheckedChanged;
 
             var panel = new System.Windows.Forms.Panel();
             panel.SuspendLayout(); // IS NOT DIFF ?
             var unit = TranslationHelper.Get("Icon_Unit");
-            AddDivIntoPanel(panel, h12Button, 5, unit, 12);
+            AddDivIntoPanel(panel, h12RadioButton, 5, unit, 12);
             AddDivIntoPanel(panel, h24RadioButton, 35, unit, 24);
             AddDivIntoPanel(panel, h48RadioButton, 65, unit, 48);
             AddDivIntoPanel(panel, customRadioButton, 95, unit, buttonStr:TranslationHelper.Get("Icon_Custom"));
@@ -327,6 +391,28 @@ namespace DailyWallpaper
             if (startFeatures["UseShortcutKeys"].ToLower().Equals("yes"))
             {
                 _Icon_DisableShortcutKeysMenuItem.Checked = false;
+            }
+
+            string timerStr = startFeatures["Timer"];
+            hoursTextBox.Enabled = false;
+            if (timerStr.Equals("12"))
+            {
+                h12RadioButton.Checked = true;
+            } 
+            else if (timerStr.Equals("24"))
+            {
+                h24RadioButton.Checked = true;
+            }
+            else if (timerStr.Equals("48"))
+            {
+                h48RadioButton.Checked = true;
+            }
+            else
+            {
+                customRadioButton.Checked = true;
+                hoursTextBox.Enabled = true;
+                hoursTextBox.Text = timerStr;
+                textFromHoursTextBox = timerStr;
             }
         }
 
