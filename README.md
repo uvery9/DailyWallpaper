@@ -1,48 +1,32 @@
 # DailyWallpaperUI
-Change the wallpaper daily from Bing,Spotlight or LocalPath
+[DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI): Change the wallpaper daily from Bing,Spotlight or LocalPath
 
 [![license](https://img.shields.io/github/license/QL-Win/QuickLook.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![AppVeyor](https://img.shields.io/appveyor/ci/xupefei/QuickLook.svg)](https://ci.appveyor.com/project/JaredDC/dailywallpaperui)
 [![Github All Releases](https://img.shields.io/github/downloads/QL-Win/QuickLook/total.svg)](https://github.com/JaredDC/DailyWallpaperUI/releases)
 [![GitHub release](https://img.shields.io/github/release/QL-Win/QuickLook.svg)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
 
+## User Interface
+
+### English Version
+<img src="https://user-images.githubusercontent.com/42594123/123409679-07ca7a00-d5e1-11eb-9e00-122197c7ed5d.png" alt="main-interface_en" style="zoom: 30%;" />
+
+### Simplified Chinese
+<img src="https://user-images.githubusercontent.com/42594123/123409675-0731e380-d5e1-11eb-891f-06af34083743.png" alt="main-interface" style="zoom:30%;" />
 
 
-
-Official website is: [DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI)
-
-Language support list: (Or you could modify the **Translations.config** to support your language,  even executable version.
-
+## Language support list: 
+You could modify the **Translations.config** to support your language,  even executable version.
 The code will detect your location and select the appropriate language. If you don't want to do this, the default is English.
-
 There may be many syntax errors in the **Translations.config**, help me improve it
 
-)
+<img src="https://user-images.githubusercontent.com/42594123/123509339-71ad5700-d6a7-11eb-9eb4-1a56aebdd3fe.png" alt="main-interface_en" style="zoom: 30%;" />
 
-<img src="https://user-images.githubusercontent.com/42594123/123509339-71ad5700-d6a7-11eb-9eb4-1a56aebdd3fe.png" alt="main-interface_en" style="zoom: 100%;" />
+### Tray Icon
+**icon will change cause the status**
 
-FOR GITHUB
+<img src="https://user-images.githubusercontent.com/42594123/123409664-0436f300-d5e1-11eb-83fd-8ea3e678bfcd.png" alt="icon_status" style="zoom: 30%;" />
 
-
-
-<img src="https://user-images.githubusercontent.com/42594123/123409679-07ca7a00-d5e1-11eb-9e00-122197c7ed5d.png" alt="main-interface_en" style="zoom: 67%;" />
-
-<img src="https://user-images.githubusercontent.com/42594123/123409675-0731e380-d5e1-11eb-891f-06af34083743.png" alt="main-interface" style="zoom:80%;" />
-
-<img src="https://user-images.githubusercontent.com/42594123/123409664-0436f300-d5e1-11eb-83fd-8ea3e678bfcd.png" alt="icon_status" style="zoom: 95%;" />
-
-
-
-
-
-
-FOR LOCAL PATH.
-
-
-
-<img src=".\Donate\main-interface.png" alt="main-interface" style="zoom:80%;" />
-<img src=".\Donate\main-interface_en.png" alt="main-interface_en" style="zoom: 67%;" />
-<img src=".\Donate\icon_status.png" alt="icon_status" style="zoom: 95%;" />
 
 
 
