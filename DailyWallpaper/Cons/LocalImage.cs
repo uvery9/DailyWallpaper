@@ -62,24 +62,17 @@ namespace DailyWallpaper
 			}
 			else // (this.update == Update.YES)
 			{
-				var lastLocalPathSetting = ini.GetCfgFromIni()["lastLocalPathSetting"];
-				if (this.path != lastLocalPathSetting)
+				var iniMtime = DateTime.Parse(ini.GetCfgFromIni()["localPathMtime"]);
+				var localPathMtime = new FileInfo(this.path).LastWriteTime;
+				var timeDiff = Math.Abs((int)(localPathMtime - iniMtime).TotalSeconds);
+				Console.WriteLine($"timeDiff: {timeDiff}s.");
+				if (timeDiff > 20)
 				{
-					Console.WriteLine($"lastLocalPathSetting: {lastLocalPathSetting}");
-					return true;
-				} else {
-					var iniMtime = DateTime.Parse(ini.GetCfgFromIni()["localPathMtime"]);
-					var localPathMtime = new FileInfo(this.path).LastWriteTime;
-					var timeDiff = Math.Abs((int)(localPathMtime - iniMtime).TotalSeconds);
-					Console.WriteLine($"timeDiff: {timeDiff}s.");
-					if (timeDiff > 20)
-					{
-						return true; 
-					}
-					else
-					{
-						return false;
-					}
+					return true; 
+				}
+				else
+				{
+					return false;
 				}
 			}
 		}

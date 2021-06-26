@@ -22,9 +22,8 @@ namespace DailyWallpaper
 
             var notifyIconHelper = NotifyIconManager.GetInstance();
             _notifyIcon = notifyIconHelper.notifyIcon;
-             // _notifyIcon.MouseUp += notifyIcon_MouseUp;
 
-             _aboutViewModel = new DailyWallpaperWpfLib.ViewModel.AboutViewModel();
+            _aboutViewModel = new DailyWallpaperWpfLib.ViewModel.AboutViewModel();
             _statusViewModel = new DailyWallpaperWpfLib.ViewModel.StatusViewModel();
 
             _statusViewModel.Icon = AppIcon;

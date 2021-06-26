@@ -99,15 +99,9 @@ namespace DailyWallpaper.Helpers
         /// <param name="hour"></param>
         /// <param name="min"></param>
         /// 
-        private static int id;
         public TimerHelper(int min, System.Threading.TimerCallback callback)
         {
             var timer = new System.Threading.Timer(callback, null, 500, 1000 * 60 * min);
         }
-        static void callback(object obj)
-        {
-            Console.WriteLine(id++);
-        }
-
     }
 }
