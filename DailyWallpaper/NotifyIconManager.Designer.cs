@@ -149,11 +149,11 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_DisableShortcutKeysMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_OptionsMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());           
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_HelpMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_RunAtStartUpMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_DonateAndSupportMenuItem);
-            notifyIcon.ContextMenuStrip.Items.Add(_Icon_HelpMenuItem);
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            notifyIcon.ContextMenuStrip.Items.Add(_Icon_RunAtStartUpMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_QuitMenuItem);
         }
         private void AddDivIntoPanel(Panel panel,
