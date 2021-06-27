@@ -166,7 +166,6 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
-rm /s /q "$(SolutionDir)Output\" &gt;nul 2&gt;nul
 xcopy /e /q /i /h /y /d "$(TargetDir)" "$(SolutionDir)Output\" &gt;nul 2&gt;nul
 del "$(SolutionDir)Output\config*.ini" &gt;nul 2&gt;nul
 set errorlevel=0</PreBuildEvent>
