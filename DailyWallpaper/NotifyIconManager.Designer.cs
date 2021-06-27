@@ -344,9 +344,17 @@ namespace DailyWallpaper
                 }
                 else
                 {
-                    var appStartTime = DateTime.Parse(_ini.Read("appStartTime", "LOG"));
-                    var appExitTime = DateTime.Parse(_ini.Read("appExitTime", "LOG"));
+                    if (!DateTime.TryParse(_ini.Read("appStartTime", "LOG"), out DateTime appStartTime))
+                    {
+                        // first time.
+                        appStartTime = DateTime.Now;
+                    }
 
+                    if (!DateTime.TryParse(_ini.Read("appExitTime", "LOG"), out DateTime appExitTime))
+                    {
+                        // first time.
+                        appExitTime = DateTime.Now;
+                    }
                     // var localPathMtime = new FileInfo(this.path).LastWriteTime;
                     var timeDiff = (int)(appExitTime - appStartTime).TotalMinutes;
                     _ini.UpdateIniItem("LastExitSubStartTimeDiff", $"{timeDiff}mins");
@@ -369,8 +377,9 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("Timer", "24");
                 _timerHelper.SetTimer(24 * 60);
             }
-            // 30 mins call once.
-            _exitTimeHelper = new System.Threading.Timer(exitTimeHelperCallback, null, 500, 1000 * 60 * 30);
+            // 1min dueTime, 30 mins period.
+            _exitTimeHelper = new System.Threading.Timer(exitTimeHelperCallback, null, 1000 * 60, 1000 * 60 * 30);
+            _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
         }
         private static NotifyIconManager _instance;
         public System.Windows.Forms.NotifyIcon notifyIcon;

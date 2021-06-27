@@ -17,7 +17,6 @@ namespace DailyWallpaper
     {
         private NotifyIconManager() {
             _ini = ConfigIni.GetInstance();
-            _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
             _components = new System.ComponentModel.Container();
             notifyIcon = new System.Windows.Forms.NotifyIcon(_components)
             {
@@ -405,6 +404,7 @@ namespace DailyWallpaper
         private void _Icon_QuitMenuItem_Click(object sender, EventArgs e)
         {
             _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(),"LOG");
+            notifyIcon.Dispose();
             Application.Exit();
         }
 
