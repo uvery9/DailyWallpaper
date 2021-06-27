@@ -15,9 +15,12 @@ namespace DailyWallpaper
             var exeName = ProjectInfo.exeName;
             await DailyWallpaper(exeName);
         }
-        public static async Task<bool> ShowDialog()
+        public static async Task<bool> ShowDialog(bool selfCreateWriter=true)
         {
-
+            if (selfCreateWriter)
+            {
+                Console.WriteLine("SelfCreateWriter.");
+            }
             bool res = false;
             var exeName = ProjectInfo.exeName;
             var logFile = ProjectInfo.logFile;
@@ -60,6 +63,29 @@ namespace DailyWallpaper
             // print the log file.
             //Console.OutputEncoding = Encoding.UTF8;
             //Console.WriteLine(File.ReadAllText(logFile));
+        }
+
+        /// <summary>
+        /// FIRST writer = new StreamWriter(ProjectInfo.logFile)
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <returns></returns>
+        public static async Task<bool> ShowDialog()
+        {
+            var exeName = ProjectInfo.exeName;
+            var logFile = ProjectInfo.logFile;
+            Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
+            bool res;
+            try
+            {
+                res = await DailyWallpaper(exeName);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.ToString());
+                res = false;
+            }
+            return false;
         }
 
         /*TODO*/

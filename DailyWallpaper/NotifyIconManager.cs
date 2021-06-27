@@ -360,9 +360,28 @@ namespace DailyWallpaper
 
         }
 
+        private void _viewWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Console.Out.Flush();
+                Console.Error.Flush();
+                Console.SetOut(_writerFile);
+                Console.SetError(_writerFile);
+                _viewWindow.Hide();
+            }
+        }
+
+        private void _viewWindow_Load(object sender, EventArgs e)
+        {
+            _viewWindow.SetConsToTextBox();
+        }
+
         private void _Icon_ShowLogMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(ProjectInfo.logFile);
+            // Process.Start(ProjectInfo.logFile);
+            _viewWindow.Show();
         }
 
         private void _Icon_LocalPathMenuItem_Click(object sender, EventArgs e)
@@ -467,11 +486,11 @@ namespace DailyWallpaper
         /// <param name="e"></param>
         private void notifyIcon_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                MethodInfo mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
-                mi.Invoke(notifyIcon, null);
-            }
+            /*            if (e.Button == MouseButtons.Left)
+                        {
+                            MethodInfo mi = typeof(NotifyIcon).GetMethod("ShowContextMenu", BindingFlags.Instance | BindingFlags.NonPublic);
+                            mi.Invoke(notifyIcon, null);
+                        }*/
         }
 
         

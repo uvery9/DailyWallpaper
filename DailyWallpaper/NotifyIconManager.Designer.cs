@@ -161,6 +161,12 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_DonateAndSupportMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_QuitMenuItem);
+            _viewWindow = View.LogWindow.GetInstance(Properties.Resources.icon32x32);
+            _viewWindow.FormClosing += _viewWindow_FormClosing;
+            _viewWindow.Load += new System.EventHandler(_viewWindow_Load);
+            _writerFile = new StreamWriter(ProjectInfo.logFile);
+            Console.SetOut(_writerFile);
+            Console.SetError(_writerFile);
         }
         private void AddDivIntoPanel(Panel panel,
                                     RadioButton radioButton,
@@ -278,7 +284,7 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Closing += ContextMenuStrip_Closing;
             notifyIcon.DoubleClick += notifyIcon_DoubleClick;
             notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
-            // notifyIcon.MouseUp += notifyIcon_MouseUp;
+            notifyIcon.MouseUp += notifyIcon_MouseUp;
         }
         private void InitializeCheckedAndTimer()
         {
@@ -425,6 +431,8 @@ namespace DailyWallpaper
         private TimerHelper _timerHelper;
         private System.Threading.Timer _exitTimeHelper;
         private bool setWallpaperSucceed = false;
-        
+        private View.LogWindow _viewWindow;
+        private StreamWriter _writerFile;
+
     }
 }
