@@ -166,6 +166,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
+md "$(SolutionDir)Output\"
 set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
