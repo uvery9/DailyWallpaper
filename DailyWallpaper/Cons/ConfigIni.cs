@@ -111,8 +111,6 @@ namespace DailyWallpaper
             Write("localPathMtime", "NULL", "Local");
             
             Write("TimerSetWallpaper", "false", "LOG");
-            //Write("appExitTime", "NULL", "LOG");
-            //Write("wallpaperInLog", "NULL", "LOG");
         }
         
         private void PrintDict(Dictionary<string, string> dict)

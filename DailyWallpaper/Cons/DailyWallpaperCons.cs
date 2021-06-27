@@ -117,7 +117,8 @@ namespace DailyWallpaper
                 return false;
             }
             Wallpaper.SetWallPaper(wallpaper);
-            iniFile.UpdateIniItem("wallpaperInLog", wallpaper + "    " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
+            iniFile.UpdateIniItem("WALLPAPER", wallpaper, "LOG");
+            iniFile.UpdateIniItem("wallpaperWithTime", wallpaper + "    " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
             return true;
         }
     }

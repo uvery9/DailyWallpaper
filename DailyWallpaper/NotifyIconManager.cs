@@ -186,7 +186,7 @@ namespace DailyWallpaper
             {
                 ShowNotification("",
                     $"{TranslationHelper.Get("Notify_SetWallpaper_Succeed")} " +
-                    $"{_ini.Read("wallpaperInLog", "LOG")}");
+                    $"{_ini.Read("WALLPAPER", "LOG")}");
             }
             ChangeIconStatus();
         }
@@ -236,6 +236,23 @@ namespace DailyWallpaper
         }
 
         
+         private void notifyIcon_BalloonTipClicked(object sender, EventArgs e)
+        {
+            // Process.Start("explorer.exe", @"/select,""full-path-to-your-file""");
+            //_ini.Read();
+            var wallpaper = _ini.Read("WALLPAPER", "LOG");
+            if (File.Exists(wallpaper))
+            {
+                // string p = @"C:\tmp\this path contains spaces, and,commas\target.txt";
+                string args = string.Format("/e, /select, \"{0}\"", wallpaper);
+                ProcessStartInfo info = new ProcessStartInfo();
+                info.FileName = "explorer";
+                info.Arguments = args;
+                Process.Start(info);
+            }
+        }
+
+
 
         /// <summary>
         /// timeout unit: milliseconds
