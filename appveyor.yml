@@ -9,7 +9,6 @@ environment:
   GIT_USER_NAME: JaredDC
 image: Visual Studio 2019
 configuration: Release
-platform: Any CPU
 test: off
 before_build:
 - ps: >-
