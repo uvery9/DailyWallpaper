@@ -12,12 +12,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
+    <DefineConstants>Debug;OutputDir=$(SolutionDir)Output\</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>OutputDir=$(SolutionDir)Output\</DefineConstants>
+    <DefineConstants>Debug;OutputDir=$(SolutionDir)Output\</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DailyWallpaperComponents.wxs" />
