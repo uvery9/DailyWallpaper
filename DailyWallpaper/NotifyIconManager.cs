@@ -172,20 +172,43 @@ namespace DailyWallpaper
             }
             ChangeIconStatus();
         }
-     
+
+        private bool IsNoneSelected()
+        {
+            if (_Icon_BingMenuItem.Checked == false &&
+                _Icon_LocalPathMenuItem.Checked == false &&
+                _Icon_SpotlightMenuItem.Checked == false              
+                )
+            {
+                return true;
+            } else
+            {
+                return false;
+            }            
+        }
         private async void DailyWallpaperConsSetWallpaper() {
 
+            if (IsNoneSelected())
+            {
+                ShowNotification("", TranslationHelper.Get("Notify_AtLeastSelectOneFeature"), isError:true);
+                return;
+            }
             notifyIcon.Icon = Properties.Resources.icon32x32_timer;
             bool res = await DailyWallpaperCons.ShowDialog();
             System.Threading.Thread.Sleep(500);
             if (!res)
             {
-                ShowNotification("", TranslationHelper.Get("Notify_SetWallpaper_Failed"));
+                setWallpaperSucceed = false;
+                ShowNotification("", 
+                    string.Format(TranslationHelper.Get("Notify_SetWallpaper_Failed"), Environment.NewLine));
+                
             } else
             {
+                setWallpaperSucceed = true;
                 ShowNotification("",
-                    $"{TranslationHelper.Get("Notify_SetWallpaper_Succeed")} " +
-                    $"{_ini.Read("WALLPAPER", "LOG")}");
+                    string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"), 
+                    Environment.NewLine + $"{_ini.Read("WALLPAPER", "LOG")}")
+                    );
             }
             ChangeIconStatus();
         }
@@ -233,14 +256,11 @@ namespace DailyWallpaper
                 }
             }
         }
-
         
          private void notifyIcon_BalloonTipClicked(object sender, EventArgs e)
         {
-            // Process.Start("explorer.exe", @"/select,""full-path-to-your-file""");
-            //_ini.Read();
             var wallpaper = _ini.Read("WALLPAPER", "LOG");
-            if (File.Exists(wallpaper))
+            if (File.Exists(wallpaper) && setWallpaperSucceed)
             {
                 // string p = @"C:\tmp\this path contains spaces, and,commas\target.txt";
                 string args = string.Format("/e, /select, \"{0}\"", wallpaper);
@@ -249,9 +269,11 @@ namespace DailyWallpaper
                 info.Arguments = args;
                 Process.Start(info);
             }
+            /*if (!setWallpaperSucceed)
+            {
+                Process.Start(ProjectInfo.logFile);
+            }*/
         }
-
-
 
         /// <summary>
         /// timeout unit: milliseconds
@@ -291,12 +313,12 @@ namespace DailyWallpaper
             {
                 _Icon_BingMenuItem.Checked = false;
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = false;
-                _ini.UpdateIniItem("bingChina", "no", "Online");
+                _ini.UpdateIniItem("bing", "no", "Online");
             }
             else
             {
                 _Icon_BingMenuItem.Checked = true;
-                _ini.UpdateIniItem("bingChina", "yes", "Online");
+                _ini.UpdateIniItem("bing", "yes", "Online");
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = true;
                 notifyIcon.ContextMenuStrip.Show();
             }
@@ -316,7 +338,22 @@ namespace DailyWallpaper
                 notifyIcon.ContextMenuStrip.Show();
             }
         }
-
+        private void _Icon_BingAddWaterMarkMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = _Icon_BingAddWaterMarkMenuItem;
+            if (item.Checked)
+            {
+                item.Checked = false;
+                _ini.UpdateIniItem("bingWMK", "no", "Online");
+            }
+            else
+            {
+                item.Checked = true;
+                _ini.UpdateIniItem("bingWMK", "yes", "Online");
+                notifyIcon.ContextMenuStrip.Show();
+            }
+        }
+ 
         private void _Icon_IssueAndFeedbackMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(ProjectInfo.NewIssue);

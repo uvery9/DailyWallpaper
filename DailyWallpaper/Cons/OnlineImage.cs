@@ -45,7 +45,7 @@ namespace DailyWallpaper
          */
 
 
-        public async Task<string> BingChina(bool print=true)
+        public async Task<string> Bing(bool print=true)
         {
             var bingImg = await new BingImageProvider().GetImage(check:true);
             // remove illegal characters
@@ -56,15 +56,28 @@ namespace DailyWallpaper
             var wallpaperWMK = Path.Combine(path, file_name + "-WMK.jpg");
             if (print)
             {
-                Console.WriteLine($"Downloading BingChina IMG: {bingImg.Copyright}");
+                Console.WriteLine($"Downloading Bing IMG: {bingImg.Copyright}");
                 Console.WriteLine($"Know more: {bingImg.CopyrightLink}");
             }
-            if (!File.Exists(wallpaperWMK)) {
-                // Don't download the picture again and again.
-                var img = await new BingImageProvider().GetImage(check:false);
-                img.Img.Save(wallpaper, System.Drawing.Imaging.ImageFormat.Jpeg);
-                Wallpaper.AddWaterMark(wallpaper, wallpaperWMK, bingImg.Copyright, deleteSrc: true);
-            }            
+            if (ini.Read("bingWMK", "Online").ToLower().Equals("yes"))
+            {
+                if (!File.Exists(wallpaperWMK))
+                {
+                    // Don't download the picture again and again.
+                    var img = await new BingImageProvider().GetImage(check: false);
+                    img.Img.Save(wallpaper, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    Wallpaper.AddWaterMark(wallpaper, wallpaperWMK, bingImg.Copyright, deleteSrc: true);
+                }
+            } else
+            {
+                if (!File.Exists(wallpaper))
+                {
+                    // Don't download the picture again and again.
+                    var img = await new BingImageProvider().GetImage(check: false);
+                    img.Img.Save(wallpaper, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    return wallpaper;
+                }
+            }
             return wallpaperWMK;
         }
 
@@ -75,7 +88,7 @@ namespace DailyWallpaper
                 Console.WriteLine(e.Key + ":" + e.Value);
             }
         }
-        private string GetDailySpotlightDir()
+        private string GetSpotlightDir()
         {
             if (!ini.GetCfgFromIni()["SpotlightPath"].ToLower().Equals("auto"))
             {
@@ -100,22 +113,22 @@ namespace DailyWallpaper
             var contentDeliveryManager = Directory.GetDirectories(pkg, "*ContentDeliveryManager*", SearchOption.AllDirectories);
             if (!contentDeliveryManager.Length.Equals(1))
             {
-                // throw exception;
+                
                 ini.UpdateIniItem("Spotlight", "no", "Online");
-                return null;
-            } 
+                throw exception;
+            }
             var assets = Directory.GetDirectories(contentDeliveryManager[0], "Assets", SearchOption.AllDirectories);
             if (!assets.Length.Equals(1))
             {
                 // throw exception;
                 ini.UpdateIniItem("Spotlight", "no", "Online");
-                return null;
+                throw exception;
             }
             return assets[0];
         }
-        public string DailySpotlight()
+        public string Spotlight()
         {
-            string spotlightPath = GetDailySpotlightDir();
+            string spotlightPath = GetSpotlightDir();
             if (string.IsNullOrEmpty(spotlightPath)){
                 return null;
             }
@@ -155,7 +168,6 @@ namespace DailyWallpaper
                                 jpegfi.CopyTo(dest);
                                 Console.WriteLine($"copy to: {dest}");
                             }
-                            // 
                         }
                         else
                         {        
@@ -176,7 +188,12 @@ namespace DailyWallpaper
                 }             
             }
             List <FileInfo> jpegFilesOrdered     = jpegFiles.OrderByDescending(x => x.CreationTime).ToList();
-            return wallpaperDict[jpegFilesOrdered[0].Name];
+            var fi = wallpaperDict[jpegFilesOrdered[0].Name];
+            if (!File.Exists(fi))
+            {
+                throw new FileNotFoundException("There is no suitable wallpaper image file in the Spotlight folder!");
+            }
+            return fi;
         }      
     }
 }

@@ -62,17 +62,23 @@ namespace DailyWallpaper
 			}
 			else // (this.update == Update.YES)
 			{
-				var iniMtime = DateTime.Parse(ini.GetCfgFromIni()["localPathMtime"]);
-				var localPathMtime = new FileInfo(this.path).LastWriteTime;
-				var timeDiff = Math.Abs((int)(localPathMtime - iniMtime).TotalSeconds);
-				Console.WriteLine($"timeDiff: {timeDiff}s.");
-				if (timeDiff > 20)
+				if (DateTime.TryParse(ini.GetCfgFromIni()["localPathMtime"], out DateTime iniMtime))
 				{
-					return true; 
+					var localPathMtime = new FileInfo(this.path).LastWriteTime;
+					var timeDiff = Math.Abs((int)(localPathMtime - iniMtime).TotalSeconds);
+					Console.WriteLine($"timeDiff: {timeDiff}s.");
+					if (timeDiff > 20)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
 				}
-				else
-				{
-					return false;
+                else
+                {
+					return true;
 				}
 			}
 		}
@@ -253,12 +259,18 @@ namespace DailyWallpaper
 			}
 		}
 		
-		public string RandomSelectOneImgToWallpaper()
+		public string RandomSelectOne()
 		{
 			ScanLocalPath();
 			// CopyTo();
 			var random = new Random();
-			int index = random.Next(this.files.Count);
+			int index = random.Next(files.Count);
+			if (files.Count < 1)
+            {
+				throw new ArgumentOutOfRangeException("There are no suitable pictures in the LocalPath: " + Environment.NewLine+
+					"1)jpg/jpeg/png,  2)>100kb,  3)Width>1900,  4)Width/Height>1.4");
+                
+			}
 			return this.files[index];
 		}
 	}

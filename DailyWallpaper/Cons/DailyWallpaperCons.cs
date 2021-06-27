@@ -71,15 +71,15 @@ namespace DailyWallpaper
             // iniFile.RunAtStartup();  Console Mode shouldn't do it.
 
             
-            if (iniFile.Read("bingChina", "Online").ToLower().Equals("yes"))
+            if (iniFile.Read("bing", "Online").ToLower().Equals("yes"))
             {
                 if (iniFile.Read("alwaysDLBingWallpaper", "Online").ToLower().Equals("yes"))
                 {
-                    await new OnlineImage(iniFile).BingChina();
+                    await new OnlineImage(iniFile).Bing();
                 }
             }
             var choiceDict = new Dictionary<string, string>();
-            choiceDict.Add("bingChina", iniFile.Read("bingChina", "Online"));
+            choiceDict.Add("bing", iniFile.Read("bing", "Online"));
             choiceDict.Add("Spotlight", iniFile.Read("Spotlight", "Online"));
             choiceDict.Add("localPath", iniFile.Read("localPath", "Local"));
 
@@ -98,25 +98,26 @@ namespace DailyWallpaper
             string wallpaper = null;
             switch (choice)
             {
-                case "bingChina":
-                    wallpaper = await new OnlineImage(iniFile).BingChina(print: false);
+                case "bing":
+                    wallpaper = await new OnlineImage(iniFile).Bing(print: false);
                     break;
 
                 case "Spotlight":
-                    wallpaper = new OnlineImage(iniFile).DailySpotlight();
+                    wallpaper = new OnlineImage(iniFile).Spotlight();
                     break;
 
                 case "localPath":
                     var localImage = new LocalImage(iniFile, 
                         iniFile.Read("localPathSetting", "Local"));
-                    wallpaper = localImage.RandomSelectOneImgToWallpaper();
+                    wallpaper = localImage.RandomSelectOne();
                     break;
             }
             if (!File.Exists(wallpaper))
             {
                 return false;
             }
-            Wallpaper.SetWallPaper(wallpaper);
+            // Fill is the best.
+            Wallpaper.SetWallPaper(wallpaper, Wallpaper.PicturePosition.Fill);
             iniFile.UpdateIniItem("WALLPAPER", wallpaper, "LOG");
             iniFile.UpdateIniItem("wallpaperWithTime", wallpaper + "    " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
             return true;

@@ -63,6 +63,11 @@ namespace DailyWallpaper
                     "    " + TranslationHelper.Get("Icon_AlwaysDownLoadBingPicture"),
                     _Icon_AlwaysDownLoadBingPictureMenuItem_Click);
 
+            _Icon_BingAddWaterMarkMenuItem = ToolStripMenuItemWithHandler(
+                    "    " + TranslationHelper.Get("Icon_BingAddWaterMark"),
+                    _Icon_BingAddWaterMarkMenuItem_Click);
+            
+
             _Icon_LocalPathMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_LocalPath"),
                     TranslationHelper.Get("Icon_LocalPathTit"),
@@ -142,6 +147,7 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_BingMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_AlwaysDownLoadBingPictureMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_BingAddWaterMarkMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_LocalPathMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_LocalPathSettingMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_SpotlightMenuItem);
@@ -277,15 +283,20 @@ namespace DailyWallpaper
         private void InitializeCheckedAndTimer()
         {
             var startFeatures = _ini.GetCfgFromIni();
-            if (startFeatures["bingChina"].ToLower().Equals("yes"))
+            if (startFeatures["bing"].ToLower().Equals("yes"))
             {
                 _Icon_BingMenuItem.Checked = true;
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = true;
+                _Icon_BingAddWaterMarkMenuItem.Visible = true;
             }
 
             if (startFeatures["alwaysDLBingWallpaper"].ToLower().Equals("yes"))
             {
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Checked = true;
+            }
+            if (_ini.Read("bingWMK", "Online").ToLower().Equals("yes"))
+            {
+                _Icon_BingAddWaterMarkMenuItem.Checked = true;
             }
 
             if (AutoStartupHelper.IsAutorun())
@@ -394,6 +405,7 @@ namespace DailyWallpaper
         private string textFromHoursTextBox;
         private ToolStripMenuItem _Icon_BingMenuItem;
         private ToolStripMenuItem _Icon_AlwaysDownLoadBingPictureMenuItem;
+        private ToolStripMenuItem _Icon_BingAddWaterMarkMenuItem;
         private ToolStripMenuItem _Icon_LocalPathMenuItem;
         private ToolStripMenuItem _Icon_LocalPathSettingMenuItem;
         private ToolStripMenuItem _Icon_SpotlightMenuItem;
@@ -412,6 +424,7 @@ namespace DailyWallpaper
         private ConfigIni _ini;
         private TimerHelper _timerHelper;
         private System.Threading.Timer _exitTimeHelper;
+        private bool setWallpaperSucceed = false;
         
     }
 }

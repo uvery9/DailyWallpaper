@@ -90,9 +90,9 @@ public class Wallpaper
 
     public static void SetWallPaper(string wallpaper=null, PicturePosition style = PicturePosition.Fill)
     {
-        if (wallpaper == null)
+        if (!File.Exists(wallpaper))
         {
-            throw new ArgumentNullException(nameof(wallpaper));
+            throw new FileNotFoundException($"The provided wallpaper file was not found: {wallpaper}");
         }
         using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true))
         {

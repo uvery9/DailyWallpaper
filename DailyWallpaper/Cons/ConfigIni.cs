@@ -99,7 +99,8 @@ namespace DailyWallpaper
             Write("UseShortcutKeys", "yes", exeName);
             
             Write("downLoadSavePath", Path.Combine(myPictures, exeName), "Online");
-            Write("bingChina", "yes", "Online");
+            Write("bing", "yes", "Online");
+            Write("bingWMK", "yes", "Online");
             Write("alwaysDLBingWallpaper", "no", "Online");
             Write("Spotlight", "yes", "Online");
             Write("SpotlightPath", "AUTO", "Online");
@@ -145,7 +146,7 @@ namespace DailyWallpaper
 
             // online
             iniDict.Add("downLoadSavePath", Read("downLoadSavePath", "Online"));
-            iniDict.Add("bingChina", Read("bingChina", "Online"));
+            iniDict.Add("bing", Read("bing", "Online"));
             iniDict.Add("Spotlight", Read("Spotlight", "Online"));
             iniDict.Add("SpotlightPath", Read("SpotlightPath", "Online"));
             iniDict.Add("alwaysDLBingWallpaper", Read("alwaysDLBingWallpaper", "Online"));
