@@ -14,7 +14,7 @@ namespace DailyWallpaper.View
     
     public partial class LogWindow : Form
     {
-        public TextWriter _writer = null;
+        public TextWriter textWriter = null;
 
         private static LogWindow _instance;
         public static LogWindow GetInstance(Icon icon)
@@ -31,7 +31,7 @@ namespace DailyWallpaper.View
         {
             InitializeComponent();
             this.Icon = icon;
-            _writer = new TextBoxStreamWriter(textBox1);
+            textWriter = new TextBoxStreamWriter(textBox1);
 
         }
 
@@ -46,12 +46,12 @@ namespace DailyWallpaper.View
                 Console.Out.Flush();
                 Console.Error.Flush();
                 textBox1.Text = "";
-                Console.SetOut(_writer);
-                Console.SetError(_writer);
+                Console.SetOut(textWriter);
+                Console.SetError(textWriter);
             }
             else
             {
-                _writer.Flush();
+                textWriter.Flush();
                 Console.Out.Close();
                 Console.Error.Close();
                 

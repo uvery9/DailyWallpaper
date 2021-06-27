@@ -15,23 +15,17 @@ namespace DailyWallpaper
             var exeName = ProjectInfo.exeName;
             await DailyWallpaper(exeName);
         }
-        public static async Task<bool> ShowDialog(bool selfCreateWriter=true)
+        
+        public static async Task<bool> ShowDialog(bool useTextWriter = false, TextWriter textWriter = null)
         {
-            if (selfCreateWriter)
-            {
-                Console.WriteLine("SelfCreateWriter.");
-            }
-            bool res = false;
             var exeName = ProjectInfo.exeName;
             var logFile = ProjectInfo.logFile;
-            Console.WriteLine($"Set stdoutput and stderr to file: {logFile}");
-            Console.WriteLine("Please be PATIENT, the result will not be lost.");
-            Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
-            using (var writer = new StreamWriter(logFile))
+            bool res = false;
+            if (useTextWriter)
             {
-                Console.SetOut(writer);
-                Console.SetError(writer);
-                //Console.Error.WriteLine("Error information written to begin");
+                Console.SetOut(textWriter);
+                Console.SetError(textWriter);
+                Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
                 try
                 {
                     res = await DailyWallpaper(exeName);
@@ -41,24 +35,35 @@ namespace DailyWallpaper
                     Console.Error.WriteLine(e.ToString());
                     res = false;
                 }
-                //Console.Error.WriteLine("Error information written to TEST");
-                Console.Out.Close();
-                Console.Error.Close();
-                writer.Close();
-                // Console.SetOut(Console.OpenStandardOutput());
+                Console.Out.Flush();
+                Console.Error.Flush();
+                ResetStdoutAndStderr();
+                return res;
             }
+            
+            Console.WriteLine($"Set stdoutput and stderr to file: {logFile}");
+            Console.WriteLine("Please be PATIENT, the result will not be lost.");
+            using (var writer = new StreamWriter(logFile))
+            {
+                Console.SetOut(writer);
+                Console.SetError(writer);
+                Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
+                try
+                {
+                    res = await DailyWallpaper(exeName);
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine(e.ToString());
+                    res = false;
+                }
+                Console.Out.Flush();
+                Console.Error.Flush();
+                writer.Close();
+            }
+            ResetStdoutAndStderr();
 
-            // redirect stderr to default.
-            var standardError = new StreamWriter(Console.OpenStandardError());
-            standardError.AutoFlush = true;
-            Console.SetError(standardError);
 
-            // redirect stdout to default.
-            var standardOutput = new StreamWriter(Console.OpenStandardOutput());
-            standardOutput.AutoFlush = true;
-            Console.SetOut(standardOutput);
-
-            Console.WriteLine($"How Can I see the text?");
             return res;
             // print the log file.
             //Console.OutputEncoding = Encoding.UTF8;
@@ -70,22 +75,17 @@ namespace DailyWallpaper
         /// </summary>
         /// <param name="writer"></param>
         /// <returns></returns>
-        public static async Task<bool> ShowDialog()
+        private static void ResetStdoutAndStderr()
         {
-            var exeName = ProjectInfo.exeName;
-            var logFile = ProjectInfo.logFile;
-            Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
-            bool res;
-            try
-            {
-                res = await DailyWallpaper(exeName);
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine(e.ToString());
-                res = false;
-            }
-            return false;
+            // redirect stderr to default.
+            var standardError = new StreamWriter(Console.OpenStandardError());
+            standardError.AutoFlush = true;
+            Console.SetError(standardError);
+
+            // redirect stdout to default.
+            var standardOutput = new StreamWriter(Console.OpenStandardOutput());
+            standardOutput.AutoFlush = true;
+            Console.SetOut(standardOutput);
         }
 
         /*TODO*/

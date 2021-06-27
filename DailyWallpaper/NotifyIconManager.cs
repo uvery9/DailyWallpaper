@@ -194,7 +194,16 @@ namespace DailyWallpaper
                 return;
             }
             notifyIcon.Icon = Properties.Resources.icon32x32_timer;
-            bool res = await DailyWallpaperCons.ShowDialog();
+            bool res;
+            if (useTextBoxWriter)
+            {
+                res = await DailyWallpaperCons.ShowDialog(true, _viewWindow.textWriter);
+            }
+            else
+            {
+                res = await DailyWallpaperCons.ShowDialog();
+            }
+            
             System.Threading.Thread.Sleep(500);
             if (!res)
             {
@@ -365,17 +374,14 @@ namespace DailyWallpaper
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                Console.Out.Flush();
-                Console.Error.Flush();
-                Console.SetOut(_writerFile);
-                Console.SetError(_writerFile);
+                useTextBoxWriter = false;
                 _viewWindow.Hide();
             }
         }
 
         private void _viewWindow_Load(object sender, EventArgs e)
         {
-            _viewWindow.SetConsToTextBox();
+            useTextBoxWriter = true;
         }
 
         private void _Icon_ShowLogMenuItem_Click(object sender, EventArgs e)

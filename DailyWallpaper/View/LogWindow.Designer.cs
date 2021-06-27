@@ -61,7 +61,7 @@ namespace DailyWallpaper.View
             this.Name = "LogWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LogWindow";
-            this.Load += new System.EventHandler(this.LogWindow_Load);
+            // this.Load += new System.EventHandler(this.LogWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
