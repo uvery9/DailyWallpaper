@@ -262,6 +262,8 @@ namespace DailyWallpaper
         public void Dispose()
         {
             notifyIcon.Visible = false;
+            _timerHelper.Dispose();
+            _exitTimeHelper.Dispose();
             notifyIcon.Dispose();
         }
         private void ActionRegister()

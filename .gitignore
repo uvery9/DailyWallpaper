@@ -8,6 +8,8 @@ Ps/
 
 #
 *.zip
+Output/
+DailyWallpaperComponents.wxs
 
 # User-specific files
 *.suo

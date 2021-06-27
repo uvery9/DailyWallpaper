@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="DailyWallpaper" Language="1033"
+           Version="1.0.0.0" Manufacturer="Jared DC"
+           UpgradeCode="57eb6063-c30d-4b56-a541-670867f2396d">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
+
+    <MajorUpgrade Schedule="afterInstallValidate" AllowDowngrades="yes" />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="low" />
+
+    <Property Id='ALLUSERS' Value='2' />
+    <Property Id='MSIINSTALLPERUSER' Value='1' />
+
+    <Feature Id="ProductFeature" Title="DailyWallpaper.Installer" Level="1">
+      <ComponentGroupRef Id="DailyWallpaperComponents" />
+      <ComponentRef Id="ApplicationShortcutDesktop" />
+      <ComponentRef Id="ApplicationShortcutProgramMenu" />
+    </Feature>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramMenuFolder">
+        <Component Id="ApplicationShortcutProgramMenu" Guid="d71a2680-bb35-4c93-9d8c-5d10acdf8707">
+          <Shortcut Id="ApplicationProgramMenuShortcut"
+                    Name="DailyWallpaper"
+                    Description="DailyWallpaper lets you preview any file by pressing the space bar."
+                    Target="[INSTALLFOLDER]DailyWallpaper.exe"
+                    WorkingDirectory="INSTALLFOLDER" />
+          <RemoveFolder Id="ProgramMenuFolder" On="uninstall" />
+          <RegistryValue
+            Root="HKCU"
+            Key="Software\DailyWallpaper"
+            Name="installed"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+        </Component>
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop">
+        <Component Id="ApplicationShortcutDesktop" Guid="22fe6a14-e8bd-4b98-8780-8ac9e4cfbf4d">
+          <Shortcut Id="ApplicationDesktopShortcut"
+                    Name="DailyWallpaper"
+                    Description="DailyWallpaper: Change the wallpaper daily from Bing,Spotlight or LocalPath."
+                    Target="[INSTALLFOLDER]DailyWallpaper.exe"
+                    WorkingDirectory="INSTALLFOLDER" />
+          <RemoveFolder Id="DesktopFolder" On="uninstall" />
+          <RegistryValue
+            Root="HKCU"
+            Key="Software\DailyWallpaper"
+            Name="installed"
+            Type="integer"
+            Value="1"
+            KeyPath="yes" />
+        </Component>
+      </Directory>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="DailyWallpaper" />
+      </Directory>
+    </Directory>
+  </Product>
+</Wix>
