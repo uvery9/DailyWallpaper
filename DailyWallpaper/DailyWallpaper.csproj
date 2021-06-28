@@ -180,12 +180,12 @@ set errorlevel=0</PreBuildEvent>
   <PropertyGroup>
     <PostBuildEvent>rm /s /q $(SolutionDir)Output   &gt;nul 2&gt;nul
 
-md $(SolutionDir)Output
+md "$(SolutionDir)Output"
 
 echo TargetDir=$(TargetDir)
 echo SolutionDirOutput=$(SolutionDir)Output
 
-xcopy $(TargetDir) $(SolutionDir)Output /y /e /i /q
+xcopy $(TargetDir)  "$(SolutionDir)Output"  /y /e /i /q
 
 del $(SolutionDir)Output\config*.ini &gt;nul 2&gt;nul
 
