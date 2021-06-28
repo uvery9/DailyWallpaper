@@ -73,7 +73,7 @@
 "$(WIX)bin\heat" dir "$(SolutionDir)Output" -dr INSTALLFOLDER -cg DailyWallpaperComponents -gg -g1 -sf -srd -sreg -var "var.OutputDir" -out "$(ProjectDir)DailyWallpaperComponents.wxs"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)OUTPUT"</PostBuildEvent>
+    <PostBuildEvent>copy "!(TargetPath)" "$(SolutionDir)OUTPUT"</PostBuildEvent>
   </PropertyGroup>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.
