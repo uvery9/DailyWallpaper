@@ -134,11 +134,15 @@ namespace DailyWallpaper
                     break;
 
                 case "localPath":
-                    Console.WriteLine("Scan localPath, StartTime:" + DateTime.Now.ToString());
+                    var start = DateTime.Now;
+                    Console.WriteLine("Scan localPath, StartTime:" + start.ToString());
+                    // very cost time. show add async function.
                     var localImage = new LocalImage(iniFile, 
                         iniFile.Read("localPathSetting", "Local"));
                     wallpaper = localImage.RandomSelectOne();
-                    Console.WriteLine("Scan localPath, EndTime:" + DateTime.Now.ToString());
+                    var end = DateTime.Now;
+                    Console.WriteLine("Scan localPath, EndTime:" + end.ToString());
+                    Console.WriteLine($"Scan localPath, Cost {(end-start).TotalSeconds}s:");
                     break;
             }
             if (!File.Exists(wallpaper))

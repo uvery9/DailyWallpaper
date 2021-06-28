@@ -33,17 +33,18 @@ namespace DailyWallpaper
             {
 				throw new DirectoryNotFoundException($"The folder MUST exists: {path}");
             }
-			this.path = path;
+            this.path = path;
 			this.ini = ini;
-			this.localPathScan = ini.GetCfgFromIni()["localPathScan"];
-			if (this.localPathScan.ToLower().Equals("auto")) {
-				this.update = LocalImage.Update.AUTO;
-			} else if (this.localPathScan.ToLower().Equals("no"))
+			localPathScan = ini.GetCfgFromIni()["localPathScan"];
+			if (localPathScan.ToLower().Equals("auto")) {
+				update = LocalImage.Update.AUTO;
+            }
+            else if (localPathScan.ToLower().Equals("no"))
             {
-				this.update = LocalImage.Update.NO;
+                update = LocalImage.Update.NO;
 			}
-			this.txtFile = Path.Combine(this.path, "_img_list.txt");
-			this.old_files = null;
+			txtFile = Path.Combine(this.path, "_img_list.txt");
+			old_files = null;
 	}
 
 		private bool ShoulditUpdate()
@@ -115,20 +116,27 @@ namespace DailyWallpaper
 					continue;
 				}
 				long length = new FileInfo(file).Length / 1024;
-				
 				string file_low = file.ToLower();
 				if (file_low.EndsWith(".jpg") || file_low.EndsWith(".jpeg") || file_low.EndsWith(".png"))
 				{
 					if (length > 100)
 					{
-						Bitmap img = new Bitmap(file);
-						// new FileInfo(file).
-						if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
-						{
-							files.Add(file);
-							if (print) { Console.WriteLine(file + ": " + length + "KB"); }
+						using (var img = new Bitmap(file)) { 
+							if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
+							{
+								files.Add(file);
+								if (print) { Console.WriteLine(file + ": " + length + "KB"); }
+							}
 						}
-						img.Dispose();
+						// 72s using FromFile
+						/*						using (var img = Image.FromFile(file))
+							{
+								if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
+								{
+									files.Add(file);
+									if (print) { Console.WriteLine(file + ": " + length + "KB"); }
+								}
+							}*/
 					}
 				}
 			}
