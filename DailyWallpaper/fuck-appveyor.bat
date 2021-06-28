@@ -1,10 +1,10 @@
 REM cd to project dir.
-REM FUCK
-echo "bin\Release\"
-RM /Q /S "..\OUTPUT"
+echo I should in project diretory
+ECHO COULD dir
+RMDIR /Q /S "..\OUTPUT"
 md "..\OUTPUT"
 copy "bin\Release\"  "..\OUTPUT" /y
 del "..\OUTPUT\config*.ini" 
 del "..\OUTPUT\*.log.txt"
-echo fuck appveyor.
+echo fuck appveyor: NO XCOPY.
 set errorlevel=0

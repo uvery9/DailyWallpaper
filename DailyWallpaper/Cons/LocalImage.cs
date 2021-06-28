@@ -152,6 +152,8 @@ namespace DailyWallpaper
 								return img_list
 						 */
 						// 74s
+						// using (var img = Image.FromFile(file))
+						// without below function: 0.027s
 						using (var img = new Bitmap(file)) { 
 							if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
 							{
@@ -159,15 +161,6 @@ namespace DailyWallpaper
 								if (print) { Console.WriteLine(file + ": " + length + "KB"); }
 							}
 						}
-						// 72s using FromFile
-						/*						using (var img = Image.FromFile(file))
-							{
-								if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
-								{
-									files.Add(file);
-									if (print) { Console.WriteLine(file + ": " + length + "KB"); }
-								}
-							}*/
 					}
 				}
 			}
