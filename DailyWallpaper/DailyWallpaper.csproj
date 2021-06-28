@@ -179,7 +179,9 @@ set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>rm /s /q "$(SolutionDir)Output\" &gt;nul 2&gt;nul
-echo "$(ProjectDir)$(OutDir)"
+echo ProjectDir=$(ProjectDir)
+echo OUTDIR=$(OutDir)
+echo SolutionDir=$(SolutionDir)
 xcopy /e /q /i /h /y /d "$(ProjectDir)$(OutDir)" "$(SolutionDir)Output\"
 del "$(SolutionDir)Output\config*.ini" &gt;nul 2&gt;nul
 del "$(SolutionDir)Output\*.log.txt" &gt;nul 2&gt;nul
