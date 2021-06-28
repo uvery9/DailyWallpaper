@@ -19,7 +19,7 @@ build:
 artifacts:
 - path: DailyWallpaper\bin\Release
   name: Release
-- path: ..\OUTPUT\DailyWallpaper.Installer.msi
+- path: DailyWallpaper.Installer\bin\Release\DailyWallpaper.Installer.msi
   name: DailyWallpaper.Installer.msi
   
 on_success:
