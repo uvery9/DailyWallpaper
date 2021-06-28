@@ -178,13 +178,11 @@
 set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>rm /s /q $(ProjectDir)Output   &gt;nul 2&gt;nul
-echo TargetDir=$(TargetDir)
-echo ProjectDir=$(ProjectDir)
-
-xcopy $(TargetDir)  "$(ProjectDir)Output"  /y /e /i /q
-del $(SolutionDir)Output\config*.ini &gt;nul 2&gt;nul
-del $(SolutionDir)Output\*.log.txt &gt;nul 2&gt;nul
+    <PostBuildEvent>cd $(ProjectDir)
+call "$(ProjectDir)fuck-appveyor.bat"
+REM xcopy "$(TargetDir)" "$(SolutionDir)OUTPUT" /q /e /y /i
+REM del "$(SolutionDir)OUTPUT\config*.ini" 
+REM del "$(SolutionDir)OUTPUT\*.log.txt"
 
 set errorlevel=0
 </PostBuildEvent>
