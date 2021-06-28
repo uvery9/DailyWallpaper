@@ -163,7 +163,9 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_QuitMenuItem);
             _viewWindow = View.LogWindow.GetInstance(Properties.Resources.icon32x32);
             _viewWindow.FormClosing += _viewWindow_FormClosing;
-            _viewWindow.Load += new System.EventHandler(_viewWindow_Load);
+            // _viewWindow.Load += new System.EventHandler(_viewWindow_Load);
+            _viewWindow.clearButton.Click += new System.EventHandler(clearButton_Click);
+            _viewWindow.saveToFileButton.Click += new System.EventHandler(saveToFileButton_Click);
         }
         private void AddDivIntoPanel(Panel panel,
                                     RadioButton radioButton,
@@ -430,6 +432,7 @@ namespace DailyWallpaper
         private bool setWallpaperSucceed = false;
         private View.LogWindow _viewWindow;
         private bool useTextBoxWriter;
+        private bool iStextFromFileNew = true;
 
     }
 }

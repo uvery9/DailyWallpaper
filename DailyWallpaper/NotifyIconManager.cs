@@ -197,11 +197,13 @@ namespace DailyWallpaper
             bool res;
             if (useTextBoxWriter)
             {
+                iStextFromFileNew = false;
                 res = await DailyWallpaperCons.ShowDialog(true, _viewWindow.textWriter);
             }
             else
             {
-                res = await DailyWallpaperCons.ShowDialog();
+                iStextFromFileNew = true;
+                res = await DailyWallpaperCons.ShowDialog();  
             }
             
             System.Threading.Thread.Sleep(500);
@@ -375,19 +377,64 @@ namespace DailyWallpaper
             {
                 e.Cancel = true;
                 useTextBoxWriter = false;
+                //_viewWindow.WindowState = FormWindowState.Minimized;
+                //_viewWindow.ShowInTaskbar = false;
                 _viewWindow.Hide();
+                _viewWindow.textBoxCons.Text = "";
             }
         }
 
         private void _viewWindow_Load(object sender, EventArgs e)
         {
-            useTextBoxWriter = true;
+            
+        }
+
+        private void clearButton_Click(object sender, EventArgs e)
+        {
+            _viewWindow.textBoxCons.Text = "";
+        }
+
+        private void saveToFileButton_Click(object sender, EventArgs e)
+        {
+            if (_viewWindow.textBoxCons.Text.Length < 1)
+            {
+                return;
+            }
+            using (var saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.InitialDirectory =
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                saveFileDialog.Filter = "Txt files (*.txt)|*.txt";
+                // saveFileDialog.FilterIndex = 2;
+                saveFileDialog.RestoreDirectory = true;
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    using (var stream = saveFileDialog.OpenFile())
+                    {
+                        // Code to write the stream goes here.
+                        byte[] byteArray = System.Text.Encoding.Default.GetBytes(_viewWindow.textBoxCons.Text);
+                        stream.Write(byteArray, 0, byteArray.Length);
+                    }
+                }
+            }
         }
 
         private void _Icon_ShowLogMenuItem_Click(object sender, EventArgs e)
         {
             // Process.Start(ProjectInfo.logFile);
+            useTextBoxWriter = true;
             _viewWindow.Show();
+            if (iStextFromFileNew)
+            {
+                if (File.Exists(ProjectInfo.logFile))
+                {
+                    var textBoxCons = File.ReadAllText(ProjectInfo.logFile);
+                    _viewWindow.textBoxCons.Text = textBoxCons;
+                    // _viewWindow.textBoxCons
+                    _viewWindow.textBoxCons.Select(_viewWindow.textBoxCons.TextLength, 0);//光标定位到文本最后
+                    _viewWindow.textBoxCons.ScrollToCaret();
+                }
+            }  
         }
 
         private void _Icon_LocalPathMenuItem_Click(object sender, EventArgs e)

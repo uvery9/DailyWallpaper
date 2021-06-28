@@ -54,7 +54,8 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>DailyWallpaper.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -142,6 +143,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="res\DailyWallpaper256x256.ico" />
     <Content Include="Translations.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -157,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\icon32x32_ban.ico" />
-    <None Include="res\DailyWallpaper.ico" />
     <None Include="res\icon32x32.ico" />
   </ItemGroup>
   <ItemGroup>

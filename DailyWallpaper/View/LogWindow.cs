@@ -31,40 +31,13 @@ namespace DailyWallpaper.View
         {
             InitializeComponent();
             this.Icon = icon;
-            textWriter = new TextBoxStreamWriter(textBox1);
+            textWriter = new TextBoxStreamWriter(textBoxCons);
 
         }
 
         private void LogWindow_Load(object sender, EventArgs e)
         {
 
-        }
-        public void SetConsToTextBox(bool set = true)
-        {
-            if (set)
-            {
-                Console.Out.Flush();
-                Console.Error.Flush();
-                textBox1.Text = "";
-                Console.SetOut(textWriter);
-                Console.SetError(textWriter);
-            }
-            else
-            {
-                textWriter.Flush();
-                Console.Out.Close();
-                Console.Error.Close();
-                
-                // redirect stderr to default.
-                var standardError = new StreamWriter(Console.OpenStandardError());
-                standardError.AutoFlush = true;
-                Console.SetError(standardError);
-
-                // redirect stdout to default.
-                var standardOutput = new StreamWriter(Console.OpenStandardOutput());
-                standardOutput.AutoFlush = true;
-                Console.SetOut(standardOutput);
-            }
         }
     }
     internal class TextBoxStreamWriter : TextWriter

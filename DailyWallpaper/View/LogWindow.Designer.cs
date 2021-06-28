@@ -29,23 +29,51 @@ namespace DailyWallpaper.View
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxCons = new System.Windows.Forms.TextBox();
+            this.clearButton = new System.Windows.Forms.Button();
+            this.saveToFileButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBox1
+            // textBoxCons
             // 
-            this.textBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(1013, 478);
-            this.textBox1.TabIndex = 0;
+            this.textBoxCons.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
+            this.textBoxCons.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxCons.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBoxCons.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.textBoxCons.Location = new System.Drawing.Point(0, 0);
+            this.textBoxCons.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxCons.Multiline = true;
+            this.textBoxCons.Name = "textBoxCons";
+            this.textBoxCons.ReadOnly = true;
+            this.textBoxCons.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxCons.Size = new System.Drawing.Size(1013, 451);
+            this.textBoxCons.TabIndex = 0;
+            // 
+            // clearButton
+            // 
+            this.clearButton.AutoSize = true;
+            this.clearButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
+            this.clearButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.clearButton.Location = new System.Drawing.Point(666, 433);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(83, 41);
+            this.clearButton.TabIndex = 1;
+            this.clearButton.Text = "Clear";
+            this.clearButton.UseVisualStyleBackColor = false;
+
+            // 
+            // saveToFileButton
+            // 
+            this.saveToFileButton.AutoSize = true;
+            this.saveToFileButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
+            this.saveToFileButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
+            this.saveToFileButton.Location = new System.Drawing.Point(783, 433);
+            this.saveToFileButton.Name = "saveToFileButton";
+            this.saveToFileButton.Size = new System.Drawing.Size(133, 41);
+            this.saveToFileButton.TabIndex = 3;
+            this.saveToFileButton.Text = "Save to file";
+            this.saveToFileButton.UseVisualStyleBackColor = false;
+
             // 
             // LogWindow
             // 
@@ -53,7 +81,9 @@ namespace DailyWallpaper.View
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlText;
             this.ClientSize = new System.Drawing.Size(1013, 481);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.saveToFileButton);
+            this.Controls.Add(this.clearButton);
+            this.Controls.Add(this.textBoxCons);
             this.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -61,7 +91,6 @@ namespace DailyWallpaper.View
             this.Name = "LogWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LogWindow";
-            // this.Load += new System.EventHandler(this.LogWindow_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -69,6 +98,8 @@ namespace DailyWallpaper.View
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        public System.Windows.Forms.TextBox textBoxCons;
+        public System.Windows.Forms.Button clearButton;
+        public System.Windows.Forms.Button saveToFileButton;
     }
 }
