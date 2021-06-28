@@ -18,7 +18,9 @@ build:
   verbosity: minimal
 artifacts:
 - path: output\DailyWallpaper.Installer.msi
-  name: DailyWallpaper.Installer.msi
+  name: DailyWallpaper.Installer
+- path: DailyWallpaper\bin\Release
+  name: DailyWallpaper.Protable
   
 on_success:
     - echo succeed
