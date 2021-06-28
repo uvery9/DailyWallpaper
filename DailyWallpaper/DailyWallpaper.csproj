@@ -179,11 +179,7 @@ set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>rm /s /q $(SolutionDir)Output   &gt;nul 2&gt;nul
-echo xcopy ...
-xcopy /?
-echo xcopy +++
-dir $(TargetDir)
-xcopy /e /q /i /h /y /d  $(TargetDir)  $(SolutionDir)Output
+xcopy /e /q /i  /y /d  $(TargetDir)  $(SolutionDir)Output
 del $(SolutionDir)Output\config*.ini &gt;nul 2&gt;nul
 del $(SolutionDir)Output\*.log.txt &gt;nul 2&gt;nul
 set errorlevel=0
