@@ -19,8 +19,6 @@ build:
 artifacts:
 - path: output\DailyWallpaper.Installer.msi
   name: DailyWallpaper.Installer.msi
-- path: DailyWallpaper\bin\Release
-  name: Release
   
 on_success:
     - echo succeed
