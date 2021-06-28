@@ -25,7 +25,7 @@ There may be many syntax errors in the **Translations.config**, help me improve 
 ### Tray Icon
 **icon will change cause the status**
 
-<img src="https://user-images.githubusercontent.com/42594123/123409664-0436f300-d5e1-11eb-83fd-8ea3e678bfcd.png" alt="icon_status" style="zoom: 30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123614575-0d210200-d837-11eb-8c4f-f9d960bee1e8.png" alt="icon_status" style="zoom: 30%;" />
 
 
 
