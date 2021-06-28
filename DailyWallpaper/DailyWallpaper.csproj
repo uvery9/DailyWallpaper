@@ -178,11 +178,12 @@
 set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>rm /s /q "$(SolutionDir)Output\" &gt;nul 2&gt;nul
-xcopy /e /q /i /h /y /d $(TargetDir)  $(SolutionDir)Output\
+    <PostBuildEvent>rm /s /q $(SolutionDir)Output   &gt;nul 2&gt;nul
+xcopy /e /q /i /h /y /d  $(TargetDir)  $(SolutionDir)Output
 del $(SolutionDir)Output\config*.ini &gt;nul 2&gt;nul
 del $(SolutionDir)Output\*.log.txt &gt;nul 2&gt;nul
-set errorlevel=0</PostBuildEvent>
+set errorlevel=0
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
