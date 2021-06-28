@@ -3,7 +3,7 @@
 
 [![license](https://img.shields.io/github/license/QL-Win/QuickLook.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 [![Github All Releases](https://img.shields.io/github/downloads/QL-Win/QuickLook/total.svg)](https://github.com/JaredDC/DailyWallpaperUI/releases)
-[![GitHub release](https://img.shields.io/github/release/QL-Win/QuickLook.svg)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
+[![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
 
 [![AppVeyor](https://img.shields.io/appveyor/ci/xupefei/QuickLook.svg)](https://ci.appveyor.com/project/JaredDC/dailywallpaperui)
 [![LatestProtable](https://img.shields.io/github/release/QL-Win/QuickLook.svg)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip)
