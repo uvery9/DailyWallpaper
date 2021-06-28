@@ -282,7 +282,7 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
             notifyIcon.ContextMenuStrip.Closing += ContextMenuStrip_Closing;
             notifyIcon.DoubleClick += notifyIcon_DoubleClick;
-            notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
+            // notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
             notifyIcon.MouseUp += notifyIcon_MouseUp;
         }
         private void InitializeCheckedAndTimer()

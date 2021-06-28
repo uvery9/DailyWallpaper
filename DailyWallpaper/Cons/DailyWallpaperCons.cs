@@ -129,13 +129,16 @@ namespace DailyWallpaper
                     break;
 
                 case "Spotlight":
+                    
                     wallpaper = new OnlineImage(iniFile).Spotlight();
                     break;
 
                 case "localPath":
+                    Console.WriteLine("Scan localPath, StartTime:" + DateTime.Now.ToString());
                     var localImage = new LocalImage(iniFile, 
                         iniFile.Read("localPathSetting", "Local"));
                     wallpaper = localImage.RandomSelectOne();
+                    Console.WriteLine("Scan localPath, EndTime:" + DateTime.Now.ToString());
                     break;
             }
             if (!File.Exists(wallpaper))

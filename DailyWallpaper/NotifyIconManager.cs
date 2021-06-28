@@ -382,7 +382,7 @@ namespace DailyWallpaper
                 //_viewWindow.WindowState = FormWindowState.Minimized;
                 //_viewWindow.ShowInTaskbar = false;
                 _viewWindow.Hide();
-                _viewWindow.textBoxCons.Text = "";
+                // _viewWindow.textBoxCons.Text = "";
             }
         }
 
