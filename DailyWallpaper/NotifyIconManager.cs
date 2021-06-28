@@ -324,6 +324,7 @@ namespace DailyWallpaper
             {
                 _Icon_BingMenuItem.Checked = false;
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = false;
+                _Icon_BingAddWaterMarkMenuItem.Visible = false;
                 _ini.UpdateIniItem("bing", "no", "Online");
             }
             else
@@ -331,6 +332,7 @@ namespace DailyWallpaper
                 _Icon_BingMenuItem.Checked = true;
                 _ini.UpdateIniItem("bing", "yes", "Online");
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = true;
+                _Icon_BingAddWaterMarkMenuItem.Visible = true;
                 notifyIcon.ContextMenuStrip.Show();
             }
         }
@@ -407,6 +409,8 @@ namespace DailyWallpaper
                 saveFileDialog.Filter = "Txt files (*.txt)|*.txt";
                 // saveFileDialog.FilterIndex = 2;
                 saveFileDialog.RestoreDirectory = true;
+                saveFileDialog.FileName = ProjectInfo.exeName + "_" +
+                DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     using (var stream = saveFileDialog.OpenFile())

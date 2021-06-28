@@ -54,8 +54,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>res\DailyWallpaper256x256.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -169,7 +168,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DailyWallpaper.ico" />
     <None Include="res\icon32x32_timer.ico" />
     <None Include="res\icon32x32_exclamation.ico" />
     <None Include="res\icon32x32_good.ico" />
