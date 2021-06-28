@@ -182,6 +182,7 @@ set errorlevel=0</PreBuildEvent>
 echo xcopy ...
 xcopy /?
 echo xcopy +++
+dir $(TargetDir)
 xcopy /e /q /i /h /y /d  $(TargetDir)  $(SolutionDir)Output
 del $(SolutionDir)Output\config*.ini &gt;nul 2&gt;nul
 del $(SolutionDir)Output\*.log.txt &gt;nul 2&gt;nul
