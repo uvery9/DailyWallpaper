@@ -1,5 +1,7 @@
 # DailyWallpaperUI
-[DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI): Change the wallpaper daily from Bing,Spotlight or LocalPath
+
+
+[DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI)[![CodeSize](https://img.shields.io/github/repo-size/JaredDC/DailyWallpaperUI)]: Change the wallpaper daily from Bing,Spotlight or LocalPath
 
 [![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
