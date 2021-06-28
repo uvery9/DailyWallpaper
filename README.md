@@ -7,9 +7,9 @@
 
 [![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui)](https://ci.appveyor.com/project/JaredDC/dailywallpaperui)
 
-[![LatestProtable](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui?style=for-the-badge)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip)
+[![LatestProtable](https://img.shields.io/badge/download-protable-brightgreen)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip)
 
-[![LatestInstaller](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui?style=for-the-badge)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/OUTPUT%2FDailyWallpaper.Installer.msi)
+[![LatestInstaller](https://img.shields.io/badge/download-installer-important)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/OUTPUT%2FDailyWallpaper.Installer.msi)
 
 [![LatestInstaller](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui?style=for-the-badge)](https://ci.appveyor.com/project///build/artifacts)
 
