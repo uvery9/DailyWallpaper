@@ -1,17 +1,11 @@
 # DailyWallpaperUI
 
 
-[DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI)[![CodeSize](https://img.shields.io/github/repo-size/JaredDC/DailyWallpaperUI)]: Change the wallpaper daily from Bing,Spotlight or LocalPath
+[DailyWallpaper](https://github.com/JaredDC/DailyWallpaperUI): Change the wallpaper daily from Bing,Spotlight or LocalPath
 
-[![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html)
+[![Size](https://img.shields.io/github/repo-size/JaredDC/DailyWallpaperUI)](https://github.com/JaredDC/DailyWallpaperUI) [![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
 
-[![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
-
-[![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui)](https://ci.appveyor.com/project/JaredDC/dailywallpaperui)
-
-[![LatestProtable](https://img.shields.io/badge/download-protable-brightgreen)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip)
-
-[![LatestInstaller](https://img.shields.io/badge/download-installer-important)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/OUTPUT%2FDailyWallpaper.Installer.msi)
+[![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui)](https://ci.appveyor.com/project/JaredDC/dailywallpaperui) [![LatestProtable](https://img.shields.io/badge/download-protable-brightgreen)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip) [![LatestInstaller](https://img.shields.io/badge/download-installer-important)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/OUTPUT%2FDailyWallpaper.Installer.msi)
 
 
 ## User Interface
