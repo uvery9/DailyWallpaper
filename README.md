@@ -5,13 +5,12 @@
 [![Github All Releases](https://img.shields.io/github/downloads/JaredDC/DailyWallpaperUI/total)](https://github.com/JaredDC/DailyWallpaperUI/releases)
 [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
 
+
 [![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui)](https://ci.appveyor.com/project/JaredDC/dailywallpaperui)
 
 [![LatestProtable](https://img.shields.io/badge/download-protable-brightgreen)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip)
 
 [![LatestInstaller](https://img.shields.io/badge/download-installer-important)](https://ci.appveyor.com/api/buildjobs/q5w21fr61ksn7wc8/artifacts/OUTPUT%2FDailyWallpaper.Installer.msi)
-
-[![LatestInstaller](https://img.shields.io/appveyor/build/JaredDC/dailywallpaperui?style=for-the-badge)](https://ci.appveyor.com/project///build/artifacts)
 
 
 ## User Interface
