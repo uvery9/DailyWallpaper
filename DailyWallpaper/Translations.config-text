@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Translations>
+  <ar>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START> DailyWallpaper قيد التشغيل في الخلفية. </APP_START>
+    <APP_SECOND> DailyWallpaper قيد التشغيل بالفعل </APP_SECOND>
+    <APP_PATH_NOT_WRITABLE> مسار البيانات "{0}" غير قابل للكتابة. يرجى التحقق مما إذا كان لديك الإذن الكافي. </APP_PATH_NOT_WRITABLE>
+    <Icon_RunAtStartup> تشغيل عند بدء التشغيل </Icon_RunAtStartup>
+    <Icon_ToolTip> الإصدار DailyWallpaper {0} </Icon_ToolTip>
+    <Icon_ChangeWallpaper> تغيير الخلفية </Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit> انقر ، اختر عشوائيًا من القائمة المحددة وقم بتغيير الخلفية </Icon_ChangeWallpaperTit>
+    <Icon_Bing> بنج </Icon_Bing>
+    <Icon_BingTit> إضافة Bing إلى قائمة عشوائية </Icon_BingTit>
+    <Icon_LocalPath> مسار محلي </Icon_LocalPath>
+    <Icon_LocalPathTit> إضافة مسار محلي إلى قائمة عشوائية </Icon_LocalPathTit>
+    <Icon_LocalPathSetting> إعداد المسار المحلي </Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit> تعيين المسار المحلي </Icon_LocalPathSettingTit>
+    <Icon_Spotlight> Windows Spotlight </Icon_Spotlight>
+    <Icon_SpotlightTit> إضافة Windows Spotlight إلى قائمة عشوائية </Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys> تعطيل مفاتيح الاختصارات </Icon_DisableShortcutKeys>
+    <Icon_Options> خيارات ... </Icon_Options>
+    <Icon_DonateAndSupport> تبرع وادعم ... </Icon_DonateAndSupport>
+    <Icon_Help>يساعد </Icon_Help>
+    <Icon_OpenOfficialWebsite> فتح الموقع الرسمي ... </Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate> تحقق من التحديث </Icon_CheckUpdate>
+    <Icon_IssueAndFeedback> المشكلة والملاحظات ... </Icon_IssueAndFeedback>
+    <Icon_ShowLog> إظهار السجل </Icon_ShowLog>
+    <Icon_About> حول </Icon_About>
+    <Icon_Quit> إنهاء </Icon_Quit>
+    <TrayIcon_ShortcutKeys> (DoubleClick رمز العلبة) </TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed> تم ضبط الخلفية بنجاح: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed> فشل تعيين الخلفية! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting> حدد هذا المجلد: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation> شكرا لدعمكم </Notify_ThanksForDonation>
+    <Notify_RunAtStartup> تهانينا! لقد قمت بتمكين وظيفة التشغيل التلقائي عند بدء التشغيل. {0} سوف يمنحك هذا تجربة أفضل! </Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper> الفاصل الزمني لتغيير خلفية الشاشة تلقائيًا ، كل </Icon_AutoChangeWallpaper>
+    <Icon_Unit> ساعات </Icon_Unit>
+    <Icon_Custom> مخصص </Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture> تنزيل صور Bing دائمًا </Icon_AlwaysDownLoadBingPicture>
+  </ar>
+  <de>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper läuft nun im Hintergrund</APP_START>
+    <APP_SECOND>DailyWallpaper wird bereits ausgeführt</APP_SECOND>
+    <APP_PATH_NOT_WRITABLE>Keine Schreibrechte für das Verzeichnis "{0}". Bitte Berechtigungen prüfen.</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>Sie haben die neueste Version</Update_NoUpdate>
+    <Update_Found>Update auf v{0} verfügbar, hier klicken um die Downloadseite zu öffnen</Update_Found>
+    <Update_Error>Beim Suchen nach Updates ist ein Fehler aufgetreten: {0}</Update_Error>
+    <Icon_RunAtStartup>Beim Start ausführen </Icon_RunAtStartup>
+    <Icon_ToolTip>DailyWallpaper v{0}</Icon_ToolTip>
+    <Icon_ChangeWallpaper>Hintergrund ändern</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>Klicken, zufällig aus der Checkliste auswählen und das Hintergrundbild ändern</Icon_ChangeWallpaperTit>
+    <Icon_Bing>Bing</Icon_Bing>
+    <Icon_BingTit>Bing zur Zufallsliste hinzufügen</Icon_BingTit>
+    <Icon_LocalPath>Lokaler Pfad</Icon_LocalPath>
+    <Icon_LocalPathTit>Lokalen Pfad zur Zufallsliste hinzufügen</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>Lokale Pfadeinstellung</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>Lokalen Pfad festlegen</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Windows-Spotlight</Icon_Spotlight>
+    <Icon_SpotlightTit>Windows Spotlight zur Zufallsliste hinzufügen</Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys>ShortcutKeys deaktivieren</Icon_DisableShortcutKeys>
+    <Icon_Options>Optionen...</Icon_Options>
+    <Icon_DonateAndSupport>Spenden und Unterstützen...</Icon_DonateAndSupport>
+    <Icon_Help>Hilfe</Icon_Help>
+    <Icon_OpenOfficialWebsite>Offene offizielle Website öffnen...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>Aktualisierung prüfen</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>Problem und Feedback...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>Protokoll anzeigen</Icon_ShowLog>
+    <Icon_About>Über</Icon_About>
+    <Icon_Quit>Beenden</Icon_Quit>
+    <TrayIcon_ShortcutKeys>(Doppelklicken Sie auf das Taskleistensymbol)</TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed>Hintergrund erfolgreich eingestellt: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>Das Hintergrundbild konnte nicht eingestellt werden! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting>Diesen Ordner ausgewählt: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation>Danke für Ihre Unterstützung!</Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Herzlichen Glückwunsch! Sie haben die automatische Startfunktion aktiviert. {0}Das wird dir ein besseres Erlebnis bieten!</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>Das Zeitintervall des automatischen Hintergrundbildwechsels, alle </Icon_AutoChangeWallpaper>
+    <Icon_Unit>Stunden</Icon_Unit>
+    <Icon_Custom> Benutzerdefiniert</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>Bing-Bilder immer herunterladen</Icon_AlwaysDownLoadBingPicture>
+  </de>
+  <en>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper is running in the background.</APP_START>
+    <APP_SECOND>DailyWallpaper is already running</APP_SECOND>
+    <APP_PATH_NOT_WRITABLE>Data path "{0}" is not writable. Please check if you have sufficient permission.</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>You are now on the latest version.</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} is released. Click here to open the download page.</Update_Found>
+    <Update_Error>Error occured when checking for updates: {0}</Update_Error>
+    <Icon_RunAtStartup>Run at startup (&amp;S)</Icon_RunAtStartup>
+    <Icon_ToolTip>DailyWallpaper v{0}</Icon_ToolTip>
+    <Icon_ChangeWallpaper>Change Wallpaper</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>Click, Randomly select from the checked list and change the wallpaper</Icon_ChangeWallpaperTit>
+    <Icon_Bing>Bing</Icon_Bing>
+    <Icon_BingTit>Add Bing to random list</Icon_BingTit>
+    <Icon_LocalPath>Local Path</Icon_LocalPath>
+    <Icon_LocalPathTit>Add Local Path to random list</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>Local Path Setting</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>Set Local Path</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Windows Spotlight</Icon_Spotlight>
+    <Icon_SpotlightTit>Add Windows Spotlight to random list</Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys>Disable ShortcutKeys</Icon_DisableShortcutKeys>
+    <Icon_Options>Options...</Icon_Options>
+    <Icon_DonateAndSupport>Donate and Support...</Icon_DonateAndSupport>
+    <Icon_Help>Help</Icon_Help>
+    <Icon_OpenOfficialWebsite>Open official website...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>Check Update</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>Issue and Feedback...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>Show log</Icon_ShowLog>
+    <Icon_About>About</Icon_About>
+    <Icon_Quit>Quit (&amp;Q)</Icon_Quit>
+    <TrayIcon_ShortcutKeys>(DoubleClick the tray icon)</TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed>Wallpaper setted succeed, click me to open: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>Failed to set wallpaper, click me to see what happen, or Help->Show Log</Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting>Selected this folder: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation>Thanks for your support!</Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Congratulations! you have enabled the automatic run at startup function. {0}This will give you a better experience!</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>The time interval of automatic wallpaper change, every </Icon_AutoChangeWallpaper>
+    <Icon_Unit>hours</Icon_Unit>
+    <Icon_Custom>Custom</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>Always download Bing picture</Icon_AlwaysDownLoadBingPicture>
+    <Icon_BingAddWaterMark>Add watermark to Bing</Icon_BingAddWaterMark>
+    <Notify_AtLeastSelectOneFeature>At least select one feature! such as: Windows Spotlight</Notify_AtLeastSelectOneFeature>
+  </en>
+  <es>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper está funcionando en segundo plano.</APP_START>
+    <APP_SECOND>DailyWallpaper ya está funcionando en segundo plano</APP_SECOND>
+    <APP_PATH_NOT_WRITABLE>No se puede escribir en la ruta "{0}". Por favor, compruebe si tiene suficientes permisos.</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>Está usando la última versión.</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} está disponible. Haga clic aquí para abrir la página de descarga.</Update_Found>
+    <Update_Error>Ocurrió un error al buscar actualizaciones: {0}</Update_Error>
+    <Icon_RunAtStartup> Ejecutar al inicio </Icon_RunAtStartup>
+    <Icon_ToolTip> DailyWallpaper v {0} </Icon_ToolTip>
+    <Icon_ChangeWallpaper> Cambiar fondo de pantalla </Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit> Haga clic, seleccione aleatoriamente de la lista marcada y cambie el fondo de pantalla </Icon_ChangeWallpaperTit>
+    <Icon_Bing> Bing </Icon_Bing>
+    <Icon_BingTit> Agregar Bing a la lista aleatoria </Icon_BingTit>
+    <Icon_LocalPath> Ruta local </Icon_LocalPath>
+    <Icon_LocalPathTit> Agregar ruta local a la lista aleatoria </Icon_LocalPathTit>
+    <Icon_LocalPathSetting> Configuración de ruta local </Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit> Establecer ruta local </Icon_LocalPathSettingTit>
+    <Icon_Spotlight> Destacado de Windows </Icon_Spotlight>
+    <Icon_SpotlightTit> Agregar Windows Spotlight a la lista aleatoria </Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys> Deshabilitar ShortcutKeys </Icon_DisableShortcutKeys>
+    <Icon_Options> Opciones ... </Icon_Options>
+    <Icon_DonateAndSupport> Done y apoye ... </Icon_DonateAndSupport>
+    <Icon_Help> Ayuda </Icon_Help>
+    <Icon_OpenOfficialWebsite> Abrir sitio web oficial ... </Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate> Comprobar actualización </Icon_CheckUpdate>
+    <Icon_IssueAndFeedback> Problema y comentarios ... </Icon_IssueAndFeedback>
+    <Icon_ShowLog> Mostrar registro </Icon_ShowLog>
+    <Icon_About> Acerca de </Icon_About>
+    <Icon_Quit> Salir </Icon_Quit>
+    <TrayIcon_ShortcutKeys> (Haga doble clic en el icono de la bandeja) </TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed> Fondo de pantalla configurado correctamente: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed> ¡No se pudo establecer el fondo de pantalla! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting> Seleccionó esta carpeta: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation> ¡Gracias por su apoyo! </Notify_ThanksForDonation>
+    <Notify_RunAtStartup> ¡Felicitaciones! Ha habilitado la función de ejecución automática al inicio. {0} ¡Esto le brindará una mejor experiencia! </Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>El intervalo de tiempo del cambio automático de fondo de pantalla, cada</Icon_AutoChangeWallpaper>
+    <Icon_Unit>horas</Icon_Unit>
+    <Icon_Custom>Personalizado</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>Descargar siempre imágenes de Bing</Icon_AlwaysDownLoadBingPicture>
+  </es>
+  <fr>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper s'exécute en tâche de fond.</APP_START>
+    <APP_SECOND>DailyWallpaper s'exécute déjà en tâche de fond</APP_SECOND>
+	  <APP_PATH_NOT_WRITABLE>Le chemin de données "{0}" n'est pas accessible en écriture. Veuillez vérifier si vous disposez des autorisations suffisantes.</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>Vous êtes maintenant sur la dernière version.</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} est disponible. Cliquez ici pour ouvrir la page de téléchargement.</Update_Found>
+    <Update_Error>Une erreur s'est produite lors de la vérification des mises à jour : {0}</Update_Error>
+    <Icon_RunAtStartup>Exécuter au démarrage </Icon_RunAtStartup>
+    <Icon_ToolTip>DailyWallpaper v{0}</Icon_ToolTip>
+    <Icon_ChangeWallpaper>Changer de fond d'écran</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>Cliquez, sélectionnez au hasard dans la liste cochée et changez le fond d'écran</Icon_ChangeWallpaperTit>
+    <Icon_Bing>Bing</Icon_Bing>
+    <Icon_BingTit>Ajouter Bing à une liste aléatoire</Icon_BingTit>
+    <Icon_LocalPath>Chemin local</Icon_LocalPath>
+    <Icon_LocalPathTit>Ajouter un chemin local à une liste aléatoire</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>Paramètre de chemin local</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>Définir le chemin local</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Spot Windows</Icon_Spotlight>
+    <Icon_SpotlightTit>Ajouter Windows Spotlight à une liste aléatoire</Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys>Désactiver les touches de raccourci</Icon_DisableShortcutKeys>
+    <Icon_Options>Options...</Icon_Options>
+    <Icon_DonateAndSupport>Faire un don et soutenir...</Icon_DonateAndSupport>
+    <Icon_Help>Aide</Icon_Help>
+    <Icon_OpenOfficialWebsite>Ouvrir le site officiel...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>Vérifier la mise à jour</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>Problème et commentaires...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>Afficher le journal</Icon_ShowLog>
+    <Icon_About>À propos</Icon_About>
+    <Icon_Quit>Quitter</Icon_Quit>
+    <TrayIcon_ShortcutKeys>(DoubleCliquez sur l'icône de la barre d'état système)</TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed>Le papier peint a réussi : </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>Impossible de définir le fond d'écran ! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting>Sélectionné ce dossier : </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation>Merci pour votre soutien !</Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Félicitations ! vous avez activé la fonction d'exécution automatique au démarrage. {0}Cela vous offrira une meilleure expérience !</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>L'intervalle de temps du changement automatique de fond d'écran, tous les</Icon_AutoChangeWallpaper>
+    <Icon_Unit>Heures</Icon_Unit>
+    <Icon_Custom>Personnalisé</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>Toujours télécharger des images Bing</Icon_AlwaysDownLoadBingPicture>
+  </fr>
+  <it>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper è in esecuzione in secondo piano.</APP_START>
+    <APP_SECOND>DailyWallpaper è già in esecuzione</APP_SECOND>
+    <APP_PATH_NOT_WRITABLE>Non è possibile scrivere nel percorso "{0}". Assicurati di avere i permessi necessari.</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>Stai usando l'ultima versione.</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} è disponibile. Fai click qui per aprire la pagina di download.</Update_Found>
+    <Update_Error>Si è verificato un errore durante la verifica degli aggiornamenti: {0}</Update_Error>
+    <Icon_RunAtStartup>Esegui all'avvio </Icon_RunAtStartup>
+    <Icon_ToolTip>DailyWallpaper v{0}</Icon_ToolTip>
+    <Icon_ChangeWallpaper>Cambia sfondo</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>Fai clic, seleziona a caso dall'elenco selezionato e cambia lo sfondo</Icon_ChangeWallpaperTit>
+    <Icon_Bing>Bing</Icon_Bing>
+    <Icon_BingTit>Aggiungi Bing all'elenco casuale</Icon_BingTit>
+    <Icon_LocalPath>Percorso locale</Icon_LocalPath>
+    <Icon_LocalPathTit>Aggiungi percorso locale all'elenco casuale</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>Impostazione percorso locale</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>Imposta percorso locale</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Windows Spotlight</Icon_Spotlight>
+    <Icon_SpotlightTit>Aggiungi Windows Spotlight a un elenco casuale</Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys>Disabilita i tasti di scelta rapida</Icon_DisableShortcutKeys>
+    <Icon_Options>Opzioni...</Icon_Options>
+    <Icon_DonateAndSupport>Dona e sostieni...</Icon_DonateAndSupport>
+    <Icon_Help>Aiuto</Icon_Help>
+    <Icon_OpenOfficialWebsite>Apri sito ufficiale...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>Verifica aggiornamento</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>Problema e feedback...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>Mostra registro</Icon_ShowLog>
+    <Icon_About>Informazioni</Icon_About>
+    <Icon_Quit>Esci</Icon_Quit>
+    <TrayIcon_ShortcutKeys>(Fai doppio clic sull'icona nella barra delle applicazioni)</TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed>Sfondo impostato correttamente: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>Impossibile impostare lo sfondo! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting>Selezionata questa cartella: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation>Grazie per il tuo supporto!</Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Congratulazioni! hai abilitato la funzione di esecuzione automatica all'avvio. {0}Questo ti darà un'esperienza migliore!</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>L'intervallo di tempo per il cambio automatico dello sfondo, ogni</Icon_AutoChangeWallpaper>
+    <Icon_Unit>Ore</Icon_Unit>
+    <Icon_Custom>Personalizzato</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>Scarica sempre le immagini di Bing</Icon_AlwaysDownLoadBingPicture>
+  </it>
+  <ja>
+    <UI_FontFamily>Segoe UI,Meiryo UI,MS Gothic</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper はバックグラウンドで動作しています</APP_START>
+    <APP_SECOND>DailyWallpaper はすでにバックグラウンドで動作しています</APP_SECOND>
+	  <APP_PATH_NOT_WRITABLE>データパス "{0}"は書き込み可能ではありません。 十分な権限があるかどうかを確認してください。</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>最新版です</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} がリリースされました。ここをクリックしてダウンロードページを開きます。</Update_Found>
+    <Update_Error>更新の確認中にエラーが発生しました: {0}</Update_Error>
+    <Icon_RunAtStartup>起動時に実行（&amp;S）</Icon_RunAtStartup>
+    <Icon_ToolTip>DailyWallpaper v {0} </Icon_ToolTip>
+    <Icon_ChangeWallpaper>壁紙の変更</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>クリックし、チェックリストからランダムに選択して壁紙を変更します</Icon_ChangeWallpaperTit>
+    <Icon_Bing> Bing </Icon_Bing>
+    <Icon_BingTit>ランダムリストにBingを追加</Icon_BingTit>
+    <Icon_LocalPath>ローカルパス</Icon_LocalPath>
+    <Icon_LocalPathTit>ランダムリストにローカルパスを追加</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>ローカルパス設定</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>ローカルパスの設定</Icon_LocalPathSettingTit>
+    <Icon_Spotlight> Windowsスポットライト</Icon_Spotlight>
+    <Icon_SpotlightTit>ランダムリストにWindowsスポットライトを追加</Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys>ショートカットキーを無効にする</Icon_DisableShortcutKeys>
+    <Icon_Options>オプション... </Icon_Options>
+    <Icon_DonateAndSupport>寄付とサポート... </Icon_DonateAndSupport>
+    <Icon_Help>ヘルプ</Icon_Help>
+    <Icon_OpenOfficialWebsite>公式ウェブサイトを開く... </Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>チェックアップデート</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>問題とフィードバック... </Icon_IssueAndFeedback>
+    <Icon_ShowLog>ログを表示</Icon_ShowLog>
+    <Icon_About> About </Icon_About>
+    <Icon_Quit>終了（＆amp; Q）</Icon_Quit>
+    <TrayIcon_ShortcutKeys>（トレイアイコンをダブルクリック）</TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed>壁紙の設定が成功しました：</Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>壁紙の設定に失敗しました！ </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting>このフォルダーを選択しました：</Notify_LocalPathSetting>
+    <Notify_ThanksForDonation>ご支援ありがとうございます！</Notify_ThanksForDonation>
+    <Notify_RunAtStartup>おめでとうございます！ 起動時の自動実行機能を有効にしました。 {0}これにより、エクスペリエンスが向上します！</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>自動壁紙変更の時間間隔、すべての</Icon_AutoChangeWallpaper>
+    <Icon_Unit>時間</Icon_Unit>
+    <Icon_Custom>カスタム</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>常にBingの画像をダウンロードする</Icon_AlwaysDownLoadBingPicture>
+  </ja>
+  <ko-KR>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper이 백그라운드에서 실행 중입니다.</APP_START>
+    <APP_SECOND>DailyWallpaper이 이미 실행 중입니다</APP_SECOND>
+    <APP_PATH_NOT_WRITABLE> 데이터 경로 "{0}"에 쓰기가 불가능합니다. 충분한 권한이 있는지 확인하십시오. </APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>최신 버전을 사용 중입니다.</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} 버전이 출시되었습니다. 다운로드 페이지로 가려면 이곳을 클릭하십시오.</Update_Found>
+    <Update_Error>업데이트 확인 중 오류가 발생하였습니다: {0}</Update_Error>
+    <Icon_RunAtStartup> 시작시 실행 (&amp;S) </Icon_RunAtStartup>
+    <Icon_ToolTip> DailyWallpaper v {0} </Icon_ToolTip>
+    <Icon_ChangeWallpaper> 배경 화면 변경 </Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit> 클릭, 체크리스트에서 랜덤 선택 후 배경 화면 변경 </Icon_ChangeWallpaperTit>
+    <Icon_Bing> 빙 </Icon_Bing>
+    <Icon_BingTit> Bing을 임의 목록에 추가 </Icon_BingTit>
+    <Icon_LocalPath> 로컬 경로 </Icon_LocalPath>
+    <Icon_LocalPathTit> 무작위 목록에 로컬 경로 추가 </Icon_LocalPathTit>
+    <Icon_LocalPathSetting> 로컬 경로 설정 </Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit> 로컬 경로 설정 </Icon_LocalPathSettingTit>
+    <Icon_Spotlight> Windows 추천 </Icon_Spotlight>
+    <Icon_SpotlightTit> 임의 목록에 Windows 추천 추가 </Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys> 단축키 비활성화 </Icon_DisableShortcutKeys>
+    <Icon_Options> 옵션 ... </Icon_Options>
+    <Icon_DonateAndSupport> 기부 및 지원 ... </Icon_DonateAndSupport>
+    <Icon_Help> 도움말 </Icon_Help>
+    <Icon_OpenOfficialWebsite> 공식 웹 사이트 열기 ... </Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate> 업데이트 확인 </Icon_CheckUpdate>
+    <Icon_IssueAndFeedback> 문제 및 피드백 ... </Icon_IssueAndFeedback>
+    <Icon_ShowLog> 로그 표시 </Icon_ShowLog>
+    <Icon_About> 정보 </Icon_About>
+    <Icon_Quit> 종료 (&amp;Q) </Icon_Quit>
+    <TrayIcon_ShortcutKeys> (트레이 아이콘 더블 클릭) </TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed> 배경 화면 설정 성공 : </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed> 배경 화면 설정 실패! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting> 선택한 폴더 : </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation> 지원해 주셔서 감사합니다! </Notify_ThanksForDonation>
+    <Notify_RunAtStartup> 축하합니다! 시작시 자동 실행 기능을 활성화했습니다. {0} 이렇게하면 더 나은 경험을 얻을 수 있습니다! </Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper> 자동 배경 화면 변경 간격 </Icon_AutoChangeWallpaper>
+    <Icon_Unit> 시간 </Icon_Unit>
+    <Icon_Custom> 사용자 지정 </Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture> 항상 Bing 사진 다운로드 </Icon_AlwaysDownLoadBingPicture>
+  </ko-KR>
+  <pt>
+    <UI_FontFamily> Segoe UI </UI_FontFamily>
+    <DRAW_FontFamily> Segoe UI </DRAW_FontFamily>
+    <APP_START> DailyWallpaper está sendo executado em segundo plano. </APP_START>
+    <APP_SECOND> DailyWallpaper já está em execução </APP_SECOND>
+    <APP_PATH_NOT_WRITABLE> O caminho de dados "{0}" não é gravável. Verifique se você tem permissão suficiente. </APP_PATH_NOT_WRITABLE>
+    <Icon_RunAtStartup>Esegui all'avvio </Icon_RunAtStartup>
+    <Icon_ToolTip>DailyWallpaper v{0}</Icon_ToolTip>
+    <Icon_ChangeWallpaper>Cambia sfondo</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>Fai clic, seleziona a caso dall'elenco selezionato e cambia lo sfondo</Icon_ChangeWallpaperTit>
+    <Icon_Bing>Bing</Icon_Bing>
+    <Icon_BingTit>Aggiungi Bing all'elenco casuale</Icon_BingTit>
+    <Icon_LocalPath>Percorso locale</Icon_LocalPath>
+    <Icon_LocalPathTit>Aggiungi percorso locale all'elenco casuale</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>Impostazione percorso locale</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>Imposta percorso locale</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Windows Spotlight</Icon_Spotlight>
+    <Icon_SpotlightTit>Aggiungi Windows Spotlight a un elenco casuale</Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys>Disabilita i tasti di scelta rapida</Icon_DisableShortcutKeys>
+    <Icon_Options>Opzioni...</Icon_Options>
+    <Icon_DonateAndSupport>Dona e sostieni...</Icon_DonateAndSupport>
+    <Icon_Help>Aiuto</Icon_Help>
+    <Icon_OpenOfficialWebsite>Apri sito ufficiale...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>Verifica aggiornamento</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>Problema e feedback...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>Mostra registro</Icon_ShowLog>
+    <Icon_About>Informazioni</Icon_About>
+    <Icon_Quit>Esci</Icon_Quit>
+    <TrayIcon_ShortcutKeys> (DoubleClick o ícone da bandeja) </TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed> Papel de parede definido com sucesso: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed> Falha ao definir o papel de parede! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting> Selecionou esta pasta: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation> Obrigado pelo seu apoio! </Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Parabéns! você habilitou a execução automática na função de inicialização. {0} Isso proporcionará uma experiência melhor! </Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>O intervalo de tempo da mudança automática do papel de parede, a cada</Icon_AutoChangeWallpaper>
+    <Icon_Unit>Horas</Icon_Unit>
+    <Icon_Custom>Personalizado</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>Sempre baixe imagens do Bing</Icon_AlwaysDownLoadBingPicture>
+  </pt>
+  <ru-RU>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper выполняется в фоновом режиме.</APP_START>
+    <APP_SECOND>DailyWallpaper уже запущен</APP_SECOND>
+	  <APP_PATH_NOT_WRITABLE> Путь к данным "{0}" недоступен для записи. Проверьте, достаточно ли у вас разрешений. </APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>Вы используете последнюю версию.</Update_NoUpdate>
+    <Update_Found>Выпущен DailyWallpaper {0}. Нажмите здесь для перехода на страницу загрузки.</Update_Found>
+    <Update_Error>При проверке обновлений произошла ошибка: {0}</Update_Error>
+    <Icon_RunAtStartup> Запускать при запуске </Icon_RunAtStartup>
+    <Icon_ToolTip> DailyWallpaper v {0} </Icon_ToolTip>
+    <Icon_ChangeWallpaper> Изменить обои </Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit> Щелкните, произвольно выберите из отмеченного списка и измените обои </Icon_ChangeWallpaperTit>
+    <Icon_Bing> Bing </Icon_Bing>
+    <Icon_BingTit> Добавить Bing в случайный список </Icon_BingTit>
+    <Icon_LocalPath> Локальный путь </Icon_LocalPath>
+    <Icon_LocalPathTit> Добавить локальный путь в случайный список </Icon_LocalPathTit>
+    <Icon_LocalPathSetting> Настройка локального пути </Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit> Установить локальный путь </Icon_LocalPathSettingTit>
+    <Icon_Spotlight> Windows: интересное </Icon_Spotlight>
+    <Icon_SpotlightTit> Добавить Windows Spotlight в случайный список </Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys> Отключить клавиши быстрого доступа </Icon_DisableShortcutKeys>
+    <Icon_Options> Параметры ... </Icon_Options>
+    <Icon_DonateAndSupport> Пожертвовать и поддержать ... </Icon_DonateAndSupport>
+    <Icon_Help> Справка </Icon_Help>
+    <Icon_OpenOfficialWebsite> Открыть официальный сайт ... </Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate> Проверить обновление </Icon_CheckUpdate>
+    <Icon_IssueAndFeedback> Проблема и отзыв ... </Icon_IssueAndFeedback>
+    <Icon_ShowLog> Показать журнал </Icon_ShowLog>
+    <Icon_About> О </Icon_About>
+    <Icon_Quit> Выйти </Icon_Quit>
+    <TrayIcon_ShortcutKeys> (дважды щелкните значок в области уведомлений) </TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed> Обои установлены успешно: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed> Не удалось установить обои! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting> Выбрал эту папку: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation> Спасибо за вашу поддержку! </Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Поздравляем! вы включили функцию автоматического запуска при запуске. {0} Это улучшит вашу работу! </Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper> Интервал времени автоматической смены обоев, каждые </Icon_AutoChangeWallpaper>
+    <Icon_Unit> Часы </Icon_Unit>
+    <Icon_Custom> Пользовательский </Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture> Всегда загружать изображения Bing </Icon_AlwaysDownLoadBingPicture>
+  </ru-RU>
+  <uk-UA>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper виконується в фоновому режимі.</APP_START>
+    <APP_SECOND>DailyWallpaper вже запущений</APP_SECOND>
+	  <APP_PATH_NOT_WRITABLE> Шлях до даних "{0}" не можна записати. Перевірте, чи маєте ви достатній дозвіл. </APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>Ви використовуєте останню версію.</Update_NoUpdate>
+    <Update_Found>Випущений DailyWallpaper {0}. Натисніть тут для переходу на сторінку завантаження.</Update_Found>
+    <Update_Error>При перевірці оновлень сталася помилка: {0}</Update_Error>
+    <Icon_RunAtStartup> Запуск під час запуску </Icon_RunAtStartup>
+    <Icon_ToolTip> DailyWallpaper v {0} </Icon_ToolTip>
+    <Icon_ChangeWallpaper> Змінити шпалери </Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit> Клацніть, Випадково виберіть із перевіреного списку та змініть шпалери </Icon_ChangeWallpaperTit>
+    <Icon_Bing> Bing </Icon_Bing>
+    <Icon_BingTit> Додати Bing до випадкового списку </Icon_BingTit>
+    <Icon_LocalPath> Локальний шлях </Icon_LocalPath>
+    <Icon_LocalPathTit> Додати локальний шлях до випадкового списку </Icon_LocalPathTit>
+    <Icon_LocalPathSetting> Налаштування локального шляху </Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit> Встановити локальний шлях </Icon_LocalPathSettingTit>
+    <Icon_Spotlight> Прожектор Windows </Icon_Spotlight>
+    <Icon_SpotlightTit> Додайте Windows Spotlight до випадкового списку </Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys> Вимкнути ярличні клавіші </Icon_DisableShortcutKeys>
+    <Icon_Options> Параметри ... </Icon_Options>
+    <Icon_DonateAndSupport> Пожертви та підтримка ... </Icon_DonateAndSupport>
+    <Icon_Help> Довідка </Icon_Help>
+    <Icon_OpenOfficialWebsite> Відкрити офіційний веб-сайт ... </Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate> Перевірити оновлення </Icon_CheckUpdate>
+    <Icon_IssueAndFeedback> Випуск і відгук ... </Icon_IssueAndFeedback>
+    <Icon_ShowLog> Показати журнал </Icon_ShowLog>
+    <Icon_About> Про </Icon_About>
+    <Icon_Quit> Вийти </Icon_Quit>
+    <TrayIcon_ShortcutKeys> (DoubleClick значок лотка) </TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed> Шпалери встановлені успішно: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed> Не вдалося встановити шпалери! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting> Вибрано цю папку: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation> Дякуємо за підтримку! </Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Вітаємо! ви ввімкнули функцію автоматичного запуску під час запуску. {0} Це дасть вам кращий досвід! </Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper> Часовий інтервал автоматичної зміни шпалер кожні </Icon_AutoChangeWallpaper>
+    <Icon_Unit> Години </Icon_Unit>
+    <Icon_Custom> Спеціально </Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture> Завжди завантажувати зображення Bing </Icon_AlwaysDownLoadBingPicture> 
+  </uk-UA>
+  <vi>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper đang chạy trong nền.</APP_START>
+    <APP_SECOND>DailyWallpaper đang chạy</APP_SECOND>
+	  <APP_PATH_NOT_WRITABLE> Đường dẫn dữ liệu "{0}" không thể ghi. Vui lòng kiểm tra xem bạn có đủ quyền hay không. </APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>Bạn hiện đang sử dụng phiên bản mới nhất.</Update_NoUpdate>
+    <Update_Found>Đã có phiên bản DailyWallpaper {0}. Nhấp vào đây để mở trang tải xuống.</Update_Found>
+    <Update_Error>Đã xảy ra lỗi khi kiểm tra cập nhật: {0}</Update_Error>
+    <Icon_RunAtStartup> Chạy khi khởi động </Icon_RunAtStartup>
+    <Icon_ToolTip> DailyWallpaper v {0} </Icon_ToolTip>
+    <Icon_ChangeWallpaper> Thay đổi hình nền </Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit> Nhấp, Chọn ngẫu nhiên từ danh sách đã chọn và thay đổi hình nền </Icon_ChangeWallpaperTit>
+    <Icon_Bing> Bing </Icon_Bing>
+    <Icon_BingTit> Thêm Bing vào danh sách ngẫu nhiên </Icon_BingTit>
+    <Icon_LocalPath> Đường dẫn cục bộ </Icon_LocalPath>
+    <Icon_LocalPathTit> Thêm đường dẫn cục bộ vào danh sách ngẫu nhiên </Icon_LocalPathTit>
+    <Icon_LocalPathSetting> Cài đặt đường dẫn cục bộ </Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit> Đặt đường dẫn cục bộ </Icon_LocalPathSettingTit>
+    <Icon_Spotlight> Windows Spotlight </Icon_Spotlight>
+    <Icon_SpotlightTit> Thêm Windows Spotlight vào danh sách ngẫu nhiên </Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys> Tắt ShortcutKeys </Icon_DisableShortcutKeys>
+    <Icon_Options> Tùy chọn ... </Icon_Options>
+    <Icon_DonateAndSupport> Đóng góp và Hỗ trợ ... </Icon_DonateAndSupport>
+    <Icon_Help> Trợ giúp </Icon_Help>
+    <Icon_OpenOfficialWebsite> Mở trang web chính thức ... </Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate> Kiểm tra cập nhật </Icon_CheckUpdate>
+    <Icon_IssueAndFeedback> Sự cố và phản hồi ... </Icon_IssueAndFeedback>
+    <Icon_ShowLog> Hiển thị nhật ký </Icon_ShowLog>
+    <Icon_About> Giới thiệu </Icon_About>
+    <Icon_Quit> Thoát </Icon_Quit>
+    <TrayIcon_ShortcutKeys> (DoubleClick vào biểu tượng khay) </TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed> Đã thiết lập hình nền thành công: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed> Không đặt được hình nền! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting> Đã chọn thư mục này: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation> Cảm ơn sự hỗ trợ của bạn! </Notify_ThanksForDonation>
+    <Notify_RunAtStartup> Xin chúc mừng! bạn đã bật chức năng chạy tự động khi khởi động. {0} Điều này sẽ mang lại cho bạn trải nghiệm tốt hơn! </Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper> Khoảng thời gian thay đổi hình nền tự động, mỗi </Icon_AutoChangeWallpaper>
+    <Icon_Unit> Giờ </Icon_Unit>
+    <Icon_Custom> Tùy chỉnh </Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture> Luôn tải xuống hình ảnh Bing </Icon_AlwaysDownLoadBingPicture>
+  </vi>
+  <zh-CN>
+    <UI_FontFamily>Segoe UI,Microsoft Yahei,SimSun,Microsoft Yahei UI</UI_FontFamily>
+    <DRAW_FontFamily>Microsoft Yahei UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper 正在后台运行。</APP_START>
+    <APP_SECOND>另一个 DailyWallpaper 进程正在运行</APP_SECOND>
+    <APP_PATH_NOT_WRITABLE>数据目录 "{0}" 不可写。请检查您是否有足够的权限。</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>您已使用了最新版本。</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} 已发布。点击这里打开下载页面。</Update_Found>
+    <Icon_RunAtStartup>启动时自动运行 (&amp;S)</Icon_RunAtStartup>
+    <Icon_ChangeWallpaper>更换壁纸</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>点击一次,从勾选的列表中随机选取功能,更换壁纸</Icon_ChangeWallpaperTit>
+    <Icon_Bing>Bing</Icon_Bing>
+    <Icon_BingTit>增加 Bing 到随机列表中</Icon_BingTit>
+    <Icon_LocalPath>本地文件夹</Icon_LocalPath>
+    <Icon_LocalPathTit>增加 本地文件夹 到随机列表中</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>本地文件夹设置</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>设置本地文件夹</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Windows 聚焦</Icon_Spotlight>
+    <Icon_SpotlightTit>增加 Windows 聚焦 到随机列表中</Icon_SpotlightTit>
+    <Icon_ToolTip>DailyWallpaper v{0}</Icon_ToolTip>
+    <Icon_DisableShortcutKeys>禁用快捷键</Icon_DisableShortcutKeys>
+    <Icon_Options>选项...</Icon_Options>
+    <Icon_DonateAndSupport>捐助支持...</Icon_DonateAndSupport>
+    <Icon_Help>帮助</Icon_Help>
+    <Icon_OpenOfficialWebsite>打开官网...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>检查更新</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>问题反馈...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>显示日志</Icon_ShowLog>
+    <Icon_About>关于</Icon_About>
+    <Icon_Quit>退出 (&amp;Q)</Icon_Quit>
+    <TrayIcon_ShortcutKeys>(双击托盘图标)</TrayIcon_ShortcutKeys>
+	  <Notify_SetWallpaper_Succeed>设置成功,点击通知查看文件:{0}</Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>设置壁纸失败! 查看原因: {0}帮助 -> 显示日志</Notify_SetWallpaper_Failed>
+	  <Notify_LocalPathSetting>您选择了文件夹: </Notify_LocalPathSetting>
+	  <Notify_ThanksForDonation>人间有大爱,谢谢支持!</Notify_ThanksForDonation>
+    <Notify_RunAtStartup> 恭喜,您开启了 启动时自动运行 功能.{0}这会获得更好的使用体验!</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>自动换壁纸的时间间隔, 每 </Icon_AutoChangeWallpaper>
+    <Icon_Unit>小时</Icon_Unit>
+    <Icon_Custom>自定义</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>总是下载 Bing 图片</Icon_AlwaysDownLoadBingPicture>
+    <Icon_BingAddWaterMark>增加 Bing 水印</Icon_BingAddWaterMark>
+    <Notify_AtLeastSelectOneFeature>至少选择一项功能! 如: Windows聚焦</Notify_AtLeastSelectOneFeature>
+  </zh-CN>
+  <zh-TW>
+    <UI_FontFamily>Segoe UI,Microsoft JhengHei UI,Microsoft JhengHei,MingLiU</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper 正在背景執行</APP_START>
+    <APP_SECOND>另一個 DailyWallpaper 處理程序正在執行。</APP_SECOND>
+    <APP_PATH_NOT_WRITABLE>數據目錄 "{0}" 不可寫。請檢查您是否有足夠的權限。</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>您已使用了最新版本。</Update_NoUpdate>
+    <Update_Found>DailyWallpaper {0} 已發布。點擊這裡打開下載頁面。</Update_Found>
+    <Update_Error>檢查更新時發生錯誤：{0}</Update_Error>
+    <Icon_RunAtStartup>啟動時自動運行 (&amp;S)</Icon_RunAtStartup>
+    <Icon_ChangeWallpaper>更換牆紙</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>點擊一次，從列表中選擇隨機功能，更換壁紙</Icon_ChangeWallpaperTit>
+    <Icon_Bing>必應</Icon_Bing>
+    <Icon_BingTit>增加必應到隨機列表中</Icon_BingTit>
+    <Icon_LocalPath>本地文件夾</Icon_LocalPath>
+    <Icon_LocalPathTit>增加本地文件夾到隨機列表中</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>本地文件夾設置</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>設置本地文件夾</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Windows 聚焦</Icon_Spotlight>
+    <Icon_SpotlightTit>增加Windows聚焦到隨機列表中</Icon_SpotlightTit>
+    <Icon_ToolTip>DailyWallpaper v{0}</Icon_ToolTip>
+    <Icon_DisableShortcutKeys>禁止快捷方式</Icon_DisableShortcutKeys>
+    <Icon_Options>選項...</Icon_Options>
+    <Icon_DonateAndSupport>捐贈支持...</Icon_DonateAndSupport>
+    <Icon_Help>幫助</Icon_Help>
+    <Icon_OpenOfficialWebsite>打開官網...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>檢查更新</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>問題反饋...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>顯示日誌</Icon_ShowLog>
+    <Icon_About>關於</Icon_About>
+    <Icon_Quit>退出 (&amp;Q)</Icon_Quit>
+    <TrayIcon_ShortcutKeys>（雙擊托盤圖標）</TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed>壁紙設置成功：</Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>設置壁紙失敗！ </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting>選擇了這個文件夾：</Notify_LocalPathSetting>
+    <Notify_ThanksForDonation>感謝您的支持！</Notify_ThanksForDonation>
+    <Notify_RunAtStartup> 恭喜！ 您已啟用啟動時自動運行功能。 {0}這會給您帶來更好的體驗！</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>壁紙自動更換的時間間隔，每</Icon_AutoChangeWallpaper>
+    <Icon_Unit>小時</Icon_Unit>
+    <Icon_Custom>自定義</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>始終下載必應圖片</Icon_AlwaysDownLoadBingPicture>
+  </zh-TW>
+  <hi>
+    <UI_FontFamily>Segoe UI</UI_FontFamily>
+    <DRAW_FontFamily>Segoe UI</DRAW_FontFamily>
+    <APP_START>DailyWallpaper पृष्ठभूमि में चल रहा है।</APP_START>
+    <APP_SECOND>DailyWallpaper पहले ही चल रहा है।</APP_SECOND>
+	  <APP_PATH_NOT_WRITABLE>डेटा पथ "{0}" लिखने योग्य नहीं है। कृपया जांचें कि क्या आपके पास पर्याप्त अनुमति है।</APP_PATH_NOT_WRITABLE>
+    <Update_NoUpdate>अब आप नवीनतम संस्करण पर हैं।</Update_NoUpdate>
+    <Update_Found>DailyWallpaper का नया संस्करण उपलब्ध है। डाउनलोड पेज खोलने के लिए यहां क्लिक करें।</Update_Found>
+    <Update_Error>अपडेट की जांच करते समय त्रुटि हुई: {0}</Update_Error>
+    <Icon_RunAtStartup>स्टार्टअप पर चलाएं </Icon_RunAtStartup>
+    <Icon_ToolTip>दैनिक वॉलपेपर v{0}</Icon_ToolTip>
+    <Icon_ChangeWallpaper>वॉलपेपर बदलें</Icon_ChangeWallpaper>
+    <Icon_ChangeWallpaperTit>क्लिक करें, चेक की गई सूची से यादृच्छिक रूप से चयन करें और वॉलपेपर बदलें</Icon_ChangeWallpaperTit>
+    <Icon_Bing>बिंग</Icon_Bing>
+    <Icon_BingTit>बिंग को यादृच्छिक सूची में जोड़ें</Icon_BingTit>
+    <Icon_LocalPath>स्थानीय पथ</Icon_LocalPath>
+    <Icon_LocalPathTit>स्थानीय पथ को यादृच्छिक सूची में जोड़ें</Icon_LocalPathTit>
+    <Icon_LocalPathSetting>स्थानीय पथ सेटिंग</Icon_LocalPathSetting>
+    <Icon_LocalPathSettingTit>स्थानीय पथ सेट करें</Icon_LocalPathSettingTit>
+    <Icon_Spotlight>Windows Spotlight</Icon_Spotlight>
+    <Icon_SpotlightTit>विंडोज स्पॉटलाइट को यादृच्छिक सूची में जोड़ें</Icon_SpotlightTit>
+    <Icon_DisableShortcutKeys>शॉर्टकटकी अक्षम करें</Icon_DisableShortcutKeys>
+    <Icon_Options>विकल्प...</Icon_Options>
+    <Icon_DonateAndSupport>दान करें और समर्थन करें...</Icon_DonateAndSupport>
+    <Icon_Help>सहायता</Icon_Help>
+    <Icon_OpenOfficialWebsite>आधिकारिक वेबसाइट खोलें...</Icon_OpenOfficialWebsite>
+    <Icon_CheckUpdate>अपडेट जांचें</Icon_CheckUpdate>
+    <Icon_IssueAndFeedback>समस्या और प्रतिक्रिया...</Icon_IssueAndFeedback>
+    <Icon_ShowLog>लॉग दिखाएं</Icon_ShowLog>
+    <Icon_About>के बारे में</Icon_About>
+    <Icon_Quit>छोड़ें</Icon_Quit>
+    <TrayIcon_ShortcutKeys>(ट्रे आइकन पर डबल क्लिक करें)</TrayIcon_ShortcutKeys>
+    <Notify_SetWallpaper_Succeed>वॉलपेपर सेट सफल हुआ: </Notify_SetWallpaper_Succeed>
+    <Notify_SetWallpaper_Failed>वॉलपेपर सेट करने में विफल! </Notify_SetWallpaper_Failed>
+    <Notify_LocalPathSetting>इस फ़ोल्डर को चुना: </Notify_LocalPathSetting>
+    <Notify_ThanksForDonation>आपके समर्थन के लिए धन्यवाद!</Notify_ThanksForDonation>
+    <Notify_RunAtStartup> बधाई हो! आपने स्टार्टअप फ़ंक्शन पर स्वचालित रन सक्षम किया है। {0}यह आपको एक बेहतर अनुभव देगा!</Notify_RunAtStartup>
+    <Icon_AutoChangeWallpaper>स्वचालित वॉलपेपर परिवर्तन का समय अंतराल, प्रत्येक </Icon_AutoChangeWallpaper>
+    <Icon_Unit>घंटे</Icon_Unit>
+    <Icon_Custom>कस्टम</Icon_Custom>
+    <Icon_AlwaysDownLoadBingPicture>Bing चित्र हमेशा डाउनलोड करें</Icon_AlwaysDownLoadBingPicture>
+  </hi>
+</Translations>
