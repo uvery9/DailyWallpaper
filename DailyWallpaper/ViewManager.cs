@@ -78,7 +78,7 @@ namespace DailyWallpaper
 
         protected override void Dispose(bool disposing)
         {
-            
+            _notifyIcon.Dispose();
         }
 
 
