@@ -30,8 +30,7 @@ namespace DailyWallpaper
                 Application.SetCompatibleTextRenderingDefault(false);
                 try
                 {
-                    DWApplicationContext context = new DWApplicationContext();
-                    Application.Run(context);
+                    Application.Run(new ViewManager());
                 }
                 catch (Exception exc)
                 {
