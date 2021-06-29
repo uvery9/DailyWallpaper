@@ -97,20 +97,16 @@
     <Compile Include="Cons\LocalImage.cs" />
     <Compile Include="Cons\OnlineImage.cs" />
     <Compile Include="Cons\Wallpaper.cs" />
-    <Compile Include="DeviceManager.cs" />
-    <Compile Include="DeviceStatus.cs" />
     <Compile Include="Helpers\FolderPicker.cs" />
     <Compile Include="Helpers\ProjectInfo.cs" />
     <Compile Include="Helpers\TimerHelper.cs" />
     <Compile Include="Helpers\TranslationHelper.cs" />
-    <Compile Include="IDeviceManager.cs" />
     <Compile Include="NotifyIconManager.cs" />
     <Compile Include="NotifyIconManager.Designer.cs">
       <DependentUpon>NotifyIconManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DWApplicationContext.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="View\LogWindow.cs">
       <SubType>Form</SubType>
