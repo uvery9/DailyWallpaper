@@ -147,12 +147,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DailyWallpaperWpfLib\DailyWallpaperWpfLib.csproj">
-      <Project>{ec9652c9-aeec-48ea-bd5d-f00e3c80eabb}</Project>
-      <Name>DailyWallpaperWpfLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="res\icon32x32_ban.ico" />
     <None Include="res\icon32x32.ico" />
   </ItemGroup>
