@@ -198,33 +198,11 @@ namespace DailyWallpaper
 					{
 						// python pillow PIL open just use 3s to scan the same folder,wtf
 						/*
-							 def images_filter(self, path):
-								img_list_txt = os.path.join(path, '_img_list.txt')
-								self.check_folder_mtime(path, img_list_txt)
-								img_list = list()
-								if not self._is_newtest and self._scan.lower()!="no":
-									img_list = list()
-									for root, dirnames, files in os.walk(path):
-										for name in files:
-											realpath = os.path.join(root, name)
-											name_t = name.lower()
-											# MUST BE a image file
-											if name_t.endswith(".jpg") or name_t.endswith(".jpeg") or name_t.endswith(".png"):
-												# image file MUST BE larger than 100KB
-												if os.path.getsize(realpath)//1024>100:
-													img_pillow = Image.open(realpath)
-													if img_pillow.width > 1900:
-														if img_pillow.width/img_pillow.height > 1.4:
-															img_list.append(realpath)
-													img_pillow.close()                            
-									self.list_converter(img_list, "to", img_list_txt)
-								else:   
-									img_list = self.list_converter(list(), "from", img_list_txt)
-								self.update_element_in_config("WallpaperSetter", "mtime", self._mtime_str, not self._is_newtest)
-								if not img_list:
-									print(">>> Warning: There is no image meet the requirements in the path:\n\t{}\n"
-									">>> Consider change the path.".format(self._img_dir))
-								return img_list
+							img_pillow = Image.open(realpath)
+							if img_pillow.width > 1900:
+								if img_pillow.width/img_pillow.height > 1.4:
+									img_list.append(realpath)
+							img_pillow.close()    
 						 */
 						// 74s
 						// using (var img = Image.FromFile(file))
