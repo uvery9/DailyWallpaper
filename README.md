@@ -12,10 +12,10 @@
 ## User Interface
 
 ### English Version
-<img src="https://user-images.githubusercontent.com/42594123/123409679-07ca7a00-d5e1-11eb-9e00-122197c7ed5d.png" alt="main-interface_en" style="zoom: 30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123919395-7a5ba100-d9b7-11eb-9ada-906614929381.png" alt="main-interface_en" style="zoom: 30%;" />
 
 ### Simplified Chinese
-<img src="https://user-images.githubusercontent.com/42594123/123409675-0731e380-d5e1-11eb-891f-06af34083743.png" alt="main-interface" style="zoom:30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123919390-7891dd80-d9b7-11eb-9cb6-9f20f8e43ff7.png" alt="main-interface" style="zoom:30%;" />
 
 
 ## Language support list: 
