@@ -4,7 +4,7 @@
 
 [DailyWallpaper](https://github.com/JaredDC/DailyWallpaper)
 
-[![Size](https://img.shields.io/github/repo-size/JaredDC/DailyWallpaperUI)](https://github.com/JaredDC/DailyWallpaperUI) [![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaperUI/releases/latest)
+[![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaper/releases/latest)
 
 [![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaper)](https://ci.appveyor.com/project/JaredDC/dailywallpaper) [![LatestProtable](https://img.shields.io/badge/download-protable-brightgreen)](https://ci.appveyor.com/api/buildjobs/20r5lsth9cie9y1j/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip) [![LatestInstaller](https://img.shields.io/badge/download-installer-important)](https://ci.appveyor.com/api/buildjobs/20r5lsth9cie9y1j/artifacts/OUTPUT%2FDailyWallpaper.Installer.msi)
 
@@ -12,10 +12,10 @@
 ## User Interface
 
 ### English Version
-<img src="https://user-images.githubusercontent.com/42594123/123409679-07ca7a00-d5e1-11eb-9e00-122197c7ed5d.png" alt="main-interface_en" style="zoom: 30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123919395-7a5ba100-d9b7-11eb-9ada-906614929381.png" alt="main-interface_en" style="zoom: 30%;" />
 
 ### Simplified Chinese
-<img src="https://user-images.githubusercontent.com/42594123/123409675-0731e380-d5e1-11eb-891f-06af34083743.png" alt="main-interface" style="zoom:30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123919390-7891dd80-d9b7-11eb-9cb6-9f20f8e43ff7.png" alt="main-interface" style="zoom:30%;" />
 
 
 ## Language support list: 
