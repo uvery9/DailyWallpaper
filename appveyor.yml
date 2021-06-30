@@ -16,25 +16,25 @@ build:
   
 after_build:
 - cmd:   
-    git describe --always --tags
+    git describe --always --tags | set GIT_TAG=
     
     cd DailyWallpaper\bin\Release\
     
     7z a DailyWallpaper.Protable.zip .
    
-    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT\DailyWallpaper.Protable-%APPVEYOR_BUILD_VERSION%.zip
+    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT\DailyWallpaper.Protable-%GIT_TAG%.zip
     
     cd ..\..\..\OUTPUT
     
-    move DailyWallpaper.Installer.msi DailyWallpaper.Installer-%APPVEYOR_BUILD_VERSION%.msi
+    move DailyWallpaper.Installer.msi DailyWallpaper.Installer-%GIT_TAG%.msi
     
     dir
 
 
 artifacts:
-- path: OUTPUT\DailyWallpaper.Installer-%APPVEYOR_BUILD_VERSION%.msi
+- path: OUTPUT\DailyWallpaper.Installer-%GIT_TAG%.msi
   name: DailyWallpaper.Installer
-- path: OUTPUT\DailyWallpaper.Protable-%APPVEYOR_BUILD_VERSION%.zip
+- path: OUTPUT\DailyWallpaper.Protable-%GIT_TAG%.zip
   name: DailyWallpaper.Protable
 
 deploy:
