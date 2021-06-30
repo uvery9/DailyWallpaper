@@ -555,7 +555,6 @@ namespace DailyWallpaper
 
                 if (!string.IsNullOrEmpty(pathSelected))
                 {
-                    // Update to config.ini
                     _ini.UpdateIniItem("localPathSetting", pathSelected, "Local");
                     ShowNotification("", $"{TranslationHelper.Get("Notify_LocalPathSetting")} {pathSelected}");
                 }

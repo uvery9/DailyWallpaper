@@ -1,9 +1,12 @@
 ﻿using DailyWallpaper;
+using DailyWallpaper.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace DailyWallpaper
 {
@@ -13,8 +16,6 @@ namespace DailyWallpaper
 		private string path;
 		private int invalidCnt = 0;
 		private ConfigIni ini;
-		private string localPathScan;
-		// private readonly string timeFormat = "yyyy-MM-dd HH:mm:ss";
 		private string txtFile;
 		private List<string> old_files;
 		public enum Update : int
@@ -26,7 +27,82 @@ namespace DailyWallpaper
 			UNKNOWN
 		}
 		private Update update = Update.UNKNOWN;
-		
+
+		private static string GetHash(string input)
+		{
+			// Use input string to calculate MD5 hash
+			using (MD5 md5 = MD5.Create())
+			{
+				byte[] inputBytes = System.Text.Encoding.Default.GetBytes(input);
+				byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+				// Convert the byte array to hexadecimal string
+				StringBuilder sb = new StringBuilder();
+				for (int i = 0; i < hashBytes.Length; i++)
+				{
+					sb.Append(hashBytes[i].ToString("X2"));
+				}
+				return sb.ToString();
+			}
+		}
+
+		private string GenerateListFileName(string path)
+        {
+			// name+md5+imgList.txt save the log file.
+			var md5 = GetHash(path).Substring(0, 5);
+			var name = new DirectoryInfo(path).Name;
+			var imgListTxt = name + "-" + md5 + "-imgList.txt";
+			var saveDir = Path.Combine(Helpers.ProjectInfo.executingLocation, "imglist_dir");
+			if (!Directory.Exists(saveDir))
+            {
+				Directory.CreateDirectory(saveDir);
+				Console.WriteLine($"Created saveDir: {saveDir}");
+			}
+			var imgListFile1st = Path.Combine(saveDir, imgListTxt);
+			var imgListFile = imgListFile1st;
+			var imgListFile2nd = Path.Combine(path, "_imgList.txt");
+			if (File.Exists(imgListFile2nd))
+			{
+				imgListFile = imgListFile2nd;
+			}
+			if (!File.Exists(imgListFile1st) && !File.Exists(imgListFile2nd))
+            {
+				try
+                {
+					File.WriteAllText(imgListFile1st, "TEST");
+					File.Delete(imgListFile1st);
+					imgListFile = imgListFile1st;
+				}
+				catch (Exception e)
+				{
+					// may no permission???
+					Console.Error.WriteLine(e);
+					Console.Error.WriteLine($"Maybe PATH IS TOO LOOG: {imgListFile1st}");
+					Console.Error.WriteLine($"Maybe the program don't have permission.");
+					Console.WriteLine($"Try to use: {imgListFile2nd}");
+					try
+					{
+						File.WriteAllText(imgListFile2nd, "TEST");
+						File.Delete(imgListFile2nd);
+						imgListFile = imgListFile2nd;
+					}
+					catch (Exception err)
+					{
+						// may no permission???
+						Console.Error.WriteLine(err);
+						var newLine = Environment.NewLine;
+						throw new Exception(newLine + newLine+ newLine +
+							$">>> Please contact me[{ProjectInfo.email}] with: " +
+							$"{Path.Combine(ProjectInfo.executingLocation, ProjectInfo.exeName + ".log.txt")}:" +
+							newLine + newLine + newLine
+							);
+					}
+
+				}
+			}			
+			Console.WriteLine($"imgListFile: {imgListFile}");
+			return imgListFile;
+		}
 		public LocalImage(ConfigIni ini, string path)
 		{
 			if (!Directory.Exists(path))
@@ -35,7 +111,7 @@ namespace DailyWallpaper
             }
             this.path = path;
 			this.ini = ini;
-			localPathScan = ini.GetCfgFromIni()["localPathScan"];
+			var localPathScan = ini.GetCfgFromIni()["localPathScan"];
 			if (localPathScan.ToLower().Equals("auto")) {
 				update = LocalImage.Update.AUTO;
             }
@@ -43,7 +119,7 @@ namespace DailyWallpaper
             {
                 update = LocalImage.Update.NO;
 			}
-			txtFile = Path.Combine(this.path, "_img_list.txt");
+			txtFile = GenerateListFileName(this.path);
 			old_files = null;
 	}
 
@@ -52,7 +128,6 @@ namespace DailyWallpaper
 			if (!new FileInfo(this.txtFile).Exists)
 			{
 				this.update = Update.FORCE;
-				// update config.ini modified time.
 			}
 			if (this.update == Update.FORCE || this.update == Update.CleanInvalid)
 			{
@@ -196,7 +271,6 @@ namespace DailyWallpaper
 						Console.WriteLine("Updated: {0}", txtFile);
 					}
 					ini.UpdateIniItem("localPathMtime", new FileInfo(this.path).LastWriteTime.ToString(), "Local");
-					// update config.ini modified time.
 				}
 			}
 			catch (ArgumentNullException e)
