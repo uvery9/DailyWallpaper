@@ -24,7 +24,7 @@ deploy:
   description: "[Changelog](https://github.com/JaredDC/DailyWallpaper/tree/master/Changelogs)"
   provider: GitHub
   auth_token:
-    secure:  # your encrypted token from GitHub
+    secure:  jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD
   artifact: DailyWallpaper.Installer, DailyWallpaper.Protable
   draft: true
   prerelease: false
