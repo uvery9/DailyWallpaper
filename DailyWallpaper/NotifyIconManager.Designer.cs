@@ -437,7 +437,7 @@ namespace DailyWallpaper
         private System.Threading.Timer _exitTimeHelper;
         private bool setWallpaperSucceed = false;
         private View.LogWindow _viewWindow;
-        private bool useTextBoxWriter;
+        private bool useTextBoxWriter = false;
         private bool iStextFromFileNew = true;
         private bool consRunning = false;
 

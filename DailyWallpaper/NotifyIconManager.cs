@@ -409,7 +409,9 @@ namespace DailyWallpaper
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                useTextBoxWriter = false;
+                if (!consRunning) {
+                    useTextBoxWriter = false;
+                }
                 //_viewWindow.WindowState = FormWindowState.Minimized;
                 //_viewWindow.ShowInTaskbar = false;
                 _viewWindow.Hide();
@@ -457,22 +459,34 @@ namespace DailyWallpaper
         private void _Icon_ShowLogMenuItem_Click(object sender, EventArgs e)
         {
             // Process.Start(ProjectInfo.logFile);
-            if (!consRunning)
+            if (consRunning)
             {
-                useTextBoxWriter = true;
-                _viewWindow.Show();
-                if (iStextFromFileNew)
+                if (useTextBoxWriter)
                 {
-                    if (File.Exists(ProjectInfo.logFile))
-                    {
-                        var textBoxCons = File.ReadAllText(ProjectInfo.logFile);
-                        _viewWindow.textBoxCons.Text = textBoxCons;
-                        // _viewWindow.textBoxCons
-                        _viewWindow.textBoxCons.Select(_viewWindow.textBoxCons.TextLength, 0);//光标定位到文本最后
-                        _viewWindow.textBoxCons.ScrollToCaret();
-                    }
+                    _viewWindow.Show();
+                    return;
+                } else
+                {
+                    ShowNotification("", 
+                        "You cannot redirect stdout/stderr " + 
+                        "while the console program is running.", true);
+                    return;
                 }
-            }  
+                
+            }
+            useTextBoxWriter = true;
+            _viewWindow.Show();
+            if (iStextFromFileNew)
+            {
+                if (File.Exists(ProjectInfo.logFile))
+                {
+                    var textBoxCons = File.ReadAllText(ProjectInfo.logFile);
+                    _viewWindow.textBoxCons.Text = textBoxCons;
+                    // _viewWindow.textBoxCons
+                    _viewWindow.textBoxCons.Select(_viewWindow.textBoxCons.TextLength, 0);//光标定位到文本最后
+                    _viewWindow.textBoxCons.ScrollToCaret();
+                }
+            }
         }
 
         private void _Icon_LocalPathMenuItem_Click(object sender, EventArgs e)
