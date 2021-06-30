@@ -20,19 +20,19 @@ after_build:
     
     7z a DailyWallpaper.Protable.zip .
    
-    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT\DailyWallpaper.Protable.%APPVEYOR_BUILD_VERSION%.zip
+    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT\DailyWallpaper.Protable-%APPVEYOR_BUILD_VERSION%.zip
     
     cd ..\..\..\OUTPUT
     
-    move DailyWallpaper.Installer.msi DailyWallpaper.Installer.%APPVEYOR_BUILD_VERSION%.msi
+    move DailyWallpaper.Installer.msi DailyWallpaper.Installer-%APPVEYOR_BUILD_VERSION%.msi
     
     dir
 
 
 artifacts:
-- path: OUTPUT\DailyWallpaper.Installer.$(APPVEYOR_REPO_TAG_NAME).msi
+- path: OUTPUT\DailyWallpaper.Installer-%APPVEYOR_BUILD_VERSION%.msi
   name: DailyWallpaper.Installer
-- path: OUTPUT\DailyWallpaper.Protable.$(APPVEYOR_REPO_TAG_NAME).zip
+- path: OUTPUT\DailyWallpaper.Protable-%APPVEYOR_BUILD_VERSION%.zip
   name: DailyWallpaper.Protable
 
 deploy:
