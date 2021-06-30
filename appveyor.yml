@@ -28,9 +28,9 @@ after_build:
 
 
 artifacts:
-- path: DailyWallpaper.Installer.msi
+- path: OUTPUT\DailyWallpaper.Installer.msi
   name: DailyWallpaper.Installer
-- path: DailyWallpaper.Protable.zip
+- path: OUTPUT\DailyWallpaper.Protable.zip
   name: DailyWallpaper.Protable
 
 deploy:
