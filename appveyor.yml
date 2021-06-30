@@ -38,7 +38,7 @@ artifacts:
   name: DailyWallpaper.Protable
 
 deploy:
-  release: DailyWallpaper $(APPVEYOR_REPO_TAG_NAME)
+  release: DailyWallpaper-v%GIT_TAG%
   description: "[Changelog](https://github.com/JaredDC/DailyWallpaper/tree/master/Changelogs)"
   provider: GitHub
   auth_token:
@@ -47,5 +47,4 @@ deploy:
   draft: true
   prerelease: false
   on:
-    branch: master                 # release from master branch only
     APPVEYOR_REPO_TAG: true        # deploy on tag push only

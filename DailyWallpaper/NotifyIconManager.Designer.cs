@@ -124,7 +124,9 @@ namespace DailyWallpaper
                     _Icon_ShowLogMenuItem_Click);
             _Icon_AboutMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_About"),
-                    (e, s) => { }); //ShowAboutView();
+                    (e, s) => {
+                        new View.AboutForm().Show();
+                    }); //ShowAboutView();
 
             _Icon_HelpMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
                 _Icon_OpenOfficialWebsiteMenuItem,
