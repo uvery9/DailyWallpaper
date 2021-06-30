@@ -196,8 +196,7 @@ namespace DailyWallpaper
 				{
 					if (length > 100)
 					{
-						// python pillow PIL open just use 3s to scan the same folder,wtf
-						/*
+						/* python pillow PIL open just use 3s to scan the same folder
 							img_pillow = Image.open(realpath)
 							if img_pillow.width > 1900:
 								if img_pillow.width/img_pillow.height > 1.4:
@@ -206,7 +205,6 @@ namespace DailyWallpaper
 						 */
 						// 74s
 						// using (var img = Image.FromFile(file))
-						// without below function: 0.027s
 						using (var img = new Bitmap(file)) { 
 							if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
 							{
