@@ -6,7 +6,9 @@
 
 [![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaper/releases/latest)
 
-[![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaper)](https://ci.appveyor.com/project/JaredDC/dailywallpaper) [![LatestProtable](https://img.shields.io/badge/download-protable-brightgreen)](https://ci.appveyor.com/api/buildjobs/20r5lsth9cie9y1j/artifacts/DailyWallpaper%2Fbin%2FDailyWallpaper.Protable.zip) [![LatestInstaller](https://img.shields.io/badge/download-installer-important)](https://ci.appveyor.com/api/buildjobs/20r5lsth9cie9y1j/artifacts/OUTPUT%2FDailyWallpaper.Installer.msi)
+[![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaper)](https://ci.appveyor.com/project/JaredDC/dailywallpaper) 
+
+[![Latest](https://img.shields.io/badge/Click-Download_Latest-important)](https://ci.appveyor.com/project/JaredDC/dailywallpaper/build/artifacts)
 
 
 ## User Interface
