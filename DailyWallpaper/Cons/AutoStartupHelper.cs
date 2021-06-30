@@ -35,7 +35,7 @@ namespace DailyWallpaper
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Failed to add DailyWallpaper to Startup folder.{e.ToString()}");
+                Console.Error.WriteLine($"Failed to add DailyWallpaper to Startup folder.{e}");
             }
         }
 
@@ -51,7 +51,7 @@ namespace DailyWallpaper
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Failed to delete DailyWallpaper startup shortcut.{e.ToString()}");
+                Console.Error.WriteLine($"Failed to delete DailyWallpaper startup shortcut.{e}");
             }
         }
         internal static bool IsAutorun()

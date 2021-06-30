@@ -294,6 +294,12 @@ namespace DailyWallpaper
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = true;
                 _Icon_BingAddWaterMarkMenuItem.Visible = true;
             }
+            else
+            {
+                _Icon_BingMenuItem.Checked = false;
+                _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = false;
+                _Icon_BingAddWaterMarkMenuItem.Visible = false;
+            }
 
             if (startFeatures["alwaysDLBingWallpaper"].ToLower().Equals("yes"))
             {

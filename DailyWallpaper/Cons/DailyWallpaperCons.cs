@@ -13,7 +13,7 @@ namespace DailyWallpaper
         static void MainSTD(string[] args)
         {
             var exeName = ProjectInfo.exeName;
-            DailyWallpaper(exeName);
+            DailyWallpaper();
         }
         private static DailyWallpaperCons _instance;
         public static DailyWallpaperCons GetInstance()
@@ -34,10 +34,10 @@ namespace DailyWallpaper
             {
                 Console.SetOut(textWriter);
                 Console.SetError(textWriter);
-                Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
+                Console.WriteLine($"------  {DateTime.Now:yyyy-MM-dd HH:mm:ss}  ------");
                 try
                 {
-                    res = DailyWallpaper(exeName);
+                    res = DailyWallpaper();
                 }
                 catch (Exception e)
                 {
@@ -59,7 +59,7 @@ namespace DailyWallpaper
                 Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
                 try
                 {
-                    res = DailyWallpaper(exeName);
+                    res = DailyWallpaper();
                 }
                 catch (Exception e)
                 {
@@ -95,9 +95,8 @@ namespace DailyWallpaper
             Console.SetOut(standardOutput);
         }
 
-        private static bool DailyWallpaper(string exeName)
+        private static bool DailyWallpaper()
         {
-            // = new ConfigIni(exeName: exeName);
             var iniFile = ConfigIni.GetInstance();
             // iniFile.RunAtStartup();  Console Mode shouldn't do it.
 

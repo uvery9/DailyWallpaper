@@ -39,7 +39,8 @@ namespace DailyWallpaper
             if (_ini.GetCfgFromIni()["UseShortcutKeys"].ToLower().Equals("yes"))
             {
                 //DailyWallpaperConsSetWallpaper();
-                DailyWallpaperConsSetWallpaperAsync();
+                // Will NOT wait
+                Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
             }
         }
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -72,12 +73,12 @@ namespace DailyWallpaper
             {
                 //Enter key is down
                 //Capture the text
-                if (sender is TextBox)
+                if (sender is TextBox box)
                 {
                     int result;
-                    if (int.TryParse(((TextBox)sender).Text, out result))
+                    if (int.TryParse(box.Text, out result))
                     {
-                        textFromHoursTextBox = ((TextBox)sender).Text;
+                        textFromHoursTextBox = box.Text;
                         _ini.UpdateIniItem("Timer", textFromHoursTextBox);
                     }
                 }
@@ -254,7 +255,8 @@ namespace DailyWallpaper
         private void _Icon_ChangeWallpaperMenuItem_Click(object sender, EventArgs e)
         {
             // DailyWallpaperConsSetWallpaper();
-            DailyWallpaperConsSetWallpaperAsync();
+            // NOT WAIT
+            Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
         }
 
         private void _Icon_DisableShortcutKeysMenuItem_Click(object sender, EventArgs e)

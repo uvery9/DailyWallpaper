@@ -101,7 +101,8 @@ namespace DailyWallpaper.Helpers
         /// 
         public TimerHelper(int min, System.Threading.TimerCallback callback)
         {
-            var timer = new System.Threading.Timer(callback, null, 500, 1000 * 60 * min);
+            // begin, period
+            new System.Threading.Timer(callback, null, 1000 * 60 * min, 1000 * 60 * min);
         }
     }
 }
