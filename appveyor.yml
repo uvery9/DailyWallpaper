@@ -30,9 +30,9 @@ after_build:
 
 
 artifacts:
-- path: OUTPUT\DailyWallpaper.Installer.msi
+- path: OUTPUT\DailyWallpaper.Installer.$(APPVEYOR_REPO_TAG_NAME).msi
   name: DailyWallpaper.Installer
-- path: OUTPUT\DailyWallpaper.Protable.zip
+- path: OUTPUT\DailyWallpaper.Protable.$(APPVEYOR_REPO_TAG_NAME).zip
   name: DailyWallpaper.Protable
 
 deploy:
