@@ -38,12 +38,13 @@ namespace DailyWallpaper
         {
             if (_ini.GetCfgFromIni()["UseShortcutKeys"].ToLower().Equals("yes"))
             {
-                DailyWallpaperConsSetWallpaper();
+                //DailyWallpaperConsSetWallpaper();
+                DailyWallpaperConsSetWallpaperAsync();
             }
         }
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            DailyWallpaperConsSetWallpaper();
+            Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync()).Wait();
             _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
             // _ini.UpdateIniItem("TimerSetWallpaper", "false", "LOG");
         }
@@ -144,6 +145,10 @@ namespace DailyWallpaper
             {
                 notifyIcon.Icon = Properties.Resources.icon32x32;
             }
+            if (consRunning)
+            {
+                notifyIcon.Icon = Properties.Resources.icon32x32_timer;
+            }
         }
         
         private void _Icon_RunAtStartupMenuItem_Click(object sender, EventArgs e)
@@ -186,46 +191,70 @@ namespace DailyWallpaper
                 return false;
             }            
         }
-        private async void DailyWallpaperConsSetWallpaper() {
 
-            if (IsNoneSelected())
+        private async Task DailyWallpaperConsSetWallpaperAsync()
+        {
+            await Task.Run(() => DailyWallpaperConsSetWallpaper());
+        }
+        private void DailyWallpaperConsSetWallpaper() {
+
+            if (consRunning)
             {
-                ShowNotification("", TranslationHelper.Get("Notify_AtLeastSelectOneFeature"), isError:true);
                 return;
             }
-            notifyIcon.Icon = Properties.Resources.icon32x32_timer;
-            bool res;
-            if (useTextBoxWriter)
+            consRunning = true;
+            // notifyIcon.
+            try
             {
-                iStextFromFileNew = false;
-                res = await DailyWallpaperCons.ShowDialog(true, _viewWindow.textWriter);
+                if (IsNoneSelected())
+                {
+                    ShowNotification("", TranslationHelper.Get("Notify_AtLeastSelectOneFeature"), isError: true);
+                    return;
+                }
+                notifyIcon.Icon = Properties.Resources.icon32x32_timer;
+                bool res;
+                if (useTextBoxWriter)
+                {
+                    iStextFromFileNew = false;
+                    res = DailyWallpaperCons.GetInstance().ShowDialog(true, _viewWindow.textWriter);
+                }
+                else
+                {
+                    iStextFromFileNew = true;
+                    res = DailyWallpaperCons.GetInstance().ShowDialog();
+                }
+
+                System.Threading.Thread.Sleep(500);
+                if (!res)
+                {
+                    setWallpaperSucceed = false;
+                    ShowNotification("",
+                        string.Format(TranslationHelper.Get("Notify_SetWallpaper_Failed"), Environment.NewLine));
+
+                }
+                else
+                {
+                    setWallpaperSucceed = true;
+                    ShowNotification("",
+                        string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"),
+                        Environment.NewLine + $"{_ini.Read("WALLPAPER", "LOG")}")
+                        );
+                }
             }
-            else
+            catch
             {
-                iStextFromFileNew = true;
-                res = await DailyWallpaperCons.ShowDialog();  
+
             }
-            
-            System.Threading.Thread.Sleep(500);
-            if (!res)
+            finally
             {
-                setWallpaperSucceed = false;
-                ShowNotification("", 
-                    string.Format(TranslationHelper.Get("Notify_SetWallpaper_Failed"), Environment.NewLine));
-                
-            } else
-            {
-                setWallpaperSucceed = true;
-                ShowNotification("",
-                    string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"), 
-                    Environment.NewLine + $"{_ini.Read("WALLPAPER", "LOG")}")
-                    );
+                consRunning = false;
+                ChangeIconStatus();
             }
-            ChangeIconStatus();
         }
         private void _Icon_ChangeWallpaperMenuItem_Click(object sender, EventArgs e)
         {
-            DailyWallpaperConsSetWallpaper();
+            // DailyWallpaperConsSetWallpaper();
+            DailyWallpaperConsSetWallpaperAsync();
         }
 
         private void _Icon_DisableShortcutKeysMenuItem_Click(object sender, EventArgs e)
@@ -426,17 +455,20 @@ namespace DailyWallpaper
         private void _Icon_ShowLogMenuItem_Click(object sender, EventArgs e)
         {
             // Process.Start(ProjectInfo.logFile);
-            useTextBoxWriter = true;
-            _viewWindow.Show();
-            if (iStextFromFileNew)
+            if (!consRunning)
             {
-                if (File.Exists(ProjectInfo.logFile))
+                useTextBoxWriter = true;
+                _viewWindow.Show();
+                if (iStextFromFileNew)
                 {
-                    var textBoxCons = File.ReadAllText(ProjectInfo.logFile);
-                    _viewWindow.textBoxCons.Text = textBoxCons;
-                    // _viewWindow.textBoxCons
-                    _viewWindow.textBoxCons.Select(_viewWindow.textBoxCons.TextLength, 0);//光标定位到文本最后
-                    _viewWindow.textBoxCons.ScrollToCaret();
+                    if (File.Exists(ProjectInfo.logFile))
+                    {
+                        var textBoxCons = File.ReadAllText(ProjectInfo.logFile);
+                        _viewWindow.textBoxCons.Text = textBoxCons;
+                        // _viewWindow.textBoxCons
+                        _viewWindow.textBoxCons.Select(_viewWindow.textBoxCons.TextLength, 0);//光标定位到文本最后
+                        _viewWindow.textBoxCons.ScrollToCaret();
+                    }
                 }
             }  
         }

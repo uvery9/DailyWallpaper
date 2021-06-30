@@ -57,7 +57,10 @@ namespace DailyWallpaper
             return RetVal.ToString();
         }
 
-        public void Write(string Key, string Value, string Section = null)
+        /// <summary>
+        /// MUST USE UpdateIniItem
+        /// </summary>
+        private void Write(string Key, string Value, string Section = null)
         {
             if (string.IsNullOrEmpty(Section))
             {

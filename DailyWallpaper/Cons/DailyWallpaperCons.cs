@@ -10,13 +10,22 @@ namespace DailyWallpaper
 {
     class DailyWallpaperCons
     {
-        static async Task MainSTD(string[] args)
+        static void MainSTD(string[] args)
         {
             var exeName = ProjectInfo.exeName;
-            await DailyWallpaper(exeName);
+            DailyWallpaper(exeName);
         }
-        
-        public static async Task<bool> ShowDialog(bool useTextWriter = false, TextWriter textWriter = null)
+        private static DailyWallpaperCons _instance;
+        public static DailyWallpaperCons GetInstance()
+        {
+            return _instance ?? (_instance = new DailyWallpaperCons());
+        }
+        private DailyWallpaperCons()
+        {
+
+        }
+
+        public bool ShowDialog(bool useTextWriter = false, TextWriter textWriter = null)
         {
             var exeName = ProjectInfo.exeName;
             var logFile = ProjectInfo.logFile;
@@ -28,7 +37,7 @@ namespace DailyWallpaper
                 Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
                 try
                 {
-                    res = await DailyWallpaper(exeName);
+                    res = DailyWallpaper(exeName);
                 }
                 catch (Exception e)
                 {
@@ -50,7 +59,7 @@ namespace DailyWallpaper
                 Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
                 try
                 {
-                    res = await DailyWallpaper(exeName);
+                    res = DailyWallpaper(exeName);
                 }
                 catch (Exception e)
                 {
@@ -62,8 +71,6 @@ namespace DailyWallpaper
                 writer.Close();
             }
             ResetStdoutAndStderr();
-
-
             return res;
             // print the log file.
             //Console.OutputEncoding = Encoding.UTF8;
@@ -88,20 +95,17 @@ namespace DailyWallpaper
             Console.SetOut(standardOutput);
         }
 
-        /*TODO*/
-        // generate single file excutable
-        private async static Task<bool> DailyWallpaper(string exeName)
+        private static bool DailyWallpaper(string exeName)
         {
             // = new ConfigIni(exeName: exeName);
             var iniFile = ConfigIni.GetInstance();
             // iniFile.RunAtStartup();  Console Mode shouldn't do it.
 
-            
             if (iniFile.Read("bing", "Online").ToLower().Equals("yes"))
             {
                 if (iniFile.Read("alwaysDLBingWallpaper", "Online").ToLower().Equals("yes"))
                 {
-                    await new OnlineImage(iniFile).Bing();
+                    new OnlineImage(iniFile).Bing();
                 }
             }
             var choiceDict = new Dictionary<string, string>();
@@ -125,24 +129,23 @@ namespace DailyWallpaper
             switch (choice)
             {
                 case "bing":
-                    wallpaper = await new OnlineImage(iniFile).Bing(print: false);
+                        wallpaper = new OnlineImage(iniFile).Bing(print: false);
                     break;
 
                 case "Spotlight":
-                    
-                    wallpaper = new OnlineImage(iniFile).Spotlight();
+                        wallpaper = new OnlineImage(iniFile).Spotlight();
                     break;
 
                 case "localPath":
-                    var start = DateTime.Now;
-                    Console.WriteLine("Scan localPath, StartTime:" + start.ToString());
-                    // very cost time. show add async function.
-                    var localImage = new LocalImage(iniFile, 
-                        iniFile.Read("localPathSetting", "Local"));
-                    wallpaper = localImage.RandomSelectOne();
-                    var end = DateTime.Now;
-                    Console.WriteLine("Scan localPath, EndTime:" + end.ToString());
-                    Console.WriteLine($"Scan localPath, Cost {(end-start).TotalSeconds}s:");
+                        var start = DateTime.Now;
+                        Console.WriteLine("Scan localPath, StartTime:" + start.ToString());
+                        // very cost time. show add async function.
+                        var localImage = new LocalImage(iniFile,
+                            iniFile.Read("localPathSetting", "Local"));
+                        wallpaper = localImage.RandomSelectOne();
+                        var end = DateTime.Now;
+                        Console.WriteLine("Scan localPath, EndTime:" + end.ToString());
+                        Console.WriteLine($"Scan localPath, Cost {(end - start).TotalSeconds}s:");                        
                     break;
             }
             if (!File.Exists(wallpaper))

@@ -433,6 +433,7 @@ namespace DailyWallpaper
         private View.LogWindow _viewWindow;
         private bool useTextBoxWriter;
         private bool iStextFromFileNew = true;
+        private bool consRunning = false;
 
     }
 }

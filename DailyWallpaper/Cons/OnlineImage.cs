@@ -45,9 +45,9 @@ namespace DailyWallpaper
          */
 
 
-        public async Task<string> Bing(bool print=true)
+        public string Bing(bool print=true)
         {
-            var bingImg = await new BingImageProvider().GetImage(check:true);
+            var bingImg = new BingImageProvider().GetImage(check:true);
             // remove illegal characters
             // var file_name = string.Concat(filename.Split(Path.GetInvalidFileNameChars()));
             // replace illegal characters with _
@@ -64,7 +64,7 @@ namespace DailyWallpaper
                 if (!File.Exists(wallpaperWMK))
                 {
                     // Don't download the picture again and again.
-                    var img = await new BingImageProvider().GetImage(check: false);
+                    var img = new BingImageProvider().GetImage(check: false);
                     img.Img.Save(wallpaper, System.Drawing.Imaging.ImageFormat.Jpeg);
                     Wallpaper.AddWaterMark(wallpaper, wallpaperWMK, bingImg.Copyright, deleteSrc: true);
                 }
@@ -73,7 +73,7 @@ namespace DailyWallpaper
                 if (!File.Exists(wallpaper))
                 {
                     // Don't download the picture again and again.
-                    var img = await new BingImageProvider().GetImage(check: false);
+                    var img = new BingImageProvider().GetImage(check: false);
                     img.Img.Save(wallpaper, System.Drawing.Imaging.ImageFormat.Jpeg);
                     return wallpaper;
                 }
@@ -157,6 +157,7 @@ namespace DailyWallpaper
                     Image img = Image.FromFile(file);
                     if (System.Drawing.Imaging.ImageFormat.Jpeg.Equals(img.RawFormat))
                     {
+
                         if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
                         {
                             var jpegfi = new FileInfo(file);
