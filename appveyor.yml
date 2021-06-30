@@ -22,9 +22,11 @@ after_build:
     
     7z a DailyWallpaper.Protable.zip .
    
-    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT
+    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT\DailyWallpaper.Protable.%APPVEYOR_BUILD_VERSION%.zip
     
     cd ..\..\..\OUTPUT
+    
+    move DailyWallpaper.Installer.msi DailyWallpaper.Installer.%APPVEYOR_BUILD_VERSION%.msi
 
 
 artifacts:
