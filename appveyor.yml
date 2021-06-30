@@ -20,13 +20,12 @@ artifacts:
   name: DailyWallpaper.Protable
 
 deploy:
-  release: DailyWallpaper-v$(APPVEYOR_REPO_TAG_NAME)
-  description: 'Release from appveyor'
+  release: DailyWallpaper $(APPVEYOR_REPO_TAG_NAME)
+  description: "[Changelog](https://github.com/JaredDC/DailyWallpaper/tree/master/Changelogs)"
   provider: GitHub
   auth_token:
-    secure: jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD # your encrypted token from GitHub
-  artifact: DailyWallpaper.Installer
-            DailyWallpaper.Protable
+    secure:  # your encrypted token from GitHub
+  artifact: DailyWallpaper.Installer, DailyWallpaper.Protable
   draft: true
   prerelease: false
   on:
