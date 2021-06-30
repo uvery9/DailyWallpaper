@@ -1,4 +1,4 @@
-version: 1.5.2.{build}
+version: 1.5.3.{build}
 environment:
   STATIC_SITE_REPO: https://github.com/JaredDC/DailyWallpaper
   TARGET_BRANCH: master
@@ -18,6 +18,16 @@ artifacts:
   name: DailyWallpaper.Installer
 - path: DailyWallpaper\bin\Release
   name: DailyWallpaper.Protable
-  
-on_success:
-    - echo succeed
+
+deploy:
+  release: DailyWallpaper-v$(APPVEYOR_BUILD_VERSION)
+  description: 'Release from appveyor'
+  provider: GitHub
+  auth_token:
+    secure: jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD # your encrypted token from GitHub
+  artifact: DailyWallpaper.Installer            # upload all NuGet packages to release assets
+  draft: false
+  prerelease: false
+  on:
+    branch: master                 # release from master branch only
+    APPVEYOR_REPO_TAG: true        # deploy on tag push only
