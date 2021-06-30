@@ -16,6 +16,8 @@ build:
   
 after_build:
 - cmd:   
+    git describe --always --tags
+    
     cd DailyWallpaper\bin\Release\
     
     7z a DailyWallpaper.Protable.zip .
