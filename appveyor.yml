@@ -15,9 +15,7 @@ build:
   verbosity: minimal
   
 after_build:
-- cmd:
-    dir
-    
+- cmd:   
     cd DailyWallpaper\bin\Release\
     
     7z a DailyWallpaper.Protable.zip .
@@ -27,6 +25,8 @@ after_build:
     cd ..\..\..\OUTPUT
     
     move DailyWallpaper.Installer.msi DailyWallpaper.Installer.%APPVEYOR_BUILD_VERSION%.msi
+    
+    dir
 
 
 artifacts:
