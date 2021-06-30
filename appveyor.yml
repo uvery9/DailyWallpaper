@@ -16,7 +16,9 @@ build:
   
 after_build:
 - cmd:   
-    git describe --always --tags | set GIT_TAG=
+    git describe --always --tags >OUTPUTFILE.TXT
+    
+    set /P GIT_TAG=<OUTPUTFILE.TXT
     
     cd DailyWallpaper\bin\Release\
     
