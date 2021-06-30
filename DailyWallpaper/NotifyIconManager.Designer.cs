@@ -216,19 +216,19 @@ namespace DailyWallpaper
 
             h12RadioButton = new RadioButton();
             h24RadioButton = new RadioButton();
-            h48RadioButton = new RadioButton();
+            h6RadioButton = new RadioButton();
             customRadioButton = new RadioButton();
+            h6RadioButton.CheckedChanged += h6RadioButton_CheckedChanged;
             h12RadioButton.CheckedChanged += h12RadioButton_CheckedChanged;
             h24RadioButton.CheckedChanged += h24RadioButton_CheckedChanged;
-            h48RadioButton.CheckedChanged += h48RadioButton_CheckedChanged;
             customRadioButton.CheckedChanged += customRadioButton_CheckedChanged;
 
             var panel = new System.Windows.Forms.Panel();
             panel.SuspendLayout(); // IS NOT DIFF ?
-            var unit = TranslationHelper.Get("Icon_Unit");
-            AddDivIntoPanel(panel, h12RadioButton, 5, unit, 12);
-            AddDivIntoPanel(panel, h24RadioButton, 35, unit, 24);
-            AddDivIntoPanel(panel, h48RadioButton, 65, unit, 48);
+            var unit = TranslationHelper.Get("Icon_Unit");           
+            AddDivIntoPanel(panel, h6RadioButton, 5, unit, 6);
+            AddDivIntoPanel(panel, h12RadioButton, 35, unit, 12);
+            AddDivIntoPanel(panel, h24RadioButton, 65, unit, 24);
             AddDivIntoPanel(panel, customRadioButton, 95, unit, buttonStr: TranslationHelper.Get("Icon_Custom"));
             panel.Name = "combine";
             panel.AutoSize = true;
@@ -346,9 +346,9 @@ namespace DailyWallpaper
             {
                 h24RadioButton.Checked = true;
             }
-            else if (timerStr.Equals("48"))
+            else if (timerStr.Equals("6"))
             {
-                h48RadioButton.Checked = true;
+                h6RadioButton.Checked = true;
             }
             else
             {
@@ -410,7 +410,7 @@ namespace DailyWallpaper
         private ToolStripMenuItem _Icon_EveryHoursAutoChangeMenuItem;
         private RadioButton h12RadioButton;
         private RadioButton h24RadioButton;
-        private RadioButton h48RadioButton;
+        private RadioButton h6RadioButton;
         private RadioButton customRadioButton;
         private TextBox hoursTextBox;
         private string textFromHoursTextBox;

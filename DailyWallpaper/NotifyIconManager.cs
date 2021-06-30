@@ -27,7 +27,7 @@ namespace DailyWallpaper
                 Visible = true,
             };
             _timerHelper = TimerHelper.GetInstance(233, timer_Elapsed);
-            textFromHoursTextBox = "72";
+            textFromHoursTextBox = "3";
             TrayIconInitializeComponent();
             ActionRegister();
             InitializeCheckedAndTimer();
@@ -105,14 +105,14 @@ namespace DailyWallpaper
                 _timerHelper.SetTimer(24 * 60);
             }
         }
-        private void h48RadioButton_CheckedChanged(object sender, EventArgs e)
+        private void h6RadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if (h48RadioButton.Checked)
+            if (h6RadioButton.Checked)
             {
-                _ini.UpdateIniItem("Timer", 48.ToString());
+                _ini.UpdateIniItem("Timer", 6.ToString());
                 hoursTextBox.Enabled = false;
                 notifyIcon.ContextMenuStrip.Close();
-                _timerHelper.SetTimer(48 * 60);
+                _timerHelper.SetTimer(6 * 60);
             }
         }
         private void customRadioButton_CheckedChanged(object sender, EventArgs e)

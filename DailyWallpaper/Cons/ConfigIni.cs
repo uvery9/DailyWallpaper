@@ -98,7 +98,7 @@ namespace DailyWallpaper
 
             var myPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             Write("RunAtStartUp", "no", exeName);
-            Write("Timer", "24", exeName);
+            Write("Timer", "3", exeName);
             Write("UseShortcutKeys", "yes", exeName);
             
             Write("downLoadSavePath", Path.Combine(myPictures, exeName), "Online");
