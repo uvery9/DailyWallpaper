@@ -26,7 +26,7 @@ deploy:
   auth_token:
     secure: jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD # your encrypted token from GitHub
   artifact: DailyWallpaper.Installer            # upload all NuGet packages to release assets
-  draft: false
+  draft: true
   prerelease: false
   on:
     branch: master                 # release from master branch only
