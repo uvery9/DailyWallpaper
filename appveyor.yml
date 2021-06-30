@@ -21,16 +21,16 @@ after_build:
     cd DailyWallpaper\bin\Release\
     
     7z a DailyWallpaper.Protable.zip .
+   
+    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT
     
-    dir
-    
-    move DailyWallpaper.zip ..\..\..\OUTPUT
+    cd ..\..\..\OUTPUT
 
 
 artifacts:
-- path: output\DailyWallpaper.Installer.msi
+- path: DailyWallpaper.Installer.msi
   name: DailyWallpaper.Installer
-- path: output\DailyWallpaper.Protable.zip
+- path: DailyWallpaper.Protable.zip
   name: DailyWallpaper.Protable
 
 deploy:
