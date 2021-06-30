@@ -13,10 +13,24 @@ before_build:
 build:
   parallel: true
   verbosity: minimal
+  
+after_build:
+- cmd:
+    dir
+    
+    cd DailyWallpaper\bin\Release\
+    
+    7z a DailyWallpaper.Protable.zip .
+    
+    dir
+    
+    move DailyWallpaper.zip ..\..\..\OUTPUT
+
+
 artifacts:
 - path: output\DailyWallpaper.Installer.msi
   name: DailyWallpaper.Installer
-- path: DailyWallpaper\bin\Release
+- path: output\DailyWallpaper.Protable.zip
   name: DailyWallpaper.Protable
 
 deploy:
