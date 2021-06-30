@@ -48,7 +48,7 @@ namespace DailyWallpaper.View
             // 
             // progarmNametextBox
             // 
-            this.progarmNametextBox.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.progarmNametextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
             this.progarmNametextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.progarmNametextBox.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold);
             this.progarmNametextBox.Location = new System.Drawing.Point(219, 121);
@@ -66,21 +66,19 @@ namespace DailyWallpaper.View
             this.aboutWindowWebsite.AutoSize = true;
             this.aboutWindowWebsite.Location = new System.Drawing.Point(198, 162);
             this.aboutWindowWebsite.Name = "aboutWindowWebsite";
-            this.aboutWindowWebsite.Size = new System.Drawing.Size(377, 18);
+            this.aboutWindowWebsite.Size = new System.Drawing.Size(0, 18);
             this.aboutWindowWebsite.TabIndex = 1;
             this.aboutWindowWebsite.TabStop = true;
-            this.aboutWindowWebsite.Text =  ProjectInfo.OfficalWebSite;
             this.aboutWindowWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutWindowWebsite_LinkClicked);
             // 
             // textBox2
             // 
-            this.textBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.textBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.Location = new System.Drawing.Point(81, 214);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox2.Size = new System.Drawing.Size(480, 320);
             this.textBox2.TabIndex = 2;
             this.textBox2.Text = resources.GetString("textBox2.Text");
@@ -88,7 +86,7 @@ namespace DailyWallpaper.View
             // 
             // textBox3
             // 
-            this.textBox3.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.textBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
             this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox3.Location = new System.Drawing.Point(37, 162);
             this.textBox3.Name = "textBox3";
@@ -110,7 +108,7 @@ namespace DailyWallpaper.View
             // 
             // textBox4
             // 
-            this.textBox4.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.textBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox4.Location = new System.Drawing.Point(175, 202);
             this.textBox4.Name = "textBox4";
@@ -131,6 +129,7 @@ namespace DailyWallpaper.View
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.textBox4);
@@ -145,7 +144,7 @@ namespace DailyWallpaper.View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
             this.ClientSize = new System.Drawing.Size(635, 632);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox3);

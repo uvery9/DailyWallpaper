@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DailyWallpaper.Helpers;
 
 namespace DailyWallpaper.View
 {
@@ -15,6 +16,8 @@ namespace DailyWallpaper.View
         public AboutForm()
         {
             InitializeComponent();
+            this.aboutWindowWebsite.Text = Helpers.ProjectInfo.OfficalWebSite;
+            this.Icon = Properties.Resources.icon32x32;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
