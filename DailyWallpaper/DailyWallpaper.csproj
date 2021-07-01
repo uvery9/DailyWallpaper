@@ -63,6 +63,7 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -90,6 +91,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CleanEmptyFolders\CEFTextWriter.cs" />
     <Compile Include="CleanEmptyFolders\CleanEmptyFolders.cs" />
     <Compile Include="CleanEmptyFolders\CleanEmptyFoldersForm.cs">
       <SubType>Form</SubType>

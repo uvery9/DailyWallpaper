@@ -188,7 +188,7 @@ namespace DailyWallpaper
                     img.Dispose();
                 }             
             }
-            List <FileInfo> jpegFilesOrdered     = jpegFiles.OrderByDescending(x => x.CreationTime).ToList();
+            List <FileInfo> jpegFilesOrdered = jpegFiles.OrderByDescending(x => x.CreationTime).ToList();
             var fi = wallpaperDict[jpegFilesOrdered[0].Name];
             if (!File.Exists(fi))
             {

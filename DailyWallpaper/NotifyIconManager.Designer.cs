@@ -11,6 +11,7 @@ using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Timers;
+using System.Threading;
 
 namespace DailyWallpaper
 {
@@ -108,7 +109,8 @@ namespace DailyWallpaper
             _Icon_CleanEmptyFoldersMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_CleanEmptyFolders"),
                     (e, s) => {
-                        new CleanEmptyFoldersForm().Show();
+                        var cef = new CleanEmptyFoldersForm();
+                        cef.Show();
                     });
 
             _Icon_ToolboxMenuItem = ToolStripMenuItemWithHandler(
