@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBoxTarget = new System.Windows.Forms.GroupBox();
+            this.regexCheckBox = new System.Windows.Forms.CheckBox();
+            this.filterExample = new System.Windows.Forms.TextBox();
+            this.protectionFilterTextBox = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnSelectTargetFolder = new System.Windows.Forms.Button();
             this.tbTargetFolder = new System.Windows.Forms.TextBox();
             this.labelTarget = new System.Windows.Forms.Label();
@@ -40,6 +44,7 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.deleteOrRecycleBin = new System.Windows.Forms.CheckBox();
             this.saveList2File = new System.Windows.Forms.Button();
+            this.listOrLog = new System.Windows.Forms.CheckBox();
             this.groupBoxTarget.SuspendLayout();
             this.groupBoxConsole.SuspendLayout();
             this.SuspendLayout();
@@ -48,6 +53,10 @@
             // 
             this.groupBoxTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxTarget.Controls.Add(this.regexCheckBox);
+            this.groupBoxTarget.Controls.Add(this.filterExample);
+            this.groupBoxTarget.Controls.Add(this.protectionFilterTextBox);
+            this.groupBoxTarget.Controls.Add(this.textBox1);
             this.groupBoxTarget.Controls.Add(this.btnSelectTargetFolder);
             this.groupBoxTarget.Controls.Add(this.tbTargetFolder);
             this.groupBoxTarget.Controls.Add(this.labelTarget);
@@ -60,13 +69,55 @@
             this.groupBoxTarget.TabStop = false;
             this.groupBoxTarget.Text = "Paths";
             // 
+            // regexCheckBox
+            // 
+            this.regexCheckBox.AutoSize = true;
+            this.regexCheckBox.Location = new System.Drawing.Point(523, 51);
+            this.regexCheckBox.Name = "regexCheckBox";
+            this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
+            this.regexCheckBox.TabIndex = 9;
+            this.regexCheckBox.Text = "RE";
+            this.regexCheckBox.UseVisualStyleBackColor = true;
+            this.regexCheckBox.CheckedChanged += new System.EventHandler(this.regexCheckBox_CheckedChanged);
+            // 
+            // filterExample
+            // 
+            this.filterExample.BackColor = System.Drawing.SystemColors.Control;
+            this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.filterExample.Location = new System.Drawing.Point(577, 52);
+            this.filterExample.Name = "filterExample";
+            this.filterExample.ReadOnly = true;
+            this.filterExample.Size = new System.Drawing.Size(297, 21);
+            this.filterExample.TabIndex = 8;
+            this.filterExample.Text = " Such as: equal,freedom,Pictures";
+            this.filterExample.TextChanged += new System.EventHandler(this.filterExample_TextChanged);
+            // 
+            // protectionFilterTextBox
+            // 
+            this.protectionFilterTextBox.Location = new System.Drawing.Point(180, 45);
+            this.protectionFilterTextBox.Name = "protectionFilterTextBox";
+            this.protectionFilterTextBox.Size = new System.Drawing.Size(337, 28);
+            this.protectionFilterTextBox.TabIndex = 7;
+            this.protectionFilterTextBox.TextChanged += new System.EventHandler(this.protectionFilterTextBox_TextChanged);
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(12, 52);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(177, 21);
+            this.textBox1.TabIndex = 6;
+            this.textBox1.Text = "Protection filter:";
+            // 
             // btnSelectTargetFolder
             // 
             this.btnSelectTargetFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder.Location = new System.Drawing.Point(887, 23);
+            this.btnSelectTargetFolder.Location = new System.Drawing.Point(901, 20);
             this.btnSelectTargetFolder.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder.Name = "btnSelectTargetFolder";
-            this.btnSelectTargetFolder.Size = new System.Drawing.Size(80, 32);
+            this.btnSelectTargetFolder.Size = new System.Drawing.Size(99, 47);
             this.btnSelectTargetFolder.TabIndex = 5;
             this.btnSelectTargetFolder.Text = "Select";
             this.btnSelectTargetFolder.UseVisualStyleBackColor = true;
@@ -76,17 +127,18 @@
             // 
             this.tbTargetFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbTargetFolder.Location = new System.Drawing.Point(142, 26);
+            this.tbTargetFolder.Location = new System.Drawing.Point(180, 14);
             this.tbTargetFolder.Margin = new System.Windows.Forms.Padding(4);
             this.tbTargetFolder.Name = "tbTargetFolder";
-            this.tbTargetFolder.Size = new System.Drawing.Size(731, 28);
+            this.tbTargetFolder.Size = new System.Drawing.Size(694, 28);
             this.tbTargetFolder.TabIndex = 3;
+            this.tbTargetFolder.TabStop = false;
             this.tbTargetFolder.TextChanged += new System.EventHandler(this.tbTargetFolder_TextChanged);
             // 
             // labelTarget
             // 
             this.labelTarget.AutoSize = true;
-            this.labelTarget.Location = new System.Drawing.Point(9, 30);
+            this.labelTarget.Location = new System.Drawing.Point(9, 25);
             this.labelTarget.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTarget.Name = "labelTarget";
             this.labelTarget.Size = new System.Drawing.Size(134, 18);
@@ -191,11 +243,22 @@
             this.saveList2File.UseVisualStyleBackColor = true;
             this.saveList2File.Click += new System.EventHandler(this.saveList2File_Click);
             // 
+            // listOrLog
+            // 
+            this.listOrLog.AutoSize = true;
+            this.listOrLog.Location = new System.Drawing.Point(807, 85);
+            this.listOrLog.Name = "listOrLog";
+            this.listOrLog.Size = new System.Drawing.Size(22, 21);
+            this.listOrLog.TabIndex = 8;
+            this.listOrLog.UseVisualStyleBackColor = true;
+            this.listOrLog.CheckedChanged += new System.EventHandler(this.listOrLog_CheckedChanged);
+            // 
             // CleanEmptyFoldersForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1028, 701);
+            this.Controls.Add(this.listOrLog);
             this.Controls.Add(this.saveList2File);
             this.Controls.Add(this.btnClean);
             this.Controls.Add(this.deleteOrRecycleBin);
@@ -231,5 +294,10 @@
         public System.Windows.Forms.TextBox tbConsole;
         private System.Windows.Forms.CheckBox deleteOrRecycleBin;
         private System.Windows.Forms.Button saveList2File;
+        private System.Windows.Forms.CheckBox listOrLog;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox protectionFilterTextBox;
+        private System.Windows.Forms.TextBox filterExample;
+        private System.Windows.Forms.CheckBox regexCheckBox;
     }
 }

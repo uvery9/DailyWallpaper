@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
+using System.Text.RegularExpressions;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -25,11 +26,15 @@ namespace DailyWallpaper
         private List<string> emptyFolderList;
         private string printPath = null;
         private bool scanRes = false;
+        private List<string> protectionFilter;
+        private string regexFilter;
+        private Regex regex;
 
         public CleanEmptyFoldersForm()
         {
             InitializeComponent();
             this.tbTargetFolder.KeyDown += tbTargetFolder_KeyDown;
+            protectionFilterTextBox.KeyDown += protectionFilterTextBox_KeyDown;
             Icon = Properties.Resources.icon32x32;
             _cef = new CleanEmptyFolders();
             _console = new CEFTextWriter(new ControlWriter(tbConsole));
@@ -48,7 +53,9 @@ namespace DailyWallpaper
             deleteOrRecycleBin.Checked = false;
             DeleteOrRecycleBin(deletePermanently: false);
             emptyFolderList = new List<string>();
-            saveList2File.Enabled = false;
+            listOrLog.Checked = true;
+            protectionFilter = new List<string>();
+            regexCheckBox.Checked = false;
         }
 
         private void btnSelectOutFolder_Click(object sender, EventArgs e)
@@ -147,6 +154,7 @@ namespace DailyWallpaper
             _console.WriteLine($"#---- Started  {option} Operation ----#");
             _console.WriteLine();
             _console.WriteLine($"The following folders will be deleted:\r\n");
+
             var task = Task.Run(() =>
             {
                 // Were we already canceled?
@@ -171,6 +179,22 @@ namespace DailyWallpaper
                         }
                         return;
                     }
+                    if (protectionFilter.Count > 0)
+                    {
+                         _console.WriteLine("You have set the following protection filter(s):");
+                        foreach (var fi in protectionFilter)
+                        {
+                            _console.WriteLine($" {fi} ");
+                        }
+                        _console.WriteLine();
+                    }
+                    if (regexCheckBox.Checked && !string.IsNullOrEmpty(regexFilter))
+                    {
+                        // windows should IgnoreCase
+                        regex = new Regex(regexFilter, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                        _console.WriteLine($"\r\nYou have set the regex protection filter: \" {regexFilter} \"");
+                    }
+
                     int cnt = 0;
                     DeleteEmptyDirs(path, ref cnt, token, delete, deletePermanently);                  
                     if (cnt == 0)
@@ -200,23 +224,17 @@ namespace DailyWallpaper
 
                 // No Error, emptyFolderList is usable
                 scanRes = true;
-                if (emptyFolderList.Count > 1)
-                {
-                    saveList2File.Enabled = true;
-                }
                 _console.WriteLine();
                 _console.WriteLine($"\r\n#---- Finished {option} Operation ----#");
             }
             catch (OperationCanceledException e)
             {
                 scanRes = false;
-                saveList2File.Enabled = false;
                 _console.WriteLine($"\r\nRecurseScanDir throw exception message: {e.Message}");
             }
             catch (Exception ex)
             {
                 scanRes = false;
-                saveList2File.Enabled = false;
                 _console.WriteLine($"\r\nRecurseScanDir throw exception message: {ex.Message}");
                 _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
             }
@@ -240,8 +258,31 @@ namespace DailyWallpaper
                 foreach (var d in Directory.EnumerateDirectories(dir))
                 {
                     // FUCK THE $RECYCLE.BIN
-                    if (d.Contains("$RECYCLE.BIN")) {
+                    if (d.ToLower().Contains("$RECYCLE.BIN".ToLower())) {
                         continue;
+                    }
+                    bool continueFlag = false;
+                    if (!regexCheckBox.Checked && protectionFilter.Count > 0)
+                    {
+                        foreach (var filter in protectionFilter)
+                        {
+                            if (d.Contains(filter))
+                            {
+                                continueFlag = true;
+                                continue;
+                            }
+                        }
+                    }
+                    if (continueFlag)
+                    {
+                        continue;
+                    }
+                    if (regexCheckBox.Checked && !string.IsNullOrEmpty(regexFilter))
+                    {
+                        if (regex.IsMatch(d))
+                        {
+                            continue;
+                        }
                     }
                     if (token.IsCancellationRequested)
                     {
@@ -325,6 +366,20 @@ namespace DailyWallpaper
             _console.WriteLine($"\r\nYou have selected this folder:\r\n  {path}");
             return true;
         }
+
+        /// <summary>
+        /// Should TEST
+        /// </summary>
+        private void protectionFilterTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (sender is TextBox box)
+                {
+                    SetProtectionFilter(box.Text, print: true);
+                }
+            }
+        }
         private void tbTargetFolder_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -379,11 +434,16 @@ namespace DailyWallpaper
         private void saveList2File_Click(object sender, EventArgs e)
         {
 
-            if (emptyFolderList.Count < 1)
+            if (listOrLog.Checked && emptyFolderList.Count < 1)
+            {
+                _console.WriteLine("You SHOULD scan one folder first.");
+                return;
+            }
+            if (listOrLog.Checked && !Directory.Exists(_cef.targetFolderPath))
             {
                 return;
             }
-            if (!Directory.Exists(_cef.targetFolderPath))
+            if (!listOrLog.Checked && tbConsole.Text.Length < 1)
             {
                 return;
             }
@@ -402,22 +462,108 @@ namespace DailyWallpaper
                 {
                     name = name.Split(':')[0] + "-Disk";
                 }
-                saveFileDialog.FileName = "EmptyFoldersIn_" + name + "_" +
-                     DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
+                if (listOrLog.Checked)
+                {
+                    saveFileDialog.FileName = "EmptyFolders-List_" + name + "_" +
+                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
+                } else
+                {
+                    saveFileDialog.FileName = "EmptyFolders-Log_" + name + "_" +
+                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
+                }
+                
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     using (var stream = saveFileDialog.OpenFile())
                     {
                         // Code to write the stream goes here.
-                        byte[] dataAsBytes = emptyFolderList.SelectMany(s =>
+                        byte[] dataAsBytes = null;
+
+                        if (listOrLog.Checked)
+                        {
+                            dataAsBytes = emptyFolderList.SelectMany(s =>
                             System.Text.Encoding.Default.GetBytes(s + Environment.NewLine)).ToArray();
-                        // byte[] byteArray = System.Text.Encoding.Default.GetBytes(tbConsole.Text);
+                        }
+                        else
+                        {
+                            dataAsBytes = System.Text.Encoding.Default.GetBytes(tbConsole.Text);
+                        }
                         stream.Write(dataAsBytes, 0, dataAsBytes.Length);
                     }
                 }
             }
 
+        }
+
+        private void listOrLog_CheckedChanged(object sender, EventArgs e)
+        {
+            if (listOrLog.Checked)
+            {
+                saveList2File.Text = "Save list to File";
+            }
+            else
+            {
+                saveList2File.Text = "Save log to File";
+            }
+        }
+
+        private void filterExample_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SetProtectionFilter(string text, bool print = false)
+        {
+            string filter = text;
+            if (string.IsNullOrEmpty(filter))
+            {
+                return;
+            }
+            if (regexCheckBox.Checked)
+            {
+                protectionFilter = new List<string>();
+                regexFilter = filter;
+                if (print)
+                {
+                    _console.WriteLine($"\r\nYou have set the regex protection filter: \" {regexFilter} \"");
+                }
+                return;
+            }
+            regexFilter = "";
+            if (filter.Contains("，"))
+            {
+                if (print) _console.WriteLine("\r\n>>> WARNING: Chinese comma(full-width commas) in the filter <<<\r\n");
+            }
+            filter = filter.Trim();
+            var filterList = filter.Split(',');
+            if (filterList.Length < 1)
+            {
+                return;
+            }
+            if (print) _console.WriteLine("\r\nYou have set the following protection filter(s):");
+            protectionFilter = new List<string>();
+            foreach (var ft in filterList)
+            {
+                if (print) _console.WriteLine($" {ft} ");
+                protectionFilter.Add(ft);
+            }
+        }
+        private void protectionFilterTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SetProtectionFilter(protectionFilterTextBox.Text);
+        }
+
+        private void regexCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (regexCheckBox.Checked)
+            {
+                this.filterExample.Text = " Using regular expression";
+            }
+            else
+            {
+                this.filterExample.Text = " Such as: equal,freedom,Pictures";
+            }
         }
     }
 }
