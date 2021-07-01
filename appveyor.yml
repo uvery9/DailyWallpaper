@@ -1,4 +1,4 @@
-version: 1.5.3.{build}
+version: 1.5.4.{build}
 environment:
   STATIC_SITE_REPO: https://github.com/JaredDC/DailyWallpaper
   TARGET_BRANCH: master
@@ -38,8 +38,8 @@ artifacts:
   name: DailyWallpaper.Protable
 
 deploy:
-  release: DailyWallpaper-v%GIT_TAG%
-  description: "[Changelog](https://github.com/JaredDC/DailyWallpaper/tree/master/Changelogs)"
+  release: %GIT_TAG%
+  description: " NEED ADD "
   provider: GitHub
   auth_token:
     secure:  jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD
