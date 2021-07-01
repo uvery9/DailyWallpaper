@@ -78,7 +78,6 @@
             this.regexCheckBox.TabIndex = 9;
             this.regexCheckBox.Text = "RE";
             this.regexCheckBox.UseVisualStyleBackColor = true;
-            this.regexCheckBox.CheckedChanged += new System.EventHandler(this.regexCheckBox_CheckedChanged);
             // 
             // filterExample
             // 

@@ -67,6 +67,7 @@ namespace DailyWallpaper
             this.MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             SetUpFilterMode();
+            this.regexCheckBox.CheckedChanged += new System.EventHandler(this.regexCheckBox_CheckedChanged);
         }
         /// <summary>
         /// bind to tbTargetFolderHistory
