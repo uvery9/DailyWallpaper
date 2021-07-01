@@ -31,7 +31,7 @@
             this.groupBoxTarget = new System.Windows.Forms.GroupBox();
             this.regexCheckBox = new System.Windows.Forms.CheckBox();
             this.filterExample = new System.Windows.Forms.TextBox();
-            this.protectionFilterTextBox = new System.Windows.Forms.TextBox();
+            this.folderFilterTextBox = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnSelectTargetFolder = new System.Windows.Forms.Button();
             this.tbTargetFolder = new System.Windows.Forms.TextBox();
@@ -55,7 +55,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxTarget.Controls.Add(this.regexCheckBox);
             this.groupBoxTarget.Controls.Add(this.filterExample);
-            this.groupBoxTarget.Controls.Add(this.protectionFilterTextBox);
+            this.groupBoxTarget.Controls.Add(this.folderFilterTextBox);
             this.groupBoxTarget.Controls.Add(this.textBox1);
             this.groupBoxTarget.Controls.Add(this.btnSelectTargetFolder);
             this.groupBoxTarget.Controls.Add(this.tbTargetFolder);
@@ -92,13 +92,13 @@
             this.filterExample.Text = " Such as: equal,freedom,Pictures";
             this.filterExample.TextChanged += new System.EventHandler(this.filterExample_TextChanged);
             // 
-            // protectionFilterTextBox
+            // folderFilterTextBox
             // 
-            this.protectionFilterTextBox.Location = new System.Drawing.Point(180, 45);
-            this.protectionFilterTextBox.Name = "protectionFilterTextBox";
-            this.protectionFilterTextBox.Size = new System.Drawing.Size(337, 28);
-            this.protectionFilterTextBox.TabIndex = 7;
-            this.protectionFilterTextBox.TextChanged += new System.EventHandler(this.protectionFilterTextBox_TextChanged);
+            this.folderFilterTextBox.Location = new System.Drawing.Point(150, 46);
+            this.folderFilterTextBox.Name = "folderFilterTextBox";
+            this.folderFilterTextBox.Size = new System.Drawing.Size(337, 28);
+            this.folderFilterTextBox.TabIndex = 7;
+            this.folderFilterTextBox.TextChanged += new System.EventHandler(this.folderFilterTextBox_TextChanged);
             // 
             // textBox1
             // 
@@ -109,7 +109,7 @@
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(177, 21);
             this.textBox1.TabIndex = 6;
-            this.textBox1.Text = "Protection filter:";
+            this.textBox1.Text = "Folder Filter:";
             // 
             // btnSelectTargetFolder
             // 
@@ -127,7 +127,7 @@
             // 
             this.tbTargetFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbTargetFolder.Location = new System.Drawing.Point(180, 14);
+            this.tbTargetFolder.Location = new System.Drawing.Point(150, 15);
             this.tbTargetFolder.Margin = new System.Windows.Forms.Padding(4);
             this.tbTargetFolder.Name = "tbTargetFolder";
             this.tbTargetFolder.Size = new System.Drawing.Size(694, 28);
@@ -297,7 +297,7 @@
         private System.Windows.Forms.Button saveList2File;
         private System.Windows.Forms.CheckBox listOrLog;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox protectionFilterTextBox;
+        private System.Windows.Forms.TextBox folderFilterTextBox;
         private System.Windows.Forms.TextBox filterExample;
         private System.Windows.Forms.CheckBox regexCheckBox;
     }
