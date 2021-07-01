@@ -112,8 +112,8 @@ namespace DailyWallpaper
             Write("localPath", "no", "Local");
             Write("localPathSetting", myPictures, "Local");
             Write("localPathScan", "AUTO", "Local");
-            Write("localPathMtime", "NULL", "Local");
             
+            Write("localPathMtime", "NULL", "LOG");
             Write("TimerSetWallpaper", "false", "LOG");
         }
         
@@ -158,7 +158,8 @@ namespace DailyWallpaper
             iniDict.Add("localPath", Read("localPath", "Local"));
             iniDict.Add("localPathSetting", Read("localPathSetting", "Local"));
             iniDict.Add("localPathScan", Read("localPathScan", "Local"));
-            iniDict.Add("localPathMtime", Read("localPathMtime", "Local"));
+            
+            iniDict.Add("localPathMtime", Read("localPathMtime", "LOG"));
 
             // print
             // PrintDict(iniDict);

@@ -246,7 +246,7 @@ namespace DailyWallpaper
 					{
 						Console.WriteLine("Updated: {0}", txtFile);
 					}
-					ini.UpdateIniItem("localPathMtime", new FileInfo(this.path).LastWriteTime.ToString(), "Local");
+					ini.UpdateIniItem("localPathMtime", new FileInfo(this.path).LastWriteTime.ToString(), "LOG");
 				}
 			}
 			catch (ArgumentNullException e)

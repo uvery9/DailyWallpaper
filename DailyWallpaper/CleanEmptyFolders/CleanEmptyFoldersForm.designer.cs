@@ -267,6 +267,7 @@
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.groupBoxConsole);
             this.Controls.Add(this.groupBoxTarget);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(754, 536);
             this.Name = "CleanEmptyFoldersForm";

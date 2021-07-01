@@ -402,7 +402,6 @@ namespace DailyWallpaper
                         // first time.
                         appExitTime = DateTime.Now;
                     }
-                    // var localPathMtime = new FileInfo(this.path).LastWriteTime;
                     var timeDiff = (int)(appExitTime - appStartTime).TotalMinutes;
                     _ini.UpdateIniItem("LastExitSubStartTimeDiff", $"{timeDiff}mins");
                     if (timeDiff > res * 60)

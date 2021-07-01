@@ -10,14 +10,19 @@ namespace DailyWallpaper
     class CleanEmptyFolders
     {
         public string targetFolderPath = null;
-        public string helpString = 
-            "***** USAGE *****\r\n" +
-            "1.\"Select\": Select a folder, or just enter on the textbox.\r\n" +
-           "2.\"Print\" : Show all the empty folders recursively, but no delete anything.\r\n" +
-           "3.\"Clear\" : Clear the screen.\r\n" +
-           "4.\"STOP\"  : Stop the search process.\r\n" +
-           "5.\"Clean\" : Recursively delete empty subfolders under target folder.\r\n" + 
-            "***** USAGE *****\r\n";
+        public string helpString =
+            "******************************************** USAGE ********************************************\r\n" +
+           "1.\"Select\":                  Select/Type+ENTER\r\n" +
+           "2.\"Print\" :                  Show all the empty folders recursively\r\n" +
+           "3.\"Clear\" :                  Clear screen.\r\n" +
+           "4.\"STOP\"  :                  Stop \r\n" +
+           "5.\"RecycleBin/Delete\" :      literally.\r\n" +
+           "6.\"Protection filter:\" :     use filter to select/not select the folder, \r\n "+
+           "                                 use checkbox, trigger general/regex\r\n" +
+           "7.\"filter mode\" :            Type on the Target Folder Textbox then trigger \r\n  " +
+            "                                1)regex find, 2)regex protect , 3)general find, 4)general protect \r\n" +
+           "8.\"Save list/log to File\":   literally.\r\n" +
+            "******************************************** USAGE ********************************************\r\n";
         public ConfigIni ini;
         public List<string> controlledFolder1st;
         public List<string> controlledFolderAll;
@@ -56,7 +61,11 @@ namespace DailyWallpaper
             var controlledFolderAllLower = controlledFolderAll.ConvertAll(item => item.ToLower());
 
             controlledFolder1stLower.AddRange(controlledFolderAllLower);
-            
+
+            while (path.EndsWith("\\"))
+            {
+                path = path.Substring(0, path.Length - 1);
+            }
             // Completely matched.
             if (controlledFolder1stLower.Contains(path.ToLower()))
             {

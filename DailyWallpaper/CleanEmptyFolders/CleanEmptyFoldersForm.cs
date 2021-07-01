@@ -29,7 +29,10 @@ namespace DailyWallpaper
         private List<string> protectionFilter;
         private string regexFilter;
         private Regex regex;
-
+        private bool regexMode = true;
+        private bool generalMode = true;
+        private List<string> tbTargetFolderHistory = new List<string>();
+        
         public CleanEmptyFoldersForm()
         {
             InitializeComponent();
@@ -42,11 +45,12 @@ namespace DailyWallpaper
             var init = _cef.ini.Read("CleanEmptyFoldersPath", "LOG");
             if (Directory.Exists(init))
             {
-                tbTargetFolder.Text = init;
+                UpdateTextAndIniFile(init, updateIni : false);
             } else
             {
                 tbTargetFolder.Text = desktopPath;
             }
+            
             _source = new CancellationTokenSource();
             btnStop.Enabled = false;
             // default: send to RecycleBin
@@ -56,8 +60,30 @@ namespace DailyWallpaper
             listOrLog.Checked = true;
             protectionFilter = new List<string>();
             regexCheckBox.Checked = false;
-        }
+            var remode = _cef.ini.Read("cefRegexMode");
+            if (!string.IsNullOrEmpty(remode) && remode.ToLower().Equals("find"))
+            {
+                regexMode = false;
+            }
 
+            var genmode = _cef.ini.Read("cefGenMode");
+            if (!string.IsNullOrEmpty(genmode) && genmode.ToLower().Equals("find"))
+            {
+                generalMode = false;
+            }
+            this.MaximizeBox = false;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+        }
+        /// <summary>
+        /// bind to tbTargetFolderHistory
+        /// </summary>
+        private void BindHistory(TextBox tb, List<string> list)
+        {
+            tb.AutoCompleteCustomSource.Clear();
+            tb.AutoCompleteCustomSource.AddRange(list.ToArray());
+            tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            tb.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        }
         private void btnSelectOutFolder_Click(object sender, EventArgs e)
         {
             /*  Note that you need to install the Microsoft.WindowsAPICodePack.Shell package 
@@ -98,19 +124,20 @@ namespace DailyWallpaper
 
         private void btnClean_Click(object sender, EventArgs e)
         {
-            _source = new CancellationTokenSource();
-            btnStop.Enabled = true;
-            btnClean.Enabled = false;
-            btnPrint.Enabled = false;
-            RecurseScanDir(_cef.targetFolderPath, _source.Token, true);
+            PrintDir(delete: true);
         }
-        private void btnPrint_Click(object sender, EventArgs e)
+
+        private void PrintDir(bool delete = false)
         {
             _source = new CancellationTokenSource();
             btnStop.Enabled = true;
             btnClean.Enabled = false;
             btnPrint.Enabled = false;
-            RecurseScanDir(_cef.targetFolderPath, _source.Token, false);
+            RecurseScanDir(_cef.targetFolderPath, _source.Token, delete);
+        }
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            PrintDir();
 
         }
         private void btnStop_Click(object sender, EventArgs e)
@@ -134,9 +161,13 @@ namespace DailyWallpaper
 
         // Thanks to João Angelo
         // https://stackoverflow.com/questions/2811509/c-sharp-remove-all-empty-subdirectories
+        /// <summary>
+        /// TODO: When folder To much, try to not use Recurse
+        /// </summary>
         private async void RecurseScanDir(string path, CancellationToken token, bool delete = false)
         {
             //token.ThrowIfCancellationRequested();
+            // DO NOT KNOW WHY D: DOESNOT WORK WHILE D:\ WORK.
             if (!Directory.Exists(path))
             {
                 _console.WriteLine("Invalid directory path: {0}", path);
@@ -182,6 +213,8 @@ namespace DailyWallpaper
                     if (protectionFilter.Count > 0)
                     {
                          _console.WriteLine("You have set the following protection filter(s):");
+                        var mode = generalMode ? "match" : "find";
+                        _console.WriteLine($"general mode: \"{mode}\"");
                         foreach (var fi in protectionFilter)
                         {
                             _console.WriteLine($" {fi} ");
@@ -192,7 +225,9 @@ namespace DailyWallpaper
                     {
                         // windows should IgnoreCase
                         regex = new Regex(regexFilter, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-                        _console.WriteLine($"\r\nYou have set the regex protection filter: \" {regexFilter} \"");
+                        _console.WriteLine($"\r\nYou have set the regex filter: \" {regexFilter} \"");
+                        var mode  = regexMode ? "match" : "find";
+                        _console.WriteLine($"regex mode: \"{mode}\"");
                     }
 
                     int cnt = 0;
@@ -249,9 +284,7 @@ namespace DailyWallpaper
         {
             if (String.IsNullOrEmpty(dir))
             {
-                throw new ArgumentException(
-                                    "Starting directory is a null reference or an empty string",
-                                    "dir");
+                throw new ArgumentException("Starting directory is a null reference or an empty string: dir");
             }
             try
             {
@@ -266,10 +299,21 @@ namespace DailyWallpaper
                     {
                         foreach (var filter in protectionFilter)
                         {
-                            if (d.Contains(filter))
+                            if (generalMode)
                             {
-                                continueFlag = true;
-                                continue;
+                                if (d.Contains(filter))
+                                {
+                                    continueFlag = true;
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                if (!d.Contains(filter))
+                                {
+                                    continueFlag = true;
+                                    continue;
+                                }
                             }
                         }
                     }
@@ -279,9 +323,19 @@ namespace DailyWallpaper
                     }
                     if (regexCheckBox.Checked && !string.IsNullOrEmpty(regexFilter))
                     {
-                        if (regex.IsMatch(d))
+                        if (regexMode)
                         {
-                            continue;
+                            if (regex.IsMatch(d))
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (!regex.IsMatch(d))
+                            {
+                                continue;
+                            }
                         }
                     }
                     if (token.IsCancellationRequested)
@@ -322,17 +376,15 @@ namespace DailyWallpaper
         /// <summary>
         /// check if Controlled Or NotExist
         /// </summary>
-        private bool IsControlledOrNotExist(string path)
+        private bool IsControlled(string path, bool print = true)
         {
             if (_cef.IsControlledFolder(path)){
-                _console.WriteLine($"\r\nThe folder is CONTROLLED, please re-select:\r\n   {path}");
-                _console.WriteLine("\r\nYou could Type \" list controlled \" in the Target Folder and Type ENTER" + 
-                    " to see all the controlled folders.");
-                return true;
-            }
-            if (!Directory.Exists(path))
-            {
-                _console.WriteLine($"\r\nThe folder dose NOT EXIST, please re-select:\r\n   {path}");
+                if (print)
+                {
+                    _console.WriteLine($"\r\nThe folder is CONTROLLED, please re-select:\r\n   {path}");
+                    _console.WriteLine("\r\nYou could Type \" list controlled \" in the Target Folder and Type ENTER" +
+                        " to see all the controlled folders.");
+                }
                 return true;
             }
             return false;
@@ -341,9 +393,7 @@ namespace DailyWallpaper
 
         private void tbTargetFolder_TextChanged(object sender, EventArgs e)
         {
-            _cef.targetFolderPath = tbTargetFolder.Text;
-            //var newPath = "path change to:" + tbTargetFolder.Text + "\r\n";
-            //this.tbConsole.Text += newPath;
+            // DONOTHING
         }
 
         private void CleanEmptyFoldersForm_Load(object sender, EventArgs e)
@@ -355,15 +405,34 @@ namespace DailyWallpaper
 
         }
         
-        private bool UpdateTextAndIniFile(string path)
+        private bool UpdateTextAndIniFile(string path, bool updateIni = true, bool print = true)
         {
-            if (IsControlledOrNotExist(path))
+            if (IsControlled(path))
             {
                 return false;
             }
+            if (!Directory.Exists(path))
+            {
+                if (print)
+                {
+                    _console.WriteLine($"\r\nThe folder dose NOT EXIST, please re-select:\r\n   {path}");
+                }
+                return false;
+            }
+            // DirectoryIn
+            path = Path.GetFullPath(path);
+            tbTargetFolderHistory.Add(path);
+            BindHistory(tbTargetFolder, tbTargetFolderHistory);
             _cef.targetFolderPath = path;
-            _cef.ini.UpdateIniItem("CleanEmptyFoldersPath", path, "LOG");
-            _console.WriteLine($"\r\nYou have selected this folder:\r\n  {path}");
+            tbTargetFolder.Text = path;
+            if (updateIni)
+            {
+                _cef.ini.UpdateIniItem("CleanEmptyFoldersPath", path, "LOG");
+            }
+            if (print)
+            {
+                _console.WriteLine($"\r\nYou have selected this folder:\r\n  {path}");
+            }
             return true;
         }
 
@@ -380,18 +449,18 @@ namespace DailyWallpaper
                 }
             }
         }
+
         private void tbTargetFolder_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 if (sender is TextBox box)
                 {
-                    string path = box.Text;
+                    var path = box.Text;
                     path = path.Trim();
-                    while (path.EndsWith("\\"))
-                    {
-                        path = path.Substring(0, path.Length - 1);
-                    }
+
+                    // command mode
+                    bool useCommand = false;
                     if (path.ToLower().Equals("list controlled"))
                     {
                         _console.WriteLine("\r\nThe following is a list of controlled folders:");
@@ -399,9 +468,48 @@ namespace DailyWallpaper
                         {
                             _console.WriteLine(f);
                         }
+                        useCommand = true;
+                    }
+                    if (path.ToLower().Equals("regex protect"))
+                    {
+                        _console.WriteLine("\r\nregex mode: protect");
+                        regexMode = true;
+                        _cef.ini.UpdateIniItem("cefRegexMode", "protect");
+                        useCommand = true;
+                    }
+                    if (path.ToLower().Equals("regex find"))
+                    {
+                        _console.WriteLine("\r\nregex mode: find");
+                        regexMode = false;
+                        _cef.ini.UpdateIniItem("cefRegexMode", "find");
+                        useCommand = true;
+                    }
+
+                    if (path.ToLower().Equals("general protect"))
+                    {
+                        _console.WriteLine("\r\ngeneral mode: protect");
+                        generalMode = true;
+                        _cef.ini.UpdateIniItem("cefGenMode", "protect");
+                        useCommand = true;
+                    }
+                    if (path.ToLower().Equals("general find"))
+                    {
+                        _console.WriteLine("\r\ngeneral mode: find");
+                        generalMode = false;
+                        _cef.ini.UpdateIniItem("cefGenMode", "find");
+                        useCommand = true;
+                    }
+
+                    // recover
+                    if (useCommand)
+                    {
+                        tbTargetFolder.Text = "";
                         return;
                     }
-                    UpdateTextAndIniFile(path);
+                    if (UpdateTextAndIniFile(path))
+                    {
+                        PrintDir();
+                    }
                 }
             }
         }
@@ -518,6 +626,8 @@ namespace DailyWallpaper
             string filter = text;
             if (string.IsNullOrEmpty(filter))
             {
+                protectionFilter = new List<string>();
+                regexFilter = "";
                 return;
             }
             if (regexCheckBox.Checked)
@@ -526,7 +636,7 @@ namespace DailyWallpaper
                 regexFilter = filter;
                 if (print)
                 {
-                    _console.WriteLine($"\r\nYou have set the regex protection filter: \" {regexFilter} \"");
+                    _console.WriteLine($"\r\nYou have set the regex filter: \" {regexFilter} \"");
                 }
                 return;
             }
@@ -551,7 +661,7 @@ namespace DailyWallpaper
         }
         private void protectionFilterTextBox_TextChanged(object sender, EventArgs e)
         {
-            SetProtectionFilter(protectionFilterTextBox.Text);
+            // DONOTHING
         }
 
         private void regexCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -559,10 +669,30 @@ namespace DailyWallpaper
             if (regexCheckBox.Checked)
             {
                 this.filterExample.Text = " Using regular expression";
+                _console.WriteLine("\r\nYou could Type \" regex protect \" or \" regex find \"" + Environment.NewLine +
+                "in the Target Folder and Type ENTER" + " to trigger regex mode.");
+                if (regexMode)
+                {
+                    _console.WriteLine("\r\nregex mode: protect");
+                }
+                else
+                {
+                    _console.WriteLine("\r\nregex mode: find");
+                }
             }
             else
             {
                 this.filterExample.Text = " Such as: equal,freedom,Pictures";
+                _console.WriteLine("\r\nYou could Type \" general protect \" or \" general find \"" + Environment.NewLine +
+                "in the Target Folder and Type ENTER" + " to trigger general mode.");
+                if (generalMode)
+                {
+                    _console.WriteLine("\r\ngeneral mode: protect");
+                }
+                else
+                {
+                    _console.WriteLine("\r\ngeneral mode: find");
+                }
             }
         }
     }
