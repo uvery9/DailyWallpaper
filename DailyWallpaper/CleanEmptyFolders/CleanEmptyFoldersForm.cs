@@ -179,6 +179,11 @@ namespace DailyWallpaper
                         _console.WriteLine();
                         _console.WriteLine("The folder is clean.");
                     }
+                    else
+                    {
+                        _console.WriteLine();
+                        _console.WriteLine($"Found {cnt} empty folder(s).");
+                    }
                 }
                 catch (OperationCanceledException e)
                 {
@@ -234,6 +239,10 @@ namespace DailyWallpaper
             {
                 foreach (var d in Directory.EnumerateDirectories(dir))
                 {
+                    // FUCK THE $RECYCLE.BIN
+                    if (d.Contains("$RECYCLE.BIN")) {
+                        continue;
+                    }
                     if (token.IsCancellationRequested)
                     {
                         token.ThrowIfCancellationRequested();
@@ -385,8 +394,16 @@ namespace DailyWallpaper
                 saveFileDialog.Filter = "Txt files (*.txt)|*.txt";
                 // saveFileDialog.FilterIndex = 2;
                 saveFileDialog.RestoreDirectory = true;
-                saveFileDialog.FileName = "EmptyFolderIn_" + new DirectoryInfo(_cef.targetFolderPath).Name 
-                    + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
+                var name = new DirectoryInfo(_cef.targetFolderPath).Name;
+                
+                // E:, D: -> D-Disk
+                // need TEST here
+                if (name.Contains(":"))
+                {
+                    name = name.Split(':')[0] + "-Disk";
+                }
+                saveFileDialog.FileName = "EmptyFoldersIn_" + name + "_" +
+                     DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
