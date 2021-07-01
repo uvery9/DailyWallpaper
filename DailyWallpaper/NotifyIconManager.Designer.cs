@@ -66,7 +66,7 @@ namespace DailyWallpaper
             _Icon_BingAddWaterMarkMenuItem = ToolStripMenuItemWithHandler(
                     "    " + TranslationHelper.Get("Icon_BingAddWaterMark"),
                     _Icon_BingAddWaterMarkMenuItem_Click);
-            
+
 
             _Icon_LocalPathMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_LocalPath"),
@@ -102,6 +102,23 @@ namespace DailyWallpaper
                         ShowNotification("", TranslationHelper.Get("Notify_ThanksForDonation"));
                     });
 
+
+            // Find and Remove Empty Directories
+            // CleanEmptyDirs
+            _Icon_CleanEmptyFoldersMenuItem = ToolStripMenuItemWithHandler(
+                    TranslationHelper.Get("Icon_CleanEmptyFolders"),
+                    (e, s) => {
+                        new CleanEmptyFoldersForm().Show();
+                    });
+
+            _Icon_ToolboxMenuItem = ToolStripMenuItemWithHandler(
+                    TranslationHelper.Get("Icon_Toolbox"),
+                    (e, s) => { });
+
+            _Icon_ToolboxMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                _Icon_CleanEmptyFoldersMenuItem
+            });
+
             // Help and DropDownItems
             _Icon_HelpMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Help"),
@@ -119,9 +136,11 @@ namespace DailyWallpaper
                     TranslationHelper.Get("Icon_IssueAndFeedback"),
                     ProjectInfo.NewIssue,
                     _Icon_IssueAndFeedbackMenuItem_Click);
+            
             _Icon_ShowLogMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_ShowLog"),
                     _Icon_ShowLogMenuItem_Click);
+            
             _Icon_AboutMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_About"),
                     (e, s) => {
@@ -136,6 +155,7 @@ namespace DailyWallpaper
                 _Icon_ShowLogMenuItem,
                 _Icon_AboutMenuItem}
             );
+
             _Icon_RunAtStartUpMenuItem = ToolStripMenuItemWithHandler(
                         TranslationHelper.Get("Icon_RunAtStartup"),
                         _Icon_RunAtStartupMenuItem_Click);
@@ -157,8 +177,9 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_DisableShortcutKeysMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_OptionsMenuItem);
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());           
-            notifyIcon.ContextMenuStrip.Items.Add(_Icon_HelpMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_ToolboxMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_HelpMenuItem);           
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_RunAtStartUpMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_DonateAndSupportMenuItem);
@@ -425,7 +446,9 @@ namespace DailyWallpaper
         private ToolStripMenuItem _Icon_DisableShortcutKeysMenuItem;
         private ToolStripMenuItem _Icon_OptionsMenuItem;
         private ToolStripMenuItem _Icon_DonateAndSupportMenuItem;
+        private ToolStripMenuItem _Icon_CleanEmptyFoldersMenuItem;
         private ToolStripMenuItem _Icon_HelpMenuItem;
+        private ToolStripMenuItem _Icon_ToolboxMenuItem;
         private ToolStripMenuItem _Icon_OpenOfficialWebsiteMenuItem;
         private ToolStripMenuItem _Icon_CheckUpdateMenuItem;
         private ToolStripMenuItem _Icon_IssueAndFeedbackMenuItem;

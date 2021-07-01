@@ -532,7 +532,6 @@ namespace DailyWallpaper
 
             using (var dialog = new CommonOpenFileDialog())
             {
-                string pathSelected = null;
                 var localPathSetting = _ini.GetCfgFromIni()["localPathSetting"];
                 var deskTopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 if (!localPathSetting.ToLower().Equals("null") && Directory.Exists(localPathSetting))
@@ -547,16 +546,11 @@ namespace DailyWallpaper
                 dialog.Multiselect = false;
                 dialog.Title = TranslationHelper.Get("Icon_LocalPathSetting");
                 // maybe add some log TODO
-                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
                     // MessageBox.Show("You selected: " + dialog.FileName);
-                    pathSelected = dialog.FileName;
-                }
-
-                if (!string.IsNullOrEmpty(pathSelected))
-                {
-                    _ini.UpdateIniItem("localPathSetting", pathSelected, "Local");
-                    ShowNotification("", $"{TranslationHelper.Get("Notify_LocalPathSetting")} {pathSelected}");
+                    _ini.UpdateIniItem("localPathSetting", dialog.FileName, "Local");
+                    ShowNotification("", $"{TranslationHelper.Get("Notify_LocalPathSetting")} {dialog.FileName}");
                 }
             }
         }

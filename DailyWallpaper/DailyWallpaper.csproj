@@ -90,6 +90,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CleanEmptyFolders\CleanEmptyFolders.cs" />
+    <Compile Include="CleanEmptyFolders\CleanEmptyFoldersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CleanEmptyFolders\CleanEmptyFoldersForm.designer.cs">
+      <DependentUpon>CleanEmptyFoldersForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Cons\AutoStartupHelper.cs" />
     <Compile Include="Cons\BingImageProvider.cs" />
     <Compile Include="Cons\ConfigIni.cs" />
@@ -120,6 +127,9 @@
     <Compile Include="View\LogWindow.Designer.cs">
       <DependentUpon>LogWindow.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CleanEmptyFolders\CleanEmptyFoldersForm.resx">
+      <DependentUpon>CleanEmptyFoldersForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -172,6 +182,7 @@
     <None Include="res\icon32x32_exclamation.ico" />
     <None Include="res\icon32x32_good.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
