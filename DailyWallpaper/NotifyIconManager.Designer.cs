@@ -112,6 +112,14 @@ namespace DailyWallpaper
                         _cefWindow.Show();
                     });
 
+            // Find and Remove Empty Directories
+            // CleanEmptyDirs
+            _Icon_HashCalcMenuItem = ToolStripMenuItemWithHandler(
+                    TranslationHelper.Get("Icon_HashCalc"),
+                    (e, s) => {
+                        _hashWindow.Show();
+                    });
+
             _Icon_ToolboxMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Toolbox"),
                     (e, s) => { });
@@ -120,6 +128,10 @@ namespace DailyWallpaper
                 _Icon_CleanEmptyFoldersMenuItem
             });
 
+            _Icon_ToolboxMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                _Icon_HashCalcMenuItem
+            });
+            
             // Help and DropDownItems
             _Icon_HelpMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Help"),
@@ -192,6 +204,8 @@ namespace DailyWallpaper
             _viewWindow.saveToFileButton.Click += new System.EventHandler(saveToFileButton_Click);
             _cefWindow = new CleanEmptyFoldersForm();
             _cefWindow.FormClosing += _cefWindow_FormClosing;
+            _hashWindow = new HashCalc.HashCalcForm();
+            _hashWindow.FormClosing += _hashWindow_FormClosing;
         }
         private void AddDivIntoPanel(Panel panel,
                                     RadioButton radioButton,
@@ -449,6 +463,7 @@ namespace DailyWallpaper
         private ToolStripMenuItem _Icon_OptionsMenuItem;
         private ToolStripMenuItem _Icon_DonateAndSupportMenuItem;
         private ToolStripMenuItem _Icon_CleanEmptyFoldersMenuItem;
+        private ToolStripMenuItem _Icon_HashCalcMenuItem;
         private ToolStripMenuItem _Icon_HelpMenuItem;
         private ToolStripMenuItem _Icon_ToolboxMenuItem;
         private ToolStripMenuItem _Icon_OpenOfficialWebsiteMenuItem;
@@ -465,6 +480,7 @@ namespace DailyWallpaper
         private bool setWallpaperSucceed = false;
         private View.LogWindow _viewWindow;
         private CleanEmptyFoldersForm _cefWindow;
+        private HashCalc.HashCalcForm _hashWindow;
         private bool useTextBoxWriter = false;
         private bool iStextFromFileNew = true;
         private bool consRunning = false;
