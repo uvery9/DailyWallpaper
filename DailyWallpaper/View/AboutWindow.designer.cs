@@ -36,7 +36,7 @@ namespace DailyWallpaper.View
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
             this.progarmNametextBox = new System.Windows.Forms.TextBox();
             this.aboutWindowWebsite = new System.Windows.Forms.LinkLabel();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.GPLtextBox = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -59,7 +59,6 @@ namespace DailyWallpaper.View
             this.progarmNametextBox.TabStop = false;
             this.progarmNametextBox.Text = "DailyWallpaper";
             this.progarmNametextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.progarmNametextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // aboutWindowWebsite
             // 
@@ -71,18 +70,18 @@ namespace DailyWallpaper.View
             this.aboutWindowWebsite.TabStop = true;
             this.aboutWindowWebsite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.aboutWindowWebsite_LinkClicked);
             // 
-            // textBox2
+            // GPLtextBox
             // 
-            this.textBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Location = new System.Drawing.Point(81, 214);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(480, 320);
-            this.textBox2.TabIndex = 2;
-            this.textBox2.Text = resources.GetString("textBox2.Text");
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.GPLtextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
+            this.GPLtextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.GPLtextBox.Location = new System.Drawing.Point(81, 214);
+            this.GPLtextBox.Multiline = true;
+            this.GPLtextBox.Name = "GPLtextBox";
+            this.GPLtextBox.ReadOnly = true;
+            this.GPLtextBox.Size = new System.Drawing.Size(480, 320);
+            this.GPLtextBox.TabIndex = 2;
+            this.GPLtextBox.Text = resources.GetString("GPLtextBox.Text");
+            this.GPLtextBox.TextChanged += new System.EventHandler(this.GPLtextBox_TextChanged);
             // 
             // textBox3
             // 
@@ -133,7 +132,7 @@ namespace DailyWallpaper.View
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.textBox4);
-            this.panel1.Controls.Add(this.textBox2);
+            this.panel1.Controls.Add(this.GPLtextBox);
             this.panel1.Controls.Add(this.progarmNametextBox);
             this.panel1.Location = new System.Drawing.Point(3, 2);
             this.panel1.Name = "panel1";
@@ -166,7 +165,7 @@ namespace DailyWallpaper.View
 
         private System.Windows.Forms.TextBox progarmNametextBox;
         private System.Windows.Forms.LinkLabel aboutWindowWebsite;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox GPLtextBox;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox4;

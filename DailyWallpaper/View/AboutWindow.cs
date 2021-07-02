@@ -20,11 +20,6 @@ namespace DailyWallpaper.View
             this.Icon = Properties.Resources.icon32x32;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void aboutWindowWebsite_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(Helpers.ProjectInfo.OfficalWebSite);
@@ -40,7 +35,7 @@ namespace DailyWallpaper.View
 
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void GPLtextBox_TextChanged(object sender, EventArgs e)
         {
 
         }
