@@ -144,5 +144,15 @@ namespace DailyWallpaper.HashCalc
                 e.Effect = DragDropEffects.None;
             }
         }
+
+        private void panel2_DragDrop(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void panel2_DragEnter(object sender, DragEventArgs e)
+        {
+
+        }
     }
 }

@@ -32,6 +32,11 @@ namespace DailyWallpaper.HashCalc
             this.hashPicBox = new System.Windows.Forms.PictureBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
@@ -45,11 +50,6 @@ namespace DailyWallpaper.HashCalc
             this.textBox13 = new System.Windows.Forms.TextBox();
             this.textBox14 = new System.Windows.Forms.TextBox();
             this.textBox15 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -119,6 +119,53 @@ namespace DailyWallpaper.HashCalc
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(827, 241);
             this.panel2.TabIndex = 4;
+            this.panel2.DragDrop += new System.Windows.Forms.DragEventHandler(this.panel2_DragDrop);
+            this.panel2.DragEnter += new System.Windows.Forms.DragEventHandler(this.panel2_DragEnter);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(732, 68);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 30);
+            this.button7.TabIndex = 7;
+            this.button7.Text = "Copy";
+            this.button7.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(732, 127);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 30);
+            this.button6.TabIndex = 7;
+            this.button6.Text = "Save";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(723, 9);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(92, 32);
+            this.button5.TabIndex = 6;
+            this.button5.Text = "Browse";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(717, 185);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(98, 44);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "Calculate";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(614, 194);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(64, 25);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "Clear";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // textBox9
             // 
@@ -246,53 +293,9 @@ namespace DailyWallpaper.HashCalc
             this.textBox15.Text = "22D59D8E90DE3F0E0BE5BF5A0128E53F";
             this.textBox15.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(614, 194);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(64, 25);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Clear";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(717, 185);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(98, 44);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "Calculate";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(723, 9);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(92, 32);
-            this.button5.TabIndex = 6;
-            this.button5.Text = "Browse";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(732, 127);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 30);
-            this.button6.TabIndex = 7;
-            this.button6.Text = "Save";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(732, 68);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 30);
-            this.button7.TabIndex = 7;
-            this.button7.Text = "Copy";
-            this.button7.UseVisualStyleBackColor = true;
-            // 
             // panel1
             // 
+            this.panel1.AllowDrop = true;
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.button4);
             this.panel1.Controls.Add(this.button8);
@@ -315,6 +318,8 @@ namespace DailyWallpaper.HashCalc
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(827, 241);
             this.panel1.TabIndex = 4;
+            this.panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragDrop);
+            this.panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
             // 
             // button1
             // 
