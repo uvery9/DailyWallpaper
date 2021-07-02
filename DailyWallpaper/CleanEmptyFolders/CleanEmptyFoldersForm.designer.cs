@@ -260,7 +260,7 @@
             // listOrLog
             // 
             this.listOrLog.AutoSize = true;
-            this.listOrLog.Location = new System.Drawing.Point(807, 85);
+            this.listOrLog.Location = new System.Drawing.Point(816, 85);
             this.listOrLog.Name = "listOrLog";
             this.listOrLog.Size = new System.Drawing.Size(22, 21);
             this.listOrLog.TabIndex = 8;
