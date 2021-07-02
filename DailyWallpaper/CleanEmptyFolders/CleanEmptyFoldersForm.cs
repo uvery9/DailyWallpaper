@@ -483,7 +483,6 @@ namespace DailyWallpaper
             }
             if (cmd.ToLower().Equals("mode protect"))
             {
-                
                 useCommand = true;
                 if (regexCheckBox.Checked) 
                 {
@@ -493,7 +492,7 @@ namespace DailyWallpaper
                 {
                     filterMode = FilterMode.GEN_PROTECT;
                 }
-                _console.WriteLine($"\r\nmode: {filterMode}");
+                _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
                 _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
             }
             if (cmd.ToLower().Equals("mode find"))
@@ -507,7 +506,7 @@ namespace DailyWallpaper
                 {
                     filterMode = FilterMode.GEN_FIND;
                 }
-                _console.WriteLine($"\r\nmode: {filterMode}");
+                _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
                 _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
             }
 
@@ -691,44 +690,28 @@ namespace DailyWallpaper
             if (regexCheckBox.Checked)
             {
                 this.filterExample.Text = " Using regular expression";
+                if (filterMode == FilterMode.GEN_FIND)
+                {
+                    filterMode = FilterMode.REGEX_FIND;
+                }
+                if (filterMode == FilterMode.GEN_PROTECT)
+                {
+                    filterMode = FilterMode.REGEX_PROTECT;
+                }
             }
             else
             {
                 this.filterExample.Text = " Such as: equal,freedom,Pictures";
-            }
-            if (filterMode == FilterMode.GEN_FIND)
-            {
-                if (regexCheckBox.Checked)
-                {
-                    filterMode = FilterMode.REGEX_FIND;
-                }
-                
-            }
-            else if (filterMode == FilterMode.REGEX_PROTECT)
-            {
-                if (!regexCheckBox.Checked)
+                if (filterMode == FilterMode.REGEX_PROTECT)
                 {
                     filterMode = FilterMode.GEN_PROTECT;
                 }
-                
-            }
-            else if (filterMode == FilterMode.REGEX_FIND)
-            {
-                if (!regexCheckBox.Checked)
+                if (filterMode == FilterMode.REGEX_FIND)
                 {
                     filterMode = FilterMode.GEN_FIND;
                 }
-                
-            }
-            else
-            {
-                if (regexCheckBox.Checked)
-                {
-                    filterMode = FilterMode.REGEX_FIND;
-                }
-                
-            }
-            _console.WriteLine($"\r\n MODE: {filterMode}");
+            }            
+            _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
             _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
 
         }
