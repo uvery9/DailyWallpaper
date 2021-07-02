@@ -185,6 +185,7 @@
             // 
             // tbConsole
             // 
+            this.tbConsole.AllowDrop = true;
             this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -197,6 +198,8 @@
             this.tbConsole.Size = new System.Drawing.Size(990, 485);
             this.tbConsole.TabIndex = 0;
             this.tbConsole.WordWrap = false;
+            this.tbConsole.DragDrop += new System.Windows.Forms.DragEventHandler(this.tbConsole_DragDrop);
+            this.tbConsole.DragEnter += new System.Windows.Forms.DragEventHandler(this.tbConsole_DragEnter);
             // 
             // btnClean
             // 

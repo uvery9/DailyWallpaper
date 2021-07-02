@@ -904,5 +904,53 @@ namespace DailyWallpaper
             }
             UpdateIniAndTextBox();
         }
+
+
+
+        private void tbConsole_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                // DirectoryInfo().
+                if (filePaths.Length == 1)
+                {
+                    foreach (string fileLoc in filePaths)
+                    {
+                        var path = filePaths[0];
+                        if (Directory.Exists(path))
+                        {
+                            if (!UpdateTextAndIniFile(path))
+                            {
+                                return;
+                            }
+                            tbTargetFolder.Text = path;
+                        }
+                        else
+                        {
+                            _console.WriteLine("\r\nAttention: Files are not allowed!");
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    _console.WriteLine("\r\nAttention: File or multiple folders are not allowed!");
+                }
+                
+            }
+        }
+
+        private void tbConsole_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
     }
 }
