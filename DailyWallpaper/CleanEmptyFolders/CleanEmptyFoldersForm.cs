@@ -30,7 +30,7 @@ namespace DailyWallpaper
         private string regexFilter;
         private Regex regex;
         private List<string> tbTargetFolderHistory = new List<string>();
-        private enum FilterMode: int
+        private enum FilterMode : int
         {
             REGEX_FIND,
             REGEX_PROTECT,
@@ -51,7 +51,7 @@ namespace DailyWallpaper
             var init = _cef.ini.Read("CleanEmptyFoldersPath", "LOG");
             if (Directory.Exists(init))
             {
-                UpdateTextAndIniFile(init, updateIni : false);
+                UpdateTextAndIniFile(init, updateIni: false);
             } else
             {
                 tbTargetFolder.Text = desktopPath;
@@ -96,8 +96,9 @@ namespace DailyWallpaper
                 {
                     regexCheckBox.Checked = false;
                     filterMode = FilterMode.GEN_PROTECT;
-                }               
+                }
             }
+            _console.WriteLine($"\r\n Start with FilterMode: {filterMode}");
         }
         private void BindHistory(TextBox tb, List<string> list)
         {
@@ -125,7 +126,7 @@ namespace DailyWallpaper
                 else
                 {
                     dialog.InitialDirectory = desktopPath;
-                }    
+                }
                 dialog.IsFolderPicker = true;
                 dialog.EnsurePathExists = true;
                 dialog.Multiselect = false;
@@ -232,9 +233,16 @@ namespace DailyWallpaper
                             }
                         }
                         return;
-                    }                 
+                    }
                     int cnt = 0;
-                    DeleteEmptyDirs(path, ref cnt, token, delete, deletePermanently);                  
+                    if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
+                    {
+                        ScanEmptyDirsFindMode(path, ref cnt, delete, token);
+                    }
+                    else
+                    {
+                        ScanEmptyDirs(path, ref cnt, token, delete, deletePermanently);
+                    }
                     if (cnt == 0)
                     {
                         _console.WriteLine("[NOTHING]");
@@ -283,7 +291,7 @@ namespace DailyWallpaper
         }
 
         private bool FolderFilter(string path, FilterMode mode)
-        {              
+        {
             if (mode == FilterMode.GEN_PROTECT)
             {
                 if (folderFilter.Count > 0)
@@ -297,7 +305,7 @@ namespace DailyWallpaper
                     }
                 }
             }
-            else if (mode == FilterMode.REGEX_PROTECT)
+            if (mode == FilterMode.REGEX_PROTECT)
             {
                 if (regex == null)
                 {
@@ -308,20 +316,7 @@ namespace DailyWallpaper
                     return true;
                 }
             }
-            else if (mode == FilterMode.GEN_FIND)
-            {
-                if (folderFilter.Count > 0)
-                {
-                    foreach (var filter in folderFilter)
-                    {
-                        if (!path.Contains(filter))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            else
+            if (mode == FilterMode.REGEX_FIND)
             {
                 if (regex == null)
                 {
@@ -335,7 +330,78 @@ namespace DailyWallpaper
             return false;
         }
 
-        private void DeleteEmptyDirs(string dir, ref int cnt, CancellationToken token, bool delete = false,
+        /// <summary>
+        /// TEST CASE: 
+        /// 1)games 2)D:\games 3)games,Steam\logs 4)D:\games,Steam\logs
+        /// </summary>
+
+        private void ScanEmptyDirsFindMode(string path, ref int cnt, bool delete, CancellationToken token)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Starting directory is a null reference or an empty string: path");
+            }
+            try
+            {
+                foreach (var d in Directory.EnumerateDirectories(path))
+                {
+                    // FUCK THE $RECYCLE.BIN
+                    if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
+                    {
+                        continue;
+                    }
+
+                    ScanEmptyDirsFindMode(d, ref cnt, delete, token);
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                }
+                foreach (var filter in folderFilter)
+                {
+                    if (path.Contains(filter))
+                    {
+                        EmptyJudge(path, ref cnt, delete);
+                        continue;
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException) { }
+            catch (Exception e)
+            {
+                _console.WriteLine(e);
+            }
+        }
+
+        private void EmptyJudge(string dir, ref int cnt, bool delete)
+        {
+            var entries = Directory.EnumerateFileSystemEntries(dir);
+            if (!entries.Any())
+            {
+                try
+                {
+                    cnt++;
+                    // Directory.Delete(dir);
+                    emptyFolderList.Add(dir);
+                    if (delete)
+                    {
+                        _console.WriteLine($"deleted >>>  {dir}");
+                        FileSystem.DeleteDirectory(dir, UIOption.OnlyErrorDialogs,
+                            deletePermanently ?
+                            RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                            UICancelOption.DoNothing);
+                    }
+                    else
+                    {
+                        _console.WriteLine($"print >>>  {dir}");
+                    }
+                }
+                catch (UnauthorizedAccessException) { }
+                catch (DirectoryNotFoundException) { }
+            }
+        }
+
+        private void ScanEmptyDirs(string dir, ref int cnt, CancellationToken token, bool delete = false,
             bool deletePermanently = false)
         {
             if (String.IsNullOrEmpty(dir))
@@ -358,33 +424,9 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    DeleteEmptyDirs(d, ref cnt, token, delete, deletePermanently);
+                    ScanEmptyDirs(d, ref cnt, token, delete, deletePermanently);
                 }
-                var entries = Directory.EnumerateFileSystemEntries(dir);
-
-                if (!entries.Any())
-                {
-                    try
-                    {
-                        cnt++;
-                        // Directory.Delete(dir);
-                        emptyFolderList.Add(dir);
-                        if (delete)
-                        {
-                            _console.WriteLine($"deleted >>>  {dir}");
-                            FileSystem.DeleteDirectory(dir, UIOption.OnlyErrorDialogs,
-                                deletePermanently ?
-                                RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                                UICancelOption.DoNothing);
-                        }
-                        else
-                        {
-                            _console.WriteLine($"print >>>  {dir}");
-                        }
-                    }
-                    catch (UnauthorizedAccessException) { }
-                    catch (DirectoryNotFoundException) { }
-                }
+                EmptyJudge(dir, ref cnt, delete);
             }
             catch (UnauthorizedAccessException) { }
         }
@@ -472,6 +514,8 @@ namespace DailyWallpaper
 
             // command mode
             bool useCommand = false;
+            bool useModeCmd = false;
+            FilterMode fimode = FilterMode.GEN_PROTECT;
             if (cmd.ToLower().Equals("list controlled"))
             {
                 _console.WriteLine("\r\nThe following is a list of controlled folders:");
@@ -481,37 +525,41 @@ namespace DailyWallpaper
                 }
                 useCommand = true;
             }
-            if (cmd.ToLower().Equals("mode protect"))
+            if (cmd.ToLower().Equals("mode"))
             {
-                useCommand = true;
-                if (regexCheckBox.Checked) 
-                {
-                    filterMode = FilterMode.REGEX_PROTECT;
-                }
-                else
-                {
-                    filterMode = FilterMode.GEN_PROTECT;
-                }
-                _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
-                _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
-            }
-            if (cmd.ToLower().Equals("mode find"))
-            {
-                useCommand = true;
+                useModeCmd = true;
                 if (regexCheckBox.Checked)
                 {
-                    filterMode = FilterMode.REGEX_FIND;
+                    if (filterMode == FilterMode.REGEX_FIND)
+                    {
+                        fimode = FilterMode.REGEX_PROTECT;
+                    }
+                    if (filterMode == FilterMode.REGEX_PROTECT)
+                    {
+                        fimode = FilterMode.REGEX_FIND;
+                    }
                 }
                 else
                 {
-                    filterMode = FilterMode.GEN_FIND;
+                    if (filterMode == FilterMode.GEN_FIND)
+                    {
+                        fimode = FilterMode.GEN_PROTECT;
+                    }
+                    if (filterMode == FilterMode.GEN_PROTECT)
+                    {
+                        fimode = FilterMode.GEN_FIND;
+                    }
                 }
+
+            }
+            if (useModeCmd)
+            {
+                filterMode = fimode;
                 _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
                 _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
             }
-
             // recover
-            if (useCommand)
+            if (useCommand || useModeCmd)
             {
                 box.Text = "";
                 return true;
@@ -528,7 +576,7 @@ namespace DailyWallpaper
                     path = path.Trim();
                     if (UpdateTextAndIniFile(path))
                     {
-                        PrintDir();
+                        // PrintDir();
                     }
                 }
             }
@@ -649,6 +697,7 @@ namespace DailyWallpaper
             {
                 folderFilter = new List<string>();
                 regexFilter = "";
+                _console.WriteLine(">>> But there is no valid filter value.");
                 return;
             }
             folderFilter = new List<string>();
@@ -673,7 +722,7 @@ namespace DailyWallpaper
             {
                 return;
             }
-            if (print) _console.WriteLine("\r\nYou have set the following protection filter(s):");
+            if (print) _console.WriteLine("\r\nYou have set the following general filter(s):");
             foreach (var ft in filterList)
             {
                 if (print) _console.WriteLine($" {ft} ");

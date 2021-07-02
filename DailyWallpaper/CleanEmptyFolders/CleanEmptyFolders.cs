@@ -12,19 +12,20 @@ namespace DailyWallpaper
         public string targetFolderPath = null;
         public string helpString =
             "******************************************** USAGE ********************************************\r\n" +
-           "1.\"Select\":                    Select/ (Type + ENTER)\r\n" +
+           "1.\"Select\":                    Select / (TYPE + ENTER), PS: When you type, ENTER is NEEDED\r\n" +
            "2.\"Print\" :                    Show all the empty folders recursively\r\n" +
            "3.\"Clear\" :                    Clear screen.\r\n" +
-           "4.\"STOP\"  :                    Stop \r\n" +
-           "5.\"RecycleBin/Delete\" :        literally.\r\n" +
-                                             
+           "4.\"STOP\"  :                    Stop Scanning\r\n" +
+           "5.\"RecycleBin/Delete\" :        literally.\r\n" +                                   
            "6.\"Save list/log to File\":     literally.\r\n" +
-           "7.\"Folder filter checkbox:\":   use CHECKBOX select regex/general \r\n " +
-           "8.\"Folder filter textbox\":     TYPE on the Folder Filter TEXTBOX then ENTER  \r\n  " +
-            "                                   1)  mode find, 2)  mode protect \r\n" +
-            "SUM:          1) use checkbox choose regex/general  2) use Folder Filter TEXTBOX choose find/protect \r\n" +
-            "                 Then you get REGEX_FIND,REGX_PROTECT,GEN_FIND,GEN_PROTECT            " +
-            "\r\n******************************************** USAGE ********************************************\r\n";
+           "7.\"Folder filter CHECKBOX:\":   use CHECKBOX select general/regex\r\n" +
+           "8.\"Folder filter TEXTBOX\":\r\n" +
+            "  8.1 Command mode:             TYPE then ENTER \r\n" +
+            "                                        1) list controlled  2) mode \r\n" +
+            "  8.2 Word    mode:             JUST TYPE [ENTER: Yes but not needed]\r\n\r\n" +
+            "SUM:   1) use RE CHECKBOX choose general/regex  2) use folder filter TEXTBOX type \" mode \"choose find/protect \r\n" +
+            "                 Then you get GEN_FIND, GEN_PROTECT, REGEX_FIND, REGX_PROTECT   \r\n" +
+            "******************************************** USAGE ********************************************\r\n";
         public ConfigIni ini;
         public List<string> controlledFolder1st;
         public List<string> controlledFolderAll;
