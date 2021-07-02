@@ -161,6 +161,7 @@
     </Compile>
     <None Include="res\DailyWallpaper256x256.ico" />
     <None Include="res\DailyWallpaper_80x80.png" />
+    <None Include="res\cef32x32.ico" />
     <Content Include="Translations.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

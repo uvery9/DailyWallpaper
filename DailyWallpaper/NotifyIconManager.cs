@@ -404,6 +404,15 @@ namespace DailyWallpaper
 
         }
 
+        
+        private void _cefWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                _cefWindow.Hide();
+            }
+        }
         private void _viewWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
@@ -558,6 +567,8 @@ namespace DailyWallpaper
         private void _Icon_QuitMenuItem_Click(object sender, EventArgs e)
         {
             _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(),"LOG");
+            _cefWindow.Dispose();
+            _viewWindow.Dispose();
             notifyIcon.Dispose();
             Application.Exit();
         }

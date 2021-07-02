@@ -109,8 +109,7 @@ namespace DailyWallpaper
             _Icon_CleanEmptyFoldersMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_CleanEmptyFolders"),
                     (e, s) => {
-                        var cef = new CleanEmptyFoldersForm();
-                        cef.Show();
+                        _cefWindow.Show();
                     });
 
             _Icon_ToolboxMenuItem = ToolStripMenuItemWithHandler(
@@ -191,6 +190,8 @@ namespace DailyWallpaper
             // _viewWindow.Load += new System.EventHandler(_viewWindow_Load);
             _viewWindow.clearButton.Click += new System.EventHandler(clearButton_Click);
             _viewWindow.saveToFileButton.Click += new System.EventHandler(saveToFileButton_Click);
+            _cefWindow = new CleanEmptyFoldersForm();
+            _cefWindow.FormClosing += _cefWindow_FormClosing;
         }
         private void AddDivIntoPanel(Panel panel,
                                     RadioButton radioButton,
@@ -463,6 +464,7 @@ namespace DailyWallpaper
         private System.Threading.Timer _exitTimeHelper;
         private bool setWallpaperSucceed = false;
         private View.LogWindow _viewWindow;
+        private CleanEmptyFoldersForm _cefWindow;
         private bool useTextBoxWriter = false;
         private bool iStextFromFileNew = true;
         private bool consRunning = false;

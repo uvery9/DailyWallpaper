@@ -68,6 +68,8 @@ namespace DailyWallpaper
             FormBorderStyle = FormBorderStyle.FixedSingle;
             SetUpFilterMode();
             this.regexCheckBox.CheckedChanged += new System.EventHandler(this.regexCheckBox_CheckedChanged);
+            // _console.WriteLine("You could always TYPE help in folder filter textbox and press ENTER.");
+            Icon = Properties.Resources.cef32x32;
         }
         /// <summary>
         /// bind to tbTargetFolderHistory
@@ -80,25 +82,30 @@ namespace DailyWallpaper
                 if (fimode.Equals("GEN_FIND"))
                 {
                     regexCheckBox.Checked = false;
+                    modeCheckBox.Checked = true;
                     filterMode = FilterMode.GEN_FIND;
                 }
                 else if (fimode.Equals("REGEX_PROTECT"))
                 {
                     regexCheckBox.Checked = true;
+                    modeCheckBox.Checked = false;
                     filterMode = FilterMode.REGEX_PROTECT;
                 }
                 else if (fimode.Equals("REGEX_FIND"))
                 {
                     regexCheckBox.Checked = true;
+                    modeCheckBox.Checked = true;
                     filterMode = FilterMode.REGEX_FIND;
                 }
                 else
                 {
                     regexCheckBox.Checked = false;
+                    modeCheckBox.Checked = false;
                     filterMode = FilterMode.GEN_PROTECT;
                 }
             }
             _console.WriteLine($"\r\n Start with FilterMode: {filterMode}");
+            UpdateFilterExampleText(filterMode);
         }
         private void BindHistory(TextBox tb, List<string> list)
         {
@@ -152,7 +159,10 @@ namespace DailyWallpaper
 
         private void PrintDir(bool delete = false)
         {
-            SetFolderFilter(folderFilterTextBox.Text, print: true);
+            if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
+            {
+                return;
+            }
             _source = new CancellationTokenSource();
             btnStop.Enabled = true;
             btnClean.Enabled = false;
@@ -237,7 +247,11 @@ namespace DailyWallpaper
                     int cnt = 0;
                     if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
                     {
-                        ScanEmptyDirsFindMode(path, ref cnt, delete, token);
+                        ScanEmptyDirsFindMode(path, ref cnt, delete, token, re: false);
+                    }
+                    else if (filterMode == FilterMode.REGEX_FIND && regex != null)
+                    {
+                        ScanEmptyDirsFindMode(path, ref cnt, delete, token, re: true);
                     }
                     else
                     {
@@ -255,13 +269,9 @@ namespace DailyWallpaper
                         _console.WriteLine($"Found {cnt} empty folder(s).");
                     }
                 }
-                catch (OperationCanceledException e)
+                catch (Exception)
                 {
-                    throw e;
-                }
-                catch (Exception e)
-                {
-                    throw e;
+                    throw;
                 }
             }, token); // Pass same token to Task.Run.
             try
@@ -276,12 +286,12 @@ namespace DailyWallpaper
             catch (OperationCanceledException e)
             {
                 scanRes = false;
-                _console.WriteLine($"\r\nRecurseScanDir throw exception message: {e.Message}");
+                _console.WriteLine($"\r\n>>> RecurseScanDir throw exception message: {e.Message}");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 scanRes = false;
-                _console.WriteLine($"\r\nRecurseScanDir throw exception message: {ex.Message}");
+                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e.Message}");
                 _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
             }
 
@@ -335,7 +345,7 @@ namespace DailyWallpaper
         /// 1)games 2)D:\games 3)games,Steam\logs 4)D:\games,Steam\logs
         /// </summary>
 
-        private void ScanEmptyDirsFindMode(string path, ref int cnt, bool delete, CancellationToken token)
+        private void ScanEmptyDirsFindMode(string path, ref int cnt, bool delete, CancellationToken token, bool re = false)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -343,33 +353,49 @@ namespace DailyWallpaper
             }
             try
             {
+                
                 foreach (var d in Directory.EnumerateDirectories(path))
                 {
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
                     // FUCK THE $RECYCLE.BIN
                     if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
                     {
                         continue;
                     }
-
-                    ScanEmptyDirsFindMode(d, ref cnt, delete, token);
-                    if (token.IsCancellationRequested)
-                    {
-                        token.ThrowIfCancellationRequested();
-                    }
+                    ScanEmptyDirsFindMode(d, ref cnt, delete, token, re);
                 }
-                foreach (var filter in folderFilter)
+                if (re)
                 {
-                    if (path.Contains(filter))
+                    if (regex.IsMatch(path))
                     {
                         EmptyJudge(path, ref cnt, delete);
-                        continue;
+                        return;
                     }
+                }
+                else
+                {
+                    foreach (var filter in folderFilter)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        if (path.Contains(filter))
+                        {
+                            EmptyJudge(path, ref cnt, delete);
+                            continue;
+                        }
+                    }
+                    return;
                 }
             }
             catch (UnauthorizedAccessException) { }
-            catch (Exception e)
+            catch (Exception)
             {
-                _console.WriteLine(e);
+                throw;
             }
         }
 
@@ -508,14 +534,42 @@ namespace DailyWallpaper
             }
         }
 
+        private void UpdateREAndModeCheckBox(FilterMode mode)
+        {
+            if (mode == FilterMode.GEN_FIND)
+            {
+                regexCheckBox.Checked = false;
+                modeCheckBox.Checked = true;
+            }
+            if (mode == FilterMode.GEN_PROTECT)
+            {
+                regexCheckBox.Checked = false;
+                modeCheckBox.Checked = false;
+            }
+            if (mode == FilterMode.REGEX_FIND)
+            {
+                regexCheckBox.Checked = true;
+                modeCheckBox.Checked = true;
+            }
+            if (mode == FilterMode.REGEX_PROTECT)
+            {
+                regexCheckBox.Checked = true;
+                modeCheckBox.Checked = false;
+            }
+        }
+        private void UpdateIniAndTextBox()
+        {    
+            _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
+            UpdateFilterExampleText(filterMode);
+            _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
+        }
         private bool IsCmdInTextBox(TextBox box, string cmd)
         {
             cmd = cmd.Trim();
 
             // command mode
             bool useCommand = false;
-            bool useModeCmd = false;
-            FilterMode fimode = FilterMode.GEN_PROTECT;
+            
             if (cmd.ToLower().Equals("list controlled"))
             {
                 _console.WriteLine("\r\nThe following is a list of controlled folders:");
@@ -525,9 +579,10 @@ namespace DailyWallpaper
                 }
                 useCommand = true;
             }
-            if (cmd.ToLower().Equals("mode"))
+            if (cmd.ToLower().Equals("find"))
             {
-                useModeCmd = true;
+                useCommand = true;
+                FilterMode fimode = filterMode;
                 if (regexCheckBox.Checked)
                 {
                     if (filterMode == FilterMode.REGEX_FIND)
@@ -550,16 +605,46 @@ namespace DailyWallpaper
                         fimode = FilterMode.GEN_FIND;
                     }
                 }
-
-            }
-            if (useModeCmd)
-            {
                 filterMode = fimode;
-                _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
-                _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
+                UpdateREAndModeCheckBox(filterMode);
             }
+            if (cmd.ToLower().Equals("re"))
+            {
+                useCommand = true;
+                FilterMode fimode = filterMode;
+                if (modeCheckBox.Checked)
+                {
+                    if (filterMode == FilterMode.REGEX_FIND)
+                    {
+                        fimode = FilterMode.GEN_FIND;
+                    }
+                    if (filterMode == FilterMode.GEN_FIND)
+                    {
+                        fimode = FilterMode.REGEX_FIND;
+                    }
+                }
+                else
+                {
+                    if (filterMode == FilterMode.GEN_PROTECT)
+                    {
+                        fimode = FilterMode.REGEX_PROTECT;
+                    }
+                    if (filterMode == FilterMode.REGEX_PROTECT)
+                    {
+                        fimode = FilterMode.GEN_PROTECT;
+                    }
+                }
+                filterMode = fimode;
+                UpdateREAndModeCheckBox(filterMode);
+            }
+            if (cmd.ToLower().Equals("help"))
+            {
+                _console.WriteLine(_cef.helpString);
+                useCommand = true;
+            }
+
             // recover
-            if (useCommand || useModeCmd)
+            if (useCommand)
             {
                 box.Text = "";
                 return true;
@@ -689,7 +774,7 @@ namespace DailyWallpaper
 
         }
 
-        private void SetFolderFilter(string text, bool print = false)
+        private bool SetFolderFilter(string text, bool print = false)
         {
             _console.WriteLine($">>> Using: {filterMode}");
             string filter = text;
@@ -697,20 +782,31 @@ namespace DailyWallpaper
             {
                 folderFilter = new List<string>();
                 regexFilter = "";
+                regex = null;
                 _console.WriteLine(">>> But there is no valid filter value.");
-                return;
+                return true;
             }
             folderFilter = new List<string>();
             regexFilter = "";
             if (regexCheckBox.Checked)
             {
                 regexFilter = filter;
-                regex = new Regex(regexFilter, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                try
+                {
+                    regex = new Regex(regexFilter, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                }
+                catch (Exception e)
+                {
+                    _console.WriteLine($"\r\n!!! filter ERROR: {regexFilter} illegal");
+                    _console.WriteLine($"\r\n!!! ERROR: {e.Message}");
+                    regex = null;
+                    return false;
+                } 
                 if (print)
                 {
                     _console.WriteLine($"\r\nYou have set the regex filter: \" {regexFilter} \"");
                 }
-                return;
+                return true;
             }
             if (filter.Contains("，"))
             {
@@ -720,7 +816,7 @@ namespace DailyWallpaper
             var filterList = filter.Split(',');
             if (filterList.Length < 1)
             {
-                return;
+                return false;
             }
             if (print) _console.WriteLine("\r\nYou have set the following general filter(s):");
             foreach (var ft in filterList)
@@ -728,17 +824,36 @@ namespace DailyWallpaper
                 if (print) _console.WriteLine($" {ft} ");
                 folderFilter.Add(ft);
             }
+            return true;
         }
         private void folderFilterTextBox_TextChanged(object sender, EventArgs e)
         {
             // DONOTHING
         }
 
+        private void UpdateFilterExampleText(FilterMode mode)
+        {
+            if (mode == FilterMode.GEN_FIND)
+            {
+                filterExample.Text = " Using General Find mode";
+            }
+            if (mode == FilterMode.GEN_PROTECT)
+            {
+                filterExample.Text = " Using General Protect mode";
+            }
+            if (mode == FilterMode.REGEX_FIND)
+            {
+                filterExample.Text = " Using Regex Find mode";
+            }
+            if (mode == FilterMode.REGEX_PROTECT)
+            {
+                filterExample.Text = " Using Regex Protect mode";
+            }
+        }
         private void regexCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (regexCheckBox.Checked)
             {
-                this.filterExample.Text = " Using regular expression";
                 if (filterMode == FilterMode.GEN_FIND)
                 {
                     filterMode = FilterMode.REGEX_FIND;
@@ -750,7 +865,6 @@ namespace DailyWallpaper
             }
             else
             {
-                this.filterExample.Text = " Such as: equal,freedom,Pictures";
                 if (filterMode == FilterMode.REGEX_PROTECT)
                 {
                     filterMode = FilterMode.GEN_PROTECT;
@@ -759,10 +873,36 @@ namespace DailyWallpaper
                 {
                     filterMode = FilterMode.GEN_FIND;
                 }
-            }            
-            _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
-            _cef.ini.UpdateIniItem("FilterMode", filterMode.ToString());
+            }
+            UpdateIniAndTextBox();
 
+        }
+
+        private void modeCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (modeCheckBox.Checked)
+            {
+                if (filterMode == FilterMode.GEN_PROTECT)
+                {
+                    filterMode = FilterMode.GEN_FIND;
+                }
+                if (filterMode == FilterMode.REGEX_PROTECT)
+                {
+                    filterMode = FilterMode.REGEX_FIND;
+                }
+            }
+            else
+            {
+                if (filterMode == FilterMode.GEN_FIND)
+                {
+                    filterMode = FilterMode.GEN_PROTECT;
+                }
+                if (filterMode == FilterMode.REGEX_FIND)
+                {
+                    filterMode = FilterMode.REGEX_PROTECT;
+                }
+            }
+            UpdateIniAndTextBox();
         }
     }
 }

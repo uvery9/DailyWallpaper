@@ -76,7 +76,7 @@ namespace DailyWallpaper
 				catch (Exception e)
 				{
 					// may no permission???
-					Console.Error.WriteLine(e);
+					Console.Error.WriteLine(e.Message);
 					Console.Error.WriteLine($"Maybe PATH IS TOO LOOG: {imgListFile1st}");
 					Console.Error.WriteLine($"Maybe the program don't have permission.");
 					Console.WriteLine($"Try to use: {imgListFile2nd}");
@@ -89,7 +89,7 @@ namespace DailyWallpaper
 					catch (Exception err)
 					{
 						// may no permission???
-						Console.Error.WriteLine(err);
+						Console.Error.WriteLine(err.Message);
 						var newLine = Environment.NewLine;
 						throw new Exception(newLine + newLine+ newLine +
 							$">>> Please contact me[{ProjectInfo.email}] with: " +
@@ -251,7 +251,7 @@ namespace DailyWallpaper
 			}
 			catch (ArgumentNullException e)
 			{
-				Console.WriteLine("Exception caught: {0}", e);
+				Console.WriteLine("Exception caught: {0}", e.Message);
 			}
 		}
 		public List<string> Txt2List(bool checkExist=true)
@@ -286,7 +286,7 @@ namespace DailyWallpaper
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine("Exception caught: {0}", e);
+				Console.WriteLine("Exception caught: {0}", e.Message);
 				return new List<string>();
 			}
 			

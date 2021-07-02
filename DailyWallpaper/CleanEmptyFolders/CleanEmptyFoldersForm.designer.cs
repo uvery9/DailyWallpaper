@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBoxTarget = new System.Windows.Forms.GroupBox();
+            this.modeCheckBox = new System.Windows.Forms.CheckBox();
             this.regexCheckBox = new System.Windows.Forms.CheckBox();
             this.filterExample = new System.Windows.Forms.TextBox();
             this.folderFilterTextBox = new System.Windows.Forms.TextBox();
@@ -53,6 +54,7 @@
             // 
             this.groupBoxTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxTarget.Controls.Add(this.modeCheckBox);
             this.groupBoxTarget.Controls.Add(this.regexCheckBox);
             this.groupBoxTarget.Controls.Add(this.filterExample);
             this.groupBoxTarget.Controls.Add(this.folderFilterTextBox);
@@ -69,10 +71,21 @@
             this.groupBoxTarget.TabStop = false;
             this.groupBoxTarget.Text = "Paths";
             // 
+            // modeCheckBox
+            // 
+            this.modeCheckBox.AutoSize = true;
+            this.modeCheckBox.Location = new System.Drawing.Point(551, 51);
+            this.modeCheckBox.Name = "modeCheckBox";
+            this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
+            this.modeCheckBox.TabIndex = 10;
+            this.modeCheckBox.Text = "Find";
+            this.modeCheckBox.UseVisualStyleBackColor = true;
+            this.modeCheckBox.CheckedChanged += new System.EventHandler(this.modeCheckBox_CheckedChanged);
+            // 
             // regexCheckBox
             // 
             this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(523, 51);
+            this.regexCheckBox.Location = new System.Drawing.Point(502, 51);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
             this.regexCheckBox.TabIndex = 9;
@@ -83,12 +96,11 @@
             // 
             this.filterExample.BackColor = System.Drawing.SystemColors.Control;
             this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(577, 52);
+            this.filterExample.Location = new System.Drawing.Point(630, 52);
             this.filterExample.Name = "filterExample";
             this.filterExample.ReadOnly = true;
-            this.filterExample.Size = new System.Drawing.Size(297, 21);
+            this.filterExample.Size = new System.Drawing.Size(234, 21);
             this.filterExample.TabIndex = 8;
-            this.filterExample.Text = " Such as: equal,freedom,Pictures";
             this.filterExample.TextChanged += new System.EventHandler(this.filterExample_TextChanged);
             // 
             // folderFilterTextBox
@@ -113,12 +125,12 @@
             // btnSelectTargetFolder
             // 
             this.btnSelectTargetFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder.Location = new System.Drawing.Point(901, 20);
+            this.btnSelectTargetFolder.Location = new System.Drawing.Point(861, 19);
             this.btnSelectTargetFolder.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder.Name = "btnSelectTargetFolder";
-            this.btnSelectTargetFolder.Size = new System.Drawing.Size(99, 47);
+            this.btnSelectTargetFolder.Size = new System.Drawing.Size(139, 35);
             this.btnSelectTargetFolder.TabIndex = 5;
-            this.btnSelectTargetFolder.Text = "Select";
+            this.btnSelectTargetFolder.Text = "Select Folder";
             this.btnSelectTargetFolder.UseVisualStyleBackColor = true;
             this.btnSelectTargetFolder.Click += new System.EventHandler(this.btnSelectOutFolder_Click);
             // 
@@ -299,5 +311,6 @@
         private System.Windows.Forms.TextBox folderFilterTextBox;
         private System.Windows.Forms.TextBox filterExample;
         private System.Windows.Forms.CheckBox regexCheckBox;
+        private System.Windows.Forms.CheckBox modeCheckBox;
     }
 }

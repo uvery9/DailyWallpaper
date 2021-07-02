@@ -21,7 +21,7 @@ namespace DailyWallpaper
            "7.\"Folder filter CHECKBOX:\":   use CHECKBOX select general/regex\r\n" +
            "8.\"Folder filter TEXTBOX\":\r\n" +
             "  8.1 Command mode:             TYPE then ENTER \r\n" +
-            "                                        1) list controlled  2) mode \r\n" +
+            "                                        1) help  2) list controlled  3) re 4) find\r\n" +
             "  8.2 Word    mode:             JUST TYPE [ENTER: Yes but not needed]\r\n\r\n" +
             "SUM:   1) use RE CHECKBOX choose general/regex  2) use folder filter TEXTBOX type \" mode \"choose find/protect \r\n" +
             "                 Then you get GEN_FIND, GEN_PROTECT, REGEX_FIND, REGX_PROTECT   \r\n" +
