@@ -26,13 +26,17 @@ namespace DailyWallpaper.Helpers
         private static Color backColor = 
             Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
 
-        /// <summary>
-        /// return result will block the program.
-        /// https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket?view=net-5.0
-        /// https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run?view=net-5.0
-        /// NEED TO FIX: WHEN SOMEBODY USE VPN/SOMETHING, (S)HE CAN VISIT THR WEBSIT(SERVER), BUT THIS METHOD CAN'T.
-        /// </summary>
-        public static void TestConnectUsingSocket(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
+        public static void TestConnect(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
+        {
+            TestConnectUsingSocket(updateFunc, server, port);
+        }
+            /// <summary>
+            /// return result will block the program.
+            /// https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket?view=net-5.0
+            /// https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run?view=net-5.0
+            /// NEED TO FIX: WHEN SOMEBODY USE VPN/SOMETHING, (S)HE CAN VISIT THR WEBSIT(SERVER), BUT THIS METHOD CAN'T.
+            /// </summary>
+            public static void TestConnectUsingSocket(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
         {
             bool innerRun()
             {

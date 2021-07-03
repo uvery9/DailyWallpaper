@@ -53,7 +53,7 @@ namespace DailyWallpaper
                     // ShowNotification("Use backup gitee", msg);
                 }
             };
-            ProjectInfo.TestConnectUsingSocket(updateUrlTips, "www.github.com");
+            ProjectInfo.TestConnect(updateUrlTips, "www.github.com");
         }
 
         // call back by timer.
