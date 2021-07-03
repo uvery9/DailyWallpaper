@@ -16,8 +16,7 @@ namespace DailyWallpaper
     {
         public ViewManager()
         {
-
-             var notifyIconHelper = NotifyIconManager.GetInstance();
+            var notifyIconHelper = NotifyIconManager.GetInstance();
             _notifyIcon = notifyIconHelper.notifyIcon;
             _hiddenWindow = new System.Windows.Window();
             _hiddenWindow.Hide();

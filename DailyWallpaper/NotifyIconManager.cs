@@ -31,6 +31,32 @@ namespace DailyWallpaper
             TrayIconInitializeComponent();
             ActionRegister();
             InitializeCheckedAndTimer();
+            TryToUseGithubInCN();
+            /// <summary>
+            /// try to use github in CN, update CN/Global URL background.
+            /// </summary>
+
+        }
+
+        void TryToUseGithubInCN()
+        {
+            void updateUrlTips(bool success, string msg)
+            {
+                if (success)
+                {
+                    // Update to CN URL.
+                    // DonationUrl OfficalWebSite NewIssue
+                    // ProjectInfo.DonationUrl
+                    _Icon_DonateAndSupportMenuItem.ToolTipText =    ProjectInfo.DonationUrl;
+                    _Icon_IssueAndFeedbackMenuItem.ToolTipText =    ProjectInfo.NewIssue;
+                    _Icon_OpenOfficialWebsiteMenuItem.ToolTipText = ProjectInfo.OfficalWebSite;
+                }
+                else
+                {
+                    // ShowNotification("Use backup gitee", msg);
+                }
+            };
+            ProjectInfo.TestConnectUsingSocket(updateUrlTips, "www.github.com");
         }
 
         // call back by timer.
@@ -43,6 +69,7 @@ namespace DailyWallpaper
                 Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
             }
         }
+
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync()).Wait();
