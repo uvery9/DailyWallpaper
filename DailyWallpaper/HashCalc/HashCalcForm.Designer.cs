@@ -244,7 +244,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // SHA256TextBox
             // 
-            this.SHA256TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.SHA256TextBox.BackColor = System.Drawing.SystemColors.Control;
             this.SHA256TextBox.Location = new System.Drawing.Point(104, 107);
             this.SHA256TextBox.Name = "SHA256TextBox";
             this.SHA256TextBox.ReadOnly = true;
@@ -255,7 +255,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // SHA1TextBox
             // 
-            this.SHA1TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.SHA1TextBox.BackColor = System.Drawing.SystemColors.Control;
             this.SHA1TextBox.Location = new System.Drawing.Point(104, 64);
             this.SHA1TextBox.Name = "SHA1TextBox";
             this.SHA1TextBox.ReadOnly = true;
@@ -266,7 +266,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // CRC64TextBox
             // 
-            this.CRC64TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.CRC64TextBox.BackColor = System.Drawing.SystemColors.Control;
             this.CRC64TextBox.Location = new System.Drawing.Point(538, 22);
             this.CRC64TextBox.Name = "CRC64TextBox";
             this.CRC64TextBox.ReadOnly = true;
@@ -277,7 +277,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // CRC32TextBox
             // 
-            this.CRC32TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.CRC32TextBox.BackColor = System.Drawing.SystemColors.Control;
             this.CRC32TextBox.Location = new System.Drawing.Point(609, 64);
             this.CRC32TextBox.Name = "CRC32TextBox";
             this.CRC32TextBox.ReadOnly = true;
@@ -288,7 +288,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // MD5TextBox
             // 
-            this.MD5TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.MD5TextBox.BackColor = System.Drawing.SystemColors.Control;
             this.MD5TextBox.Location = new System.Drawing.Point(104, 20);
             this.MD5TextBox.Name = "MD5TextBox";
             this.MD5TextBox.ReadOnly = true;
