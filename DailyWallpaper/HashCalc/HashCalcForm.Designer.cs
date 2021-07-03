@@ -86,6 +86,7 @@ namespace DailyWallpaper.HashCalc
             this.hashTextBox.Location = new System.Drawing.Point(14, 537);
             this.hashTextBox.Multiline = true;
             this.hashTextBox.Name = "hashTextBox";
+            this.hashTextBox.ReadOnly = true;
             this.hashTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.hashTextBox.Size = new System.Drawing.Size(828, 246);
             this.hashTextBox.TabIndex = 5;
