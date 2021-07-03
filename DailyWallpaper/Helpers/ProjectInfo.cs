@@ -28,15 +28,50 @@ namespace DailyWallpaper.Helpers
 
         public static void TestConnect(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
         {
-            TestConnectUsingSocket(updateFunc, server, port);
+            // TestConnectUsingSocket(updateFunc, server, port);
+            TestConnectUsingProxy(updateFunc, server, port);
+            
         }
-            /// <summary>
-            /// return result will block the program.
-            /// https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket?view=net-5.0
-            /// https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run?view=net-5.0
-            /// NEED TO FIX: WHEN SOMEBODY USE VPN/SOMETHING, (S)HE CAN VISIT THR WEBSIT(SERVER), BUT THIS METHOD CAN'T.
-            /// </summary>
-            public static void TestConnectUsingSocket(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
+
+        // DON'T KNOW IF THE USER HAS AN PROXY
+        public static void TestConnectUsingProxy(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
+        {
+            bool innerRun()
+            {
+                try
+                {
+                    var webRq = (HttpWebRequest)WebRequest.Create(server);
+                    var proxy = webRq.Proxy;
+                    if (proxy != null)
+                    {
+                        MessageBox.Show(string.Format("Proxy: {0}", proxy.GetProxy(webRq.RequestUri)));
+                    }
+                    else
+                    {
+                        MessageBox.Show("Proxy is null; no proxy will be used");
+                    }
+                    connectToWorld = true;
+                    updateFunc(true, $"Conneted to {server}");
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"error: {e}");
+                    connectToWorld = false;
+                    updateFunc(false, $"Can not conneted to {server} with error: {e.Message}.");
+                    return false;
+                }
+            };
+            Task.Run(() => { return innerRun(); });
+        }
+
+        /// <summary>
+        /// return result will block the program.
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.socket?view=net-5.0
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run?view=net-5.0
+        /// NEED TO FIX: WHEN SOMEBODY USE VPN/SOMETHING, (S)HE CAN VISIT THR WEBSIT(SERVER), BUT THIS METHOD CAN'T.
+        /// </summary>
+        public static void TestConnectUsingSocket(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
         {
             bool innerRun()
             {
@@ -86,8 +121,18 @@ namespace DailyWallpaper.Helpers
                     return false;
                 }
             };
-            // Wait(); or .Result will block the program.
             Task.Run(() => { return innerRun(); });
+            /* Wait(); or .Result will block the program.
+             *   task.Result is accessing the property's get accessor blocks the calling thread 
+             *  until the asynchronous operation is complete; it is equivalent to calling the 
+             *  Wait method. Once the result of an operation is available, it is stored and 
+             *  is returned immediately on subsequent calls to the Result property. Note that, 
+             *  if an exception occurred during the operation of the task, or if the task 
+             *  has been cancelled, the Result property does not return a value. Instead, 
+             *  attempting to access the property value throws an AggregateException exception. 
+             *  The only difference is that the await will not block. Instead, it will asynchronously 
+             *  wait for the Task to complete and then resume
+             */
         }
 
         public static string DonationUrl { 
