@@ -17,7 +17,7 @@ namespace DailyWallpaper
     public partial class CleanEmptyFoldersForm : Form, IDisposable
     {
         private CleanEmptyFolders _cef;
-        private CEFTextWriter _console;
+        private TextBoxCons _console;
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private CancellationTokenSource _source;
         private bool deletePermanently = false;
@@ -46,7 +46,7 @@ namespace DailyWallpaper
             folderFilterTextBox.KeyDown += folderFilterTextBox_KeyDown;
             Icon = Properties.Resources.icon32x32;
             _cef = new CleanEmptyFolders();
-            _console = new CEFTextWriter(new ControlWriter(tbConsole));
+            _console = new TextBoxCons(new ConsWriter(tbConsole));
             _console.WriteLine(_cef.helpString);
             var init = _cef.ini.Read("CleanEmptyFoldersPath", "LOG");
             if (Directory.Exists(init))
