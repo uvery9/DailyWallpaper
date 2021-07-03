@@ -38,7 +38,7 @@ artifacts:
   name: DailyWallpaper.Protable
 
 deploy:
-  release: %GIT_TAG%
+  release: v%GIT_TAG%
   description: " NEED ADD "
   provider: GitHub
   auth_token:
