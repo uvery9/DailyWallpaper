@@ -16,7 +16,8 @@ namespace DailyWallpaper.HashCalc
 {
     public partial class HashCalcForm : Form
     {
-        private HashCalc m_hashCalc;
+        private HashCalc m_hashCalc1;
+        private HashCalc m_hashCalc2;
         public HashCalcForm()
         {
             InitializeComponent();
@@ -24,9 +25,11 @@ namespace DailyWallpaper.HashCalc
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = Properties.Resources.HASH32x32;
             hashPicBox.AllowDrop = true;
-            m_hashCalc = new HashCalc();
+            m_hashCalc1 = new HashCalc();
+            m_hashCalc2 = new HashCalc();
+            m_hashCalc1.hashProgressBar = file1ProgressBar;
             EnableAllHashCheckBoxAndTextBox();
-            hashTextBox.Text = m_hashCalc.help;
+            hashTextBox.Text = m_hashCalc1.help;
             //
 
         }
@@ -41,29 +44,8 @@ namespace DailyWallpaper.HashCalc
             if (x >= hashPicBox.Location.X && x <= hashPicBox.Location.X + hashPicBox.Width
                 && y >= hashPicBox.Location.Y && y <= hashPicBox.Location.Y + hashPicBox.Height)
             {
-
-                if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                {
-                    string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                    foreach (string fileLoc in filePaths)
-                    {
-                        // Code to read the contents of the text file
-                        if (File.Exists(fileLoc))
-                        {
-                            /*                            using (TextReader tr = new StreamReader(fileLoc))
-                                                        {
-                                                            MessageBox.Show(tr.ReadToEnd());
-                                                        }*/
-                            this.TopMost = false;
-                            MessageBox.Show(fileLoc);
-                        }
-
-                    }
-                }
-            } else
-            {
-                this.Cursor = System.Windows.Forms.Cursors.No;
-            }
+                // DO SOMETHING.
+            } 
         }
 
 
@@ -98,8 +80,9 @@ namespace DailyWallpaper.HashCalc
                 {
                     if (File.Exists(fileLoc))
                     {
-                        m_hashCalc.file1Path = fileLoc;
+                        m_hashCalc1.filePath = fileLoc;
                         hashfile1TextBox.Text = fileLoc;
+                        file1CalcButton.PerformClick(); // Pretend to be clicked.
                     }
 
                 }
@@ -118,23 +101,6 @@ namespace DailyWallpaper.HashCalc
             }
         }
 
-        private void file2Panel_DragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                foreach (string fileLoc in filePaths)
-                {
-                    if (File.Exists(fileLoc))
-                    {
-                        m_hashCalc.file2Path = fileLoc;
-                        file2TextBox.Text = fileLoc;
-                    }
-
-                }
-            }
-        }
-
         private void hashTextBox_KeyDown(object sender, KeyEventArgs e)
         {
 
@@ -145,7 +111,7 @@ namespace DailyWallpaper.HashCalc
             if (!string.IsNullOrEmpty(hashfile1TextBox.Text))
             {
                 if (File.Exists(hashfile1TextBox.Text)){
-                    m_hashCalc.file1Path = hashfile1TextBox.Text;
+                    m_hashCalc1.filePath = hashfile1TextBox.Text;
                 }
             }
         }
@@ -174,49 +140,19 @@ namespace DailyWallpaper.HashCalc
             var path = HashOpenFileDialog(hashfile1TextBox.Text);
             if (!string.IsNullOrEmpty(path))
             {
-                m_hashCalc.file1Path = path;
+                m_hashCalc1.filePath = path;
                 hashfile1TextBox.Text = path;
-            }
-        }
-
-        private void file2BrowseButton_Click(object sender, EventArgs e)
-        {
-            var path = HashOpenFileDialog(file2TextBox.Text);
-            if (!string.IsNullOrEmpty(path))
-            {
-                m_hashCalc.file2Path = path;
-                file2TextBox.Text = path;
-            }
-        }
-
-        private void file2TextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(file2TextBox.Text))
-            {
-                if (File.Exists(file2TextBox.Text))
-                {
-                    m_hashCalc.file1Path = file2TextBox.Text;
-                }
             }
         }
 
         private string CopyOrSaveInfoFile1()
         {
-            return CopyOrSaveInfo(m_hashCalc.file1Path,
+            return CopyOrSaveInfo(m_hashCalc1.filePath,
                                   MD5_1TextBox.Text,
                                   CRC32_1TextBox.Text,
                                   CRC64_1TextBox.Text,
                                   SHA1_1TextBox.Text,
                                   SHA256_1TextBox.Text);
-        }
-        private string CopyOrSaveInfoFile2()
-        {
-            return CopyOrSaveInfo(m_hashCalc.file2Path,
-                                  MD5_2TextBox.Text,
-                                  CRC32_2TextBox.Text,
-                                  CRC64_2TextBox.Text,
-                                  SHA1_2TextBox.Text,
-                                  SHA256_2TextBox.Text);            
         }
 
         private string CopyOrSaveInfo(string name, string md5, string crc32, string crc64, string sha1, string sha256)
@@ -247,11 +183,7 @@ namespace DailyWallpaper.HashCalc
             return ret;
         }
 
-        private bool file1Calculating = false;
-        private bool file2Calculating = false;
         private CancellationTokenSource file1Cancel;
-        private CancellationTokenSource file2Cancel;
-
         private void EnableAllHashCheckBoxAndTextBox()
         {
             mD5_1checkBox.Checked = true;
@@ -269,31 +201,11 @@ namespace DailyWallpaper.HashCalc
             sha256_1checkBox.Checked = true;
             SHA256_1TextBox.Enabled = true;
 
-            mD5_2checkBox.Checked = true;
-            MD5_2TextBox.Enabled = true;
-
-            cRC64_2checkBox.Checked = true;
-            CRC64_2TextBox.Enabled = true;
-
-            sha1_2checkBox.Checked = true;
-            SHA1_2TextBox.Enabled = true;
-
-            cRC32_2checkBox.Checked = true;
-            CRC32_2TextBox.Enabled = true;
-
-            sha256_2checkBox.Checked = true;
-            SHA256_2TextBox.Enabled = true;
-
             MD5_1TextBox.TabStop = false;
             CRC64_1TextBox.TabStop = false;
             SHA1_1TextBox.TabStop = false;
             CRC32_1TextBox.TabStop = false;
             SHA256_1TextBox.TabStop = false;
-            MD5_2TextBox.TabStop = false;
-            CRC64_2TextBox.TabStop = false;
-            SHA1_2TextBox.TabStop = false;
-            CRC32_2TextBox.TabStop = false;
-            SHA256_2TextBox.TabStop = false;
         }
         private void save2File(string file, string str)
         {
@@ -325,19 +237,9 @@ namespace DailyWallpaper.HashCalc
             Clipboard.SetText(CopyOrSaveInfoFile1());
         }
 
-        private void file2CopyButton_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetText(CopyOrSaveInfoFile2());
-        }
-
         private void file1SaveButton_Click(object sender, EventArgs e)
         {
-            save2File(m_hashCalc.file1Path, CopyOrSaveInfoFile1());
-        }
-
-        private void file2SaveButton_Click(object sender, EventArgs e)
-        {
-            save2File(m_hashCalc.file2Path, CopyOrSaveInfoFile2());
+            save2File(m_hashCalc1.filePath, CopyOrSaveInfoFile1());
         }
 
         private void CheckBoxAffectTextBox(CheckBox cb, TextBox tb)
@@ -375,63 +277,88 @@ namespace DailyWallpaper.HashCalc
         {
             CheckBoxAffectTextBox(sha256_1checkBox, SHA256_1TextBox);
         }
+       
 
-        private void mD5_2checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBoxAffectTextBox(mD5_2checkBox, MD5_2TextBox);
-        }
-
-        private void cRC64_2checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBoxAffectTextBox(cRC64_2checkBox, CRC64_2TextBox);
-        }
-
-        private void sha1_2checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBoxAffectTextBox(sha1_2checkBox, SHA1_2TextBox);
-        }
-
-        private void cRC32_2checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBoxAffectTextBox(cRC32_2checkBox, CRC32_2TextBox);
-        }
-
-        private void sha256_2checkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBoxAffectTextBox(sha256_2checkBox, SHA256_2TextBox);
-        }
-        
-        public void Calculate(string file, CancellationToken token, bool crc32, bool crc64,
+        private Dictionary<string, string> Calculate(HashCalc hashcalc, CancellationToken token, bool crc32, bool crc64,
             bool md5, bool sha1, bool sha256)
         {
-            if (crc32)  m_hashCalc.CRC32(file, token);
-            if (crc64)  m_hashCalc.CRC64(file, token);
-            if (md5)    m_hashCalc.MD5(file, token);
-            if (sha1)   m_hashCalc.SHA1(file, token);
-            if (sha256) m_hashCalc.SHA256(file, token);
-            file1HashbackGroundWorker.RunWorkerAsync(file);
+            var hashList = new List<string>();
+            void TellResultAsync(string who, string result, string costTime)
+            {
+                hashTextBox.Text += "\r\n" + who + ": " + result + " " + costTime;
+            }
+            var dict = new Dictionary<string, string>();
+            if (crc32) 
+            {
+                var res = hashcalc.CalcCRC32(hashcalc.filePath, token);
+                dict.Add("CRC32", res);
+            }
+            if (crc64)
+            {
+                var res = hashcalc.CalcCRC64(hashcalc.filePath, token);
+                dict.Add("CRC64", res);
+            }
+            if (md5)
+            {
+                hashcalc.CalcMD5(hashcalc.filePath, TellResultAsync, token);
+                // dict.Add("MD5", res);
+            }
+            if (sha1)
+            {
+                //var res = hashcalc.CalcSHA1(hashcalc.filePath, token);
+                // hashcalc.CalcSHA1(hashcalc.filePath, GetString, token);
+                //dict.Add("SHA1", res);
+            }
+
+            if (sha256)
+            {
+                //var res = hashcalc.CalcSHA256(hashcalc.filePath, token);
+               // dict.Add("SHA256", res);
+            }
+            return dict;
         }
-
-
 
         private void file1CalcButton_Click(object sender, EventArgs e)
         {
             file1Cancel = new CancellationTokenSource();
             file1CalcButton.Enabled = false;
-            Calculate(m_hashCalc.file1Path, file1Cancel.Token, cRC32_1checkBox.Checked, cRC64_1checkBox.Checked,
+            var dict = Calculate(m_hashCalc1, file1Cancel.Token, cRC32_1checkBox.Checked, cRC64_1checkBox.Checked,
                 mD5_1checkBox.Checked, sha1_1checkBox.Checked, sha256_1checkBox.Checked);
+
+            if (cRC32_1checkBox.Checked)
+            {
+                var s = dict["CRC32"];
+                CRC32_1TextBox.Text = s ?? "";
+
+            }
+            
+            if (cRC64_1checkBox.Checked)
+            {
+                var s = dict["CRC64"];
+                CRC64_1TextBox.Text = s ?? "";
+            }
+
+            if (mD5_1checkBox.Checked)
+            {
+                var s = dict["MD5"];
+                MD5_1TextBox.Text = s ?? "";
+            }
+
+            if (sha1_1checkBox.Checked)
+            {
+                var s = dict["SHA1"];
+                SHA1_1TextBox.Text = s ?? "";
+            }
+            
+            if (sha256_1checkBox.Checked)
+            {
+                var s = dict["SHA256"];
+                SHA256_1TextBox.Text = s ?? "";
+            }
             file1CalcButton.Enabled = true;
             // file2Cancel.Token;
         }
-        private void file2CalcButton_Click(object sender, EventArgs e)
-        {
-            file2Cancel = new CancellationTokenSource();
-            file2CalcButton.Enabled = false;
-            Calculate(m_hashCalc.file2Path, file2Cancel.Token, cRC32_2checkBox.Checked, cRC64_2checkBox.Checked,
-                mD5_2checkBox.Checked, sha1_2checkBox.Checked, sha256_2checkBox.Checked);
-            file2CalcButton.Enabled = true;
-            // file2Cancel.Token;
-        }
+
         private void file1ClearButton_Click(object sender, EventArgs e)
         {
             MD5_1TextBox.Text = "";
@@ -440,32 +367,13 @@ namespace DailyWallpaper.HashCalc
             SHA1_1TextBox.Text = "";
             SHA256_1TextBox.Text = "";
             hashfile1TextBox.Text = "";
-            m_hashCalc.file1Path = "";
-            if (file1Calculating)
-            {
-                if (file1Cancel != null)
-                {
-                    file1Cancel.Cancel();
-                }
-            }
-        }
+            m_hashCalc1.filePath = "";
 
-        private void file2ClearButton_Click(object sender, EventArgs e)
-        {
-            MD5_2TextBox.Text = "";
-            CRC32_2TextBox.Text = "";
-            CRC64_2TextBox.Text = "";
-            SHA1_2TextBox.Text = "";
-            SHA256_2TextBox.Text = "";
-            file2TextBox.Text = "";
-            m_hashCalc.file2Path = "";
-            if (file2Calculating)
+            if (file1Cancel != null)
             {
-                if (file2Cancel != null)
-                {
-                    file2Cancel.Cancel();
-                }
+                file1Cancel.Cancel();
             }
+
         }
 
         private string MakeHashString(byte[] hashBytes)
@@ -477,43 +385,71 @@ namespace DailyWallpaper.HashCalc
             }
             return hash.ToString();
         }
-        private void file1HashbackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
+      /* private void file1HashbackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
+       * {
+       *     string filePath = e.Argument.ToString();
+       *     byte[] buffer;
+       *     int bytesRead;
+       *     long size;
+       *     long totalBytesRead = 0;
+       *     using (var file = File.OpenRead(filePath))
+       *     {
+       *         size = file.Length;
+       *         using (var hasher = MD5.Create()) {
+       *             do
+       *             {
+       *                 buffer = new byte[1024 * 1024 * 5];
+       *                 bytesRead = file.Read(buffer, 0, buffer.Length);
+       *                 totalBytesRead += bytesRead;
+       *                 hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
+       *                 file1HashbackGroundWorker.ReportProgress((int)((double)totalBytesRead / size * 100));
+       *
+       *
+       *             } while (bytesRead != 0);
+       *             hasher.TransformFinalBlock(buffer, 0, 0);
+       *             e.Result = MakeHashString(hasher.Hash);
+       *         }
+       *     }
+       * }
+        */
+
+    /*        private void file1HashbackGroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+     *   {
+     *       file1ProgressBar.Value = e.ProgressPercentage;
+     *   }       private void file1HashbackGroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+     *   {
+     *       // MessageBox.Show(e.Result.ToString());
+     *       hashTextBox.Text = e.Result.ToString();
+     *       file1ProgressBar.Value = 0;
+     * }
+     */
+
+        private void alwaysOnTopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string filePath = e.Argument.ToString();
-            byte[] buffer;
-            int bytesRead;
-            long size;
-            long totalBytesRead = 0;
-            using (var file = File.OpenRead(filePath))
+            var it = alwaysOnTopToolStripMenuItem;
+            if (it.Checked)
             {
-                size = file.Length;
-                using (var hasher = MD5.Create()) {
-                    do
-                    {
-                        buffer = new byte[1024 * 1024 * 5];
-                        bytesRead = file.Read(buffer, 0, buffer.Length);
-                        totalBytesRead += bytesRead;
-                        hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
-                        file1HashbackGroundWorker.ReportProgress((int)((double)totalBytesRead / size * 100));
-
-
-                    } while (bytesRead != 0);
-                    hasher.TransformFinalBlock(buffer, 0, 0);
-                    e.Result = MakeHashString(hasher.Hash);
-                }
+                it.Checked = false;
+                TopMost = false;
+            }
+            else
+            {
+                it.Checked = true;
+                TopMost = true;
             }
         }
 
-        private void file1HashbackGroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void automaticallyCalculateHashAfterDragAndDropToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            file1ProgressBar.Value = e.ProgressPercentage;
-        }
-
-        private void file1HashbackGroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            // MessageBox.Show(e.Result.ToString());
-            hashTextBox.Text = e.Result.ToString();
-            file1ProgressBar.Value = 0;
+            var it = automaticallyCalculateHashAfterDragAndDropToolStripMenuItem;
+            if (it.Checked)
+            {
+                it.Checked = false;
+            }
+            else
+            {
+                it.Checked = true;
+            }
         }
     }
 }

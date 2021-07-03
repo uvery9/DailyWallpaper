@@ -7,40 +7,70 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Security.Cryptography;
 using System.IO;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace DailyWallpaper.HashCalc
 {
     class HashCalc
     {
         public string help;
-        public string file1Path;
-        public string file2Path;
+        public string filePath;
+        public ProgressBar hashProgressBar;
+
+        private Progress<long> totalProgess;
+        public List<string> hashList;
+        public List<Task> tasks;
 
         public HashCalc()
         {
             help = "You can drag file to picture/panel 1/panel2";
+            // totalHashProgess = new ProgressImpl();
+            void ProgressAction(long i)
+            {
+                // readTotal += i;
+                hashProgressBar.Invoke(new Action(() =>
+                {
+                    hashProgressBar.Value = (int)i;
+                }));
+            }
+            totalProgess = new Progress<long>(ProgressAction);
+            tasks = new List<Task>();
+            hashList = new List<string>();
         }
-        public void GenerateHash_Click(string text)
-        {
 
+        /* new ProgressImpl(i => hashProgressBar.Invoke(new Action(() =>
+         {
+             hashProgressBar.Value = i;
+         }));*/
+        /* FUCK THE LAMBA.
+         * new Progress<int>(i =>
+         * {
+         *     hashProgressBar.Invoke(new Action(() =>
+         *     {
+         *         hashProgressBar.Value = i;
+         *     }));
+         * });*/
+        public void CalcMD5(string path, Action<string, string, string> action, CancellationToken token)
+        {
+            Task.Run(() => ComputeHashAsync(action, 
+                "MD5", MD5.Create(), path, token, totalProgess, weightedFactor: 0.3));
         }
-        public string MD5(string path, CancellationToken token)
+        public string CalcCRC64(string path, CancellationToken token)
         {
             return null;
         }
-        public string CRC64(string path, CancellationToken token)
+        public void CalcSHA1(string path, Action<string, string, string> action, CancellationToken token)
         {
-            return null;
+            Task.Run(async () => await ComputeHashAsync(action,
+                "SHA1", SHA1.Create(), path, token, totalProgess, weightedFactor: 0.4));
         }
-        public string SHA1(string path, CancellationToken token)
+        public void CalcSHA256(string path, Action<string, string, string> action, CancellationToken token)
         {
-            return null;
+            Task.Run(async () => await ComputeHashAsync(action,
+                "SHA256", SHA256.Create(), path, token, totalProgess, weightedFactor: 0.5));
         }
-        public string SHA256(string path, CancellationToken token)
-        {
-            return null;
-        }
-        public string CRC32(string path, CancellationToken token)
+        public string CalcCRC32(string path, CancellationToken token)
         {
             return null;
         }
@@ -74,7 +104,7 @@ namespace DailyWallpaper.HashCalc
                 using (var fs = new FileStream(f, FileMode.Open))
                 {
                     bytes = await hash.ComputeHashAsync(fs,
-                        cancellationToken: s.Token,
+                        cancelToken: s.Token,
                         progress: new Progress<long>(i =>
                         {
                             progressBar1.Invoke(new Action(() =>
@@ -108,22 +138,34 @@ namespace DailyWallpaper.HashCalc
         /// Extension Methods (C# Programming Guide)
         /// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods
         /// </summary>
-        public static class HashAlgorithmExtensions
+
+        /// <summary>
+        /// hashAlgorithm = SHA1.Create(), progress: progressbar
+        /// </summary>
+        /// <param name="hashAlgorithm"></param>
+        /// <param name="stream"></param>
+        /// <param name="cancelToken"></param>
+        /// <param name="progress"></param>
+        /// <param name="bufferSize"></param>
+        /// <returns></returns>
+        public static async Task ComputeHashAsync(Action<string, string, string> action,
+            string who, HashAlgorithm hashAlgorithm, string path,
+            CancellationToken cancelToken = default(CancellationToken),
+            IProgress<long> progress = null, double weightedFactor = 0.5,
+            int bufferSize = 1024 * 1024 * 10)
         {
-            // hashAlgorithm = SHA1.Create()
-            public static async Task<byte[]> ComputeHashAsync(
-                HashAlgorithm hashAlgorithm, Stream stream,
-                CancellationToken cancellationToken = default(CancellationToken),
-                IProgress<long> progress = null,
-                int bufferSize = 1024 * 1024)
+            using (var stream = new FileInfo(path).OpenRead())
             {
-                byte[] readAheadBuffer, buffer, hash;
+                var timer = new Stopwatch();
+                timer.Start();
+                stream.Position = 0;
+                byte[] readAheadBuffer, buffer;
                 int readAheadBytesRead, bytesRead;
-                long size, totalBytesRead = 0;
-                size = stream.Length;
+                long totalBytesRead = 0;
+                var size = stream.Length;
                 readAheadBuffer = new byte[bufferSize];
                 readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
-                   readAheadBuffer.Length, cancellationToken);
+                    readAheadBuffer.Length, cancelToken);
                 totalBytesRead += readAheadBytesRead;
                 do
                 {
@@ -131,7 +173,7 @@ namespace DailyWallpaper.HashCalc
                     buffer = readAheadBuffer;
                     readAheadBuffer = new byte[bufferSize];
                     readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
-                        readAheadBuffer.Length, cancellationToken);
+                        readAheadBuffer.Length, cancelToken);
                     totalBytesRead += readAheadBytesRead;
 
                     if (readAheadBytesRead == 0)
@@ -139,15 +181,42 @@ namespace DailyWallpaper.HashCalc
                     else
                         hashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0);
                     if (progress != null)
-                        progress.Report(totalBytesRead);
-                    if (cancellationToken.IsCancellationRequested)
-                        cancellationToken.ThrowIfCancellationRequested();
+                        progress.Report((int)((double)totalBytesRead / size * 100));
+                    if (cancelToken.IsCancellationRequested)
+                        cancelToken.ThrowIfCancellationRequested();
                 } while (readAheadBytesRead != 0);
-                return hash = hashAlgorithm.Hash;
+                timer.Stop();
+                var hashCostTime = timer.Elapsed.Milliseconds;
+                action($"{who}", GetHash(data: hashAlgorithm.Hash), "cost:" + hashCostTime.ToString()+"ms");
+                }
+        }
+            
+        // encoding = Encoding.UTF8
+        public static string GetHash(HashAlgorithm hashAlgorithm = null, byte[] data = null, 
+            string input = null, Encoding encoding = default)
+        {
+            // Convert the input string to a byte array and compute the hash.
+            if (data == null && !string.IsNullOrEmpty(input))
+            {
+                data = hashAlgorithm.ComputeHash(encoding.GetBytes(input));
             }
+
+            var sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("X2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
         }
 
+
     }
+
     internal class User32TopWindow
     {
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
