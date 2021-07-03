@@ -24,17 +24,17 @@ after_build:
     
     7z a DailyWallpaper.Protable.zip .
    
-    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT\DailyWallpaper.Protable-v%GIT_TAG%.zip
+    move DailyWallpaper.Protable.zip ..\..\..\OUTPUT\DailyWallpaper.Protable-%GIT_TAG%.zip
     
     cd ..\..\..\OUTPUT
     
-    move DailyWallpaper.Installer.msi DailyWallpaper.Installer-v%GIT_TAG%.msi
+    move DailyWallpaper.Installer.msi DailyWallpaper.Installer-%GIT_TAG%.msi
 
 
 artifacts:
-- path: OUTPUT\DailyWallpaper.Installer-v%GIT_TAG%.msi
+- path: OUTPUT\DailyWallpaper.Installer-%GIT_TAG%.msi
   name: DailyWallpaper.Installer
-- path: OUTPUT\DailyWallpaper.Protable-v%GIT_TAG%.zip
+- path: OUTPUT\DailyWallpaper.Protable-%GIT_TAG%.zip
   name: DailyWallpaper.Protable
 
 deploy:
