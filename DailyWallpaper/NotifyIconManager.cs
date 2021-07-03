@@ -44,9 +44,6 @@ namespace DailyWallpaper
             {
                 if (success)
                 {
-                    // Update to CN URL.
-                    // DonationUrl OfficalWebSite NewIssue
-                    // ProjectInfo.DonationUrl
                     _Icon_DonateAndSupportMenuItem.ToolTipText =    ProjectInfo.DonationUrl;
                     _Icon_IssueAndFeedbackMenuItem.ToolTipText =    ProjectInfo.NewIssue;
                     _Icon_OpenOfficialWebsiteMenuItem.ToolTipText = ProjectInfo.OfficalWebSite;
