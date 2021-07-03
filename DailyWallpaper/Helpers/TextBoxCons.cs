@@ -6,14 +6,14 @@ using System.Windows.Forms;
 
 namespace DailyWallpaper
 {
-    class CEFTextWriter : TextWriter
+    class TextBoxCons : TextWriter
     {
         private IEnumerable<TextWriter> writers;
-        public CEFTextWriter(IEnumerable<TextWriter> writers)
+        public TextBoxCons(IEnumerable<TextWriter> writers)
         {
             this.writers = writers.ToList();
         }
-        public CEFTextWriter(params TextWriter[] writers)
+        public TextBoxCons(params TextWriter[] writers)
         {
             this.writers = writers;
         }
@@ -47,10 +47,10 @@ namespace DailyWallpaper
             get { return Encoding.Default; }
         }
     }
-    public class ControlWriter : TextWriter
+    public class ConsWriter : TextWriter
     {
         private TextBox textbox;
-        public ControlWriter(TextBox textbox)
+        public ConsWriter(TextBox textbox)
         {
             this.textbox = textbox;
         }
