@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -408,6 +409,7 @@ namespace DailyWallpaper.HashCalc
             if (md5)    m_hashCalc.MD5(file, token);
             if (sha1)   m_hashCalc.SHA1(file, token);
             if (sha256) m_hashCalc.SHA256(file, token);
+            file1HashbackGroundWorker.RunWorkerAsync(file);
         }
 
 
@@ -464,6 +466,54 @@ namespace DailyWallpaper.HashCalc
                     file2Cancel.Cancel();
                 }
             }
+        }
+
+        private string MakeHashString(byte[] hashBytes)
+        {
+            var hash = new StringBuilder(32);
+            foreach (var b in hashBytes)
+            {
+                hash.Append(b.ToString("X2"));
+            }
+            return hash.ToString();
+        }
+        private void file1HashbackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string filePath = e.Argument.ToString();
+            byte[] buffer;
+            int bytesRead;
+            long size;
+            long totalBytesRead = 0;
+            using (var file = File.OpenRead(filePath))
+            {
+                size = file.Length;
+                using (var hasher = MD5.Create()) {
+                    do
+                    {
+                        buffer = new byte[1024 * 1024 * 5];
+                        bytesRead = file.Read(buffer, 0, buffer.Length);
+                        totalBytesRead += bytesRead;
+                        hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
+                        file1HashbackGroundWorker.ReportProgress((int)((double)totalBytesRead / size * 100));
+
+
+                    } while (bytesRead != 0);
+                    hasher.TransformFinalBlock(buffer, 0, 0);
+                    e.Result = MakeHashString(hasher.Hash);
+                }
+            }
+        }
+
+        private void file1HashbackGroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            file1ProgressBar.Value = e.ProgressPercentage;
+        }
+
+        private void file1HashbackGroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // MessageBox.Show(e.Result.ToString());
+            hashTextBox.Text = e.Result.ToString();
+            file1ProgressBar.Value = 0;
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace DailyWallpaper.HashCalc
 {
@@ -42,6 +44,109 @@ namespace DailyWallpaper.HashCalc
         {
             return null;
         }
+
+        /*
+
+         byte[] bytes;
+        using (var hash = MD5.Create())
+        {
+            using (var fs = new FileStream(f, FileMode.Open))
+            {
+                bytes = await hash.ComputeHashAsync(fs,
+                    progress: new Progress<long>(i =>
+                    {
+                        progressBar1.Invoke(new Action(() =>
+                        {
+                            progressBar1.Value = i;
+                        }));
+                    }));
+                MessageBox.Show(BitConverter.ToString(bytes).Replace("-", string.Empty));
+            }
+        }
+         */
+        /*try
+        {
+            var s = new CancellationTokenSource();
+            s.CancelAfter(1000);
+            byte[] bytes;
+            using (var hash = MD5.Create())
+            {
+                using (var fs = new FileStream(f, FileMode.Open))
+                {
+                    bytes = await hash.ComputeHashAsync(fs,
+                        cancellationToken: s.Token,
+                        progress: new Progress<long>(i =>
+                        {
+                            progressBar1.Invoke(new Action(() =>
+                            {
+                                progressBar1.Value = i;
+                            }));
+                        }));
+
+                    MessageBox.Show(BitConverter.ToString(bytes).Replace("-", string.Empty));
+                }
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            MessageBox.Show("Operation canceled.");
+        }*/
+        /*
+         var f = Path.Combine(Application.StartupPath, "temp.log");
+        File.Delete(f);
+        using (var fs = new FileStream(f, FileMode.Create))
+        {
+            fs.Seek(1L * 1024 * 1024 * 1024, SeekOrigin.Begin);
+            fs.WriteByte(0);
+            fs.Close();
+        }
+         */
+
+        /// <summary>
+        /// https://stackoverflow.com/questions/53965380/report-hash-progress
+        /// http://www.alexandre-gomes.com/?p=144
+        /// Extension Methods (C# Programming Guide)
+        /// https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods
+        /// </summary>
+        public static class HashAlgorithmExtensions
+        {
+            // hashAlgorithm = SHA1.Create()
+            public static async Task<byte[]> ComputeHashAsync(
+                HashAlgorithm hashAlgorithm, Stream stream,
+                CancellationToken cancellationToken = default(CancellationToken),
+                IProgress<long> progress = null,
+                int bufferSize = 1024 * 1024)
+            {
+                byte[] readAheadBuffer, buffer, hash;
+                int readAheadBytesRead, bytesRead;
+                long size, totalBytesRead = 0;
+                size = stream.Length;
+                readAheadBuffer = new byte[bufferSize];
+                readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
+                   readAheadBuffer.Length, cancellationToken);
+                totalBytesRead += readAheadBytesRead;
+                do
+                {
+                    bytesRead = readAheadBytesRead;
+                    buffer = readAheadBuffer;
+                    readAheadBuffer = new byte[bufferSize];
+                    readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
+                        readAheadBuffer.Length, cancellationToken);
+                    totalBytesRead += readAheadBytesRead;
+
+                    if (readAheadBytesRead == 0)
+                        hashAlgorithm.TransformFinalBlock(buffer, 0, bytesRead);
+                    else
+                        hashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0);
+                    if (progress != null)
+                        progress.Report(totalBytesRead);
+                    if (cancellationToken.IsCancellationRequested)
+                        cancellationToken.ThrowIfCancellationRequested();
+                } while (readAheadBytesRead != 0);
+                return hash = hashAlgorithm.Hash;
+            }
+        }
+
     }
     internal class User32TopWindow
     {

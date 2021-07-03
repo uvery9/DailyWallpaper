@@ -80,6 +80,7 @@ namespace DailyWallpaper.HashCalc
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.file1HashbackGroundWorker = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).BeginInit();
             this.file2Panel.SuspendLayout();
             this.file1Panel.SuspendLayout();
@@ -624,6 +625,13 @@ namespace DailyWallpaper.HashCalc
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(173, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             // 
+            // file1HashbackGroundWorker
+            // 
+            this.file1HashbackGroundWorker.WorkerReportsProgress = true;
+            this.file1HashbackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.file1HashbackGroundWorker_DoWork);
+            this.file1HashbackGroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.file1HashbackGroundWorker_ProgressChanged);
+            this.file1HashbackGroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.file1HashbackGroundWorker_RunWorkerCompleted);
+            // 
             // HashCalcForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -703,5 +711,6 @@ namespace DailyWallpaper.HashCalc
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calculateHashOfTextToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker file1HashbackGroundWorker;
     }
 }
