@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -26,37 +27,51 @@ namespace DailyWallpaper.Helpers
         private static Color backColor = 
             Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
 
-        public static void TestConnect(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
+        public static void TestConnect(Action<bool, string> updateFunc, string server = "https://www.google.com", int port = 80, bool useProxy = true)
         {
-            // TestConnectUsingSocket(updateFunc, server, port);
-            TestConnectUsingProxy(updateFunc, server, port);
-            
+            if (useProxy)
+            {
+                TestConnectUsingProxy(updateFunc, server, port);
+            }
+            else
+            {
+                TestConnectUsingSocket(updateFunc, server, port);
+            }
         }
 
-        // DON'T KNOW IF THE USER HAS AN PROXY
-        public static void TestConnectUsingProxy(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
+        private static void TestConnectUsingProxy(Action<bool, string> updateFunc, string server = "https://www.google.com", int port = 80)
         {
             bool innerRun()
             {
+                
                 try
                 {
-                    var webRq = (HttpWebRequest)WebRequest.Create(server);
-                    var proxy = webRq.Proxy;
-                    if (proxy != null)
+                    var webReq = (HttpWebRequest)WebRequest.Create(server);
+                    webReq.Timeout = 3000;
+                    // MessageBox.Show(string.Format("Proxy: {0}", webReq.Proxy.GetProxy(webReq.RequestUri)));
+                    // webReq.Proxy = proxy;  USE SYSTEM PROXY
+                    // new WebProxy(Global.Loopback, Global.httpPort);
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    string msg = null;
+                    using (var webReqResp = (HttpWebResponse)webReq.GetResponse())
                     {
-                        MessageBox.Show(string.Format("Proxy: {0}", proxy.GetProxy(webRq.RequestUri)));
+                        if (webReqResp.StatusCode != HttpStatusCode.OK
+                        && webReqResp.StatusCode != HttpStatusCode.NoContent)
+                        {
+                            msg = ", descri: ";
+                            msg += webReqResp.StatusDescription;
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Proxy is null; no proxy will be used");
-                    }
+                    timer.Stop();
+                    var responseTime = timer.Elapsed.Milliseconds;
                     connectToWorld = true;
-                    updateFunc(true, $"Conneted to {server}");
+                    string show = msg ?? ""; // string show = string.IsNullOrEmpty(msg) ? "" : msg;
+                    updateFunc(true, $"Conneted to {server}, response: {responseTime} ms{show}");
                     return true;
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show($"error: {e}");
                     connectToWorld = false;
                     updateFunc(false, $"Can not conneted to {server} with error: {e.Message}.");
                     return false;
@@ -71,7 +86,7 @@ namespace DailyWallpaper.Helpers
         /// https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run?view=net-5.0
         /// NEED TO FIX: WHEN SOMEBODY USE VPN/SOMETHING, (S)HE CAN VISIT THR WEBSIT(SERVER), BUT THIS METHOD CAN'T.
         /// </summary>
-        public static void TestConnectUsingSocket(Action<bool, string> updateFunc, string server = "www.google.com", int port = 80)
+        private static void TestConnectUsingSocket(Action<bool, string> updateFunc, string server = "https://www.google.com", int port = 80)
         {
             bool innerRun()
             {

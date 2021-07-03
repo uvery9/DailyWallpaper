@@ -42,6 +42,7 @@ namespace DailyWallpaper
         {
             void updateUrlTips(bool success, string msg)
             {
+                // MessageBox.Show(msg);
                 if (success)
                 {
                     _Icon_DonateAndSupportMenuItem.ToolTipText =    ProjectInfo.DonationUrl;
@@ -53,8 +54,8 @@ namespace DailyWallpaper
                     // ShowNotification("Use backup gitee", msg);
                 }
             };
-            ProjectInfo.TestConnect(updateUrlTips, "https://www.google.com");
-            //ProjectInfo.TestConnect(updateUrlTips, "https://www.github.com");
+            // ProjectInfo.TestConnect(updateUrlTips, "https://www.google.com");
+            ProjectInfo.TestConnect(updateUrlTips, "https://www.github.com");
         }
 
         // call back by timer.
