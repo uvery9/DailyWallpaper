@@ -2,9 +2,9 @@
 ### Change the wallpaper daily from Bing,Spotlight or LocalPath
 <img src="https://user-images.githubusercontent.com/42594123/123645736-289d0480-d859-11eb-80f3-8e1094bc29fd.png" width="100">  
 
-**[DailyWallpaper](https://github.com/JaredDC/DailyWallpaper)**
+**[DailyWallpaper Website](https://github.com/JaredDC/DailyWallpaper)**
 
-[DailyWallpaper for China](https://gitee.com/imtvip/DailyWallpaper)
+[DailyWallpaper Website for China People](https://gitee.com/imtvip/DailyWallpaper)
 
 
 [![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaper/releases/latest)
