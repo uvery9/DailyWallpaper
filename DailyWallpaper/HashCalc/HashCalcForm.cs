@@ -19,6 +19,7 @@ namespace DailyWallpaper.HashCalc
         private HashCalc m_hashCalc;
         private TextBoxCons _console;
         delegate void CalcMethod(string path, Action<string, string, string> action, CancellationToken token);
+        private static Mutex mut = new Mutex();
         public HashCalcForm()
         {
             InitializeComponent();
@@ -290,7 +291,9 @@ namespace DailyWallpaper.HashCalc
             void TellResultAsync(string who, string result, string costTime)
             {
                 tx.Text = result;
+                mut.WaitOne();
                 _console.WriteLine("\r\nFinished " + who + " : " + result + ",\r\n  cost time: " + costTime);
+                mut.ReleaseMutex();
             }
             if (cb.Checked)
             {
