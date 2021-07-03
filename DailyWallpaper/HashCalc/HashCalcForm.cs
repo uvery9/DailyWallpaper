@@ -75,7 +75,10 @@ namespace DailyWallpaper.HashCalc
                     {
                         m_hashCalc.filePath = fileLoc;
                         hashfileTextBox.Text = fileLoc;
-                        fileCalcButton.PerformClick(); // Pretend to be clicked.
+                        if (automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked)
+                        {
+                            fileCalcButton.PerformClick(); // Pretend to be clicked.
+                        }
                     }
 
                 }
@@ -212,6 +215,8 @@ namespace DailyWallpaper.HashCalc
             SHA1TextBox.TabStop = false;
             CRC32TextBox.TabStop = false;
             SHA256TextBox.TabStop = false;
+            automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
+            
         }
         private void save2File(string file, string str)
         {
@@ -320,7 +325,7 @@ namespace DailyWallpaper.HashCalc
                 }
                 else
                 {
-                    _console.WriteLine("\r\n>>> ERROR " + who + costTimeOrReson);
+                    _console.WriteLine("\r\n>>> " + who + costTimeOrReson);
                     fileProgressBar.Value = 0;
                 }
                 mut.ReleaseMutex();
@@ -465,6 +470,33 @@ namespace DailyWallpaper.HashCalc
             }
             _console.WriteLine("Stop...");
             // fileProgressBar.Value = 0;
+        }
+
+        private void hashTextBox_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                foreach (string fileLoc in filePaths)
+                {
+                    if (File.Exists(fileLoc))
+                    {
+                        string ext = Path.GetExtension(fileLoc);
+                        _console.WriteLine($"file ext is {ext}");
+                    }
+
+                }
+            }
+        }
+
+        private void usageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _console.WriteLine(m_hashCalc.help);
+        }
+
+        private void donateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(ProjectInfo.DonationUrl);
         }
     }
 }

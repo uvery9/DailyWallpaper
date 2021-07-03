@@ -105,6 +105,8 @@
     <Compile Include="Cons\LocalImage.cs" />
     <Compile Include="Cons\OnlineImage.cs" />
     <Compile Include="Cons\Wallpaper.cs" />
+    <Compile Include="HashCalc\CRC32.cs" />
+    <Compile Include="HashCalc\CRC64.cs" />
     <Compile Include="HashCalc\HashCalcForm.cs">
       <SubType>Form</SubType>
     </Compile>

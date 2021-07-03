@@ -54,11 +54,88 @@ namespace DailyWallpaper.HashCalc
 
         public void CalcCRC32(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-
+            Task.Run(() => {
+                var who = "CRC32:  ";
+                try
+                {
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    var crc32 = new CRC32();
+                    var hash = String.Empty;
+                    using (var stream = new FileInfo(path).OpenRead())
+                    {
+                        stream.Position = 0;
+                        foreach (byte b in crc32.ComputeHash(stream))
+                        {
+                            hash += b.ToString("X2");
+                            if (token.IsCancellationRequested) 
+                            { 
+                                token.ThrowIfCancellationRequested();
+                            }
+                        }
+                            
+                    }
+                    // Console.WriteLine("CRC-32 is {0}", hash);
+                    timer.Stop();
+                    var hashCostTime = timer.Elapsed.Milliseconds;
+                    action(true, $"{who}", hash, hashCostTime.ToString() + "ms");
+                }
+                catch (OperationCanceledException e)
+                {
+                    action(false, $"Info {who}", null, e.Message);
+                }
+                catch (Exception e)
+                {
+                    action(false, $"ERROR {who}", null, e.Message);
+                }
+            });
         }
+        /// <summary>
+        /// FOR 7-ZIP
+        /// CRC-32 - same as ZIP, Gzip, xz.
+        ///CRC-64 - same as xz utils(wikipedia writes that it's ECMA-182).
+        ///So you can check any details in source code of zip/gzip/7z/xz.
+        ///And you can check exact digest values with sofware 7-Zip / xz utils / gzip / info-zip.
+        /// </summary>
         public void CalcCRC64(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
+            Task.Run(() => {
+                var who = "CRC64ISO3309:   ";
+                try
+                {
+                    var timer = new Stopwatch();
+                    timer.Start();
 
+
+                    /* 
+                    * The ISO polynomial, defined in ISO 3309 and used in HDLC.
+                    * ISO = 0xD800000000000000
+                    */
+                    var crc64 = new Crc64Iso();
+                    var hash = String.Empty;
+                    using (var fs = new FileInfo(path).OpenRead()) {
+                        foreach (byte b in crc64.ComputeHash(fs))
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                token.ThrowIfCancellationRequested();
+                            }
+                            hash += b.ToString("X2");
+                        }
+                    }
+                    timer.Stop();
+                    var hashCostTime = timer.Elapsed.Milliseconds;
+                    action(true, $"{who}", hash, hashCostTime.ToString() + "ms");
+                }
+                catch (OperationCanceledException e)
+                {
+                    action(false, $"Info {who}", null, e.Message);
+                }
+                catch (Exception e)
+                {
+                    action(false, $"ERROR {who}", null, e.Message);
+                }
+            });
         }
         public void CalcMD5(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
@@ -193,9 +270,13 @@ namespace DailyWallpaper.HashCalc
                     action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime.ToString() + "ms");
                 }
             }
+            catch (OperationCanceledException e)
+            {
+                action(false, $"Info {who}", null, e.Message);
+            }
             catch (Exception e)
             {
-                action(false, $"{who}", null, e.Message);
+                action(false, $"ERROR {who}", null, e.Message);
             }
         }
             

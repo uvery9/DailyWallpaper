@@ -82,12 +82,15 @@ namespace DailyWallpaper.HashCalc
             // 
             // hashTextBox
             // 
+            this.hashTextBox.AllowDrop = true;
             this.hashTextBox.Location = new System.Drawing.Point(14, 537);
             this.hashTextBox.Multiline = true;
             this.hashTextBox.Name = "hashTextBox";
             this.hashTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.hashTextBox.Size = new System.Drawing.Size(828, 246);
             this.hashTextBox.TabIndex = 5;
+            this.hashTextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashTextBox_DragDrop);
+            this.hashTextBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
             this.hashTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.hashTextBox_KeyDown);
             // 
             // filePanel
@@ -394,14 +397,16 @@ namespace DailyWallpaper.HashCalc
             // donateToolStripMenuItem
             // 
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(173, 34);
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.donateToolStripMenuItem.Text = "Donate";
+            this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
             // 
             // usageToolStripMenuItem
             // 
             this.usageToolStripMenuItem.Name = "usageToolStripMenuItem";
-            this.usageToolStripMenuItem.Size = new System.Drawing.Size(173, 34);
+            this.usageToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.usageToolStripMenuItem.Text = "Usage";
+            this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
             // HashCalcForm
             // 
