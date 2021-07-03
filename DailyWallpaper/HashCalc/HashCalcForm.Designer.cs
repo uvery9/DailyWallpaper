@@ -33,8 +33,11 @@ namespace DailyWallpaper.HashCalc
             this.hashTextBox = new System.Windows.Forms.TextBox();
             this.filePanel = new System.Windows.Forms.Panel();
             this.fileCopyButton = new System.Windows.Forms.Button();
+            this.clearButton = new System.Windows.Forms.Button();
+            this.stopButton = new System.Windows.Forms.Button();
             this.fileSaveButton = new System.Windows.Forms.Button();
             this.fileCalcButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.CRC64checkBox = new System.Windows.Forms.CheckBox();
             this.fileProgressBar = new System.Windows.Forms.ProgressBar();
             this.CRC32checkBox = new System.Windows.Forms.CheckBox();
@@ -53,16 +56,12 @@ namespace DailyWallpaper.HashCalc
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.rememberWindowPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useUppercaseLettersInHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calculateHashOfTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Stop = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.clearButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).BeginInit();
             this.filePanel.SuspendLayout();
             this.headMenuStrip.SuspendLayout();
@@ -96,7 +95,7 @@ namespace DailyWallpaper.HashCalc
             this.filePanel.AllowDrop = true;
             this.filePanel.Controls.Add(this.fileCopyButton);
             this.filePanel.Controls.Add(this.clearButton);
-            this.filePanel.Controls.Add(this.Stop);
+            this.filePanel.Controls.Add(this.stopButton);
             this.filePanel.Controls.Add(this.fileSaveButton);
             this.filePanel.Controls.Add(this.fileCalcButton);
             this.filePanel.Controls.Add(this.button1);
@@ -128,6 +127,26 @@ namespace DailyWallpaper.HashCalc
             this.fileCopyButton.UseVisualStyleBackColor = true;
             this.fileCopyButton.Click += new System.EventHandler(this.fileCopyButton_Click);
             // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(11, 148);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(75, 30);
+            this.clearButton.TabIndex = 7;
+            this.clearButton.Text = "Clear";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
+            // 
+            // stopButton
+            // 
+            this.stopButton.Location = new System.Drawing.Point(750, 101);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(75, 30);
+            this.stopButton.TabIndex = 7;
+            this.stopButton.Text = "Stop";
+            this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
             // fileSaveButton
             // 
             this.fileSaveButton.Location = new System.Drawing.Point(750, 58);
@@ -147,6 +166,16 @@ namespace DailyWallpaper.HashCalc
             this.fileCalcButton.Text = "Calculate";
             this.fileCalcButton.UseVisualStyleBackColor = true;
             this.fileCalcButton.Click += new System.EventHandler(this.fileCalcButton_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(-726, 181);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 25);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Clear";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.fileClearButton_Click);
             // 
             // CRC64checkBox
             // 
@@ -315,7 +344,6 @@ namespace DailyWallpaper.HashCalc
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.alwaysOnTopToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.rememberWindowPositionToolStripMenuItem,
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem,
             this.useUppercaseLettersInHashToolStripMenuItem,
             this.calculateHashOfTextToolStripMenuItem});
@@ -334,12 +362,6 @@ namespace DailyWallpaper.HashCalc
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(529, 6);
-            // 
-            // rememberWindowPositionToolStripMenuItem
-            // 
-            this.rememberWindowPositionToolStripMenuItem.Name = "rememberWindowPositionToolStripMenuItem";
-            this.rememberWindowPositionToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
-            this.rememberWindowPositionToolStripMenuItem.Text = "Remember window position";
             // 
             // automaticallyCalculateHashAfterDragAndDropToolStripMenuItem
             // 
@@ -380,36 +402,6 @@ namespace DailyWallpaper.HashCalc
             this.usageToolStripMenuItem.Name = "usageToolStripMenuItem";
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(173, 34);
             this.usageToolStripMenuItem.Text = "Usage";
-            // 
-            // Stop
-            // 
-            this.Stop.Location = new System.Drawing.Point(750, 101);
-            this.Stop.Name = "Stop";
-            this.Stop.Size = new System.Drawing.Size(75, 30);
-            this.Stop.TabIndex = 7;
-            this.Stop.Text = "Stop";
-            this.Stop.UseVisualStyleBackColor = true;
-            this.Stop.Click += new System.EventHandler(this.fileSaveButton_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(-726, 181);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 25);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Clear";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.fileClearButton_Click);
-            // 
-            // clearButton
-            // 
-            this.clearButton.Location = new System.Drawing.Point(11, 148);
-            this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(75, 30);
-            this.clearButton.TabIndex = 7;
-            this.clearButton.Text = "Clear";
-            this.clearButton.UseVisualStyleBackColor = true;
-            this.clearButton.Click += new System.EventHandler(this.button2_Click);
             // 
             // HashCalcForm
             // 
@@ -463,13 +455,12 @@ namespace DailyWallpaper.HashCalc
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem alwaysOnTopToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem rememberWindowPositionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem automaticallyCalculateHashAfterDragAndDropToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem useUppercaseLettersInHashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calculateHashOfTextToolStripMenuItem;
-        private System.Windows.Forms.Button Stop;
+        private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.Button button1;
     }

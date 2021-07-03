@@ -51,14 +51,19 @@ namespace DailyWallpaper.HashCalc
          *         hashProgressBar.Value = i;
          *     }));
          * });*/
+
+        public void CalcCRC32(string path, Action<string, string, string> action, CancellationToken token)
+        {
+
+        }
+        public void CalcCRC64(string path, Action<string, string, string> action, CancellationToken token)
+        {
+
+        }
         public void CalcMD5(string path, Action<string, string, string> action, CancellationToken token)
         {
-            Task.Run(() => ComputeHashAsync(action, 
+            Task.Run(() => ComputeHashAsync(action,
                 "MD5", MD5.Create(), path, token, totalProgess, weightedFactor: 0.3));
-        }
-        public string CalcCRC64(string path, CancellationToken token)
-        {
-            return null;
         }
         public void CalcSHA1(string path, Action<string, string, string> action, CancellationToken token)
         {
@@ -70,10 +75,7 @@ namespace DailyWallpaper.HashCalc
             Task.Run(async () => await ComputeHashAsync(action,
                 "SHA256", SHA256.Create(), path, token, totalProgess, weightedFactor: 0.5));
         }
-        public string CalcCRC32(string path, CancellationToken token)
-        {
-            return null;
-        }
+
 
         /*
 
@@ -187,7 +189,7 @@ namespace DailyWallpaper.HashCalc
                 } while (readAheadBytesRead != 0);
                 timer.Stop();
                 var hashCostTime = timer.Elapsed.Milliseconds;
-                action($"{who}", GetHash(data: hashAlgorithm.Hash), "cost:" + hashCostTime.ToString()+"ms");
+                action($"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime.ToString()+"ms");
                 }
         }
             
