@@ -31,25 +31,24 @@ namespace DailyWallpaper.HashCalc
         {
             this.hashPicBox = new System.Windows.Forms.PictureBox();
             this.hashTextBox = new System.Windows.Forms.TextBox();
-            this.file1Panel = new System.Windows.Forms.Panel();
-            this.file1CopyButton = new System.Windows.Forms.Button();
-            this.file1SaveButton = new System.Windows.Forms.Button();
-            this.file1BrowseButton = new System.Windows.Forms.Button();
-            this.file1CalcButton = new System.Windows.Forms.Button();
-            this.file1ClearButton = new System.Windows.Forms.Button();
-            this.file1 = new System.Windows.Forms.TextBox();
-            this.cRC64_1checkBox = new System.Windows.Forms.CheckBox();
-            this.file1ProgressBar = new System.Windows.Forms.ProgressBar();
-            this.cRC32_1checkBox = new System.Windows.Forms.CheckBox();
-            this.mD5_1checkBox = new System.Windows.Forms.CheckBox();
-            this.sha256_1checkBox = new System.Windows.Forms.CheckBox();
-            this.sha1_1checkBox = new System.Windows.Forms.CheckBox();
-            this.hashfile1TextBox = new System.Windows.Forms.TextBox();
-            this.SHA256_1TextBox = new System.Windows.Forms.TextBox();
-            this.SHA1_1TextBox = new System.Windows.Forms.TextBox();
-            this.CRC64_1TextBox = new System.Windows.Forms.TextBox();
-            this.CRC32_1TextBox = new System.Windows.Forms.TextBox();
-            this.MD5_1TextBox = new System.Windows.Forms.TextBox();
+            this.filePanel = new System.Windows.Forms.Panel();
+            this.fileCopyButton = new System.Windows.Forms.Button();
+            this.fileSaveButton = new System.Windows.Forms.Button();
+            this.fileCalcButton = new System.Windows.Forms.Button();
+            this.CRC64checkBox = new System.Windows.Forms.CheckBox();
+            this.fileProgressBar = new System.Windows.Forms.ProgressBar();
+            this.CRC32checkBox = new System.Windows.Forms.CheckBox();
+            this.MD5checkBox = new System.Windows.Forms.CheckBox();
+            this.SHA256checkBox = new System.Windows.Forms.CheckBox();
+            this.SHA1checkBox = new System.Windows.Forms.CheckBox();
+            this.SHA256TextBox = new System.Windows.Forms.TextBox();
+            this.SHA1TextBox = new System.Windows.Forms.TextBox();
+            this.CRC64TextBox = new System.Windows.Forms.TextBox();
+            this.CRC32TextBox = new System.Windows.Forms.TextBox();
+            this.MD5TextBox = new System.Windows.Forms.TextBox();
+            this.fileBrowseButton = new System.Windows.Forms.Button();
+            this.file = new System.Windows.Forms.TextBox();
+            this.hashfileTextBox = new System.Windows.Forms.TextBox();
             this.headMenuStrip = new System.Windows.Forms.MenuStrip();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,8 +60,11 @@ namespace DailyWallpaper.HashCalc
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Stop = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.clearButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).BeginInit();
-            this.file1Panel.SuspendLayout();
+            this.filePanel.SuspendLayout();
             this.headMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,232 +77,225 @@ namespace DailyWallpaper.HashCalc
             this.hashPicBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.hashPicBox.TabIndex = 1;
             this.hashPicBox.TabStop = false;
-            this.hashPicBox.Click += new System.EventHandler(this.file1BrowseButton_Click);
+            this.hashPicBox.Click += new System.EventHandler(this.fileBrowseButton_Click);
             this.hashPicBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragDrop);
             this.hashPicBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
             // 
             // hashTextBox
             // 
-            this.hashTextBox.Location = new System.Drawing.Point(14, 544);
+            this.hashTextBox.Location = new System.Drawing.Point(14, 537);
             this.hashTextBox.Multiline = true;
             this.hashTextBox.Name = "hashTextBox";
             this.hashTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.hashTextBox.Size = new System.Drawing.Size(830, 216);
+            this.hashTextBox.Size = new System.Drawing.Size(828, 246);
             this.hashTextBox.TabIndex = 5;
             this.hashTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.hashTextBox_KeyDown);
             // 
-            // file1Panel
+            // filePanel
             // 
-            this.file1Panel.AllowDrop = true;
-            this.file1Panel.Controls.Add(this.file1CopyButton);
-            this.file1Panel.Controls.Add(this.file1SaveButton);
-            this.file1Panel.Controls.Add(this.file1CalcButton);
-            this.file1Panel.Controls.Add(this.file1ClearButton);
-            this.file1Panel.Controls.Add(this.cRC64_1checkBox);
-            this.file1Panel.Controls.Add(this.file1ProgressBar);
-            this.file1Panel.Controls.Add(this.cRC32_1checkBox);
-            this.file1Panel.Controls.Add(this.mD5_1checkBox);
-            this.file1Panel.Controls.Add(this.sha256_1checkBox);
-            this.file1Panel.Controls.Add(this.sha1_1checkBox);
-            this.file1Panel.Controls.Add(this.SHA256_1TextBox);
-            this.file1Panel.Controls.Add(this.SHA1_1TextBox);
-            this.file1Panel.Controls.Add(this.CRC64_1TextBox);
-            this.file1Panel.Controls.Add(this.CRC32_1TextBox);
-            this.file1Panel.Controls.Add(this.MD5_1TextBox);
-            this.file1Panel.Location = new System.Drawing.Point(12, 332);
-            this.file1Panel.Name = "file1Panel";
-            this.file1Panel.Size = new System.Drawing.Size(830, 206);
-            this.file1Panel.TabIndex = 4;
-            this.file1Panel.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragDrop);
-            this.file1Panel.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
+            this.filePanel.AllowDrop = true;
+            this.filePanel.Controls.Add(this.fileCopyButton);
+            this.filePanel.Controls.Add(this.clearButton);
+            this.filePanel.Controls.Add(this.Stop);
+            this.filePanel.Controls.Add(this.fileSaveButton);
+            this.filePanel.Controls.Add(this.fileCalcButton);
+            this.filePanel.Controls.Add(this.button1);
+            this.filePanel.Controls.Add(this.CRC64checkBox);
+            this.filePanel.Controls.Add(this.fileProgressBar);
+            this.filePanel.Controls.Add(this.CRC32checkBox);
+            this.filePanel.Controls.Add(this.MD5checkBox);
+            this.filePanel.Controls.Add(this.SHA256checkBox);
+            this.filePanel.Controls.Add(this.SHA1checkBox);
+            this.filePanel.Controls.Add(this.SHA256TextBox);
+            this.filePanel.Controls.Add(this.SHA1TextBox);
+            this.filePanel.Controls.Add(this.CRC64TextBox);
+            this.filePanel.Controls.Add(this.CRC32TextBox);
+            this.filePanel.Controls.Add(this.MD5TextBox);
+            this.filePanel.Location = new System.Drawing.Point(14, 337);
+            this.filePanel.Name = "filePanel";
+            this.filePanel.Size = new System.Drawing.Size(828, 194);
+            this.filePanel.TabIndex = 4;
+            this.filePanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragDrop);
+            this.filePanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
             // 
-            // file1CopyButton
+            // fileCopyButton
             // 
-            this.file1CopyButton.Location = new System.Drawing.Point(727, 24);
-            this.file1CopyButton.Name = "file1CopyButton";
-            this.file1CopyButton.Size = new System.Drawing.Size(75, 30);
-            this.file1CopyButton.TabIndex = 7;
-            this.file1CopyButton.Text = "Copy";
-            this.file1CopyButton.UseVisualStyleBackColor = true;
-            this.file1CopyButton.Click += new System.EventHandler(this.file1CopyButton_Click);
+            this.fileCopyButton.Location = new System.Drawing.Point(750, 14);
+            this.fileCopyButton.Name = "fileCopyButton";
+            this.fileCopyButton.Size = new System.Drawing.Size(75, 30);
+            this.fileCopyButton.TabIndex = 7;
+            this.fileCopyButton.Text = "Copy";
+            this.fileCopyButton.UseVisualStyleBackColor = true;
+            this.fileCopyButton.Click += new System.EventHandler(this.fileCopyButton_Click);
             // 
-            // file1SaveButton
+            // fileSaveButton
             // 
-            this.file1SaveButton.Location = new System.Drawing.Point(727, 83);
-            this.file1SaveButton.Name = "file1SaveButton";
-            this.file1SaveButton.Size = new System.Drawing.Size(75, 30);
-            this.file1SaveButton.TabIndex = 7;
-            this.file1SaveButton.Text = "Save";
-            this.file1SaveButton.UseVisualStyleBackColor = true;
-            this.file1SaveButton.Click += new System.EventHandler(this.file1SaveButton_Click);
+            this.fileSaveButton.Location = new System.Drawing.Point(750, 58);
+            this.fileSaveButton.Name = "fileSaveButton";
+            this.fileSaveButton.Size = new System.Drawing.Size(75, 30);
+            this.fileSaveButton.TabIndex = 7;
+            this.fileSaveButton.Text = "Save";
+            this.fileSaveButton.UseVisualStyleBackColor = true;
+            this.fileSaveButton.Click += new System.EventHandler(this.fileSaveButton_Click);
             // 
-            // file1BrowseButton
+            // fileCalcButton
             // 
-            this.file1BrowseButton.Location = new System.Drawing.Point(752, 294);
-            this.file1BrowseButton.Name = "file1BrowseButton";
-            this.file1BrowseButton.Size = new System.Drawing.Size(92, 32);
-            this.file1BrowseButton.TabIndex = 6;
-            this.file1BrowseButton.Text = "Browse";
-            this.file1BrowseButton.UseVisualStyleBackColor = true;
-            this.file1BrowseButton.Click += new System.EventHandler(this.file1BrowseButton_Click);
+            this.fileCalcButton.Location = new System.Drawing.Point(730, 141);
+            this.fileCalcButton.Name = "fileCalcButton";
+            this.fileCalcButton.Size = new System.Drawing.Size(98, 44);
+            this.fileCalcButton.TabIndex = 5;
+            this.fileCalcButton.Text = "Calculate";
+            this.fileCalcButton.UseVisualStyleBackColor = true;
+            this.fileCalcButton.Click += new System.EventHandler(this.fileCalcButton_Click);
             // 
-            // file1CalcButton
+            // CRC64checkBox
             // 
-            this.file1CalcButton.Location = new System.Drawing.Point(712, 141);
-            this.file1CalcButton.Name = "file1CalcButton";
-            this.file1CalcButton.Size = new System.Drawing.Size(98, 44);
-            this.file1CalcButton.TabIndex = 5;
-            this.file1CalcButton.Text = "Calculate";
-            this.file1CalcButton.UseVisualStyleBackColor = true;
-            this.file1CalcButton.Click += new System.EventHandler(this.file1CalcButton_Click);
+            this.CRC64checkBox.AutoSize = true;
+            this.CRC64checkBox.Location = new System.Drawing.Point(458, 24);
+            this.CRC64checkBox.Name = "CRC64checkBox";
+            this.CRC64checkBox.Size = new System.Drawing.Size(79, 22);
+            this.CRC64checkBox.TabIndex = 1;
+            this.CRC64checkBox.Text = "CRC64";
+            this.CRC64checkBox.UseVisualStyleBackColor = true;
+            this.CRC64checkBox.CheckedChanged += new System.EventHandler(this.CRC64checkBox_CheckedChanged);
             // 
-            // file1ClearButton
+            // fileProgressBar
             // 
-            this.file1ClearButton.Location = new System.Drawing.Point(609, 150);
-            this.file1ClearButton.Name = "file1ClearButton";
-            this.file1ClearButton.Size = new System.Drawing.Size(64, 25);
-            this.file1ClearButton.TabIndex = 5;
-            this.file1ClearButton.Text = "Clear";
-            this.file1ClearButton.UseVisualStyleBackColor = true;
-            this.file1ClearButton.Click += new System.EventHandler(this.file1ClearButton_Click);
+            this.fileProgressBar.Location = new System.Drawing.Point(104, 151);
+            this.fileProgressBar.Name = "fileProgressBar";
+            this.fileProgressBar.Size = new System.Drawing.Size(608, 25);
+            this.fileProgressBar.TabIndex = 3;
             // 
-            // file1
+            // CRC32checkBox
             // 
-            this.file1.BackColor = System.Drawing.SystemColors.Control;
-            this.file1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.file1.Location = new System.Drawing.Point(14, 301);
-            this.file1.Name = "file1";
-            this.file1.Size = new System.Drawing.Size(67, 21);
-            this.file1.TabIndex = 4;
-            this.file1.Text = "File:";
+            this.CRC32checkBox.AutoSize = true;
+            this.CRC32checkBox.Location = new System.Drawing.Point(524, 66);
+            this.CRC32checkBox.Name = "CRC32checkBox";
+            this.CRC32checkBox.Size = new System.Drawing.Size(79, 22);
+            this.CRC32checkBox.TabIndex = 1;
+            this.CRC32checkBox.Text = "CRC32";
+            this.CRC32checkBox.UseVisualStyleBackColor = true;
+            this.CRC32checkBox.CheckedChanged += new System.EventHandler(this.CRC32checkBox_CheckedChanged);
             // 
-            // cRC64_1checkBox
+            // MD5checkBox
             // 
-            this.cRC64_1checkBox.AutoSize = true;
-            this.cRC64_1checkBox.Location = new System.Drawing.Point(458, 24);
-            this.cRC64_1checkBox.Name = "cRC64_1checkBox";
-            this.cRC64_1checkBox.Size = new System.Drawing.Size(79, 22);
-            this.cRC64_1checkBox.TabIndex = 1;
-            this.cRC64_1checkBox.Text = "CRC64";
-            this.cRC64_1checkBox.UseVisualStyleBackColor = true;
-            this.cRC64_1checkBox.CheckedChanged += new System.EventHandler(this.cRC64_1checkBox_CheckedChanged);
+            this.MD5checkBox.AutoSize = true;
+            this.MD5checkBox.Location = new System.Drawing.Point(11, 22);
+            this.MD5checkBox.Name = "MD5checkBox";
+            this.MD5checkBox.Size = new System.Drawing.Size(61, 22);
+            this.MD5checkBox.TabIndex = 1;
+            this.MD5checkBox.Text = "MD5";
+            this.MD5checkBox.UseVisualStyleBackColor = true;
+            this.MD5checkBox.CheckedChanged += new System.EventHandler(this.MD5checkBox_CheckedChanged);
             // 
-            // file1ProgressBar
+            // SHA256checkBox
             // 
-            this.file1ProgressBar.Location = new System.Drawing.Point(16, 150);
-            this.file1ProgressBar.Name = "file1ProgressBar";
-            this.file1ProgressBar.Size = new System.Drawing.Size(570, 25);
-            this.file1ProgressBar.TabIndex = 3;
+            this.SHA256checkBox.AutoSize = true;
+            this.SHA256checkBox.Location = new System.Drawing.Point(11, 109);
+            this.SHA256checkBox.Name = "SHA256checkBox";
+            this.SHA256checkBox.Size = new System.Drawing.Size(88, 22);
+            this.SHA256checkBox.TabIndex = 1;
+            this.SHA256checkBox.Text = "SHA256";
+            this.SHA256checkBox.UseVisualStyleBackColor = true;
+            this.SHA256checkBox.CheckedChanged += new System.EventHandler(this.SHA256checkBox_CheckedChanged);
             // 
-            // cRC32_1checkBox
+            // SHA1checkBox
             // 
-            this.cRC32_1checkBox.AutoSize = true;
-            this.cRC32_1checkBox.Location = new System.Drawing.Point(524, 66);
-            this.cRC32_1checkBox.Name = "cRC32_1checkBox";
-            this.cRC32_1checkBox.Size = new System.Drawing.Size(79, 22);
-            this.cRC32_1checkBox.TabIndex = 1;
-            this.cRC32_1checkBox.Text = "CRC32";
-            this.cRC32_1checkBox.UseVisualStyleBackColor = true;
-            this.cRC32_1checkBox.CheckedChanged += new System.EventHandler(this.cRC32_1checkBox_CheckedChanged);
+            this.SHA1checkBox.AutoSize = true;
+            this.SHA1checkBox.Location = new System.Drawing.Point(11, 66);
+            this.SHA1checkBox.Name = "SHA1checkBox";
+            this.SHA1checkBox.Size = new System.Drawing.Size(70, 22);
+            this.SHA1checkBox.TabIndex = 1;
+            this.SHA1checkBox.Text = "SHA1";
+            this.SHA1checkBox.UseVisualStyleBackColor = true;
+            this.SHA1checkBox.CheckedChanged += new System.EventHandler(this.SHA1checkBox_CheckedChanged);
             // 
-            // mD5_1checkBox
+            // SHA256TextBox
             // 
-            this.mD5_1checkBox.AutoSize = true;
-            this.mD5_1checkBox.Location = new System.Drawing.Point(11, 22);
-            this.mD5_1checkBox.Name = "mD5_1checkBox";
-            this.mD5_1checkBox.Size = new System.Drawing.Size(61, 22);
-            this.mD5_1checkBox.TabIndex = 1;
-            this.mD5_1checkBox.Text = "MD5";
-            this.mD5_1checkBox.UseVisualStyleBackColor = true;
-            this.mD5_1checkBox.CheckedChanged += new System.EventHandler(this.mD5_1checkBox_CheckedChanged);
+            this.SHA256TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.SHA256TextBox.Location = new System.Drawing.Point(104, 107);
+            this.SHA256TextBox.Name = "SHA256TextBox";
+            this.SHA256TextBox.ReadOnly = true;
+            this.SHA256TextBox.Size = new System.Drawing.Size(608, 28);
+            this.SHA256TextBox.TabIndex = 0;
+            this.SHA256TextBox.Text = "86C507C836317BA18E3588155ED5F6E6CA6C1A6DE780C6873C87479A346D0CEF";
+            this.SHA256TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // sha256_1checkBox
+            // SHA1TextBox
             // 
-            this.sha256_1checkBox.AutoSize = true;
-            this.sha256_1checkBox.Location = new System.Drawing.Point(11, 109);
-            this.sha256_1checkBox.Name = "sha256_1checkBox";
-            this.sha256_1checkBox.Size = new System.Drawing.Size(88, 22);
-            this.sha256_1checkBox.TabIndex = 1;
-            this.sha256_1checkBox.Text = "SHA256";
-            this.sha256_1checkBox.UseVisualStyleBackColor = true;
-            this.sha256_1checkBox.CheckedChanged += new System.EventHandler(this.sha256_1checkBox_CheckedChanged);
+            this.SHA1TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.SHA1TextBox.Location = new System.Drawing.Point(104, 64);
+            this.SHA1TextBox.Name = "SHA1TextBox";
+            this.SHA1TextBox.ReadOnly = true;
+            this.SHA1TextBox.Size = new System.Drawing.Size(408, 28);
+            this.SHA1TextBox.TabIndex = 0;
+            this.SHA1TextBox.Text = "FEF9B281F46996777B94C2F8D6031091990C5142";
+            this.SHA1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // sha1_1checkBox
+            // CRC64TextBox
             // 
-            this.sha1_1checkBox.AutoSize = true;
-            this.sha1_1checkBox.Location = new System.Drawing.Point(11, 66);
-            this.sha1_1checkBox.Name = "sha1_1checkBox";
-            this.sha1_1checkBox.Size = new System.Drawing.Size(70, 22);
-            this.sha1_1checkBox.TabIndex = 1;
-            this.sha1_1checkBox.Text = "SHA1";
-            this.sha1_1checkBox.UseVisualStyleBackColor = true;
-            this.sha1_1checkBox.CheckedChanged += new System.EventHandler(this.sha1_1checkBox_CheckedChanged);
+            this.CRC64TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.CRC64TextBox.Location = new System.Drawing.Point(538, 22);
+            this.CRC64TextBox.Name = "CRC64TextBox";
+            this.CRC64TextBox.ReadOnly = true;
+            this.CRC64TextBox.Size = new System.Drawing.Size(174, 28);
+            this.CRC64TextBox.TabIndex = 0;
+            this.CRC64TextBox.Text = "2075A693782B44F0";
+            this.CRC64TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // hashfile1TextBox
+            // CRC32TextBox
             // 
-            this.hashfile1TextBox.Location = new System.Drawing.Point(63, 298);
-            this.hashfile1TextBox.Name = "hashfile1TextBox";
-            this.hashfile1TextBox.Size = new System.Drawing.Size(683, 28);
-            this.hashfile1TextBox.TabIndex = 0;
-            this.hashfile1TextBox.TabStop = false;
-            this.hashfile1TextBox.Text = "D:\\jared\\Videos\\movies\\The.Good.Doctor\\The.Good.Doctor.S04E02.1080p.WEB.H264-STRO" +
+            this.CRC32TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.CRC32TextBox.Location = new System.Drawing.Point(609, 64);
+            this.CRC32TextBox.Name = "CRC32TextBox";
+            this.CRC32TextBox.ReadOnly = true;
+            this.CRC32TextBox.Size = new System.Drawing.Size(103, 28);
+            this.CRC32TextBox.TabIndex = 0;
+            this.CRC32TextBox.Text = "EEB3C00D";
+            this.CRC32TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // MD5TextBox
+            // 
+            this.MD5TextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.MD5TextBox.Location = new System.Drawing.Point(104, 20);
+            this.MD5TextBox.Name = "MD5TextBox";
+            this.MD5TextBox.ReadOnly = true;
+            this.MD5TextBox.Size = new System.Drawing.Size(327, 28);
+            this.MD5TextBox.TabIndex = 0;
+            this.MD5TextBox.Text = "22D59D8E90DE3F0E0BE5BF5A0128E53F";
+            this.MD5TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // fileBrowseButton
+            // 
+            this.fileBrowseButton.Location = new System.Drawing.Point(747, 294);
+            this.fileBrowseButton.Name = "fileBrowseButton";
+            this.fileBrowseButton.Size = new System.Drawing.Size(92, 32);
+            this.fileBrowseButton.TabIndex = 6;
+            this.fileBrowseButton.Text = "Browse";
+            this.fileBrowseButton.UseVisualStyleBackColor = true;
+            this.fileBrowseButton.Click += new System.EventHandler(this.fileBrowseButton_Click);
+            // 
+            // file
+            // 
+            this.file.BackColor = System.Drawing.SystemColors.Control;
+            this.file.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.file.Location = new System.Drawing.Point(14, 301);
+            this.file.Name = "file";
+            this.file.Size = new System.Drawing.Size(67, 21);
+            this.file.TabIndex = 4;
+            this.file.Text = "File:";
+            // 
+            // hashfileTextBox
+            // 
+            this.hashfileTextBox.Font = new System.Drawing.Font("宋体", 10F);
+            this.hashfileTextBox.Location = new System.Drawing.Point(62, 296);
+            this.hashfileTextBox.Name = "hashfileTextBox";
+            this.hashfileTextBox.Size = new System.Drawing.Size(683, 30);
+            this.hashfileTextBox.TabIndex = 0;
+            this.hashfileTextBox.TabStop = false;
+            this.hashfileTextBox.Text = "D:\\jared\\Videos\\movies\\The.Good.Doctor\\The.Good.Doctor.S04E02.1080p.WEB.H264-STRO" +
     "NTiUM.chs.eng.mp4\r\n";
-            this.hashfile1TextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.hashfile1TextBox_KeyDown);
-            // 
-            // SHA256_1TextBox
-            // 
-            this.SHA256_1TextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.SHA256_1TextBox.Location = new System.Drawing.Point(104, 107);
-            this.SHA256_1TextBox.Name = "SHA256_1TextBox";
-            this.SHA256_1TextBox.ReadOnly = true;
-            this.SHA256_1TextBox.Size = new System.Drawing.Size(608, 28);
-            this.SHA256_1TextBox.TabIndex = 0;
-            this.SHA256_1TextBox.Text = "86C507C836317BA18E3588155ED5F6E6CA6C1A6DE780C6873C87479A346D0CEF";
-            this.SHA256_1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // SHA1_1TextBox
-            // 
-            this.SHA1_1TextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.SHA1_1TextBox.Location = new System.Drawing.Point(104, 64);
-            this.SHA1_1TextBox.Name = "SHA1_1TextBox";
-            this.SHA1_1TextBox.ReadOnly = true;
-            this.SHA1_1TextBox.Size = new System.Drawing.Size(408, 28);
-            this.SHA1_1TextBox.TabIndex = 0;
-            this.SHA1_1TextBox.Text = "FEF9B281F46996777B94C2F8D6031091990C5142";
-            this.SHA1_1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // CRC64_1TextBox
-            // 
-            this.CRC64_1TextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.CRC64_1TextBox.Location = new System.Drawing.Point(538, 22);
-            this.CRC64_1TextBox.Name = "CRC64_1TextBox";
-            this.CRC64_1TextBox.ReadOnly = true;
-            this.CRC64_1TextBox.Size = new System.Drawing.Size(174, 28);
-            this.CRC64_1TextBox.TabIndex = 0;
-            this.CRC64_1TextBox.Text = "2075A693782B44F0";
-            this.CRC64_1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // CRC32_1TextBox
-            // 
-            this.CRC32_1TextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.CRC32_1TextBox.Location = new System.Drawing.Point(609, 64);
-            this.CRC32_1TextBox.Name = "CRC32_1TextBox";
-            this.CRC32_1TextBox.ReadOnly = true;
-            this.CRC32_1TextBox.Size = new System.Drawing.Size(103, 28);
-            this.CRC32_1TextBox.TabIndex = 0;
-            this.CRC32_1TextBox.Text = "EEB3C00D";
-            this.CRC32_1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // MD5_1TextBox
-            // 
-            this.MD5_1TextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.MD5_1TextBox.Location = new System.Drawing.Point(104, 20);
-            this.MD5_1TextBox.Name = "MD5_1TextBox";
-            this.MD5_1TextBox.ReadOnly = true;
-            this.MD5_1TextBox.Size = new System.Drawing.Size(327, 28);
-            this.MD5_1TextBox.TabIndex = 0;
-            this.MD5_1TextBox.Text = "22D59D8E90DE3F0E0BE5BF5A0128E53F";
-            this.MD5_1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.hashfileTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.hashfileTextBox_KeyDown);
             // 
             // headMenuStrip
             // 
@@ -386,25 +381,55 @@ namespace DailyWallpaper.HashCalc
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(173, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             // 
+            // Stop
+            // 
+            this.Stop.Location = new System.Drawing.Point(750, 101);
+            this.Stop.Name = "Stop";
+            this.Stop.Size = new System.Drawing.Size(75, 30);
+            this.Stop.TabIndex = 7;
+            this.Stop.Text = "Stop";
+            this.Stop.UseVisualStyleBackColor = true;
+            this.Stop.Click += new System.EventHandler(this.fileSaveButton_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(-726, 181);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 25);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "Clear";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.fileClearButton_Click);
+            // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(11, 148);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(75, 30);
+            this.clearButton.TabIndex = 7;
+            this.clearButton.Text = "Clear";
+            this.clearButton.UseVisualStyleBackColor = true;
+            this.clearButton.Click += new System.EventHandler(this.button2_Click);
+            // 
             // HashCalcForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(854, 768);
-            this.Controls.Add(this.hashfile1TextBox);
+            this.ClientSize = new System.Drawing.Size(854, 795);
+            this.Controls.Add(this.hashfileTextBox);
             this.Controls.Add(this.hashTextBox);
             this.Controls.Add(this.hashPicBox);
-            this.Controls.Add(this.file1BrowseButton);
-            this.Controls.Add(this.file1Panel);
-            this.Controls.Add(this.file1);
+            this.Controls.Add(this.fileBrowseButton);
+            this.Controls.Add(this.filePanel);
+            this.Controls.Add(this.file);
             this.Controls.Add(this.headMenuStrip);
             this.MainMenuStrip = this.headMenuStrip;
             this.Name = "HashCalcForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hash Calculator";
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).EndInit();
-            this.file1Panel.ResumeLayout(false);
-            this.file1Panel.PerformLayout();
+            this.filePanel.ResumeLayout(false);
+            this.filePanel.PerformLayout();
             this.headMenuStrip.ResumeLayout(false);
             this.headMenuStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -415,25 +440,24 @@ namespace DailyWallpaper.HashCalc
         #endregion
         private System.Windows.Forms.PictureBox hashPicBox;
         private System.Windows.Forms.TextBox hashTextBox;
-        private System.Windows.Forms.Panel file1Panel;
-        private System.Windows.Forms.Button file1CopyButton;
-        private System.Windows.Forms.Button file1SaveButton;
-        private System.Windows.Forms.Button file1BrowseButton;
-        private System.Windows.Forms.Button file1CalcButton;
-        private System.Windows.Forms.Button file1ClearButton;
-        private System.Windows.Forms.TextBox file1;
-        private System.Windows.Forms.CheckBox cRC64_1checkBox;
-        private System.Windows.Forms.ProgressBar file1ProgressBar;
-        private System.Windows.Forms.CheckBox cRC32_1checkBox;
-        private System.Windows.Forms.CheckBox mD5_1checkBox;
-        private System.Windows.Forms.CheckBox sha256_1checkBox;
-        private System.Windows.Forms.CheckBox sha1_1checkBox;
-        private System.Windows.Forms.TextBox hashfile1TextBox;
-        private System.Windows.Forms.TextBox SHA256_1TextBox;
-        private System.Windows.Forms.TextBox SHA1_1TextBox;
-        private System.Windows.Forms.TextBox CRC64_1TextBox;
-        private System.Windows.Forms.TextBox CRC32_1TextBox;
-        private System.Windows.Forms.TextBox MD5_1TextBox;
+        private System.Windows.Forms.Panel filePanel;
+        private System.Windows.Forms.Button fileCopyButton;
+        private System.Windows.Forms.Button fileSaveButton;
+        private System.Windows.Forms.Button fileBrowseButton;
+        private System.Windows.Forms.Button fileCalcButton;
+        private System.Windows.Forms.TextBox file;
+        private System.Windows.Forms.CheckBox CRC64checkBox;
+        private System.Windows.Forms.ProgressBar fileProgressBar;
+        private System.Windows.Forms.CheckBox CRC32checkBox;
+        private System.Windows.Forms.CheckBox MD5checkBox;
+        private System.Windows.Forms.CheckBox SHA256checkBox;
+        private System.Windows.Forms.CheckBox SHA1checkBox;
+        private System.Windows.Forms.TextBox hashfileTextBox;
+        private System.Windows.Forms.TextBox SHA256TextBox;
+        private System.Windows.Forms.TextBox SHA1TextBox;
+        private System.Windows.Forms.TextBox CRC64TextBox;
+        private System.Windows.Forms.TextBox CRC32TextBox;
+        private System.Windows.Forms.TextBox MD5TextBox;
         private System.Windows.Forms.MenuStrip headMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
@@ -445,5 +469,8 @@ namespace DailyWallpaper.HashCalc
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calculateHashOfTextToolStripMenuItem;
+        private System.Windows.Forms.Button Stop;
+        private System.Windows.Forms.Button clearButton;
+        private System.Windows.Forms.Button button1;
     }
 }
