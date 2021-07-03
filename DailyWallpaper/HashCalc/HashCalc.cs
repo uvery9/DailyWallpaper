@@ -24,7 +24,7 @@ namespace DailyWallpaper.HashCalc
 
         public HashCalc()
         {
-            help = "You can drag file to picture/panel 1/panel2";
+            help = "You can drag FILE to picture/hash panel, drag Signature file to console.";
             // totalHashProgess = new ProgressImpl();
             void ProgressAction(long i)
             {
@@ -52,28 +52,28 @@ namespace DailyWallpaper.HashCalc
          *     }));
          * });*/
 
-        public void CalcCRC32(string path, Action<string, string, string> action, CancellationToken token)
+        public void CalcCRC32(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
 
         }
-        public void CalcCRC64(string path, Action<string, string, string> action, CancellationToken token)
+        public void CalcCRC64(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
 
         }
-        public void CalcMD5(string path, Action<string, string, string> action, CancellationToken token)
+        public void CalcMD5(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
             Task.Run(() => ComputeHashAsync(action,
-                "MD5", MD5.Create(), path, token, totalProgess, weightedFactor: 0.3));
+                "MD5:    ", MD5.Create(), path, token, totalProgess));
         }
-        public void CalcSHA1(string path, Action<string, string, string> action, CancellationToken token)
+        public void CalcSHA1(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
             Task.Run(async () => await ComputeHashAsync(action,
-                "SHA1", SHA1.Create(), path, token, totalProgess, weightedFactor: 0.4));
+                "SHA1:   ", SHA1.Create(), path, token, totalProgess));
         }
-        public void CalcSHA256(string path, Action<string, string, string> action, CancellationToken token)
+        public void CalcSHA256(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
             Task.Run(async () => await ComputeHashAsync(action,
-                "SHA256", SHA256.Create(), path, token, totalProgess, weightedFactor: 0.5));
+                "SHA256: ", SHA256.Create(), path, token, totalProgess));
         }
 
 
@@ -150,47 +150,53 @@ namespace DailyWallpaper.HashCalc
         /// <param name="progress"></param>
         /// <param name="bufferSize"></param>
         /// <returns></returns>
-        public static async Task ComputeHashAsync(Action<string, string, string> action,
+        public static async Task ComputeHashAsync(Action<bool, string, string, string> action,
             string who, HashAlgorithm hashAlgorithm, string path,
             CancellationToken cancelToken = default(CancellationToken),
-            IProgress<long> progress = null, double weightedFactor = 0.5,
-            int bufferSize = 1024 * 1024 * 10)
+            IProgress<long> progress = null, int bufferSize = 1024 * 1024 * 10)
         {
-            using (var stream = new FileInfo(path).OpenRead())
+            try
             {
-                var timer = new Stopwatch();
-                timer.Start();
-                stream.Position = 0;
-                byte[] readAheadBuffer, buffer;
-                int readAheadBytesRead, bytesRead;
-                long totalBytesRead = 0;
-                var size = stream.Length;
-                readAheadBuffer = new byte[bufferSize];
-                readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
-                    readAheadBuffer.Length, cancelToken);
-                totalBytesRead += readAheadBytesRead;
-                do
+                using (var stream = new FileInfo(path).OpenRead())
                 {
-                    bytesRead = readAheadBytesRead;
-                    buffer = readAheadBuffer;
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    stream.Position = 0;
+                    byte[] readAheadBuffer, buffer;
+                    int readAheadBytesRead, bytesRead;
+                    long totalBytesRead = 0;
+                    var size = stream.Length;
                     readAheadBuffer = new byte[bufferSize];
                     readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
                         readAheadBuffer.Length, cancelToken);
                     totalBytesRead += readAheadBytesRead;
+                    do
+                    {
+                        bytesRead = readAheadBytesRead;
+                        buffer = readAheadBuffer;
+                        readAheadBuffer = new byte[bufferSize];
+                        readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
+                            readAheadBuffer.Length, cancelToken);
+                        totalBytesRead += readAheadBytesRead;
 
-                    if (readAheadBytesRead == 0)
-                        hashAlgorithm.TransformFinalBlock(buffer, 0, bytesRead);
-                    else
-                        hashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0);
-                    if (progress != null)
-                        progress.Report((int)((double)totalBytesRead / size * 100));
-                    if (cancelToken.IsCancellationRequested)
-                        cancelToken.ThrowIfCancellationRequested();
-                } while (readAheadBytesRead != 0);
-                timer.Stop();
-                var hashCostTime = timer.Elapsed.Milliseconds;
-                action($"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime.ToString()+"ms");
+                        if (readAheadBytesRead == 0)
+                            hashAlgorithm.TransformFinalBlock(buffer, 0, bytesRead);
+                        else
+                            hashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0);
+                        if (progress != null)
+                            progress.Report((int)((double)totalBytesRead / size * 100));
+                        if (cancelToken.IsCancellationRequested)
+                            cancelToken.ThrowIfCancellationRequested();
+                    } while (readAheadBytesRead != 0);
+                    timer.Stop();
+                    var hashCostTime = timer.Elapsed.Milliseconds;
+                    action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime.ToString() + "ms");
                 }
+            }
+            catch (Exception e)
+            {
+                action(false, $"{who}", null, e.Message);
+            }
         }
             
         // encoding = Encoding.UTF8

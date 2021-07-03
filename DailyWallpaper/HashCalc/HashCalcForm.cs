@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using DailyWallpaper.Helpers;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +19,7 @@ namespace DailyWallpaper.HashCalc
     {
         private HashCalc m_hashCalc;
         private TextBoxCons _console;
-        delegate void CalcMethod(string path, Action<string, string, string> action, CancellationToken token);
+        delegate void CalcMethod(string path, Action<bool, string, string, string> action, CancellationToken token);
         private static Mutex mut = new Mutex();
         public HashCalcForm()
         {
@@ -134,10 +135,14 @@ namespace DailyWallpaper.HashCalc
             {
                 m_hashCalc.filePath = path;
                 hashfileTextBox.Text = path;
+                if (File.Exists(path)) 
+                { 
+                    fileCalcButton.PerformClick(); // Pretend to be clicked.
+                }
             }
         }
 
-        private string CopyOrSaveInfoFile1()
+        private string CopyOrSaveInfoFile()
         {
             return CopyOrSaveInfo(m_hashCalc.filePath,
                                   MD5TextBox.Text,
@@ -149,30 +154,39 @@ namespace DailyWallpaper.HashCalc
 
         private string CopyOrSaveInfo(string name, string md5, string crc32, string crc64, string sha1, string sha256)
         {
-
-            string ret = "";
-            string size;
-
+            string failed = $"connect to {ProjectInfo.author} with {ProjectInfo.email}.";
             try
             {
-                size = (new FileInfo(name).Length / 1024).ToString();
+                string size;
+                if (File.Exists(name))
+                {
+                    var sizeNum = new FileInfo(name).Length / 1024;
+                    size = sizeNum.ToString() + " KB\r\n";
+                    if (sizeNum > 1024)
+                    {
+                        sizeNum /= 1024;
+                        size = sizeNum.ToString() + " MB\r\n";
+                    }
+                }
+                else
+                {
+                    return failed;
+                }
+                string ret = "File:   "   + name + "\r\n";
+                ret += "Size:   "   + size;
+                ret += "CRC32:  "  + (string.IsNullOrEmpty(crc32) ? "" : crc32) + "\r\n";
+                ret += "CRC64:  "  + (string.IsNullOrEmpty(crc64) ? "" : crc64) + "\r\n";
+                ret += "MD5:    " + (string.IsNullOrEmpty(md5) ? "" : md5) + "\r\n";
+                ret += "SHA1:   "   + (string.IsNullOrEmpty(sha1) ? "" : sha1) + "\r\n";
+                ret += "SHA256: " + (string.IsNullOrEmpty(sha256) ? "" : sha256) + "\r\n";
+                ret += "    Paste from Hash Calculator in DailyWallpaper.\r\n";
+                return ret;
             }
-            catch
+            catch (Exception e)
             {
-                name = "NULL";
-                size = "None";
+                _console.WriteLine(e.Message);
+                return failed;
             }
-            ret += "File:   "   +  name + "\r\n";
-            ret += "Size:   "   +  size + " KB\r\n";
-           
-            ret += "CRC32:  "  + (string.IsNullOrEmpty(crc32) ? "" : crc32) + "\r\n";
-            ret += "CRC64:  "  + (string.IsNullOrEmpty(crc64) ? "" : crc64) + "\r\n";
-            ret += "MD5:    " + (string.IsNullOrEmpty(md5) ? "" : md5) + "\r\n";
-            ret += "SHA1:   "   + (string.IsNullOrEmpty(sha1) ? "" : sha1) + "\r\n";
-            ret += "SHA256: " + (string.IsNullOrEmpty(sha256) ? "" : sha256) + "\r\n";
-            ret += "    Paste from Hash Calculator in DailyWallpaper.\r\n";
-
-            return ret;
         }
 
         private CancellationTokenSource fileCancel;
@@ -226,12 +240,20 @@ namespace DailyWallpaper.HashCalc
         }
         private void fileCopyButton_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(CopyOrSaveInfoFile1());
+            try
+            {
+                Clipboard.SetText(CopyOrSaveInfoFile());
+                _console.WriteLine("Copied to Clipboard");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteLine(ex.Message);
+            }
         }
 
         private void fileSaveButton_Click(object sender, EventArgs e)
         {
-            save2File(m_hashCalc.filePath, CopyOrSaveInfoFile1());
+            save2File(m_hashCalc.filePath, CopyOrSaveInfoFile());
         }
 
         private void CheckBoxAffectTextBox(CheckBox cb, TextBox tb)
@@ -288,11 +310,19 @@ namespace DailyWallpaper.HashCalc
         
         private void HashAlgorithmCalc(TextBox tx, CheckBox cb, CalcMethod Calcmethod, CancellationToken token)
         {
-            void TellResultAsync(string who, string result, string costTime)
+            void TellResultAsync(bool res, string who, string result, string costTimeOrReson)
             {
-                tx.Text = result;
                 mut.WaitOne();
-                _console.WriteLine("\r\nFinished " + who + " : " + result + ",\r\n  cost time: " + costTime);
+                if (res)
+                {
+                    tx.Text = result;
+                    _console.WriteLine("" + who + result + "\r\n        cost time: " + costTimeOrReson);
+                }
+                else
+                {
+                    _console.WriteLine("\r\n>>> ERROR " + who + costTimeOrReson);
+                    fileProgressBar.Value = 0;
+                }
                 mut.ReleaseMutex();
             }
             if (cb.Checked)
@@ -304,6 +334,21 @@ namespace DailyWallpaper.HashCalc
 
         private void fileCalcButton_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(hashfileTextBox.Text) || !File.Exists(hashfileTextBox.Text))
+            {
+                _console.WriteLine("Please check the File textbox...");
+                return;
+            }
+            var sizeNum = new FileInfo(hashfileTextBox.Text).Length / 1024;
+            var size = sizeNum.ToString() + " KB";
+            if (sizeNum > 1024)
+            {
+                sizeNum /= 1024;
+                size = sizeNum.ToString() + " MB";
+            }
+            var info = "\r\nFile:   " + hashfileTextBox.Text + "\r\n";
+            info    += "Size:   " + size;
+            _console.WriteLine(info);
             Calculate(m_hashCalc);
         }
 
@@ -418,8 +463,8 @@ namespace DailyWallpaper.HashCalc
             {
                 fileCancel.Cancel();
             }
-            stopButton.Enabled = false;
-            fileCalcButton.Enabled = true;
+            _console.WriteLine("Stop...");
+            // fileProgressBar.Value = 0;
         }
     }
 }
