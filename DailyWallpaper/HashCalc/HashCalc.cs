@@ -152,7 +152,12 @@ namespace DailyWallpaper.HashCalc
             Task.Run(async () => await ComputeHashAsync(action,
                 "SHA256: ", SHA256.Create(), path, token, totalProgess));
         }
-
+        
+        public void CalcSHA512(string path, Action<bool, string, string, string> action, CancellationToken token)
+        {
+            Task.Run(async () => await ComputeHashAsync(action,
+                "SHA512: ", SHA512.Create(), path, token, totalProgess));
+        }
 
         /*
 

@@ -30,7 +30,7 @@ namespace DailyWallpaper.HashCalc
             hashPicBox.AllowDrop = true;
             m_hashCalc = new HashCalc();
             m_hashCalc.hashProgressBar = fileProgressBar;
-            EnableAllHashCheckBoxAndTextBox();
+            EnableDefaultHashCheckBoxAndTextBox();
             _console = new TextBoxCons(new ConsWriter(hashTextBox));
             _console.WriteLine(m_hashCalc.help);
 
@@ -193,28 +193,40 @@ namespace DailyWallpaper.HashCalc
         }
 
         private CancellationTokenSource fileCancel;
-        private void EnableAllHashCheckBoxAndTextBox()
+        private void EnableDefaultHashCheckBoxAndTextBox()
         {
+            // use default text to adjust the interface.
+            hashfileTextBox.Text = "";
             MD5checkBox.Checked = true;
             MD5TextBox.Enabled = true;
+            MD5TextBox.Text = "";
 
             CRC64checkBox.Checked = true;
             CRC64TextBox.Enabled = true;
+            CRC64TextBox.Text = "";
 
             SHA1checkBox.Checked = true;
             SHA1TextBox.Enabled = true;
+            SHA1TextBox.Text = "";
 
             CRC32checkBox.Checked = true;
             CRC32TextBox.Enabled = true;
+            CRC32TextBox.Text = "";
 
-            SHA256checkBox.Checked = true;
-            SHA256TextBox.Enabled = true;
+            SHA256checkBox.Checked = false;
+            SHA256TextBox.Enabled = false;
+            SHA256TextBox.Text = "";
+
+            SHA512checkBox.Checked = false;
+            SHA512TextBox.Enabled = false;
+            SHA512TextBox.Text = "";
 
             MD5TextBox.TabStop = false;
             CRC64TextBox.TabStop = false;
             SHA1TextBox.TabStop = false;
             CRC32TextBox.TabStop = false;
             SHA256TextBox.TabStop = false;
+            SHA512TextBox.TabStop = false;
             automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
             
         }
@@ -296,7 +308,10 @@ namespace DailyWallpaper.HashCalc
         {
             CheckBoxAffectTextBox(SHA256checkBox, SHA256TextBox);
         }
-       
+        private void SHA512checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBoxAffectTextBox(SHA512checkBox, SHA512TextBox);
+        }
 
         private void Calculate(HashCalc hashCalc)
         {
@@ -308,6 +323,7 @@ namespace DailyWallpaper.HashCalc
             HashAlgorithmCalc(SHA1TextBox, SHA1checkBox, hashCalc.CalcSHA1, token);
             HashAlgorithmCalc(CRC32TextBox, CRC32checkBox, hashCalc.CalcCRC32, token);
             HashAlgorithmCalc(CRC64TextBox, CRC64checkBox, hashCalc.CalcCRC64, token);
+            HashAlgorithmCalc(SHA512TextBox, SHA512checkBox, hashCalc.CalcSHA512, token);
             //fileCalcButton.Enabled = true;
             //stopButton.Enabled = false;
         }
@@ -374,15 +390,6 @@ namespace DailyWallpaper.HashCalc
 
         }
 
-        private string MakeHashString(byte[] hashBytes)
-        {
-            var hash = new StringBuilder(32);
-            foreach (var b in hashBytes)
-            {
-                hash.Append(b.ToString("X2"));
-            }
-            return hash.ToString();
-        }
       /* private void fileHashbackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
        * {
        *     string filePath = e.Argument.ToString();
