@@ -16,24 +16,23 @@
 
 ## User Interface
 
-### English Version
-<img src="https://user-images.githubusercontent.com/42594123/123919395-7a5ba100-d9b7-11eb-9ada-906614929381.png" alt="main-interface_en" style="zoom: 30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/124373574-ef83ea80-dcc5-11eb-9950-dc3d8f5e7caf.png" alt="main-interface" style="zoom: 10%;" />
 
-### Simplified Chinese
-<img src="https://user-images.githubusercontent.com/42594123/123919390-7891dd80-d9b7-11eb-9cb6-9f20f8e43ff7.png" alt="main-interface" style="zoom:30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/124373573-eeeb5400-dcc5-11eb-9aa5-f1c991ccd8d7.png"  alt="hash-calculator" style="zoom:10%;" />
 
+<img src="https://user-images.githubusercontent.com/42594123/124373572-edba2700-dcc5-11eb-8e0a-9af21a873800.png" alt="clean-empty-folders" style="zoom:10%;" />
 
 ## Language support list: 
 You could modify the **Translations.config** to support your language,  even executable version.
 The code will detect your location and select the appropriate language. If you don't want to do this, the default is English.
 There may be many syntax errors in the **Translations.config**, help me improve it
 
-<img src="https://user-images.githubusercontent.com/42594123/123509339-71ad5700-d6a7-11eb-9eb4-1a56aebdd3fe.png" alt="main-interface_en" style="zoom: 30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123509339-71ad5700-d6a7-11eb-9eb4-1a56aebdd3fe.png" alt="main-interface_en" style="zoom: 10%;" />
 
 ### Tray Icon
 **icon will change cause the status**
 
-<img src="https://user-images.githubusercontent.com/42594123/123614575-0d210200-d837-11eb-8c4f-f9d960bee1e8.png" alt="icon_status" style="zoom: 30%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123614575-0d210200-d837-11eb-8c4f-f9d960bee1e8.png" alt="icon_status" style="zoom: 20%;" />
 
 
 
