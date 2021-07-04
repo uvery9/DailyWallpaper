@@ -497,6 +497,59 @@ namespace DailyWallpaper.HashCalc
             // fileProgressBar.Value = 0;
         }
 
+        private async Task DealWithHashTextBoxDragDrop(string file)
+        {
+            try
+            {
+                // string ext = Path.GetExtension(fi);
+                var task = Task.Run(() =>
+                {
+                    try
+                    {
+                        _console.WriteLine($">>>>>>>>>> FILE START <<<<<<<<<<\r\n");
+                        fileCancel = new CancellationTokenSource();
+                        // Create an instance of StreamReader to read from a file.
+                        // The using statement also closes the StreamReader.
+                        string finalStr = "";
+                        using (StreamReader sr = new StreamReader(file))
+                        {
+                            string line;
+                            // Read and display lines from the file until the end of
+                            // the file is reached.
+                            mut.WaitOne();
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                _console.WriteLine(line);
+                                // finalStr += line;
+                                if (fileCancel.Token.IsCancellationRequested)
+                                    fileCancel.Token.ThrowIfCancellationRequested();
+                            }
+                            mut.ReleaseMutex();
+                        }
+                        _console.WriteLine($"\r\n>>>>>>>>>> FILE END <<<<<<<<<<");
+                    }
+                    catch (OperationCanceledException ex)
+                    {
+                        _console.WriteLine($"StreamReader ReadLine Info: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _console.WriteLine($"StreamReader ReadLine error: {ex.Message}");
+                    }
+                    finally
+                    {
+                        mut.ReleaseMutex();
+                    }
+                });
+                await task;
+            }
+            catch (Exception ex)
+            {
+                _console.WriteLine($"hashTextBox_DragDrop RUN error: {ex.Message}");
+            }
+
+
+        }
         /// <summary>
         /// https://docs.microsoft.com/en-us/dotnet/api/system.io.streamreader?view=net-5.0
         /// </summary>
@@ -505,60 +558,8 @@ namespace DailyWallpaper.HashCalc
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                foreach (string fi in filePaths)
-                {
-                    if (File.Exists(fi))
-                    {
-                        try
-                        {
-                            // string ext = Path.GetExtension(fi);
-                            Task.Run(() =>
-                            {
-                                try
-                                {
-                                    _console.WriteLine($">>>>>>>>>> FILE START <<<<<<<<<<\r\n");
-                                    fileCancel = new CancellationTokenSource();
-                                    // Create an instance of StreamReader to read from a file.
-                                    // The using statement also closes the StreamReader.
-                                    string finalStr = "";
-                                    using (StreamReader sr = new StreamReader(fi))
-                                    {
-                                        string line;
-                                        // Read and display lines from the file until the end of
-                                        // the file is reached.
-                                        mut.WaitOne();
-                                        while ((line = sr.ReadLine()) != null)
-                                        {
-                                            _console.WriteLine(line);
-                                            // finalStr += line;
-                                            if (fileCancel.Token.IsCancellationRequested)
-                                                fileCancel.Token.ThrowIfCancellationRequested();
-                                        }
-                                        mut.ReleaseMutex();
-                                    }
-                                    _console.WriteLine($"\r\n>>>>>>>>>> FILE END <<<<<<<<<<");
-                                }
-                                catch (OperationCanceledException ex)
-                                {
-                                    _console.WriteLine($"StreamReader ReadLine Info: {ex.Message}");
-                                }
-                                catch (Exception ex)
-                                {
-                                    _console.WriteLine($"StreamReader ReadLine error: {ex.Message}");
-                                }
-                                finally
-                                {
-                                    mut.ReleaseMutex();
-                                }
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            _console.WriteLine($"hashTextBox_DragDrop RUN error: {ex.Message}");
-                        }
-                        
-                    }
-
+                if (File.Exists(filePaths[0])){
+                    Task.Run(async() => await DealWithHashTextBoxDragDrop(filePaths[0]));
                 }
             }
         }

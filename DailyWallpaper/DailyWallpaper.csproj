@@ -117,6 +117,7 @@
     <Compile Include="Helpers\ConfigIni.cs" />
     <Compile Include="Helpers\FolderPicker.cs" />
     <Compile Include="Helpers\ProjectInfo.cs" />
+    <Compile Include="Helpers\ShowFormInThreadMode.cs" />
     <Compile Include="Helpers\TextBoxCons.cs" />
     <Compile Include="Helpers\TimerHelper.cs" />
     <Compile Include="Helpers\TranslationHelper.cs" />
