@@ -58,7 +58,7 @@ namespace DailyWallpaper.HashCalc
 
         public void CalcCRC32(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            Task.Run(() => {
+            tasks.Add(Task.Run(() => {
                 var who = "CRC32:  ";
                 try
                 {
@@ -91,8 +91,9 @@ namespace DailyWallpaper.HashCalc
                 catch (Exception e)
                 {
                     action(false, $"ERROR {who}", null, e.Message);
+                    MessageBox.Show(e.Message);
                 }
-            });
+            }));
         }
         /// <summary>
         /// FOR 7-ZIP
@@ -103,7 +104,7 @@ namespace DailyWallpaper.HashCalc
         /// </summary>
         public void CalcCRC64(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            Task.Run(() => {
+            tasks.Add(Task.Run(() => {
                 var who = "CRC64ISO3309:   ";
                 try
                 {
@@ -138,29 +139,28 @@ namespace DailyWallpaper.HashCalc
                 catch (Exception e)
                 {
                     action(false, $"ERROR {who}", null, e.Message);
+                    MessageBox.Show(e.Message);
                 }
-            });
+            }));
         }
         public void CalcMD5(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            Task.Run(() => ComputeHashAsync(action,
-                "MD5:    ", MD5.Create(), path, token, totalProgess));
+            tasks.Add(Task.Run(() => ComputeHashAsync(action,
+                "MD5:    ", MD5.Create(), path, token, totalProgess)));
         }
         public void CalcSHA1(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            Task.Run(async () => await ComputeHashAsync(action,
-                "SHA1:   ", SHA1.Create(), path, token, totalProgess));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(action,
+                "SHA1:   ", SHA1.Create(), path, token, totalProgess)));
         }
         public void CalcSHA256(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            Task.Run(async () => await ComputeHashAsync(action,
-                "SHA256: ", SHA256.Create(), path, token, totalProgess));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA256: ", SHA256.Create(), path, token, totalProgess)));
         }
         
         public void CalcSHA512(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            Task.Run(async () => await ComputeHashAsync(action,
-                "SHA512: ", SHA512.Create(), path, token, totalProgess));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA512: ", SHA512.Create(), path, token, totalProgess)));
         }
         public string ComputeHashOfString(HashAlgorithm hashAlgorithm, string input)
         {
@@ -299,6 +299,7 @@ namespace DailyWallpaper.HashCalc
             catch (Exception e)
             {
                 action(false, $"ERROR {who}", null, e.Message);
+                MessageBox.Show(e.Message);
             }
         }
             
