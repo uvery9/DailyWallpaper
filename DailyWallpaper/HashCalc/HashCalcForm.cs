@@ -228,7 +228,10 @@ namespace DailyWallpaper.HashCalc
             SHA256TextBox.TabStop = false;
             SHA512TextBox.TabStop = false;
             automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
-            
+            enableConsoleStringHashGeneratorToolStripMenuItem.Checked = false;
+            hashTextBox.ReadOnly = true;
+
+
         }
         private void save2File(string file, string str)
         {
@@ -504,6 +507,21 @@ namespace DailyWallpaper.HashCalc
         private void donateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(ProjectInfo.DonationUrl);
+        }
+
+        private void enableConsoleStringHashGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var it = enableConsoleStringHashGeneratorToolStripMenuItem;
+            if (it.Checked)
+            {
+                it.Checked = false;
+                hashTextBox.ReadOnly = true;
+            }
+            else
+            {
+                it.Checked = true;
+                hashTextBox.ReadOnly = false;
+            }
         }
     }
 }

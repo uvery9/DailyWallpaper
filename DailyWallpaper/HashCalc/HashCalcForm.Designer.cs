@@ -42,8 +42,10 @@ namespace DailyWallpaper.HashCalc
             this.fileProgressBar = new System.Windows.Forms.ProgressBar();
             this.CRC32checkBox = new System.Windows.Forms.CheckBox();
             this.MD5checkBox = new System.Windows.Forms.CheckBox();
+            this.SHA512checkBox = new System.Windows.Forms.CheckBox();
             this.SHA256checkBox = new System.Windows.Forms.CheckBox();
             this.SHA1checkBox = new System.Windows.Forms.CheckBox();
+            this.SHA512TextBox = new System.Windows.Forms.TextBox();
             this.SHA256TextBox = new System.Windows.Forms.TextBox();
             this.SHA1TextBox = new System.Windows.Forms.TextBox();
             this.CRC64TextBox = new System.Windows.Forms.TextBox();
@@ -62,8 +64,7 @@ namespace DailyWallpaper.HashCalc
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SHA512TextBox = new System.Windows.Forms.TextBox();
-            this.SHA512checkBox = new System.Windows.Forms.CheckBox();
+            this.enableConsoleStringHashGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).BeginInit();
             this.filePanel.SuspendLayout();
             this.headMenuStrip.SuspendLayout();
@@ -225,6 +226,17 @@ namespace DailyWallpaper.HashCalc
             this.MD5checkBox.UseVisualStyleBackColor = true;
             this.MD5checkBox.CheckedChanged += new System.EventHandler(this.MD5checkBox_CheckedChanged);
             // 
+            // SHA512checkBox
+            // 
+            this.SHA512checkBox.AutoSize = true;
+            this.SHA512checkBox.Location = new System.Drawing.Point(11, 150);
+            this.SHA512checkBox.Name = "SHA512checkBox";
+            this.SHA512checkBox.Size = new System.Drawing.Size(88, 22);
+            this.SHA512checkBox.TabIndex = 1;
+            this.SHA512checkBox.Text = "SHA512";
+            this.SHA512checkBox.UseVisualStyleBackColor = true;
+            this.SHA512checkBox.CheckedChanged += new System.EventHandler(this.SHA512checkBox_CheckedChanged);
+            // 
             // SHA256checkBox
             // 
             this.SHA256checkBox.AutoSize = true;
@@ -246,6 +258,20 @@ namespace DailyWallpaper.HashCalc
             this.SHA1checkBox.Text = "SHA1";
             this.SHA1checkBox.UseVisualStyleBackColor = true;
             this.SHA1checkBox.CheckedChanged += new System.EventHandler(this.SHA1checkBox_CheckedChanged);
+            // 
+            // SHA512TextBox
+            // 
+            this.SHA512TextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.SHA512TextBox.Location = new System.Drawing.Point(104, 141);
+            this.SHA512TextBox.Multiline = true;
+            this.SHA512TextBox.Name = "SHA512TextBox";
+            this.SHA512TextBox.ReadOnly = true;
+            this.SHA512TextBox.Size = new System.Drawing.Size(608, 44);
+            this.SHA512TextBox.TabIndex = 0;
+            this.SHA512TextBox.TabStop = false;
+            this.SHA512TextBox.Text = "30163935C002FC4E1200906C3D30A9C4956B4AF9F6DCAEF1EB4B1FCB8FBA69E7A7ACDC491EA5B1F28" +
+    "64EA8C01B01580EF09DEFC3B11B3F183CB21D236F7F1A6B";
+            this.SHA512TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // SHA256TextBox
             // 
@@ -355,7 +381,8 @@ namespace DailyWallpaper.HashCalc
             this.toolStripMenuItem1,
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem,
             this.useUppercaseLettersInHashToolStripMenuItem,
-            this.calculateHashOfTextToolStripMenuItem});
+            this.calculateHashOfTextToolStripMenuItem,
+            this.enableConsoleStringHashGeneratorToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(95, 28);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -414,30 +441,12 @@ namespace DailyWallpaper.HashCalc
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // SHA512TextBox
+            // enableConsoleStringHashGeneratorToolStripMenuItem
             // 
-            this.SHA512TextBox.BackColor = System.Drawing.SystemColors.Control;
-            this.SHA512TextBox.Location = new System.Drawing.Point(104, 141);
-            this.SHA512TextBox.Multiline = true;
-            this.SHA512TextBox.Name = "SHA512TextBox";
-            this.SHA512TextBox.ReadOnly = true;
-            this.SHA512TextBox.Size = new System.Drawing.Size(608, 44);
-            this.SHA512TextBox.TabIndex = 0;
-            this.SHA512TextBox.TabStop = false;
-            this.SHA512TextBox.Text = "30163935C002FC4E1200906C3D30A9C4956B4AF9F6DCAEF1EB4B1FCB8FBA69E7A7ACDC491EA5B1F28" +
-    "64EA8C01B01580EF09DEFC3B11B3F183CB21D236F7F1A6B";
-            this.SHA512TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // SHA512checkBox
-            // 
-            this.SHA512checkBox.AutoSize = true;
-            this.SHA512checkBox.Location = new System.Drawing.Point(11, 150);
-            this.SHA512checkBox.Name = "SHA512checkBox";
-            this.SHA512checkBox.Size = new System.Drawing.Size(88, 22);
-            this.SHA512checkBox.TabIndex = 1;
-            this.SHA512checkBox.Text = "SHA512";
-            this.SHA512checkBox.UseVisualStyleBackColor = true;
-            this.SHA512checkBox.CheckedChanged += new System.EventHandler(this.SHA512checkBox_CheckedChanged);
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Name = "enableConsoleStringHashGeneratorToolStripMenuItem";
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Text = "Enable Console hash generator";
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Click += new System.EventHandler(this.enableConsoleStringHashGeneratorToolStripMenuItem_Click);
             // 
             // HashCalcForm
             // 
@@ -501,5 +510,6 @@ namespace DailyWallpaper.HashCalc
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox SHA512checkBox;
         private System.Windows.Forms.TextBox SHA512TextBox;
+        private System.Windows.Forms.ToolStripMenuItem enableConsoleStringHashGeneratorToolStripMenuItem;
     }
 }
