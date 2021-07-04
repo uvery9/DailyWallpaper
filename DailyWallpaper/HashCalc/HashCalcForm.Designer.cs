@@ -61,10 +61,10 @@ namespace DailyWallpaper.HashCalc
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useUppercaseLettersInHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calculateHashOfTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableConsoleStringHashGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.enableConsoleStringHashGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).BeginInit();
             this.filePanel.SuspendLayout();
             this.headMenuStrip.SuspendLayout();
@@ -418,6 +418,13 @@ namespace DailyWallpaper.HashCalc
             this.calculateHashOfTextToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
             this.calculateHashOfTextToolStripMenuItem.Text = "Calculate hash of TextBox";
             // 
+            // enableConsoleStringHashGeneratorToolStripMenuItem
+            // 
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Name = "enableConsoleStringHashGeneratorToolStripMenuItem";
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Text = "Enable Console hash generator";
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Click += new System.EventHandler(this.enableConsoleStringHashGeneratorToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -441,13 +448,6 @@ namespace DailyWallpaper.HashCalc
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // enableConsoleStringHashGeneratorToolStripMenuItem
-            // 
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Name = "enableConsoleStringHashGeneratorToolStripMenuItem";
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Text = "Enable Console hash generator";
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Click += new System.EventHandler(this.enableConsoleStringHashGeneratorToolStripMenuItem_Click);
-            // 
             // HashCalcForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -464,6 +464,7 @@ namespace DailyWallpaper.HashCalc
             this.Name = "HashCalcForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hash Calculator";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HashCalcForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).EndInit();
             this.filePanel.ResumeLayout(false);
             this.filePanel.PerformLayout();

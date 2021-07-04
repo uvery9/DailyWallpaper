@@ -117,9 +117,8 @@ namespace DailyWallpaper
             _Icon_HashCalcMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_HashCalc"),
                     (e, s) => {
-                        // MessageBox.Show(Thread.CurrentThread.ManagedThreadId.ToString());
-                        new ShowFormInThreadMode().ShowForm(ShowFormInThreadMode.ShowHashCalcForm);
-                        // new HashCalc.HashCalcForm().Show();
+                        // new ShowFormInThreadMode().ShowForm(ShowFormInThreadMode.ShowHashCalcForm); // only can use showdialog.
+                        new HashCalc.HashCalcForm().Show();
                     });
             // open notepad++ / notepad
             _Icon_NotepadMenuItem = ToolStripMenuItemWithHandler(

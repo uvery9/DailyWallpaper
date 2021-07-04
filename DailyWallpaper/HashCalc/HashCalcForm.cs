@@ -34,7 +34,8 @@ namespace DailyWallpaper.HashCalc
             EnableDefaultHashCheckBoxAndTextBox();
             _console = new TextBoxCons(new ConsWriter(hashTextBox));
             _console.WriteLine(m_hashCalc.help);
-
+            _console.WriteLine($"CurrentThread ID: {Thread.CurrentThread.ManagedThreadId}");
+            
         }
 
         /// <summary>
@@ -591,6 +592,13 @@ namespace DailyWallpaper.HashCalc
                 hashTextBox.AllowDrop = true;
                 m_ini.UpdateIniItem("hashTextBoxAllowDrop", "true");
             }
+        }
+
+        private void HashCalcForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            hashTextBox.AllowDrop = false;
+            hashPicBox.AllowDrop = false;
+            filePanel.AllowDrop = false;
         }
     }
 }
