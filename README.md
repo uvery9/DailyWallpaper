@@ -16,10 +16,12 @@
 
 ## User Interface
 
-<img src="https://user-images.githubusercontent.com/42594123/124373574-ef83ea80-dcc5-11eb-9950-dc3d8f5e7caf.png" alt="main-interface" style="zoom: 10%;" />
+<img src="https://user-images.githubusercontent.com/42594123/124373719-62da2c00-dcc7-11eb-9c79-bd33bfa0f366.png" alt="main-interface" style="zoom: 10%;" />
 
+### hash calculator
 <img src="https://user-images.githubusercontent.com/42594123/124373573-eeeb5400-dcc5-11eb-9aa5-f1c991ccd8d7.png"  alt="hash-calculator" style="zoom:10%;" />
 
+### clean empty folders
 <img src="https://user-images.githubusercontent.com/42594123/124373572-edba2700-dcc5-11eb-8e0a-9af21a873800.png" alt="clean-empty-folders" style="zoom:10%;" />
 
 ## Language support list: 
