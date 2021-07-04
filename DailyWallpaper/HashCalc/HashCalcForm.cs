@@ -21,6 +21,7 @@ namespace DailyWallpaper.HashCalc
         private TextBoxCons _console;
         delegate void CalcMethod(string path, Action<bool, string, string, string> action, CancellationToken token);
         private static Mutex mut = new Mutex();
+        private ConfigIni m_ini = ConfigIni.GetInstance();
         public HashCalcForm()
         {
             InitializeComponent();
@@ -230,6 +231,11 @@ namespace DailyWallpaper.HashCalc
             automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
             enableConsoleStringHashGeneratorToolStripMenuItem.Checked = false;
             hashTextBox.ReadOnly = true;
+            alwaysOnTopToolStripMenuItem.Checked = false;
+            if (m_ini.EqualsIgnoreCase("HashCalcAlwaysOnTop", "yes"))
+            {
+                alwaysOnTopToolStripMenuItem.Checked = true;
+            }
 
 
         }
@@ -439,11 +445,14 @@ namespace DailyWallpaper.HashCalc
             {
                 it.Checked = false;
                 TopMost = false;
+                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "no");
+
             }
             else
             {
                 it.Checked = true;
                 TopMost = true;
+                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "yes");
             }
         }
 

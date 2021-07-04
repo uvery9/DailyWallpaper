@@ -150,9 +150,12 @@ namespace DailyWallpaper
                     TranslationHelper.Get("Icon_OpenOfficialWebsite"),
                     ProjectInfo.OfficalWebSite,
                     (e, s) => { System.Diagnostics.Process.Start(ProjectInfo.OfficalWebSite); });
+            
             _Icon_CheckUpdateMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_CheckUpdate"),
-                    (e, s) => { });
+                    (e, s) => {
+                    System.Diagnostics.Process.Start(ProjectInfo.OfficalLatest);
+                    });
 
             _Icon_IssueAndFeedbackMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_IssueAndFeedback"),
@@ -188,6 +191,7 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_TitleMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_ChangeWallpaperMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_EveryHoursAutoChangeMenuItem);
+
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_BingMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_AlwaysDownLoadBingPictureMenuItem);
@@ -195,14 +199,18 @@ namespace DailyWallpaper
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_LocalPathMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_LocalPathSettingMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_SpotlightMenuItem);
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            notifyIcon.ContextMenuStrip.Items.Add(_Icon_DisableShortcutKeysMenuItem);
+
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_OptionsMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_DisableShortcutKeysMenuItem);
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_RunAtStartUpMenuItem);
+
+            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            notifyIcon.ContextMenuStrip.Items.Add(_Icon_HelpMenuItem);
+
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_ToolboxMenuItem);
-            notifyIcon.ContextMenuStrip.Items.Add(_Icon_HelpMenuItem);           
-            notifyIcon.ContextMenuStrip.Items.Add(_Icon_RunAtStartUpMenuItem);
+
             notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_DonateAndSupportMenuItem);
             notifyIcon.ContextMenuStrip.Items.Add(_Icon_QuitMenuItem);
@@ -413,7 +421,7 @@ namespace DailyWallpaper
             {
                 if (_ini.EqualsIgnoreCase("TimerSetWallpaper", "true", "LOG"))
                 {
-                    _timerHelper.SetTimer(res * 60);
+                    _timerHelper.SetTimer(res * 60, SetTimerAfter);
                 }
                 else
                 {
@@ -428,18 +436,19 @@ namespace DailyWallpaper
                         // first time.
                         appExitTime = DateTime.Now;
                     }
+
                     var timeDiff = (int)(appExitTime - appStartTime).TotalMinutes;
-                    _ini.UpdateIniItem("LastExitSubStartTimeDiff", $"{timeDiff}mins");
+                    _ini.UpdateIniItem("LastExitSubStartTimeDiff", $"{timeDiff}mins", "Log");
                     if (timeDiff > res * 60)
                     {
                         // something wrong. never mind.
-                        _timerHelper.SetTimer(res * 60);
+                        _timerHelper.SetTimer(res * 60, SetTimerAfter);
                         _ini.UpdateIniItem("TimerNotWorkProperly ", $"{DateTime.Now.ToString()}");
                     }
                     else
                     {
                         // rest time = 60 * res - lastTimeNotFinishe.
-                        _timerHelper.SetTimer(res * 60 - timeDiff);
+                        _timerHelper.SetTimer(res * 60 - timeDiff, SetTimerAfter);
                     }
 
                 }
@@ -447,12 +456,18 @@ namespace DailyWallpaper
             else
             {
                 _ini.UpdateIniItem("Timer", "24");
-                _timerHelper.SetTimer(24 * 60);
+                _timerHelper.SetTimer(24 * 60, SetTimerAfter);
             }
             // 1min dueTime, 30 mins period.
             _exitTimeHelper = new System.Threading.Timer(exitTimeHelperCallback, null, 1000 * 60, 1000 * 60 * 30);
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
         }
+        void SetTimerAfter(int mins)
+        {
+            _ini.UpdateIniItem("NEXTAutoChageWallpaperTime", 
+                DateTime.Now.AddMinutes(mins).ToString(), "LOG");
+        }
+
         private static NotifyIconManager _instance;
         public System.Windows.Forms.NotifyIcon notifyIcon;
         private ToolStripMenuItem _Icon_RunAtStartUpMenuItem;

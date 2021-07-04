@@ -44,6 +44,11 @@ namespace DailyWallpaper.Helpers
         {
             _timer.Interval = 1000 * 60 *  mins;
         }
+        public void SetTimer(int mins, Action<int> doAfter)
+        {
+            _timer.Interval = 1000 * 60 * mins;
+            doAfter(mins);
+        }
 
         public void Stop(int hours)
         {

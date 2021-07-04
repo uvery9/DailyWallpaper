@@ -20,6 +20,7 @@ namespace DailyWallpaper.Helpers
         public static string logFile = new System.IO.FileInfo(exeName + ".log.txt").FullName;
         private static string officalWebSiteGlobal = "https://github.com/JaredDC/DailyWallpaper";
         private static string officalWebSiteCHN = "https://gitee.com/imtvip/DailyWallpaper";
+        private static string officalLatestGlobal = "https://github.com/JaredDC/DailyWallpaper/releases/latest";
         private static string newIssueCHN = "https://gitee.com/imtvip/DailyWallpaper/issues/new";
         private static string newIssueGlobal = "https://github.com/JaredDC/DailyWallpaper/issues/new";
         private static string donationUrlGlobal   = "https://github.com/JaredDC/DailyWallpaper/tree/master/Donate";
@@ -171,6 +172,20 @@ namespace DailyWallpaper.Helpers
                     return officalWebSiteGlobal;
                 }
             } 
+        }
+        public static string OfficalLatest
+        {
+            get
+            {
+                if (!connectToWorld && CultureInfo.CurrentUICulture.Equals(CultureInfo.GetCultureInfo("zh-CN")))
+                {
+                    return officalLatestGlobal;
+                }
+                else
+                {
+                    return officalLatestGlobal;
+                }
+            }
         }
         public static string NewIssue
         {

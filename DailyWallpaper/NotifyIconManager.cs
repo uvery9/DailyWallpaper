@@ -15,7 +15,8 @@ namespace DailyWallpaper
 {
     public partial class NotifyIconManager : IDisposable
     {
-        private NotifyIconManager() {
+        private NotifyIconManager() 
+        {
             _ini = ConfigIni.GetInstance();
             _components = new System.ComponentModel.Container();
             notifyIcon = new System.Windows.Forms.NotifyIcon(_components)
@@ -118,7 +119,7 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("Timer", 12.ToString());
                 hoursTextBox.Enabled = false;
                 notifyIcon.ContextMenuStrip.Close();
-                _timerHelper.SetTimer(12 * 60);
+                _timerHelper.SetTimer(12 * 60, SetTimerAfter);
             }
         }
         private void h24RadioButton_CheckedChanged(object sender, EventArgs e)
@@ -128,7 +129,7 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("Timer", 24.ToString());
                 hoursTextBox.Enabled = false;
                 notifyIcon.ContextMenuStrip.Close();
-                _timerHelper.SetTimer(24 * 60);
+                _timerHelper.SetTimer(24 * 60, SetTimerAfter);
             }
         }
         private void h6RadioButton_CheckedChanged(object sender, EventArgs e)
@@ -138,7 +139,7 @@ namespace DailyWallpaper
                 _ini.UpdateIniItem("Timer", 6.ToString());
                 hoursTextBox.Enabled = false;
                 notifyIcon.ContextMenuStrip.Close();
-                _timerHelper.SetTimer(6 * 60);
+                _timerHelper.SetTimer(6 * 60, SetTimerAfter);
             }
         }
         private void customRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -151,7 +152,7 @@ namespace DailyWallpaper
                     _ini.UpdateIniItem("Timer", textFromHoursTextBox.ToString());
                 }
                 int.TryParse(textFromHoursTextBox, out int res);
-                _timerHelper.SetTimer(res * 60);
+                _timerHelper.SetTimer(res * 60, SetTimerAfter);
             }
            
         }
@@ -647,7 +648,7 @@ namespace DailyWallpaper
         {
             try
             {
-                var notePadppPathIni = _ini.Read("NOTEPADPPPATH");
+                var notePadppPathIni = _ini.Read("NOTEPADPPPATH", "Local");
                 if (!string.IsNullOrEmpty(notePadppPathIni) && File.Exists(notePadppPathIni))
                 {
                     Process.Start(notePadppPathIni);
@@ -683,8 +684,7 @@ namespace DailyWallpaper
                         p.StartInfo.UseShellExecute = false;
                         p.Start();*/
                         Process.Start(notePadppPath);
-                        _ini.UpdateIniItem("NOTEPADPPPATH", notePadppPath);
-
+                        _ini.UpdateIniItem("NOTEPADPPPATH", notePadppPath, "Local");
                     }
                     else
                     {
