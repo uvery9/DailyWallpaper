@@ -336,8 +336,7 @@ namespace DailyWallpaper
         }
         private void InitializeCheckedAndTimer()
         {
-            var startFeatures = _ini.GetCfgFromIni();
-            if (startFeatures["bing"].ToLower().Equals("yes"))
+            if (_ini.EqualsIgnoreCase("bing", "yes", "Online"))
             {
                 _Icon_BingMenuItem.Checked = true;
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = true;
@@ -349,12 +348,14 @@ namespace DailyWallpaper
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Visible = false;
                 _Icon_BingAddWaterMarkMenuItem.Visible = false;
             }
-
-            if (startFeatures["alwaysDLBingWallpaper"].ToLower().Equals("yes"))
+            
+            if (_ini.EqualsIgnoreCase("alwaysDLBingWallpaper", "yes", "Online"))
             {
                 _Icon_AlwaysDownLoadBingPictureMenuItem.Checked = true;
             }
-            if (_ini.Read("bingWMK", "Online").ToLower().Equals("yes"))
+
+            
+            if (_ini.EqualsIgnoreCase("bingWMK", "yes", "Online"))
             {
                 _Icon_BingAddWaterMarkMenuItem.Checked = true;
             }
@@ -370,22 +371,23 @@ namespace DailyWallpaper
                 notifyIcon.Icon = Properties.Resources.icon32x32_exclamation;
             }
 
-
-            if (startFeatures["Spotlight"].ToLower().Equals("yes"))
+            
+            if (_ini.EqualsIgnoreCase("Spotlight", "yes", "Online"))
             {
                 _Icon_SpotlightMenuItem.Checked = true;
             }
-            if (startFeatures["localPath"].ToLower().Equals("yes"))
+            
+            if (_ini.EqualsIgnoreCase("localPath", "yes", "Local"))
             {
                 _Icon_LocalPathMenuItem.Checked = true;
                 _Icon_LocalPathSettingMenuItem.Visible = true;
             }
-            if (startFeatures["UseShortcutKeys"].ToLower().Equals("yes"))
+            if (_ini.EqualsIgnoreCase("UseShortcutKeys", "yes"))
             {
                 _Icon_DisableShortcutKeysMenuItem.Checked = false;
             }
 
-            string timerStr = startFeatures["Timer"];
+            string timerStr = _ini.Read("Timer");
             hoursTextBox.Enabled = false;
             if (timerStr.Equals("12"))
             {
@@ -409,7 +411,7 @@ namespace DailyWallpaper
 
             if (int.TryParse(timerStr, out int res))
             {
-                if (_ini.Read("TimerSetWallpaper", "LOG").ToLower().Equals("true"))
+                if (_ini.EqualsIgnoreCase("TimerSetWallpaper", "true", "LOG"))
                 {
                     _timerHelper.SetTimer(res * 60);
                 }

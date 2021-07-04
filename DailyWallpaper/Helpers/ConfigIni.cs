@@ -37,6 +37,21 @@ namespace DailyWallpaper
             }
         }
 
+        // 
+
+        public bool EqualsIgnoreCase(string Key, string compareString,string Section = null)
+        {
+            if (string.IsNullOrEmpty(compareString) || string.IsNullOrEmpty(Key))
+            {
+                return false;
+            }
+            if (compareString.ToLower().Equals(Read(Key, Section).ToLower()))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public string Read(string Key, string Section = null)
         {
             string configFile;
@@ -138,33 +153,6 @@ namespace DailyWallpaper
             }                
         }
         
-        public Dictionary<string, string> GetCfgFromIni()
-        {
-            Dictionary<string, string> iniDict = new Dictionary<string, string>();
-
-            // exeName
-            iniDict.Add("RunAtStartUp", Read("RunAtStartUp", exeName));
-            iniDict.Add("Timer", Read("Timer", exeName));
-            iniDict.Add("UseShortcutKeys", Read("UseShortcutKeys", exeName));
-
-            // online
-            iniDict.Add("downLoadSavePath", Read("downLoadSavePath", "Online"));
-            iniDict.Add("bing", Read("bing", "Online"));
-            iniDict.Add("Spotlight", Read("Spotlight", "Online"));
-            iniDict.Add("SpotlightPath", Read("SpotlightPath", "Online"));
-            iniDict.Add("alwaysDLBingWallpaper", Read("alwaysDLBingWallpaper", "Online"));
-
-            // Local
-            iniDict.Add("localPath", Read("localPath", "Local"));
-            iniDict.Add("localPathSetting", Read("localPathSetting", "Local"));
-            iniDict.Add("localPathScan", Read("localPathScan", "Local"));
-            
-            iniDict.Add("localPathMtime", Read("localPathMtime", "LOG"));
-
-            // print
-            // PrintDict(iniDict);
-            return iniDict;
-        }
         public void RunAtStartup()
         {
             // ConfigIni iniFile

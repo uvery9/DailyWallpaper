@@ -100,29 +100,33 @@ namespace DailyWallpaper
             var iniFile = ConfigIni.GetInstance();
             // iniFile.RunAtStartup();  Console Mode shouldn't do it.
 
-            if (iniFile.Read("bing", "Online").ToLower().Equals("yes"))
+            if (iniFile.EqualsIgnoreCase("bing", "yes", "Online"))
             {
-                if (iniFile.Read("alwaysDLBingWallpaper", "Online").ToLower().Equals("yes"))
+                if (iniFile.EqualsIgnoreCase("alwaysDLBingWallpaper", "yes", "Online"))
                 {
                     new OnlineImage(iniFile).Bing();
                 }
             }
-            var choiceDict = new Dictionary<string, string>();
-            choiceDict.Add("bing", iniFile.Read("bing", "Online"));
-            choiceDict.Add("Spotlight", iniFile.Read("Spotlight", "Online"));
-            choiceDict.Add("localPath", iniFile.Read("localPath", "Local"));
-
             var choiceList = new List<string>();
-            foreach (string key in choiceDict.Keys)
+            if (iniFile.EqualsIgnoreCase("bing", "yes", "Online"))
             {
-                if (choiceDict[key].ToLower().Equals("yes"))
-                {
-                    choiceList.Add(key);
-                }
+                choiceList.Add("bing");
             }
-            var random = new Random();
-            int index = random.Next(choiceList.Count);
-            string choice = choiceList[index];
+            if (iniFile.EqualsIgnoreCase("Spotlight", "yes", "Online"))
+            {
+                choiceList.Add("Spotlight");
+            }
+            if(iniFile.EqualsIgnoreCase("localPath", "yes", "Local"))
+            {
+                choiceList.Add("localPath");
+            }
+            if (choiceList.Count < 1)
+            {
+                Console.WriteLine($"-> The choiceList.Count less than 1: {choiceList.Count}");
+                return false;
+            }
+            Console.WriteLine($"-> The choiceList.Count is: {choiceList.Count}");
+            string choice = choiceList[new Random().Next(choiceList.Count)];
             Console.WriteLine($"-> The choice is: {choice}");
             string wallpaper = null;
             switch (choice)
@@ -154,7 +158,7 @@ namespace DailyWallpaper
             // Fill is the best.
             Wallpaper.SetWallPaper(wallpaper, Wallpaper.PicturePosition.Fill);
             iniFile.UpdateIniItem("WALLPAPER", wallpaper, "LOG");
-            iniFile.UpdateIniItem("wallpaperWithTime", wallpaper + "    " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
+            iniFile.UpdateIniItem("WALLPAPERSetTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
             return true;
         }
     }

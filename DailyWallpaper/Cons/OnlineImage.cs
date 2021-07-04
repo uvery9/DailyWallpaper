@@ -20,7 +20,7 @@ namespace DailyWallpaper
             this.path = path;
             if (String.IsNullOrEmpty(path))
             {
-                if (this.ini.Read("downLoadSavePath", "Online").ToLower().Equals("null")) 
+                if (this.ini.EqualsIgnoreCase("downLoadSavePath", "null", "Online")) 
                 { 
                     var myPictures = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
                     myPictures = Path.Combine(myPictures, ini.exeName);
@@ -59,7 +59,7 @@ namespace DailyWallpaper
                 Console.WriteLine($"Downloading Bing IMG: {bingImg.Copyright}");
                 Console.WriteLine($"Know more: {bingImg.CopyrightLink}");
             }
-            if (ini.Read("bingWMK", "Online").ToLower().Equals("yes"))
+            if (ini.EqualsIgnoreCase("bingWMK", "yes", "Online"))
             {
                 if (!File.Exists(wallpaperWMK))
                 {
@@ -88,11 +88,12 @@ namespace DailyWallpaper
                 Console.WriteLine(e.Key + ":" + e.Value);
             }
         }
+
         private string GetSpotlightDir()
         {
-            if (!ini.GetCfgFromIni()["SpotlightPath"].ToLower().Equals("auto"))
+            if (!ini.EqualsIgnoreCase("SpotlightPath", "auto", "Online"))
             {
-                var dir = ini.GetCfgFromIni()["SpotlightPath"];
+                var dir = ini.Read("SpotlightPath", "Online");
                 if (!Directory.Exists(dir)) {
                     throw new DirectoryNotFoundException($"SpotlightPath invalid: {dir}");
                 }

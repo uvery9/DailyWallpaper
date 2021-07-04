@@ -111,11 +111,10 @@ namespace DailyWallpaper
             }
             this.path = path;
 			this.ini = ini;
-			var localPathScan = ini.GetCfgFromIni()["localPathScan"];
-			if (localPathScan.ToLower().Equals("auto")) {
+			if (ini.EqualsIgnoreCase("localPathScan", "auto", "Local")) {
 				update = LocalImage.Update.AUTO;
             }
-            else if (localPathScan.ToLower().Equals("no"))
+            else if (ini.EqualsIgnoreCase("localPathScan", "no", "Local"))
             {
                 update = LocalImage.Update.NO;
 			}
@@ -138,7 +137,7 @@ namespace DailyWallpaper
 			}
 			else // (this.update == Update.YES)
 			{
-				if (DateTime.TryParse(ini.GetCfgFromIni()["localPathMtime"], out DateTime iniMtime))
+				if (DateTime.TryParse(ini.Read("localPathMtime", "LOG"), out DateTime iniMtime))
 				{
 					var localPathMtime = new FileInfo(this.path).LastWriteTime;
 					var timeDiff = Math.Abs((int)(localPathMtime - iniMtime).TotalSeconds);
@@ -302,9 +301,13 @@ namespace DailyWallpaper
 		// give up this feature
 		private void CopyTo()
         {
-			if (ini.GetCfgFromIni()["want2Copy"].ToLower().Equals("yes"))
+			if (ini.EqualsIgnoreCase("want2Copy", "yes", "Local"))
 			{
-				var copyFolder = ini.GetCfgFromIni()["copyFolder"];
+				var copyFolder = ini.Read("copyFolder", "Local");
+				if (string.IsNullOrEmpty(copyFolder))
+                {
+					return;
+                }
 				string existListTxt = Path.Combine(copyFolder, "_existing_file_list.txt");
 				bool firstCopy = true;
 				if (File.Exists(existListTxt))

@@ -100,7 +100,6 @@
     </Compile>
     <Compile Include="Cons\AutoStartupHelper.cs" />
     <Compile Include="Cons\BingImageProvider.cs" />
-    <Compile Include="Cons\ConfigIni.cs" />
     <Compile Include="Cons\DailyWallpaperCons.cs" />
     <Compile Include="Cons\LocalImage.cs" />
     <Compile Include="Cons\OnlineImage.cs" />
@@ -115,6 +114,7 @@
     </Compile>
     <Compile Include="HashCalc\HashCalc.cs" />
     <Compile Include="Helpers\CallConsole.cs" />
+    <Compile Include="Helpers\ConfigIni.cs" />
     <Compile Include="Helpers\FolderPicker.cs" />
     <Compile Include="Helpers\ProjectInfo.cs" />
     <Compile Include="Helpers\TextBoxCons.cs" />

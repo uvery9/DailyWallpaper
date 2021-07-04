@@ -61,7 +61,7 @@ namespace DailyWallpaper
         // call back by timer.
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
-            if (_ini.GetCfgFromIni()["UseShortcutKeys"].ToLower().Equals("yes"))
+            if (_ini.EqualsIgnoreCase("UseShortcutKeys", "yes"))
             {
                 //DailyWallpaperConsSetWallpaper();
                 // Will NOT wait
@@ -577,9 +577,9 @@ namespace DailyWallpaper
 
             using (var dialog = new CommonOpenFileDialog())
             {
-                var localPathSetting = _ini.GetCfgFromIni()["localPathSetting"];
+                var localPathSetting = _ini.Read("localPathSetting", "Local");
                 var deskTopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                if (!localPathSetting.ToLower().Equals("null") && Directory.Exists(localPathSetting))
+                if (!_ini.EqualsIgnoreCase("localPathSetting", "null", "Local") && Directory.Exists(localPathSetting))
                 {
                     dialog.InitialDirectory = localPathSetting;
                 } else
