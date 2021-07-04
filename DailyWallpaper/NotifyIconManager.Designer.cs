@@ -26,9 +26,9 @@ namespace DailyWallpaper
             // notifyIcon.ContextMenuStrip.ShowCheckMargin = true;
             //notifyIcon.ContextMenuStrip.RenderMode = ToolStripRenderMode.System;
 
-
-            var contextMenuStripTitle = Application.ProductName + " by " + ProjectInfo.author;
-            var _Icon_TitleMenuItem = new ToolStripMenuItem(contextMenuStripTitle) { Enabled = false };
+            var _Icon_TitleMenuItem = new ToolStripMenuItem(Application.ProductName + " by " 
+                + ProjectInfo.author) { Enabled = false };
+            _Icon_TitleMenuItem.TextAlign = ContentAlignment.MiddleCenter;
 
             _Icon_ChangeWallpaperMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_ChangeWallpaper"),
@@ -40,7 +40,7 @@ namespace DailyWallpaper
             _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString =
                 TranslationHelper.Get("TrayIcon_ShortcutKeys"); // "Alt + F"
             // _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString.
-
+            _Icon_ChangeWallpaperMenuItem.TextAlign = ContentAlignment.MiddleCenter;
             _Icon_EveryHoursAutoChangeMenuItem = ToolStripMenuItemWithHandler(
                     "    " + TranslationHelper.Get("Icon_AutoChangeWallpaper"),
                     eventHandler: null);
