@@ -117,7 +117,7 @@ namespace DailyWallpaper
             _Icon_HashCalcMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_HashCalc"),
                     (e, s) => {
-                        _hashWindow.Show();
+                        new HashCalc.HashCalcForm().Show();
                     });
             // open notepad++ / notepad
             _Icon_NotepadMenuItem = ToolStripMenuItemWithHandler(
@@ -221,8 +221,6 @@ namespace DailyWallpaper
             _viewWindow.saveToFileButton.Click += new System.EventHandler(saveToFileButton_Click);
             _cefWindow = new CleanEmptyFoldersForm();
             _cefWindow.FormClosing += _cefWindow_FormClosing;
-            _hashWindow = new HashCalc.HashCalcForm();
-            _hashWindow.FormClosing += _hashWindow_FormClosing;
         }
         private void AddDivIntoPanel(Panel panel,
                                     RadioButton radioButton,
@@ -507,7 +505,6 @@ namespace DailyWallpaper
         private bool setWallpaperSucceed = false;
         private View.LogWindow _viewWindow;
         private CleanEmptyFoldersForm _cefWindow;
-        private HashCalc.HashCalcForm _hashWindow;
         private bool useTextBoxWriter = false;
         private bool iStextFromFileNew = true;
         private bool consRunning = false;

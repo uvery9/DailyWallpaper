@@ -232,9 +232,15 @@ namespace DailyWallpaper.HashCalc
             enableConsoleStringHashGeneratorToolStripMenuItem.Checked = false;
             hashTextBox.ReadOnly = true;
             alwaysOnTopToolStripMenuItem.Checked = false;
-            if (m_ini.EqualsIgnoreCase("HashCalcAlwaysOnTop", "yes"))
+            if (m_ini.EqualsIgnoreCase("HashCalcAlwaysOnTop", "true"))
             {
                 alwaysOnTopToolStripMenuItem.Checked = true;
+            }
+            hashTextBox.AllowDrop = false;
+            if (m_ini.EqualsIgnoreCase("hashTextBoxAllowDrop", "true"))
+            {
+                hashTextBox.AllowDrop = true;
+                hashTextBox.ReadOnly = false;
             }
 
 
@@ -445,14 +451,14 @@ namespace DailyWallpaper.HashCalc
             {
                 it.Checked = false;
                 TopMost = false;
-                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "no");
+                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "false");
 
             }
             else
             {
                 it.Checked = true;
                 TopMost = true;
-                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "yes");
+                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "true");
             }
         }
 
@@ -491,17 +497,66 @@ namespace DailyWallpaper.HashCalc
             // fileProgressBar.Value = 0;
         }
 
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.io.streamreader?view=net-5.0
+        /// </summary>
         private void hashTextBox_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                foreach (string fileLoc in filePaths)
+                foreach (string fi in filePaths)
                 {
-                    if (File.Exists(fileLoc))
+                    if (File.Exists(fi))
                     {
-                        string ext = Path.GetExtension(fileLoc);
-                        _console.WriteLine($"file ext is {ext}");
+                        try
+                        {
+                            // string ext = Path.GetExtension(fi);
+                            Task.Run(() =>
+                            {
+                                try
+                                {
+                                    _console.WriteLine($">>>>>>>>>> FILE START <<<<<<<<<<\r\n");
+                                    fileCancel = new CancellationTokenSource();
+                                    // Create an instance of StreamReader to read from a file.
+                                    // The using statement also closes the StreamReader.
+                                    string finalStr = "";
+                                    using (StreamReader sr = new StreamReader(fi))
+                                    {
+                                        string line;
+                                        // Read and display lines from the file until the end of
+                                        // the file is reached.
+                                        mut.WaitOne();
+                                        while ((line = sr.ReadLine()) != null)
+                                        {
+                                            _console.WriteLine(line);
+                                            // finalStr += line;
+                                            if (fileCancel.Token.IsCancellationRequested)
+                                                fileCancel.Token.ThrowIfCancellationRequested();
+                                        }
+                                        mut.ReleaseMutex();
+                                    }
+                                    _console.WriteLine($"\r\n>>>>>>>>>> FILE END <<<<<<<<<<");
+                                }
+                                catch (OperationCanceledException ex)
+                                {
+                                    _console.WriteLine($"StreamReader ReadLine Info: {ex.Message}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    _console.WriteLine($"StreamReader ReadLine error: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    mut.ReleaseMutex();
+                                }
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            _console.WriteLine($"hashTextBox_DragDrop RUN error: {ex.Message}");
+                        }
+                        
                     }
 
                 }
@@ -525,11 +580,15 @@ namespace DailyWallpaper.HashCalc
             {
                 it.Checked = false;
                 hashTextBox.ReadOnly = true;
+                hashTextBox.AllowDrop = false;
+                m_ini.UpdateIniItem("hashTextBoxAllowDrop", "false");
             }
             else
             {
                 it.Checked = true;
                 hashTextBox.ReadOnly = false;
+                hashTextBox.AllowDrop = true;
+                m_ini.UpdateIniItem("hashTextBoxAllowDrop", "true");
             }
         }
     }

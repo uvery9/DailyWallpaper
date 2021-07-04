@@ -29,10 +29,14 @@ namespace DailyWallpaper.HashCalc
             void ProgressAction(long i)
             {
                 // readTotal += i;
-                hashProgressBar.Invoke(new Action(() =>
+                // FIX ERROR: System.InvalidOperationException
+                if (hashProgressBar.IsHandleCreated)
                 {
-                    hashProgressBar.Value = (int)i;
-                }));
+                    hashProgressBar.Invoke(new Action(() =>
+                    {
+                        hashProgressBar.Value = (int)i;
+                    }));
+                }
             }
             totalProgess = new Progress<long>(ProgressAction);
             tasks = new List<Task>();

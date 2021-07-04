@@ -446,7 +446,7 @@ namespace DailyWallpaper
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                _hashWindow.Hide();
+                //_hashWindow.Hide();
             }
         }
 
@@ -605,7 +605,6 @@ namespace DailyWallpaper
         {
             _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(),"LOG");
             _cefWindow.Dispose();
-            _hashWindow.Dispose();
             _viewWindow.Dispose();
             notifyIcon.Dispose();
             Application.Exit();
