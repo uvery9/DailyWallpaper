@@ -667,11 +667,14 @@ namespace DailyWallpaper
                 }
                 Task.Run(() =>
                 {
-                    // if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"I:\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"I:\", GetNotePadppPath);
                     if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"C:\Program Files\", GetNotePadppPath);
                     if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"C:\Program Files (x86)\", GetNotePadppPath);
                     if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"C:\", GetNotePadppPath);
                     if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"D:\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"E:\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"F:\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"G:\", GetNotePadppPath);
 
                     if (!string.IsNullOrEmpty(notePadppPath))
                     {
