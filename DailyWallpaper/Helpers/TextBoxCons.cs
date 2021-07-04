@@ -70,11 +70,11 @@ namespace DailyWallpaper
         public override void WriteLine(string value)
         {
             // two long cause problem, maybe.
-            if (textbox.Text.Length > 10000)
+/*            if (textbox.Text.Length > 10000)
             {
                 var tmp = textbox.Text;
                 textbox.Text = tmp.Substring(8000, tmp.Length);
-            }
+            }*/
             textbox.AppendText(value + NewLine);
 
             textbox.Update();

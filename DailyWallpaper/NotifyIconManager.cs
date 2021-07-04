@@ -446,7 +446,7 @@ namespace DailyWallpaper
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                //_hashWindow.Hide();
+                _hashWin.Hide();
             }
         }
 

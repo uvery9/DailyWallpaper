@@ -118,7 +118,7 @@ namespace DailyWallpaper
                     TranslationHelper.Get("Icon_HashCalc"),
                     (e, s) => {
                         // new ShowFormInThreadMode().ShowForm(ShowFormInThreadMode.ShowHashCalcForm); // only can use showdialog.
-                        new HashCalc.HashCalcForm().Show();
+                        _hashWin.Show();
                     });
             // open notepad++ / notepad
             _Icon_NotepadMenuItem = ToolStripMenuItemWithHandler(
@@ -221,7 +221,10 @@ namespace DailyWallpaper
             _viewWindow.clearButton.Click += new System.EventHandler(clearButton_Click);
             _viewWindow.saveToFileButton.Click += new System.EventHandler(saveToFileButton_Click);
             _cefWindow = new CleanEmptyFoldersForm();
+            _hashWin = new HashCalc.HashCalcForm();
             _cefWindow.FormClosing += _cefWindow_FormClosing;
+            _hashWin.FormClosing += _hashWindow_FormClosing;
+            
         }
         private void AddDivIntoPanel(Panel panel,
                                     RadioButton radioButton,
@@ -330,6 +333,7 @@ namespace DailyWallpaper
         {
             notifyIcon.Visible = false;
             _timerHelper.Dispose();
+            _hashWin.Dispose();
             _exitTimeHelper.Dispose();
             notifyIcon.Dispose();
         }
@@ -509,6 +513,7 @@ namespace DailyWallpaper
         private bool useTextBoxWriter = false;
         private bool iStextFromFileNew = true;
         private bool consRunning = false;
+        private HashCalc.HashCalcForm _hashWin;
 
     }
 }

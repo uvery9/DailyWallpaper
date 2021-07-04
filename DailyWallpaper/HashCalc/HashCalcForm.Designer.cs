@@ -32,11 +32,12 @@ namespace DailyWallpaper.HashCalc
             this.hashPicBox = new System.Windows.Forms.PictureBox();
             this.hashTextBox = new System.Windows.Forms.TextBox();
             this.filePanel = new System.Windows.Forms.Panel();
+            this.hashStringCheckBox = new System.Windows.Forms.CheckBox();
             this.fileCopyButton = new System.Windows.Forms.Button();
             this.clearButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
             this.fileSaveButton = new System.Windows.Forms.Button();
-            this.fileCalcButton = new System.Windows.Forms.Button();
+            this.hashCalcButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.CRC64checkBox = new System.Windows.Forms.CheckBox();
             this.fileProgressBar = new System.Windows.Forms.ProgressBar();
@@ -60,7 +61,6 @@ namespace DailyWallpaper.HashCalc
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useUppercaseLettersInHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.calculateHashOfTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableConsoleStringHashGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,16 +95,16 @@ namespace DailyWallpaper.HashCalc
             this.hashTextBox.TabIndex = 5;
             this.hashTextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashTextBox_DragDrop);
             this.hashTextBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
-            this.hashTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.hashTextBox_KeyDown);
             // 
             // filePanel
             // 
             this.filePanel.AllowDrop = true;
+            this.filePanel.Controls.Add(this.hashStringCheckBox);
             this.filePanel.Controls.Add(this.fileCopyButton);
             this.filePanel.Controls.Add(this.clearButton);
             this.filePanel.Controls.Add(this.stopButton);
             this.filePanel.Controls.Add(this.fileSaveButton);
-            this.filePanel.Controls.Add(this.fileCalcButton);
+            this.filePanel.Controls.Add(this.hashCalcButton);
             this.filePanel.Controls.Add(this.button1);
             this.filePanel.Controls.Add(this.CRC64checkBox);
             this.filePanel.Controls.Add(this.fileProgressBar);
@@ -126,9 +126,21 @@ namespace DailyWallpaper.HashCalc
             this.filePanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragDrop);
             this.filePanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
             // 
+            // hashStringCheckBox
+            // 
+            this.hashStringCheckBox.AutoSize = true;
+            this.hashStringCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.hashStringCheckBox.Location = new System.Drawing.Point(718, 149);
+            this.hashStringCheckBox.Name = "hashStringCheckBox";
+            this.hashStringCheckBox.Size = new System.Drawing.Size(88, 22);
+            this.hashStringCheckBox.TabIndex = 8;
+            this.hashStringCheckBox.Text = "String";
+            this.hashStringCheckBox.UseVisualStyleBackColor = true;
+            this.hashStringCheckBox.CheckedChanged += new System.EventHandler(this.hashStringCheckBox_CheckedChanged);
+            // 
             // fileCopyButton
             // 
-            this.fileCopyButton.Location = new System.Drawing.Point(750, 14);
+            this.fileCopyButton.Location = new System.Drawing.Point(750, 3);
             this.fileCopyButton.Name = "fileCopyButton";
             this.fileCopyButton.Size = new System.Drawing.Size(75, 30);
             this.fileCopyButton.TabIndex = 7;
@@ -148,7 +160,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // stopButton
             // 
-            this.stopButton.Location = new System.Drawing.Point(750, 121);
+            this.stopButton.Location = new System.Drawing.Point(750, 95);
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(75, 30);
             this.stopButton.TabIndex = 7;
@@ -158,7 +170,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // fileSaveButton
             // 
-            this.fileSaveButton.Location = new System.Drawing.Point(750, 66);
+            this.fileSaveButton.Location = new System.Drawing.Point(750, 48);
             this.fileSaveButton.Name = "fileSaveButton";
             this.fileSaveButton.Size = new System.Drawing.Size(75, 30);
             this.fileSaveButton.TabIndex = 7;
@@ -166,15 +178,15 @@ namespace DailyWallpaper.HashCalc
             this.fileSaveButton.UseVisualStyleBackColor = true;
             this.fileSaveButton.Click += new System.EventHandler(this.fileSaveButton_Click);
             // 
-            // fileCalcButton
+            // hashCalcButton
             // 
-            this.fileCalcButton.Location = new System.Drawing.Point(718, 177);
-            this.fileCalcButton.Name = "fileCalcButton";
-            this.fileCalcButton.Size = new System.Drawing.Size(110, 49);
-            this.fileCalcButton.TabIndex = 5;
-            this.fileCalcButton.Text = "Calculate";
-            this.fileCalcButton.UseVisualStyleBackColor = true;
-            this.fileCalcButton.Click += new System.EventHandler(this.fileCalcButton_Click);
+            this.hashCalcButton.Location = new System.Drawing.Point(718, 177);
+            this.hashCalcButton.Name = "hashCalcButton";
+            this.hashCalcButton.Size = new System.Drawing.Size(110, 49);
+            this.hashCalcButton.TabIndex = 5;
+            this.hashCalcButton.Text = "Calculate";
+            this.hashCalcButton.UseVisualStyleBackColor = true;
+            this.hashCalcButton.Click += new System.EventHandler(this.hashCalcButton_Click);
             // 
             // button1
             // 
@@ -184,7 +196,6 @@ namespace DailyWallpaper.HashCalc
             this.button1.TabIndex = 5;
             this.button1.Text = "Clear";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.fileClearButton_Click);
             // 
             // CRC64checkBox
             // 
@@ -381,7 +392,6 @@ namespace DailyWallpaper.HashCalc
             this.toolStripMenuItem1,
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem,
             this.useUppercaseLettersInHashToolStripMenuItem,
-            this.calculateHashOfTextToolStripMenuItem,
             this.enableConsoleStringHashGeneratorToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(95, 28);
@@ -411,12 +421,6 @@ namespace DailyWallpaper.HashCalc
             this.useUppercaseLettersInHashToolStripMenuItem.Name = "useUppercaseLettersInHashToolStripMenuItem";
             this.useUppercaseLettersInHashToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
             this.useUppercaseLettersInHashToolStripMenuItem.Text = "Use upper-case letters in hash";
-            // 
-            // calculateHashOfTextToolStripMenuItem
-            // 
-            this.calculateHashOfTextToolStripMenuItem.Name = "calculateHashOfTextToolStripMenuItem";
-            this.calculateHashOfTextToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
-            this.calculateHashOfTextToolStripMenuItem.Text = "Calculate hash of TextBox";
             // 
             // enableConsoleStringHashGeneratorToolStripMenuItem
             // 
@@ -482,7 +486,7 @@ namespace DailyWallpaper.HashCalc
         private System.Windows.Forms.Button fileCopyButton;
         private System.Windows.Forms.Button fileSaveButton;
         private System.Windows.Forms.Button fileBrowseButton;
-        private System.Windows.Forms.Button fileCalcButton;
+        private System.Windows.Forms.Button hashCalcButton;
         private System.Windows.Forms.TextBox file;
         private System.Windows.Forms.CheckBox CRC64checkBox;
         private System.Windows.Forms.ProgressBar fileProgressBar;
@@ -505,12 +509,12 @@ namespace DailyWallpaper.HashCalc
         private System.Windows.Forms.ToolStripMenuItem useUppercaseLettersInHashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem calculateHashOfTextToolStripMenuItem;
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Button clearButton;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox SHA512checkBox;
         private System.Windows.Forms.TextBox SHA512TextBox;
         private System.Windows.Forms.ToolStripMenuItem enableConsoleStringHashGeneratorToolStripMenuItem;
+        private System.Windows.Forms.CheckBox hashStringCheckBox;
     }
 }

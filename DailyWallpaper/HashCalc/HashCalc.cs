@@ -162,7 +162,20 @@ namespace DailyWallpaper.HashCalc
             Task.Run(async () => await ComputeHashAsync(action,
                 "SHA512: ", SHA512.Create(), path, token, totalProgess));
         }
+        public string ComputeHashOfString(HashAlgorithm hashAlgorithm, string input)
+        {
+            /*            // Byte array representation of input string
+            var sourceBytes = Encoding.UTF8.GetBytes(input);
 
+            // Generate hash value(Byte Array) for input data
+            var hashBytes = hashAlgorithm.ComputeHash(sourceBytes);
+
+            // Convert hash byte array to string
+            var hash = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
+
+            // Output the MD5 hash*/
+            return GetHash(hashAlgorithm: hashAlgorithm, input: input, encoding: Encoding.UTF8);
+        }
         /*
 
          byte[] bytes;

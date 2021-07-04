@@ -22,6 +22,7 @@ namespace DailyWallpaper.HashCalc
         delegate void CalcMethod(string path, Action<bool, string, string, string> action, CancellationToken token);
         private static Mutex mut = new Mutex();
         private ConfigIni m_ini = ConfigIni.GetInstance();
+        private string textNeedToHash = null;
         public HashCalcForm()
         {
             InitializeComponent();
@@ -77,9 +78,10 @@ namespace DailyWallpaper.HashCalc
                     {
                         m_hashCalc.filePath = fileLoc;
                         hashfileTextBox.Text = fileLoc;
+                        hashStringCheckBox.Checked = false;
                         if (automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked)
                         {
-                            fileCalcButton.PerformClick(); // Pretend to be clicked.
+                            hashCalcButton.PerformClick(); // Pretend to be clicked.
                         }
                     }
 
@@ -97,11 +99,6 @@ namespace DailyWallpaper.HashCalc
             {
                 e.Effect = DragDropEffects.None;
             }
-        }
-
-        private void hashTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-
         }
 
         private void hashfileTextBox_KeyDown(object sender, KeyEventArgs e)
@@ -142,7 +139,7 @@ namespace DailyWallpaper.HashCalc
                 hashfileTextBox.Text = path;
                 if (File.Exists(path)) 
                 { 
-                    fileCalcButton.PerformClick(); // Pretend to be clicked.
+                    hashCalcButton.PerformClick(); // Pretend to be clicked.
                 }
             }
         }
@@ -276,7 +273,7 @@ namespace DailyWallpaper.HashCalc
             try
             {
                 Clipboard.SetText(CopyOrSaveInfoFile());
-                _console.WriteLine("Copied to Clipboard");
+                _console.WriteLine("\r\nCopied to Clipboard");
             }
             catch (Exception ex)
             {
@@ -333,18 +330,16 @@ namespace DailyWallpaper.HashCalc
         {
             fileCancel = new CancellationTokenSource();
             var token = fileCancel.Token;
-            //fileCalcButton.Enabled = false;
             HashAlgorithmCalc(MD5TextBox, MD5checkBox, hashCalc.CalcMD5, token);
             HashAlgorithmCalc(SHA256TextBox, SHA256checkBox, hashCalc.CalcSHA256, token);
             HashAlgorithmCalc(SHA1TextBox, SHA1checkBox, hashCalc.CalcSHA1, token);
             HashAlgorithmCalc(CRC32TextBox, CRC32checkBox, hashCalc.CalcCRC32, token);
             HashAlgorithmCalc(CRC64TextBox, CRC64checkBox, hashCalc.CalcCRC64, token);
             HashAlgorithmCalc(SHA512TextBox, SHA512checkBox, hashCalc.CalcSHA512, token);
-            //fileCalcButton.Enabled = true;
-            //stopButton.Enabled = false;
         }
 
-        
+
+
         private void HashAlgorithmCalc(TextBox tx, CheckBox cb, CalcMethod Calcmethod, CancellationToken token)
         {
             void TellResultAsync(bool res, string who, string result, string costTimeOrReson)
@@ -368,43 +363,75 @@ namespace DailyWallpaper.HashCalc
                 Calcmethod(m_hashCalc.filePath, TellResultAsync, token);
             }
         }
-
-        private void fileCalcButton_Click(object sender, EventArgs e)
+        private void HashAlgorithmCalc(HashAlgorithm ha, TextBox tx, CheckBox cb)
         {
-            if (string.IsNullOrEmpty(hashfileTextBox.Text) || !File.Exists(hashfileTextBox.Text))
-            {
-                _console.WriteLine("Please check the File textbox...");
-                return;
+            if (cb.Checked) {
+                tx.Text = m_hashCalc.ComputeHashOfString(ha, textNeedToHash);
             }
-            var sizeNum = new FileInfo(hashfileTextBox.Text).Length / 1024;
-            var size = sizeNum.ToString() + " KB";
-            if (sizeNum > 1024)
-            {
-                sizeNum /= 1024;
-                size = sizeNum.ToString() + " MB";
-            }
-            var info = "\r\nFile:   " + hashfileTextBox.Text + "\r\n";
-            info    += "Size:   " + size;
-            _console.WriteLine(info);
-            Calculate(m_hashCalc);
+        }
+        private void Calculate(string input)
+        {
+            hashTextBox.Text = $"\r\nCalculating string in UTF-8: \r\n===============\r\n\"{input}\"\r\n===============\r\n";
+            HashAlgorithmCalc(MD5.Create(), MD5TextBox, MD5checkBox);
+            HashAlgorithmCalc(SHA256.Create(), SHA256TextBox, SHA256checkBox);
+            HashAlgorithmCalc(SHA1.Create(), SHA1TextBox, SHA1checkBox);
+            HashAlgorithmCalc(SHA512.Create(), SHA512TextBox, SHA512checkBox);
         }
 
-        private void fileClearButton_Click(object sender, EventArgs e)
+        private void hashCalcButton_Click(object sender, EventArgs e)
+        {
+            if (!hashStringCheckBox.Checked) { 
+                if (string.IsNullOrEmpty(hashfileTextBox.Text) || !File.Exists(hashfileTextBox.Text))
+                {
+                    _console.WriteLine("Please check the File textbox...");
+                    return;
+                }
+                var sizeNum = new FileInfo(hashfileTextBox.Text).Length / 1024;
+                var size = sizeNum.ToString() + " KB";
+                if (sizeNum > 1024)
+                {
+                    sizeNum /= 1024;
+                    size = sizeNum.ToString() + " MB";
+                }
+                var info = "\r\nFile:   " + hashfileTextBox.Text + "\r\n";
+                info    += "Size:   " + size;
+                _console.WriteLine(info);
+                Calculate(m_hashCalc);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(textNeedToHash))
+                {
+                    if (string.IsNullOrEmpty(hashTextBox.Text))
+                    {
+                        _console.WriteLine("you need to type something. Clear me and do it.");
+                        return;
+                    }
+                    textNeedToHash = hashTextBox.Text;
+                }
+                
+                Calculate(textNeedToHash);
+            }
+        }
+
+        /*private void fileClearButton_Click(object sender, EventArgs e)
         {
             MD5TextBox.Text = "";
             CRC32TextBox.Text = "";
             CRC64TextBox.Text = "";
             SHA1TextBox.Text = "";
             SHA256TextBox.Text = "";
-            hashfileTextBox.Text = "";
+            
+            if (!hashStringCheckBox.Checked)
+                hashfileTextBox.Text = "";
             m_hashCalc.filePath = "";
-
+            textNeedToHash = null;
             if (fileCancel != null)
             {
                 fileCancel.Cancel();
             }
 
-        }
+        }*/
 
       /* private void fileHashbackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
        * {
@@ -478,14 +505,29 @@ namespace DailyWallpaper.HashCalc
 
         private void clearButton_Click(object sender, EventArgs e)
         {
+           
+            hashTextBox.Text = "";
             MD5TextBox.Text = "";
             CRC32TextBox.Text = "";
             CRC64TextBox.Text = "";
             SHA1TextBox.Text = "";
             SHA256TextBox.Text = "";
-            hashfileTextBox.Text = "";
+            SHA512TextBox.Text = "";
+
+            if (!hashStringCheckBox.Checked)
+                hashfileTextBox.Text = "";
             m_hashCalc.filePath = "";
-            hashTextBox.Text = "";
+            textNeedToHash = null;
+            if (fileCancel != null)
+            {
+                fileCancel.Cancel();
+            }
+
+
+
+
+
+
         }
 
         private void stopButton_Click(object sender, EventArgs e)
@@ -498,59 +540,6 @@ namespace DailyWallpaper.HashCalc
             // fileProgressBar.Value = 0;
         }
 
-        private async Task DealWithHashTextBoxDragDrop(string file)
-        {
-            try
-            {
-                // string ext = Path.GetExtension(fi);
-                var task = Task.Run(() =>
-                {
-                    try
-                    {
-                        _console.WriteLine($">>>>>>>>>> FILE START <<<<<<<<<<\r\n");
-                        fileCancel = new CancellationTokenSource();
-                        // Create an instance of StreamReader to read from a file.
-                        // The using statement also closes the StreamReader.
-                        string finalStr = "";
-                        using (StreamReader sr = new StreamReader(file))
-                        {
-                            string line;
-                            // Read and display lines from the file until the end of
-                            // the file is reached.
-                            mut.WaitOne();
-                            while ((line = sr.ReadLine()) != null)
-                            {
-                                _console.WriteLine(line);
-                                // finalStr += line;
-                                if (fileCancel.Token.IsCancellationRequested)
-                                    fileCancel.Token.ThrowIfCancellationRequested();
-                            }
-                            mut.ReleaseMutex();
-                        }
-                        _console.WriteLine($"\r\n>>>>>>>>>> FILE END <<<<<<<<<<");
-                    }
-                    catch (OperationCanceledException ex)
-                    {
-                        _console.WriteLine($"StreamReader ReadLine Info: {ex.Message}");
-                    }
-                    catch (Exception ex)
-                    {
-                        _console.WriteLine($"StreamReader ReadLine error: {ex.Message}");
-                    }
-                    finally
-                    {
-                        mut.ReleaseMutex();
-                    }
-                });
-                await task;
-            }
-            catch (Exception ex)
-            {
-                _console.WriteLine($"hashTextBox_DragDrop RUN error: {ex.Message}");
-            }
-
-
-        }
         /// <summary>
         /// https://docs.microsoft.com/en-us/dotnet/api/system.io.streamreader?view=net-5.0
         /// </summary>
@@ -558,10 +547,42 @@ namespace DailyWallpaper.HashCalc
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                if (File.Exists(filePaths[0])){
-                    Task.Run(async() => await DealWithHashTextBoxDragDrop(filePaths[0]));
-                }
+                Task.Run(()=>
+                {
+                    string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                    if (File.Exists(filePaths[0]))
+                    {
+                        var file = filePaths[0];
+                        if (new FileInfo(file).Length < 1024 * 1024)
+                        {
+                            hashStringCheckBox.Checked = true;
+                            textNeedToHash = File.ReadAllText(filePaths[0]);
+/*                            if ((textNeedToHash.Length) > 5000)
+                            {
+                                _console.WriteLine("Try to use file mode.");
+                                return;
+                            }*/
+                            mut.WaitOne();
+                            hashTextBox.Text = textNeedToHash;                           
+                            mut.ReleaseMutex();
+                            if (automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked)
+                            {
+                                hashCalcButton.PerformClick(); // Pretend to be clicked.
+                            }
+                        }
+                        else
+                        {
+                            hashStringCheckBox.Checked = false;
+                            m_hashCalc.filePath = file;
+                            hashfileTextBox.Text = file;
+                            if (automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked)
+                            {
+                                hashCalcButton.PerformClick(); // Pretend to be clicked.
+                            }
+                        }
+                        //Task.Run(async() => await DealWithHashTextBoxDragDrop(filePaths[0]));
+                    }
+                });
             }
         }
 
@@ -599,6 +620,22 @@ namespace DailyWallpaper.HashCalc
             hashTextBox.AllowDrop = false;
             hashPicBox.AllowDrop = false;
             filePanel.AllowDrop = false;
+            stopButton.PerformClick();
+            // mut.Dispose();
+            // Thread.Sleep(500);
+        }
+
+        private void hashStringCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (hashStringCheckBox.Checked)
+            {
+                hashfileTextBox.Text = "       Calculate the hash value of the text in the console.      ";
+            }
+            else
+            {
+                // _console.WriteLine("Calculate the hash value of file.");
+                hashfileTextBox.Text = "";
+            }
         }
     }
 }
