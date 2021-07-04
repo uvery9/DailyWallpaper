@@ -119,6 +119,10 @@ namespace DailyWallpaper
                     (e, s) => {
                         _hashWindow.Show();
                     });
+            // open notepad++ / notepad
+            _Icon_NotepadMenuItem = ToolStripMenuItemWithHandler(
+                    TranslationHelper.Get("Icon_Notepad"),
+                    _Icon_NotepadMenuItem_Click);
 
             _Icon_ToolboxMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Toolbox"),
@@ -131,7 +135,12 @@ namespace DailyWallpaper
             _Icon_ToolboxMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
                 _Icon_HashCalcMenuItem
             });
+
+            _Icon_ToolboxMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                _Icon_NotepadMenuItem
+            });
             
+
             // Help and DropDownItems
             _Icon_HelpMenuItem = ToolStripMenuItemWithHandler(
                     TranslationHelper.Get("Icon_Help"),
@@ -464,6 +473,7 @@ namespace DailyWallpaper
         private ToolStripMenuItem _Icon_DonateAndSupportMenuItem;
         private ToolStripMenuItem _Icon_CleanEmptyFoldersMenuItem;
         private ToolStripMenuItem _Icon_HashCalcMenuItem;
+        private ToolStripMenuItem _Icon_NotepadMenuItem;
         private ToolStripMenuItem _Icon_HelpMenuItem;
         private ToolStripMenuItem _Icon_ToolboxMenuItem;
         private ToolStripMenuItem _Icon_OpenOfficialWebsiteMenuItem;

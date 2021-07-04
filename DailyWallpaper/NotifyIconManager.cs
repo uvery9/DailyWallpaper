@@ -639,6 +639,101 @@ namespace DailyWallpaper
                         }*/
         }
 
+        // Search for Notepad++, if no found, use notepad.exe
         
+
+
+        private void _Icon_NotepadMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var notePadppPathIni = _ini.Read("NOTEPADPPPATH");
+                if (!string.IsNullOrEmpty(notePadppPathIni) && File.Exists(notePadppPathIni))
+                {
+                    Process.Start(notePadppPathIni);
+                    return;
+                }
+                string notePadppPath = null;
+                void GetNotePadppPath(bool res, string pathOrMsg)
+                {
+                    if (res)
+                    {
+                        notePadppPath = pathOrMsg;
+                    }
+                    else
+                    {
+                        // NO FOUND.
+                    }
+                }
+                Task.Run(() =>
+                {
+                    // if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"I:\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"C:\Program Files\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"C:\Program Files (x86)\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"C:\", GetNotePadppPath);
+                    if (string.IsNullOrEmpty(notePadppPath)) ScanDirsFindNotepadPP(@"D:\", GetNotePadppPath);
+
+                    if (!string.IsNullOrEmpty(notePadppPath))
+                    {
+                        /*var p = new Process();
+                        p.StartInfo.FileName = notePadppPath;
+                        p.StartInfo.UseShellExecute = false;
+                        p.Start();*/
+                        Process.Start(notePadppPath);
+                        _ini.UpdateIniItem("NOTEPADPPPATH", notePadppPath);
+
+                    }
+                    else
+                    {
+                        Process.Start("notepad.exe");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private void ScanDirsFindNotepadPP(string path, Action<bool, string> action)
+        {
+            try
+            {
+                var defPath = @"C:\Program Files\Notepad++\notepad++.exe";
+                if (File.Exists(defPath))
+                {
+                    action(true, defPath);
+                    return;
+                }
+                defPath = @"C:\Program Files(x86)\Notepad++\notepad++.exe";
+                if (File.Exists(defPath))
+                {
+                    action(true, defPath);
+                    return;
+                }
+                if (String.IsNullOrEmpty(path) || !Directory.Exists(path))
+                {
+                    action(false, "Starting directory is a null or not exist.");
+                    return;
+                    // throw new ArgumentException("Starting directory is a null reference or an empty string: path");
+                }
+                foreach (var d in Directory.EnumerateDirectories(path, "*Notepad*"))
+                {
+                    ScanDirsFindNotepadPP(d, action);
+                }
+                if (path.Contains("Notepad++"))
+                {
+                    var npexe = Path.Combine(path, "notepad++.exe");
+                    if (File.Exists(npexe))
+                    {
+                        action(true, npexe);
+                        // action(false, $">>>FOUND NOTDPAD++exe {npexe}");
+                        return;
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException) { }
+            // action(false, $"NO FOUND AT {path}");
+            return;
+        }
     }
 }
