@@ -20,7 +20,7 @@ namespace DailyWallpaper.HashCalc
         private HashCalc m_hashCalc;
         private TextBoxCons _console;
         delegate void CalcMethod(string path, Action<bool, string, string, string> action, CancellationToken token);
-        private static Mutex mut = new Mutex();
+        private Mutex mut = new Mutex();
         private ConfigIni m_ini = ConfigIni.GetInstance();
         private string textNeedToHash = null;
         public HashCalcForm()
@@ -53,7 +53,14 @@ namespace DailyWallpaper.HashCalc
             } 
         }
 
-
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            if (!IsHandleCreated)
+            {
+                this.Close();
+            }
+        }
 
         private void HashCalcForm_DragOver(object sender, DragEventArgs e)
         {
@@ -494,6 +501,7 @@ namespace DailyWallpaper.HashCalc
             SHA1TextBox.Text = "";
             SHA256TextBox.Text = "";
             SHA512TextBox.Text = "";
+            fileProgressBar.Value = 0;
 
             if (!hashStringCheckBox.Checked)
                 hashfileTextBox.Text = "";
@@ -503,12 +511,6 @@ namespace DailyWallpaper.HashCalc
             {
                 fileCancel.Cancel();
             }
-
-
-
-
-
-
         }
 
         private void stopButton_Click(object sender, EventArgs e)
@@ -518,7 +520,7 @@ namespace DailyWallpaper.HashCalc
                 fileCancel.Cancel();
             }
             _console.WriteLine("Stop...");
-            // fileProgressBar.Value = 0;
+            fileProgressBar.Value = 0;
         }
 
         /// <summary>
@@ -528,6 +530,7 @@ namespace DailyWallpaper.HashCalc
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
+                m_hashCalc.tasks.Add(
                 Task.Run(()=>
                 {
                     string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
@@ -563,7 +566,7 @@ namespace DailyWallpaper.HashCalc
                         }
                         //Task.Run(async() => await DealWithHashTextBoxDragDrop(filePaths[0]));
                     }
-                });
+                }));
             }
         }
 
@@ -598,10 +601,25 @@ namespace DailyWallpaper.HashCalc
 
         private void HashCalcForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            e.Cancel = true;
             hashTextBox.AllowDrop = false;
             hashPicBox.AllowDrop = false;
             filePanel.AllowDrop = false;
             stopButton.PerformClick();
+            stopButton.PerformClick();
+            stopButton.PerformClick();
+            // MessageBox.Show("want to close");
+            Hide();
+            // MessageBox.Show("hiding..");
+            Task.Run(()=>
+            { Task.WaitAll(m_hashCalc.tasks.ToArray());
+                // MessageBox.Show("finished.");
+                e.Cancel = false;
+            }
+            );
+            // MessageBox.Show("closing...");
+            // MessageBox.Show($"{hashTextBox.Text}"); // should error.
+            // this.Close();
             // mut.Dispose();
             // Thread.Sleep(500);
         }
