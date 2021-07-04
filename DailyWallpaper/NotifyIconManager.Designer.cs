@@ -124,7 +124,9 @@ namespace DailyWallpaper
                     TranslationHelper.Get("Icon_HashCalc"),
                     (e, s) => {
                         // new ShowFormInThreadMode().ShowForm(ShowFormInThreadMode.ShowHashCalcForm); // only can use showdialog.
-                        _hashWin.Show();
+                        // try to close the form, no error.
+                        // _hashWin.Show();
+                        new HashCalc.HashCalcForm().Show();
                     });
             // open notepad++ / notepad
             _Icon_NotepadMenuItem = ToolStripMenuItemWithHandler(
