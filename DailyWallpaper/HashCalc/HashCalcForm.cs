@@ -414,25 +414,6 @@ namespace DailyWallpaper.HashCalc
             }
         }
 
-        /*private void fileClearButton_Click(object sender, EventArgs e)
-        {
-            MD5TextBox.Text = "";
-            CRC32TextBox.Text = "";
-            CRC64TextBox.Text = "";
-            SHA1TextBox.Text = "";
-            SHA256TextBox.Text = "";
-            
-            if (!hashStringCheckBox.Checked)
-                hashfileTextBox.Text = "";
-            m_hashCalc.filePath = "";
-            textNeedToHash = null;
-            if (fileCancel != null)
-            {
-                fileCancel.Cancel();
-            }
-
-        }*/
-
       /* private void fileHashbackGroundWorker_DoWork(object sender, DoWorkEventArgs e)
        * {
        *     string filePath = e.Argument.ToString();
