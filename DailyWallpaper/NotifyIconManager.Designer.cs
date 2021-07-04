@@ -41,6 +41,11 @@ namespace DailyWallpaper
                 TranslationHelper.Get("TrayIcon_ShortcutKeys"); // "Alt + F"
             // _Icon_ChangeWallpaperMenuItem.ShortcutKeyDisplayString.
             _Icon_ChangeWallpaperMenuItem.TextAlign = ContentAlignment.MiddleCenter;
+
+            _Icon_NextAutoChangeMenuItem = ToolStripMenuItemWithHandler(
+                    "NEXTTIME", (e, s) => { });
+            _Icon_NextAutoChangeMenuItem.Enabled = false;
+
             _Icon_EveryHoursAutoChangeMenuItem = ToolStripMenuItemWithHandler(
                     "    " + TranslationHelper.Get("Icon_AutoChangeWallpaper"),
                     eventHandler: null);
@@ -50,7 +55,8 @@ namespace DailyWallpaper
             _Icon_EveryHoursAutoChangeMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
                 CustomHoursTextboxWithButtonAndUnit(
                     TranslationHelper.Get("Icon_Custom"),
-                    TranslationHelper.Get("Icon_Unit"))
+                    TranslationHelper.Get("Icon_Unit")),
+                _Icon_NextAutoChangeMenuItem
             });
 
             // BingWaterMark Flag
@@ -467,14 +473,16 @@ namespace DailyWallpaper
         }
         void SetTimerAfter(int mins)
         {
-            _ini.UpdateIniItem("NEXTAutoChageWallpaperTime", 
-                DateTime.Now.AddMinutes(mins).ToString(), "LOG");
+            var nextTime = DateTime.Now.AddMinutes(mins).ToString();
+            _ini.UpdateIniItem("NEXTAutoChageWallpaperTime", nextTime, "LOG");
+            _Icon_NextAutoChangeMenuItem.Text = "NextTime: " + nextTime;
         }
 
         private static NotifyIconManager _instance;
         public System.Windows.Forms.NotifyIcon notifyIcon;
         private ToolStripMenuItem _Icon_RunAtStartUpMenuItem;
         private ToolStripMenuItem _Icon_ChangeWallpaperMenuItem;
+        private ToolStripMenuItem _Icon_NextAutoChangeMenuItem;
         private ToolStripMenuItem _Icon_EveryHoursAutoChangeMenuItem;
         private RadioButton h12RadioButton;
         private RadioButton h24RadioButton;
