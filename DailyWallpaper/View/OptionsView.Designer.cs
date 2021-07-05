@@ -87,7 +87,7 @@ namespace DailyWallpaper.View
             this.Icon_DonateAndSupport,
             this.Icon_Quit});
             this.Icon_Options.Name = "Icon_Options";
-            this.Icon_Options.Size = new System.Drawing.Size(318, 451);
+            this.Icon_Options.Size = new System.Drawing.Size(318, 418);
             // 
             // Icon_dailyWallpaperTitleToolStripMenuItem
             // 
@@ -314,6 +314,7 @@ namespace DailyWallpaper.View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "OptionsView";
             this.Text = "OptionsView";
