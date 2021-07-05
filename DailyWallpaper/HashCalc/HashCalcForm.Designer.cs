@@ -99,6 +99,7 @@ namespace DailyWallpaper.HashCalc
             // filePanel
             // 
             this.filePanel.AllowDrop = true;
+            this.filePanel.Controls.Add(this.CRC64TextBox);
             this.filePanel.Controls.Add(this.hashStringCheckBox);
             this.filePanel.Controls.Add(this.fileCopyButton);
             this.filePanel.Controls.Add(this.clearButton);
@@ -116,7 +117,6 @@ namespace DailyWallpaper.HashCalc
             this.filePanel.Controls.Add(this.SHA512TextBox);
             this.filePanel.Controls.Add(this.SHA256TextBox);
             this.filePanel.Controls.Add(this.SHA1TextBox);
-            this.filePanel.Controls.Add(this.CRC64TextBox);
             this.filePanel.Controls.Add(this.CRC32TextBox);
             this.filePanel.Controls.Add(this.MD5TextBox);
             this.filePanel.Location = new System.Drawing.Point(14, 337);
@@ -130,7 +130,7 @@ namespace DailyWallpaper.HashCalc
             // 
             this.hashStringCheckBox.AutoSize = true;
             this.hashStringCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.hashStringCheckBox.Location = new System.Drawing.Point(718, 149);
+            this.hashStringCheckBox.Location = new System.Drawing.Point(733, 143);
             this.hashStringCheckBox.Name = "hashStringCheckBox";
             this.hashStringCheckBox.Size = new System.Drawing.Size(88, 22);
             this.hashStringCheckBox.TabIndex = 8;
@@ -160,7 +160,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // stopButton
             // 
-            this.stopButton.Location = new System.Drawing.Point(750, 95);
+            this.stopButton.Location = new System.Drawing.Point(750, 101);
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(75, 30);
             this.stopButton.TabIndex = 7;
@@ -170,7 +170,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // fileSaveButton
             // 
-            this.fileSaveButton.Location = new System.Drawing.Point(750, 48);
+            this.fileSaveButton.Location = new System.Drawing.Point(750, 53);
             this.fileSaveButton.Name = "fileSaveButton";
             this.fileSaveButton.Size = new System.Drawing.Size(75, 30);
             this.fileSaveButton.TabIndex = 7;
@@ -200,11 +200,11 @@ namespace DailyWallpaper.HashCalc
             // CRC64checkBox
             // 
             this.CRC64checkBox.AutoSize = true;
-            this.CRC64checkBox.Location = new System.Drawing.Point(458, 24);
+            this.CRC64checkBox.Location = new System.Drawing.Point(437, 22);
             this.CRC64checkBox.Name = "CRC64checkBox";
-            this.CRC64checkBox.Size = new System.Drawing.Size(79, 22);
+            this.CRC64checkBox.Size = new System.Drawing.Size(106, 22);
             this.CRC64checkBox.TabIndex = 1;
-            this.CRC64checkBox.Text = "CRC64";
+            this.CRC64checkBox.Text = "CRC64ISO";
             this.CRC64checkBox.UseVisualStyleBackColor = true;
             this.CRC64checkBox.CheckedChanged += new System.EventHandler(this.CRC64checkBox_CheckedChanged);
             // 
@@ -310,7 +310,7 @@ namespace DailyWallpaper.HashCalc
             // CRC64TextBox
             // 
             this.CRC64TextBox.BackColor = System.Drawing.SystemColors.Control;
-            this.CRC64TextBox.Location = new System.Drawing.Point(538, 22);
+            this.CRC64TextBox.Location = new System.Drawing.Point(538, 20);
             this.CRC64TextBox.Name = "CRC64TextBox";
             this.CRC64TextBox.ReadOnly = true;
             this.CRC64TextBox.Size = new System.Drawing.Size(174, 28);
@@ -374,7 +374,6 @@ namespace DailyWallpaper.HashCalc
             // 
             // headMenuStrip
             // 
-            this.headMenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.headMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.headMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,

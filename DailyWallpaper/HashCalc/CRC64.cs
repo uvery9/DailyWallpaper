@@ -13,7 +13,7 @@ namespace DailyWallpaper.HashCalc
     /// Implements a 64-bit CRC hash algorithm for a given polynomial.
     /// </summary>
     /// <remarks>
-    /// For ISO 3309 compliant 64-bit CRC's use Crc64Iso.
+    /// For ISO 3309 compliant 64-bit CRC's use CRC64ISO.
     /// This is the ISO-3309 version of CRC-64 algorithm. It is not compatible with the ECMA-182 algorithm.
     /// </remarks>
     public class CRC64 : HashAlgorithm
@@ -81,13 +81,13 @@ namespace DailyWallpaper.HashCalc
 
         static UInt64[] InitializeTable(UInt64 polynomial)
         {
-            if (polynomial == Crc64Iso.Iso3309Polynomial && Crc64Iso.Table != null)
-                return Crc64Iso.Table;
+            if (polynomial == CRC64ISO.Iso3309Polynomial && CRC64ISO.Table != null)
+                return CRC64ISO.Table;
 
             var createTable = CreateTable(polynomial);
 
-            if (polynomial == Crc64Iso.Iso3309Polynomial)
-                Crc64Iso.Table = createTable;
+            if (polynomial == CRC64ISO.Iso3309Polynomial)
+                CRC64ISO.Table = createTable;
 
             return createTable;
         }
@@ -109,18 +109,18 @@ namespace DailyWallpaper.HashCalc
         }
     }
 
-    public class Crc64Iso : CRC64
+    public class CRC64ISO : CRC64
     {
         internal static UInt64[] Table;
 
         public const UInt64 Iso3309Polynomial = 0xD800000000000000;
 
-        public Crc64Iso()
+        public CRC64ISO()
             : base(Iso3309Polynomial)
         {
         }
 
-        public Crc64Iso(UInt64 seed)
+        public CRC64ISO(UInt64 seed)
             : base(Iso3309Polynomial, seed)
         {
         }

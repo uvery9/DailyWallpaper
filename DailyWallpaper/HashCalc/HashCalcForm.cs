@@ -36,7 +36,7 @@ namespace DailyWallpaper.HashCalc
             EnableDefaultHashCheckBoxAndTextBox();
             _console = new TextBoxCons(new ConsWriter(hashTextBox));
             _console.WriteLine(m_hashCalc.help);
-            _console.WriteLine($"CurrentThread ID: {Thread.CurrentThread.ManagedThreadId}");
+            // _console.WriteLine($"CurrentThread ID: {Thread.CurrentThread.ManagedThreadId}");
             if (selfFromClosing) 
                 FormClosing += new FormClosingEventHandler(this.HashCalcForm_FormClosing);
 
@@ -340,11 +340,11 @@ namespace DailyWallpaper.HashCalc
         {
             fileCancel = new CancellationTokenSource();
             var token = fileCancel.Token;
-            HashAlgorithmCalc(MD5TextBox, MD5checkBox, hashCalc.CalcMD5, token);
-            HashAlgorithmCalc(SHA256TextBox, SHA256checkBox, hashCalc.CalcSHA256, token);
-            HashAlgorithmCalc(SHA1TextBox, SHA1checkBox, hashCalc.CalcSHA1, token);
             HashAlgorithmCalc(CRC32TextBox, CRC32checkBox, hashCalc.CalcCRC32, token);
             HashAlgorithmCalc(CRC64TextBox, CRC64checkBox, hashCalc.CalcCRC64, token);
+            HashAlgorithmCalc(MD5TextBox, MD5checkBox, hashCalc.CalcMD5, token);
+            HashAlgorithmCalc(SHA1TextBox, SHA1checkBox, hashCalc.CalcSHA1, token);
+            HashAlgorithmCalc(SHA256TextBox, SHA256checkBox, hashCalc.CalcSHA256, token);
             HashAlgorithmCalc(SHA512TextBox, SHA512checkBox, hashCalc.CalcSHA512, token);
         }
 

@@ -110,13 +110,11 @@ namespace DailyWallpaper.HashCalc
                 {
                     var timer = new Stopwatch();
                     timer.Start();
-
-
                     /* 
                     * The ISO polynomial, defined in ISO 3309 and used in HDLC.
                     * ISO = 0xD800000000000000
                     */
-                    var crc64 = new Crc64Iso();
+                    var crc64 = new CRC64ISO();
                     var hash = String.Empty;
                     using (var fs = new FileInfo(path).OpenRead()) {
                         foreach (byte b in crc64.ComputeHash(fs))
@@ -288,8 +286,17 @@ namespace DailyWallpaper.HashCalc
                             cancelToken.ThrowIfCancellationRequested();
                     } while (readAheadBytesRead != 0);
                     timer.Stop();
-                    var hashCostTime = timer.Elapsed.Milliseconds;
-                    action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime.ToString() + "ms");
+                    string hashCostTime;
+                    if (timer.Elapsed.TotalSeconds > 1)
+                    {
+                        hashCostTime = Math.Round(timer.Elapsed.TotalSeconds, 2).ToString() + "s";
+                    }
+                    else
+                    {
+                        hashCostTime = Math.Round(timer.Elapsed.TotalMilliseconds, 3).ToString() + "ms";
+                    }
+                    
+                    action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime);
                 }
             }
             catch (OperationCanceledException e)
