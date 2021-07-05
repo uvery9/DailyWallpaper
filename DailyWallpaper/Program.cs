@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyWallpaper.View;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -59,7 +60,10 @@ namespace DailyWallpaper
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                Application.Run(new ViewManager());
+                // OptionsView
+                // new ViewManager()
+                var opv = new OptionsView();
+                Application.Run(opv);
             }
             catch (Exception exc)
             {
