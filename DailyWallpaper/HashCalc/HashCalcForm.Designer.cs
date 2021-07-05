@@ -60,7 +60,7 @@ namespace DailyWallpaper.HashCalc
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.enableConsoleStringHashGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.consoleTextBoxAllowDropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.useUppercaseLettersInHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,7 +72,6 @@ namespace DailyWallpaper.HashCalc
             // 
             // hashPicBox
             // 
-            this.hashPicBox.Image = global::DailyWallpaper.Properties.Resources.draganddrop;
             this.hashPicBox.Location = new System.Drawing.Point(41, 50);
             this.hashPicBox.Name = "hashPicBox";
             this.hashPicBox.Size = new System.Drawing.Size(775, 233);
@@ -147,7 +146,7 @@ namespace DailyWallpaper.HashCalc
             this.hashStringCheckBox.TabIndex = 8;
             this.hashStringCheckBox.Text = "String";
             this.hashStringCheckBox.UseVisualStyleBackColor = true;
-            this.hashStringCheckBox.CheckedChanged += new System.EventHandler(this.hashStringCheckBox_CheckedChanged);
+            this.hashStringCheckBox.Click += new System.EventHandler(this.hashStringCheckBox_Click);
             // 
             // fileCopyButton
             // 
@@ -394,7 +393,7 @@ namespace DailyWallpaper.HashCalc
             this.alwaysOnTopToolStripMenuItem,
             this.toolStripMenuItem1,
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem,
-            this.enableConsoleStringHashGeneratorToolStripMenuItem,
+            this.consoleTextBoxAllowDropToolStripMenuItem,
             this.useUppercaseLettersInHashToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(95, 28);
@@ -419,12 +418,12 @@ namespace DailyWallpaper.HashCalc
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Text = "Automatically calculate hash after drag and drop";
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Click += new System.EventHandler(this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem_Click);
             // 
-            // enableConsoleStringHashGeneratorToolStripMenuItem
+            // consoleTextBoxAllowDropToolStripMenuItem
             // 
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Name = "enableConsoleStringHashGeneratorToolStripMenuItem";
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Text = "Allow ConsoleTextBox Drop";
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Click += new System.EventHandler(this.enableConsoleStringHashGeneratorToolStripMenuItem_Click);
+            this.consoleTextBoxAllowDropToolStripMenuItem.Name = "consoleTextBoxAllowDropToolStripMenuItem";
+            this.consoleTextBoxAllowDropToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
+            this.consoleTextBoxAllowDropToolStripMenuItem.Text = "Allow ConsoleTextBox Drop";
+            this.consoleTextBoxAllowDropToolStripMenuItem.Click += new System.EventHandler(this.consoleTextBoxAllowDropToolStripMenuItem_Click);
             // 
             // useUppercaseLettersInHashToolStripMenuItem
             // 
@@ -517,7 +516,7 @@ namespace DailyWallpaper.HashCalc
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox SHA512checkBox;
         private System.Windows.Forms.TextBox SHA512TextBox;
-        private System.Windows.Forms.ToolStripMenuItem enableConsoleStringHashGeneratorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem consoleTextBoxAllowDropToolStripMenuItem;
         private System.Windows.Forms.CheckBox hashStringCheckBox;
     }
 }
