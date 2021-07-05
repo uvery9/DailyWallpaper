@@ -119,10 +119,6 @@ namespace DailyWallpaper.HashCalc
                     using (var fs = new FileInfo(path).OpenRead()) {
                         foreach (byte b in crc64.ComputeHash(fs))
                         {
-                            if (token.IsCancellationRequested)
-                            {
-                                token.ThrowIfCancellationRequested();
-                            }
                             hash += b.ToString("X2");
                         }
                     }

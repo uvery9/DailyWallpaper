@@ -46,6 +46,7 @@ namespace DailyWallpaper.HashCalc
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
+            // can't report to progressbar here, because it will HashCore many time.
             hash = CalculateHash(hash, table, array, ibStart, cbSize);
         }
 
