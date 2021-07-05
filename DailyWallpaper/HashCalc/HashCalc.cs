@@ -72,14 +72,11 @@ namespace DailyWallpaper.HashCalc
                         foreach (byte b in crc32.ComputeHash(stream))
                         {
                             hash += b.ToString("X2");
-                            if (token.IsCancellationRequested) 
-                            { 
-                                token.ThrowIfCancellationRequested();
-                            }
                         }
                             
                     }
                     // Console.WriteLine("CRC-32 is {0}", hash);
+                    ((IProgress<long>)totalProgess).Report(100);
                     timer.Stop();
                     var hashCostTime = timer.Elapsed.Milliseconds;
                     action(true, $"{who}", hash, hashCostTime.ToString() + "ms");
@@ -122,6 +119,7 @@ namespace DailyWallpaper.HashCalc
                             hash += b.ToString("X2");
                         }
                     }
+                    ((IProgress<long>)totalProgess).Report(100);
                     timer.Stop();
                     var hashCostTime = timer.Elapsed.Milliseconds;
                     action(true, $"{who}", hash, hashCostTime.ToString() + "ms");
