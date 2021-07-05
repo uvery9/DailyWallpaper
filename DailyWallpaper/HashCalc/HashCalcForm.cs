@@ -38,7 +38,7 @@ namespace DailyWallpaper.HashCalc
             _console.WriteLine(m_hashCalc.help);
             _console.WriteLine($"CurrentThread ID: {Thread.CurrentThread.ManagedThreadId}");
             if (selfFromClosing) 
-                FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HashCalcForm_FormClosing);
+                FormClosing += new FormClosingEventHandler(this.HashCalcForm_FormClosing);
 
         }
 
@@ -615,7 +615,8 @@ namespace DailyWallpaper.HashCalc
             Hide();
             // MessageBox.Show("hiding..");
             Task.Run(()=>
-            { Task.WaitAll(m_hashCalc.tasks.ToArray());
+            {   // MessageBox.Show("Start WaitAll.");
+                Task.WaitAll(m_hashCalc.tasks.ToArray());
                 // MessageBox.Show("finished.");
                 e.Cancel = false;
             }
