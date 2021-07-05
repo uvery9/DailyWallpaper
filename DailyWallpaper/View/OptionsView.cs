@@ -1049,17 +1049,16 @@ namespace DailyWallpaper.View
         {
             void getResult(bool res, bool downloaded, string msg)
             {
-                if (!downloaded)
+                // if downloaded is true, msg will become filepath.
+                if (click && !downloaded)
                 {
-                    if (click) 
-                        ShowNotification("", msg);
+                    ShowNotification("", msg);
                 }
-                if (!res)
+                if (click && !res && !downloaded)
                 {
-                    if (click)
-                        Process.Start(ProjectInfo.OfficalLatest);
+                    Process.Start(ProjectInfo.OfficalLatest);
                 }
-                if (downloaded && res) // true tre = new download, false true = already downloaded.
+                if (downloaded && res) // true true = new download, false true = already downloaded.
                 {
                     ShowNotification("",
                                 "Update Downloaded, click me to install.",
