@@ -213,7 +213,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
-git describe --tags --abbrev=0  &gt; $(TargetDir)GITVERSION
+git describe --tags --abbrev=0  &gt; $(TargetDir)GIT-VERSION
 set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
@@ -222,7 +222,7 @@ call "$(ProjectDir)fuck-appveyor.bat"
 REM xcopy "$(TargetDir)" "$(SolutionDir)OUTPUT" /q /e /y /i
 REM del "$(SolutionDir)OUTPUT\config*.ini" 
 REM del "$(SolutionDir)OUTPUT\*.log.txt"
-
+del "$(SolutionDir)OUTPUT\*.Installer-latest.msi*"
 set errorlevel=0
 </PostBuildEvent>
   </PropertyGroup>

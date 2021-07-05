@@ -209,10 +209,10 @@ namespace DailyWallpaper.Helpers
 
         private static Version StringOrFile2Version(string input)
         {
-             if (input.Equals(@"GITVERSION"))
+             if (input.Equals(@"GIT-VERSION"))
             {
                 var file = Path.Combine(Path.GetDirectoryName(
-                             Assembly.GetExecutingAssembly().Location), "GITVERSION");
+                             Assembly.GetExecutingAssembly().Location), "GIT-VERSION");
                 if (!File.Exists(file))
                 {
                     return new Version("1.0.0");
@@ -241,7 +241,7 @@ namespace DailyWallpaper.Helpers
                           return;
                       }
                       var gitHubVersion = StringOrFile2Version(tag_name);
-                      var currentVersion = StringOrFile2Version("GITVERSION");
+                      var currentVersion = StringOrFile2Version("GIT-VERSION");
                       if (currentVersion < gitHubVersion)
                       {                      
                           var msiUrl = (string)json["assets"][0]["browser_download_url"];
