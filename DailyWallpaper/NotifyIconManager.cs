@@ -107,6 +107,7 @@ namespace DailyWallpaper
                     {
                         textFromHoursTextBox = box.Text;
                         _ini.UpdateIniItem("Timer", textFromHoursTextBox);
+                        _timerHelper.SetTimer(result * 60, SetTimerAfter);
                     }
                 }
                 notifyIcon.ContextMenuStrip.Close();

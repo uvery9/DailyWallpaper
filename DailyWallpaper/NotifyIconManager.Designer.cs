@@ -231,6 +231,7 @@ namespace DailyWallpaper
             _cefWindow = new CleanEmptyFoldersForm();
             _hashWin = new HashCalc.HashCalcForm();
             _cefWindow.FormClosing += _cefWindow_FormClosing;
+            _hashWin.selfFromClosing = false;
             _hashWin.FormClosing += _hashWindow_FormClosing;
             
         }

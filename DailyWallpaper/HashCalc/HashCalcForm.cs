@@ -23,6 +23,7 @@ namespace DailyWallpaper.HashCalc
         private Mutex mut = new Mutex();
         private ConfigIni m_ini = ConfigIni.GetInstance();
         private string textNeedToHash = null;
+        public bool selfFromClosing = true;
         public HashCalcForm()
         {
             InitializeComponent();
@@ -36,7 +37,9 @@ namespace DailyWallpaper.HashCalc
             _console = new TextBoxCons(new ConsWriter(hashTextBox));
             _console.WriteLine(m_hashCalc.help);
             _console.WriteLine($"CurrentThread ID: {Thread.CurrentThread.ManagedThreadId}");
-            
+            if (selfFromClosing) 
+                FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HashCalcForm_FormClosing);
+
         }
 
         /// <summary>
