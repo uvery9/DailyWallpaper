@@ -468,7 +468,6 @@ namespace DailyWallpaper.HashCalc
             this.Name = "HashCalcForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hash Calculator";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HashCalcForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.hashPicBox)).EndInit();
             this.filePanel.ResumeLayout(false);
             this.filePanel.PerformLayout();
