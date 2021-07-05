@@ -1,4 +1,4 @@
-version: v{build}
+version: b{build}
 environment:
   STATIC_SITE_REPO: https://github.com/JaredDC/DailyWallpaper
   TARGET_BRANCH: master
