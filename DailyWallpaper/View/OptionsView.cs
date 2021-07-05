@@ -27,7 +27,6 @@ namespace DailyWallpaper.View
         private ConfigIni _ini;
         private bool consRunning = false;
         private bool useTextBoxWriter = false;
-        private System.Threading.Timer _exitTimeHelper;
         private bool setWallpaperSucceed = false;
         private LogWindow _viewWindow;
         private CleanEmptyFoldersForm _cefWindow;
@@ -63,8 +62,26 @@ namespace DailyWallpaper.View
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
-            CheckUpdate(click: false);
+            LaterCheckUpdate();
         }
+        private void LaterCheckUpdate()
+        {
+            var updateTimer = new System.Timers.Timer
+            {
+                Interval = 1000 * 60 * 5, // 5mins LATER,
+                AutoReset = true,
+                Enabled = true
+            };
+            // _timer.
+            updateTimer.Elapsed += updatetimer_Elapsed;
+            updateTimer.Start();
+        }
+        public void updatetimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            CheckUpdate(click: false);
+            ((System.Timers.Timer)sender).Enabled = false;
+        }
+
         void UpdateTranslation()
         {
             Icon_CleanEmptyFolders.Text = TranslationHelper.Get("Icon_CleanEmptyFolders");
@@ -315,10 +332,6 @@ namespace DailyWallpaper.View
         }
 
 
-        private void exitTimeHelperCallback(object state)
-        {
-            _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(), "LOG");
-        }
         private void hoursTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) // && (e.KeyChar != '.')
@@ -966,17 +979,35 @@ namespace DailyWallpaper.View
                 _ini.UpdateIniItem("Timer", "24");
                 _timerHelper.SetTimer(24 * 60, SetTimerAfter);
             }
-            // 1min dueTime, 30 mins period.
-            _exitTimeHelper = new System.Threading.Timer(exitTimeHelperCallback, null, 1000 * 60, 1000 * 60 * 30);
+            // 30 mins period.
+            UpdateExitIniTimer();
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
         }
+
+        private void UpdateExitIniTimer()
+        {
+            var updateTimer = new System.Timers.Timer
+            {
+                Interval = 1000 * 60 * 30, // 30mins,
+                AutoReset = true,
+                Enabled = true
+            };
+            // _timer.
+            updateTimer.Elapsed += exitIniTimerElapsed;
+            updateTimer.Start();
+        }
+        public void exitIniTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(), "LOG");
+        }
+
+
         void SetTimerAfter(int mins)
         {
             var nextTime = DateTime.Now.AddMinutes(mins).ToString();
             _ini.UpdateIniItem("NEXTAutoChageWallpaperTime", nextTime, "LOG");
             Icon_NextTime.Text = "NextTime: " + nextTime;
         }
-
         
         private RadioButton h12RadioButton;
         private RadioButton h24RadioButton;
