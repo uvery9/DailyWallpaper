@@ -239,7 +239,7 @@ namespace DailyWallpaper.Helpers
                       }
                       var gitHubVersion = StringOrFile2Version(tag_name);
                       var currentVersion = StringOrFile2Version("GITVERSION");
-                      if (currentVersion <= gitHubVersion)
+                      if (currentVersion < gitHubVersion)
                       {                      
                           var msiUrl = (string)json["assets"][0]["browser_download_url"];
                           if (string.IsNullOrEmpty(msiUrl))
