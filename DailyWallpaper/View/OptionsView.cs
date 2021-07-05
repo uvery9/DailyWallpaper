@@ -62,7 +62,6 @@ namespace DailyWallpaper.View
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
-            LaterCheckUpdate();
         }
         private void LaterCheckUpdate()
         {
@@ -982,6 +981,7 @@ namespace DailyWallpaper.View
             // 30 mins period.
             UpdateExitIniTimer();
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
+            LaterCheckUpdate();
         }
 
         private void UpdateExitIniTimer()
