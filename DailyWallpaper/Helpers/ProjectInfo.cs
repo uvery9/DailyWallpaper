@@ -5,8 +5,12 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace DailyWallpaper.Helpers
 {
@@ -201,6 +205,197 @@ namespace DailyWallpaper.Helpers
                     return newIssueGlobal;
                 }
             }
+        }
+
+        private static Version StringOrFile2Version(string input)
+        {
+             if (input.Equals(@"GITVERSION"))
+            {
+                var file = Path.Combine(Path.GetDirectoryName(
+                             Assembly.GetExecutingAssembly().Location), "GITVERSION");
+                if (!File.Exists(file))
+                {
+                    return new Version("1.0.0");
+                }
+                input = File.ReadAllText(file);
+
+            }
+            var stripped = Regex.Replace(input, @"[^0-9\.]", "");
+            return new Version(stripped);
+        }
+        public static void CheckForUpdates(Action<bool, bool, string> action)
+        {
+            _ = Task.Run(() =>
+              {
+                  try
+                  {
+                      var json = DownloadJson("https://api.github.com/repos/JaredDC/DailyWallpaper/releases/latest");
+                      // "tag_name": "v1.7.0"
+                      string tag_name = (string)json["tag_name"];
+                      if (string.IsNullOrEmpty(tag_name))
+                      {
+                          action(false, false, "No tag_name");
+                          return;
+                      }
+                      var gitHubVersion = StringOrFile2Version(tag_name);
+                      var currentVersion = StringOrFile2Version("GITVERSION");
+                      if (currentVersion <= gitHubVersion)
+                      {                      
+                          var msiUrl = (string)json["assets"][0]["browser_download_url"];
+                          if (string.IsNullOrEmpty(msiUrl))
+                          {
+                              action(false, false, "No msiUrl");
+                              return;
+                          }
+                          // string gitHubFileName = (string)json["assets"][0]["name"];
+                          DownloadFileAsync(msiUrl, tag_name, action);
+                          return;
+                      }
+                      else
+                      {
+                          action(true, false, "No update.");
+                          return;
+                      }
+                  }
+                  catch (Exception e)
+                  {
+                      action(false, false, "CheckForUpdates Exception: " + e.Message);
+                  }
+              });
+        }
+        static void ws_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+
+                var wx = (WebClientEx)sender;
+                if (e.Cancelled)
+                {
+                    wx.action(false, false, "User Cancelled.");
+                    ((WebClientEx)sender).Dispose();
+                    return;
+                }
+                if (e.Error == null)
+                {
+                    using (FileStream fs = File.Create(wx.completed))
+                    {
+                        byte[] info = new UTF8Encoding(true).GetBytes($"Downloaded {wx.file} at {DateTime.Now}.");
+                        fs.Write(info, 0, info.Length);
+                    }
+                    // downloaded, return file.
+                    wx.action(true, true, wx.file);
+                }
+                else
+                {
+                    wx.action(false, false, $"{e.Error}");
+                }  
+        }
+
+        public static void DownloadFileAsync(string url, string tagName, Action<bool, bool, string> action, WebProxy webProxy = null)
+        {
+            WebClientEx ws = new WebClientEx();
+            /*            try
+                        {*/
+            
+            var gitHubFileName = "DailyWallpaper.Installer-latest.msi";
+            var savePath = Path.Combine(Path.GetDirectoryName(
+                            Assembly.GetExecutingAssembly().Location), gitHubFileName);
+            ws.completed = savePath + "." + tagName + ".completed";
+            ws.file = savePath;
+            ws.action = action;
+            if (File.Exists(ws.completed))
+            {
+                action(false, true, ws.file);
+                return;
+            }
+            if (webProxy != null)
+            {
+                ws.Proxy = webProxy;// new WebProxy(Global.Loopback, Global.httpPort);
+            }
+            ws.DownloadFileCompleted += ws_DownloadFileCompleted;
+            ws.DownloadFileAsync(new Uri(url), savePath);
+/*            }
+            catch
+            {
+
+            }*/
+            /*catch (Exception ex)
+            {
+                // MessageBox.Show(ex.Message);
+            }*/
+        }
+
+        private static dynamic DownloadJson(string url)
+        {
+            var web = new WebClientEx(15 * 1000)
+            {
+                //Proxy = WebRequest.DefaultWebProxy,
+                Credentials = CredentialCache.DefaultCredentials
+            };
+            web.Headers.Add(HttpRequestHeader.UserAgent, "Wget/1.9.1");
+
+            var response =
+                web.DownloadDataStream(url);
+
+            var json = JsonConvert.DeserializeObject<dynamic>(new StreamReader(response).ReadToEnd());
+            return json;
+        }
+    }
+    internal class WebClientEx : WebClient
+    {
+        public string completed; 
+        public string file;
+        public Action<bool, bool, string> action;
+        public WebClientEx() : this(60 * 1000)
+        {
+        }
+
+        public WebClientEx(int timeout)
+        {
+            Timeout = timeout;
+        }
+
+        public int Timeout { get; set; }
+
+        /*protected override WebRequest GetWebRequest(Uri address)
+        {
+            var request = base.GetWebRequest(address);
+
+            request.Timeout = Timeout;
+
+            return request;
+        }*/
+
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            HttpWebRequest request;
+            request = (HttpWebRequest)base.GetWebRequest(address);
+            request.Timeout = Timeout;
+            request.ReadWriteTimeout = Timeout;
+            //request.AllowAutoRedirect = false;
+            //request.AllowWriteStreamBuffering = true;
+
+            request.ServicePoint.BindIPEndPointDelegate = (servicePoint, remoteEndPoint, retryCount) =>
+            {
+                if (remoteEndPoint.AddressFamily == AddressFamily.InterNetworkV6)
+                    return new IPEndPoint(IPAddress.IPv6Any, 0);
+                else
+                    return new IPEndPoint(IPAddress.Any, 0);
+            };
+
+            return request;
+        }
+
+        public MemoryStream DownloadDataStream(string address)
+        {
+            var buffer = DownloadData(address);
+
+            return new MemoryStream(buffer);
+        }
+
+        public MemoryStream DownloadDataStream(Uri address)
+        {
+            var buffer = DownloadData(address);
+
+            return new MemoryStream(buffer);
         }
     }
 }

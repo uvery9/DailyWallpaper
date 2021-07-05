@@ -63,6 +63,7 @@ namespace DailyWallpaper.View
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
+            CheckUpdate(click: false);
         }
         void UpdateTranslation()
         {
@@ -159,9 +160,6 @@ namespace DailyWallpaper.View
             });
 
             Icon_CheckUpdate.Text = TranslationHelper.Get("Icon_CheckUpdate");
-            Icon_CheckUpdate.Click += ((e, s) => {
-                Process.Start(ProjectInfo.OfficalLatest);
-            });
 
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
@@ -1016,9 +1014,36 @@ namespace DailyWallpaper.View
 
         }
 
+        private void CheckUpdate(bool click = true)
+        {
+            void getResult(bool res, bool downloaded, string msg)
+            {
+                if (!downloaded)
+                {
+                    if (click) 
+                        ShowNotification("", msg);
+                }
+                if (!res)
+                {
+                    if (click)
+                        Process.Start(ProjectInfo.OfficalLatest);
+                }
+                if (downloaded && res) // true tre = new download, false true = already downloaded.
+                {
+                    ShowNotification("",
+                                "Update Downloaded, click me to install.",
+                                timeout: 20000,
+                                clickEvent:
+                                () => Process.Start(msg));
+                }
+            }
+            if (click)
+                ShowNotification("", "Checking update.");
+            ProjectInfo.CheckForUpdates(getResult);
+        }
         private void Icon_CheckUpdate_Click(object sender, EventArgs e)
         {
-
+            CheckUpdate();
         }
 
         private void Icon_IssueAndFeedback_Click(object sender, EventArgs e)
