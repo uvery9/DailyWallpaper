@@ -32,6 +32,7 @@ namespace DailyWallpaper.HashCalc
             this.hashPicBox = new System.Windows.Forms.PictureBox();
             this.hashTextBox = new System.Windows.Forms.TextBox();
             this.filePanel = new System.Windows.Forms.Panel();
+            this.CRC64TextBox = new System.Windows.Forms.TextBox();
             this.hashStringCheckBox = new System.Windows.Forms.CheckBox();
             this.fileCopyButton = new System.Windows.Forms.Button();
             this.clearButton = new System.Windows.Forms.Button();
@@ -49,7 +50,6 @@ namespace DailyWallpaper.HashCalc
             this.SHA512TextBox = new System.Windows.Forms.TextBox();
             this.SHA256TextBox = new System.Windows.Forms.TextBox();
             this.SHA1TextBox = new System.Windows.Forms.TextBox();
-            this.CRC64TextBox = new System.Windows.Forms.TextBox();
             this.CRC32TextBox = new System.Windows.Forms.TextBox();
             this.MD5TextBox = new System.Windows.Forms.TextBox();
             this.fileBrowseButton = new System.Windows.Forms.Button();
@@ -60,8 +60,8 @@ namespace DailyWallpaper.HashCalc
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.useUppercaseLettersInHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableConsoleStringHashGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.useUppercaseLettersInHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,10 +72,10 @@ namespace DailyWallpaper.HashCalc
             // 
             // hashPicBox
             // 
-            this.hashPicBox.Image = global::DailyWallpaper.Properties.Resources.draganddrop_long;
-            this.hashPicBox.Location = new System.Drawing.Point(14, 35);
+            this.hashPicBox.Image = global::DailyWallpaper.Properties.Resources.draganddrop;
+            this.hashPicBox.Location = new System.Drawing.Point(41, 50);
             this.hashPicBox.Name = "hashPicBox";
-            this.hashPicBox.Size = new System.Drawing.Size(828, 245);
+            this.hashPicBox.Size = new System.Drawing.Size(775, 233);
             this.hashPicBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.hashPicBox.TabIndex = 1;
             this.hashPicBox.TabStop = false;
@@ -125,6 +125,17 @@ namespace DailyWallpaper.HashCalc
             this.filePanel.TabIndex = 4;
             this.filePanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragDrop);
             this.filePanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
+            // 
+            // CRC64TextBox
+            // 
+            this.CRC64TextBox.BackColor = System.Drawing.SystemColors.Control;
+            this.CRC64TextBox.Location = new System.Drawing.Point(538, 20);
+            this.CRC64TextBox.Name = "CRC64TextBox";
+            this.CRC64TextBox.ReadOnly = true;
+            this.CRC64TextBox.Size = new System.Drawing.Size(174, 28);
+            this.CRC64TextBox.TabIndex = 0;
+            this.CRC64TextBox.Text = "2075A693782B44F0";
+            this.CRC64TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // hashStringCheckBox
             // 
@@ -307,17 +318,6 @@ namespace DailyWallpaper.HashCalc
             this.SHA1TextBox.Text = "FEF9B281F46996777B94C2F8D6031091990C5142";
             this.SHA1TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // CRC64TextBox
-            // 
-            this.CRC64TextBox.BackColor = System.Drawing.SystemColors.Control;
-            this.CRC64TextBox.Location = new System.Drawing.Point(538, 20);
-            this.CRC64TextBox.Name = "CRC64TextBox";
-            this.CRC64TextBox.ReadOnly = true;
-            this.CRC64TextBox.Size = new System.Drawing.Size(174, 28);
-            this.CRC64TextBox.TabIndex = 0;
-            this.CRC64TextBox.Text = "2075A693782B44F0";
-            this.CRC64TextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // CRC32TextBox
             // 
             this.CRC32TextBox.BackColor = System.Drawing.SystemColors.Control;
@@ -362,6 +362,7 @@ namespace DailyWallpaper.HashCalc
             // 
             // hashfileTextBox
             // 
+            this.hashfileTextBox.AllowDrop = true;
             this.hashfileTextBox.Font = new System.Drawing.Font("宋体", 10F);
             this.hashfileTextBox.Location = new System.Drawing.Point(62, 296);
             this.hashfileTextBox.Name = "hashfileTextBox";
@@ -370,10 +371,13 @@ namespace DailyWallpaper.HashCalc
             this.hashfileTextBox.TabStop = false;
             this.hashfileTextBox.Text = "D:\\jared\\Videos\\movies\\The.Good.Doctor\\The.Good.Doctor.S04E02.1080p.WEB.H264-STRO" +
     "NTiUM.chs.eng.mp4\r\n";
+            this.hashfileTextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragDrop);
+            this.hashfileTextBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.hashPicBox_DragEnter);
             this.hashfileTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.hashfileTextBox_KeyDown);
             // 
             // headMenuStrip
             // 
+            this.headMenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.headMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.headMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,
@@ -390,8 +394,8 @@ namespace DailyWallpaper.HashCalc
             this.alwaysOnTopToolStripMenuItem,
             this.toolStripMenuItem1,
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem,
-            this.useUppercaseLettersInHashToolStripMenuItem,
-            this.enableConsoleStringHashGeneratorToolStripMenuItem});
+            this.enableConsoleStringHashGeneratorToolStripMenuItem,
+            this.useUppercaseLettersInHashToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(95, 28);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -415,18 +419,19 @@ namespace DailyWallpaper.HashCalc
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Text = "Automatically calculate hash after drag and drop";
             this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Click += new System.EventHandler(this.automaticallyCalculateHashAfterDragAndDropToolStripMenuItem_Click);
             // 
-            // useUppercaseLettersInHashToolStripMenuItem
-            // 
-            this.useUppercaseLettersInHashToolStripMenuItem.Name = "useUppercaseLettersInHashToolStripMenuItem";
-            this.useUppercaseLettersInHashToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
-            this.useUppercaseLettersInHashToolStripMenuItem.Text = "Use upper-case letters in hash";
-            // 
             // enableConsoleStringHashGeneratorToolStripMenuItem
             // 
             this.enableConsoleStringHashGeneratorToolStripMenuItem.Name = "enableConsoleStringHashGeneratorToolStripMenuItem";
             this.enableConsoleStringHashGeneratorToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
-            this.enableConsoleStringHashGeneratorToolStripMenuItem.Text = "Enable Console hash generator";
+            this.enableConsoleStringHashGeneratorToolStripMenuItem.Text = "Allow ConsoleTextBox Drop";
             this.enableConsoleStringHashGeneratorToolStripMenuItem.Click += new System.EventHandler(this.enableConsoleStringHashGeneratorToolStripMenuItem_Click);
+            // 
+            // useUppercaseLettersInHashToolStripMenuItem
+            // 
+            this.useUppercaseLettersInHashToolStripMenuItem.Name = "useUppercaseLettersInHashToolStripMenuItem";
+            this.useUppercaseLettersInHashToolStripMenuItem.Size = new System.Drawing.Size(532, 34);
+            this.useUppercaseLettersInHashToolStripMenuItem.Text = "Use lower-case in hash result";
+            this.useUppercaseLettersInHashToolStripMenuItem.Click += new System.EventHandler(this.useUppercaseLettersInHashToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 

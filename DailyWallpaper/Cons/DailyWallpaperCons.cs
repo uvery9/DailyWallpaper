@@ -10,11 +10,6 @@ namespace DailyWallpaper
 {
     class DailyWallpaperCons
     {
-        static void MainSTD(string[] args)
-        {
-            var exeName = ProjectInfo.exeName;
-            DailyWallpaper();
-        }
         private static DailyWallpaperCons _instance;
         public static DailyWallpaperCons GetInstance()
         {
@@ -27,7 +22,6 @@ namespace DailyWallpaper
 
         public bool ShowDialog(bool useTextWriter = false, TextWriter textWriter = null)
         {
-            var exeName = ProjectInfo.exeName;
             var logFile = ProjectInfo.logFile;
             bool res = false;
             if (useTextWriter)
@@ -56,7 +50,7 @@ namespace DailyWallpaper
             {
                 Console.SetOut(writer);
                 Console.SetError(writer);
-                Console.WriteLine($"------  {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}  ------");
+                Console.WriteLine($"------  {DateTime.Now:yyyy-MM-dd HH:mm:ss}  ------");
                 try
                 {
                     res = DailyWallpaper();
@@ -85,13 +79,17 @@ namespace DailyWallpaper
         private static void ResetStdoutAndStderr()
         {
             // redirect stderr to default.
-            var standardError = new StreamWriter(Console.OpenStandardError());
-            standardError.AutoFlush = true;
+            var standardError = new StreamWriter(Console.OpenStandardError())
+            {
+                AutoFlush = true
+            };
             Console.SetError(standardError);
 
             // redirect stdout to default.
-            var standardOutput = new StreamWriter(Console.OpenStandardOutput());
-            standardOutput.AutoFlush = true;
+            var standardOutput = new StreamWriter(Console.OpenStandardOutput())
+            {
+                AutoFlush = true
+            };
             Console.SetOut(standardOutput);
         }
 

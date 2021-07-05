@@ -32,19 +32,23 @@ namespace DailyWallpaper
         public CleanEmptyFolders()
         {
             ini = ConfigIni.GetInstance();
-            controlledFolderAll = new List<string>();
-            controlledFolderAll.Add(@"C:\Intel");
-            controlledFolderAll.Add(@"C:\Temp");
-            controlledFolderAll.Add(@"C:\Windows");
-            controlledFolderAll.Add(@"And their all subfolders, such as C:\Windows\all\be\controlled");
+            controlledFolderAll = new List<string>
+            {
+                @"C:\Intel",
+                @"C:\Temp",
+                @"C:\Windows",
+                @"And their all subfolders, such as C:\Windows\all\be\controlled"
+            };
 
-            controlledFolder1st = new List<string>();
-            controlledFolder1st.Add(@"C:");
-            controlledFolder1st.Add(@"C:\Program Files");
-            controlledFolder1st.Add(@"C:\Program Files (x86)");
-            controlledFolder1st.Add(@"C:\ProgramData");
-            controlledFolder1st.Add(@"C:\Users");
-            controlledFolder1st.Add(@"And their fist subfolder, such as C:\Users\SOMEONE");
+            controlledFolder1st = new List<string>
+            {
+                @"C:",
+                @"C:\Program Files",
+                @"C:\Program Files (x86)",
+                @"C:\ProgramData",
+                @"C:\Users",
+                @"And their fist subfolder, such as C:\Users\SOMEONE"
+            };
         }
         
         public List<string> GetAllControlledFolders()

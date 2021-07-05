@@ -27,10 +27,12 @@ namespace DailyWallpaper.Helpers
         private Timer _timer;
         private TimerHelper(int mins, ElapsedEventHandler handler)
         {
-            _timer = new Timer();
-            _timer.Interval = 1000 * 60 *  mins;
-            _timer.AutoReset = true;
-            _timer.Enabled = true;
+            _timer = new Timer
+            {
+                Interval = 1000 * 60 * mins,
+                AutoReset = true,
+                Enabled = true
+            };
             // _timer.
             _timer.Elapsed += handler;
             _timer.Start();
@@ -50,7 +52,7 @@ namespace DailyWallpaper.Helpers
             doAfter(mins);
         }
 
-        public void Stop(int hours)
+        public void Stop()
         {
             _timer.Stop();
         }
@@ -79,10 +81,12 @@ namespace DailyWallpaper.Helpers
             _hour = iHour;
             _minute = iMinute;
             _callback = callback;
-            var aTimer = new Timer();
-            // 1min check one time.
-            aTimer.Interval = 60 * 1000;
-            aTimer.Enabled = true;
+            var aTimer = new Timer
+            {
+                // 1min check one time.
+                Interval = 60 * 1000,
+                Enabled = true
+            };
             aTimer.Elapsed += new System.Timers.ElapsedEventHandler(aTimer_Elapsed);
         }
         private void aTimer_Elapsed(Object source, ElapsedEventArgs e)

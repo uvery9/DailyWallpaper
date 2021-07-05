@@ -22,7 +22,7 @@ namespace DailyWallpaper
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
         static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
 
-        private ConfigIni(string congfigOfLog="Config", string IniPath = null, string exeName=null)
+        private ConfigIni(string IniPath = null, string exeName = null)
         {
             this.exeName = exeName ?? Helpers.ProjectInfo.exeName;
             iniPath = new FileInfo(IniPath ?? "config.ini").FullName;

@@ -31,8 +31,10 @@ namespace DailyWallpaper.HashCalc
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = Properties.Resources.HASH32x32;
             hashPicBox.AllowDrop = true;
-            m_hashCalc = new HashCalc();
-            m_hashCalc.hashProgressBar = fileProgressBar;
+            m_hashCalc = new HashCalc
+            {
+                hashProgressBar = fileProgressBar
+            };
             EnableDefaultHashCheckBoxAndTextBox();
             _console = new TextBoxCons(new ConsWriter(hashTextBox));
             _console.WriteLine(m_hashCalc.help);
@@ -236,22 +238,41 @@ namespace DailyWallpaper.HashCalc
             CRC32TextBox.TabStop = false;
             SHA256TextBox.TabStop = false;
             SHA512TextBox.TabStop = false;
-            automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
-            enableConsoleStringHashGeneratorToolStripMenuItem.Checked = false;
+
+
+            var it = enableConsoleStringHashGeneratorToolStripMenuItem;
+            it.Checked = false;
+            if (m_ini.EqualsIgnoreCase("consoleTextBoxAllowDrop", "true", "HashCalc"))
+            {
+                it.Checked = true;
+                //hashStringCheckBox.Checked = it.Checked;
+            }
+
+            //hashStringCheckBox
             hashTextBox.ReadOnly = true;
             alwaysOnTopToolStripMenuItem.Checked = false;
-            if (m_ini.EqualsIgnoreCase("HashCalcAlwaysOnTop", "true"))
+            if (m_ini.EqualsIgnoreCase("AlwaysOnTop", "true", "HashCalc"))
             {
                 alwaysOnTopToolStripMenuItem.Checked = true;
             }
             hashTextBox.AllowDrop = false;
-            if (m_ini.EqualsIgnoreCase("hashTextBoxAllowDrop", "true"))
+            if (m_ini.EqualsIgnoreCase("consoleTextBoxAllowDrop", "true", "HashCalc"))
             {
                 hashTextBox.AllowDrop = true;
                 hashTextBox.ReadOnly = false;
             }
 
+            automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
+            if (m_ini.EqualsIgnoreCase("AutoCalcAfterDrop", "false", "HashCalc"))
+            {
+                automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = false;
+            }
 
+            useUppercaseLettersInHashToolStripMenuItem.Checked = false;
+            if (m_ini.EqualsIgnoreCase("lowercase", "true", "HashCalc"))
+            {
+                automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
+            }
         }
         private void save2File(string file, string str)
         {
@@ -296,7 +317,7 @@ namespace DailyWallpaper.HashCalc
             save2File(m_hashCalc.filePath, CopyOrSaveInfoFile());
         }
 
-        private void CheckBoxAffectTextBox(CheckBox cb, TextBox tb)
+        private void CheckBoxAffectTextBox(CheckBox cb, TextBox tb, string keyInIni)
         {
             if (cb.Checked)
             {
@@ -306,34 +327,36 @@ namespace DailyWallpaper.HashCalc
             {
                 tb.Enabled = false;
             }
+            m_ini.UpdateIniItem(keyInIni, tb.Enabled.ToString(), "HashCalc");
+
         }
         private void MD5checkBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBoxAffectTextBox(MD5checkBox, MD5TextBox);
+            CheckBoxAffectTextBox(MD5checkBox, MD5TextBox, "MD5");
         }
 
         private void CRC64checkBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBoxAffectTextBox(CRC64checkBox, CRC64TextBox);
+            CheckBoxAffectTextBox(CRC64checkBox, CRC64TextBox, "CRC64");
         }
 
         private void SHA1checkBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBoxAffectTextBox(SHA1checkBox, SHA1TextBox);
+            CheckBoxAffectTextBox(SHA1checkBox, SHA1TextBox, "SHA1");
         }
 
         private void CRC32checkBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBoxAffectTextBox(CRC32checkBox, CRC32TextBox);
+            CheckBoxAffectTextBox(CRC32checkBox, CRC32TextBox, "CRC32");
         }
 
         private void SHA256checkBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBoxAffectTextBox(SHA256checkBox, SHA256TextBox);
+            CheckBoxAffectTextBox(SHA256checkBox, SHA256TextBox, "SHA256");
         }
         private void SHA512checkBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBoxAffectTextBox(SHA512checkBox, SHA512TextBox);
+            CheckBoxAffectTextBox(SHA512checkBox, SHA512TextBox, "SHA512");
         }
 
         private void Calculate(HashCalc hashCalc)
@@ -357,6 +380,10 @@ namespace DailyWallpaper.HashCalc
                 mut.WaitOne();
                 if (res)
                 {
+                    if (useUppercaseLettersInHashToolStripMenuItem.Checked)
+                    {
+                        result = result.ToLower();
+                    }
                     tx.Text = result;
                     _console.WriteLine("" + who + result + "\r\n        cost time: " + costTimeOrReson);
                 }
@@ -376,7 +403,12 @@ namespace DailyWallpaper.HashCalc
         private void HashAlgorithmCalc(HashAlgorithm ha, TextBox tx, CheckBox cb)
         {
             if (cb.Checked) {
-                tx.Text = m_hashCalc.ComputeHashOfString(ha, textNeedToHash);
+                string result = m_hashCalc.ComputeHashOfString(ha, textNeedToHash);
+                if (useUppercaseLettersInHashToolStripMenuItem.Checked)
+                {
+                    result = result.ToLower();
+                }
+                tx.Text = result;
             }
         }
         private void Calculate(string input)
@@ -469,16 +501,13 @@ namespace DailyWallpaper.HashCalc
             if (it.Checked)
             {
                 it.Checked = false;
-                TopMost = false;
-                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "false");
-
             }
             else
             {
                 it.Checked = true;
-                TopMost = true;
-                m_ini.UpdateIniItem("HashCalcAlwaysOnTop", "true");
             }
+            TopMost = it.Checked;
+            m_ini.UpdateIniItem("AlwaysOnTop", it.Checked.ToString(), "HashCalc");
         }
 
         private void automaticallyCalculateHashAfterDragAndDropToolStripMenuItem_Click(object sender, EventArgs e)
@@ -492,6 +521,7 @@ namespace DailyWallpaper.HashCalc
             {
                 it.Checked = true;
             }
+            m_ini.UpdateIniItem("AutoCalcAfterDrop", it.Checked.ToString(), "HashCalc");
         }
 
         private void clearButton_Click(object sender, EventArgs e)
@@ -583,23 +613,41 @@ namespace DailyWallpaper.HashCalc
             System.Diagnostics.Process.Start(ProjectInfo.DonationUrl);
         }
 
-        private void enableConsoleStringHashGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ConsoleTextBoxAllowDrop(bool checkBox = false)
         {
-            var it = enableConsoleStringHashGeneratorToolStripMenuItem;
-            if (it.Checked)
+            if (checkBox)
             {
-                it.Checked = false;
-                hashTextBox.ReadOnly = true;
-                hashTextBox.AllowDrop = false;
-                m_ini.UpdateIniItem("hashTextBoxAllowDrop", "false");
+                enableConsoleStringHashGeneratorToolStripMenuItem.Checked = hashStringCheckBox.Checked;
             }
             else
             {
-                it.Checked = true;
-                hashTextBox.ReadOnly = false;
-                hashTextBox.AllowDrop = true;
-                m_ini.UpdateIniItem("hashTextBoxAllowDrop", "true");
+                var it = enableConsoleStringHashGeneratorToolStripMenuItem;
+                if (it.Checked)
+                {
+                    it.Checked = false;
+                }
+                else
+                {
+                    it.Checked = true;
+                }
+                hashStringCheckBox.Checked = it.Checked;
             }
+            if (hashStringCheckBox.Checked)
+            {
+                hashfileTextBox.Text = "       Calculate the hash value of the text in the console.      ";
+            }
+            else
+            {
+                hashfileTextBox.Text = "";
+            }
+            hashTextBox.ReadOnly = !hashStringCheckBox.Checked;
+            hashTextBox.AllowDrop = hashStringCheckBox.Checked;
+            m_ini.UpdateIniItem("consoleTextBoxAllowDrop", 
+                hashStringCheckBox.Checked.ToString(), "HashCalc");
+        }
+        private void enableConsoleStringHashGeneratorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConsoleTextBoxAllowDrop();
         }
 
         private void HashCalcForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -630,15 +678,21 @@ namespace DailyWallpaper.HashCalc
 
         private void hashStringCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (hashStringCheckBox.Checked)
+            ConsoleTextBoxAllowDrop(true);
+        }
+
+        private void useUppercaseLettersInHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var it = useUppercaseLettersInHashToolStripMenuItem;
+            if (it.Checked)
             {
-                hashfileTextBox.Text = "       Calculate the hash value of the text in the console.      ";
+                it.Checked = false;
             }
             else
             {
-                // _console.WriteLine("Calculate the hash value of file.");
-                hashfileTextBox.Text = "";
+                it.Checked = true;
             }
+            m_ini.UpdateIniItem("lowercase", it.Checked.ToString(), "HashCalc");
         }
     }
 }

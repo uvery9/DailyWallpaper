@@ -102,8 +102,7 @@ namespace DailyWallpaper
                 //Capture the text
                 if (sender is TextBox box)
                 {
-                    int result;
-                    if (int.TryParse(box.Text, out result))
+                    if (int.TryParse(box.Text, out int result))
                     {
                         textFromHoursTextBox = box.Text;
                         _ini.UpdateIniItem("Timer", textFromHoursTextBox);
@@ -334,9 +333,11 @@ namespace DailyWallpaper
             {
                 // string p = @"C:\tmp\this path contains spaces, and,commas\target.txt";
                 string args = string.Format("/e, /select, \"{0}\"", wallpaper);
-                ProcessStartInfo info = new ProcessStartInfo();
-                info.FileName = "explorer";
-                info.Arguments = args;
+                ProcessStartInfo info = new ProcessStartInfo
+                {
+                    FileName = "explorer",
+                    Arguments = args
+                };
                 Process.Start(info);
             }
             /*if (!setWallpaperSucceed)

@@ -24,7 +24,7 @@ namespace DailyWallpaper.HashCalc
 
         public HashCalc()
         {
-            help = "You can drag FILE to picture/hash panel, drag Signature file to console.";
+            help = "You can drag FILE to picture/hash panel, \r\n  drag text file to console if \"Allow ConsoleTextBox Drop\" is Enabled).";
             // totalHashProgess = new ProgressImpl();
             void ProgressAction(long i)
             {
@@ -264,7 +264,7 @@ namespace DailyWallpaper.HashCalc
         /// <returns></returns>
         public static async Task ComputeHashAsync(Action<bool, string, string, string> action,
             string who, HashAlgorithm hashAlgorithm, string path,
-            CancellationToken cancelToken = default(CancellationToken),
+            CancellationToken cancelToken = default,
             IProgress<long> progress = null, int bufferSize = 1024 * 1024 * 10)
         {
             try

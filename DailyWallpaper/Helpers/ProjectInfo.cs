@@ -25,14 +25,14 @@ namespace DailyWallpaper.Helpers
         private static string newIssueGlobal = "https://github.com/JaredDC/DailyWallpaper/issues/new";
         private static string donationUrlGlobal   = "https://github.com/JaredDC/DailyWallpaper/tree/master/Donate";
         private static string donationUrlCHN = "https://gitee.com/imtvip/DailyWallpaper/tree/master/Donate";
-        private static Color backColor = 
-            Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
+       /* private static Color backColor = 
+            Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));*/
 
         public static void TestConnect(Action<bool, string> updateFunc, string server = "https://www.google.com", int port = 80, bool useProxy = true)
         {
             if (useProxy)
             {
-                TestConnectUsingProxy(updateFunc, server, port);
+                TestConnectUsingProxy(updateFunc, server);
             }
             else
             {
@@ -40,7 +40,7 @@ namespace DailyWallpaper.Helpers
             }
         }
 
-        private static void TestConnectUsingProxy(Action<bool, string> updateFunc, string server = "https://www.google.com", int port = 80)
+        private static void TestConnectUsingProxy(Action<bool, string> updateFunc, string server = "https://www.google.com")
         {
             bool innerRun()
             {

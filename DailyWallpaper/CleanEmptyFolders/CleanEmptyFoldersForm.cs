@@ -671,11 +671,9 @@ namespace DailyWallpaper
         {
             if (!deletePermanently)
             {
-                deletePermanently = false;
                 btnClean.Text = "RecycleBin";
             } else
             {
-                deletePermanently = true;
                 btnClean.Text = "Delete Permanently";
             }
             
@@ -915,23 +913,15 @@ namespace DailyWallpaper
                 // DirectoryInfo().
                 if (filePaths.Length == 1)
                 {
-                    foreach (string fileLoc in filePaths)
+                    var path = filePaths[0];
+                    if (Directory.Exists(path))
                     {
-                        var path = filePaths[0];
-                        if (Directory.Exists(path))
+                        if (!UpdateTextAndIniFile(path))
                         {
-                            if (!UpdateTextAndIniFile(path))
-                            {
-                                return;
-                            }
-                            tbTargetFolder.Text = path;
+                            return;
                         }
-                        else
-                        {
-                            _console.WriteLine("\r\nAttention: Files are not allowed!");
-                        }
+                        tbTargetFolder.Text = path;
                     }
-                    
                 }
                 else
                 {
