@@ -163,43 +163,60 @@ namespace DailyWallpaper.HashCalc
                                   CRC32TextBox.Text,
                                   CRC64TextBox.Text,
                                   SHA1TextBox.Text,
-                                  SHA256TextBox.Text);
+                                  SHA256TextBox.Text,
+                                  SHA512TextBox.Text);
         }
 
-        private string CopyOrSaveInfo(string name, string md5, string crc32, string crc64, string sha1, string sha256)
+        private void NotEmptyThenAppend(ref string all, string name, string input)
         {
-            string failed = $"connect to {ProjectInfo.author} with {ProjectInfo.email}.";
+            if (!string.IsNullOrEmpty(input))
+                all += name + input + "\r\n";
+        }
+        
+        private string CopyOrSaveInfo(string path, string md5, string crc32, string crc64, string sha1, string sha256, string sha512)
+        {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                return null;
+            }
             try
             {
+                
                 string size;
-                if (File.Exists(name))
+                
+                var sizeNum = new FileInfo(path).Length;
+                
+                if (sizeNum < 1024)
                 {
-                    var sizeNum = new FileInfo(name).Length / 1024;
-                    size = sizeNum.ToString() + " KB\r\n";
-                    if (sizeNum > 1024)
-                    {
-                        sizeNum /= 1024;
-                        size = sizeNum.ToString() + " MB\r\n";
-                    }
+                    size = sizeNum.ToString() + " Bytes";
+                }
+                else if(sizeNum > 1024 * 1024)
+                {
+                    size = (sizeNum / (1024 * 1024)).ToString() + " MB";
                 }
                 else
                 {
-                    return failed;
+                    size = (sizeNum / (1024)).ToString() + " KB";
+
                 }
-                string ret = "File:   "   + name + "\r\n";
-                ret += "Size:   "   + size;
-                ret += "CRC32:  "  + (string.IsNullOrEmpty(crc32) ? "" : crc32) + "\r\n";
-                ret += "CRC64:  "  + (string.IsNullOrEmpty(crc64) ? "" : crc64) + "\r\n";
-                ret += "MD5:    " + (string.IsNullOrEmpty(md5) ? "" : md5) + "\r\n";
-                ret += "SHA1:   "   + (string.IsNullOrEmpty(sha1) ? "" : sha1) + "\r\n";
-                ret += "SHA256: " + (string.IsNullOrEmpty(sha256) ? "" : sha256) + "\r\n";
+                string ret = "";
+                NotEmptyThenAppend(ref ret, "File:\r\n  ", path);
+                NotEmptyThenAppend(ref ret, "Size:          ", size);
+                NotEmptyThenAppend(ref ret, "CRC32:         ", crc32);
+                NotEmptyThenAppend(ref ret, "CRC64:         ", crc64);
+                NotEmptyThenAppend(ref ret, "MD5:           ", md5);
+                NotEmptyThenAppend(ref ret, "SHA1:          ", sha1);
+                NotEmptyThenAppend(ref ret, "SHA256:        ", sha256);
+                NotEmptyThenAppend(ref ret, "SHA512:\r\n", sha512);
+                NotEmptyThenAppend(ref ret, "LastWriteTime: ", new FileInfo(path).LastWriteTime.ToString());
                 ret += "    Paste from Hash Calculator in DailyWallpaper.\r\n";
+                
                 return ret;
             }
             catch (Exception e)
             {
                 _console.WriteLine(e.Message);
-                return failed;
+                return null;
             }
         }
 
@@ -208,37 +225,6 @@ namespace DailyWallpaper.HashCalc
         {
             // use default text to adjust the interface.
             hashfileTextBox.Text = "";
-            MD5checkBox.Checked = true;
-            MD5TextBox.Enabled = true;
-            MD5TextBox.Text = "";
-
-            CRC64checkBox.Checked = true;
-            CRC64TextBox.Enabled = true;
-            CRC64TextBox.Text = "";
-
-            SHA1checkBox.Checked = true;
-            SHA1TextBox.Enabled = true;
-            SHA1TextBox.Text = "";
-
-            CRC32checkBox.Checked = true;
-            CRC32TextBox.Enabled = true;
-            CRC32TextBox.Text = "";
-
-            SHA256checkBox.Checked = false;
-            SHA256TextBox.Enabled = false;
-            SHA256TextBox.Text = "";
-
-            SHA512checkBox.Checked = false;
-            SHA512TextBox.Enabled = false;
-            SHA512TextBox.Text = "";
-
-            MD5TextBox.TabStop = false;
-            CRC64TextBox.TabStop = false;
-            SHA1TextBox.TabStop = false;
-            CRC32TextBox.TabStop = false;
-            SHA256TextBox.TabStop = false;
-            SHA512TextBox.TabStop = false;
-
 
             var it = enableConsoleStringHashGeneratorToolStripMenuItem;
             it.Checked = false;
@@ -273,13 +259,92 @@ namespace DailyWallpaper.HashCalc
             {
                 automaticallyCalculateHashAfterDragAndDropToolStripMenuItem.Checked = true;
             }
+            MD5TextBox.Text = "";
+            SHA1TextBox.Text = "";
+            CRC32TextBox.Text = "";
+            SHA256TextBox.Text = "";
+            SHA512TextBox.Text = "";
+
+            MD5TextBox.TabStop = false;
+            CRC64TextBox.TabStop = false;
+            SHA1TextBox.TabStop = false;
+            CRC32TextBox.TabStop = false;
+            SHA256TextBox.TabStop = false;
+            SHA512TextBox.TabStop = false;
+
+            if (m_ini.EqualsIgnoreCase("MD5", "true","HashCalc"))
+            {
+                MD5checkBox.Checked = true;
+                MD5TextBox.Enabled = true;
+            }
+            else
+            {
+                MD5checkBox.Checked = false;
+                MD5TextBox.Enabled = false;
+            }
+
+            if (m_ini.EqualsIgnoreCase("CRC64", "true", "HashCalc"))
+            {
+                CRC64checkBox.Checked = true;
+                CRC64TextBox.Enabled = true;
+            }
+            else
+            {
+                CRC64checkBox.Checked = false;
+                CRC64TextBox.Enabled = false;
+            }
+
+            if (m_ini.EqualsIgnoreCase("SHA1", "true", "HashCalc"))
+            {
+                SHA1checkBox.Checked = true;
+                SHA1TextBox.Enabled = true;
+            }
+            else
+            {
+                SHA1checkBox.Checked = false;
+                SHA1TextBox.Enabled = false;
+            }
+
+
+            if (m_ini.EqualsIgnoreCase("CRC32", "true", "HashCalc"))
+            {
+                CRC32checkBox.Checked = true;
+                CRC32TextBox.Enabled = true;
+            }
+            else
+            {
+                CRC32checkBox.Checked = false;
+                CRC32TextBox.Enabled = false;
+            }
+
+
+            if (m_ini.EqualsIgnoreCase("SHA256", "true", "HashCalc"))
+            {
+                SHA256checkBox.Checked = true;
+                SHA256TextBox.Enabled = true;
+            }
+            else
+            {
+                SHA256checkBox.Checked = false;
+                SHA256TextBox.Enabled = false;
+            }
+
+            if (m_ini.EqualsIgnoreCase("SHA512", "true", "HashCalc"))
+            {
+                SHA512checkBox.Checked = true;
+                SHA512TextBox.Enabled = true;
+            }
+            else
+            {
+                SHA512checkBox.Checked = false;
+                SHA512TextBox.Enabled = false;
+            }
         }
         private void save2File(string file, string str)
         {
-            var fi = Path.GetFileName(file);
-            if (string.IsNullOrEmpty(file))
+            if (string.IsNullOrEmpty(file) || !File.Exists(file))
             {
-                fi = "invalid";
+                return;
             }
             using (var saveFileDialog = new SaveFileDialog())
             {
@@ -287,7 +352,9 @@ namespace DailyWallpaper.HashCalc
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 saveFileDialog.Filter = "Txt files (*.txt)|*.txt";
                 saveFileDialog.RestoreDirectory = true;
-                saveFileDialog.FileName = fi + "_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".txt";
+                var fi = Path.GetFileName(file);
+                // DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")
+                saveFileDialog.FileName = fi + ".hash.txt";
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     using (var stream = saveFileDialog.OpenFile())
@@ -303,8 +370,18 @@ namespace DailyWallpaper.HashCalc
         {
             try
             {
-                Clipboard.SetText(CopyOrSaveInfoFile());
-                _console.WriteLine("\r\nCopied to Clipboard");
+                var s = CopyOrSaveInfoFile();
+                if (!string.IsNullOrEmpty(s))
+                {
+                    Clipboard.SetText(s);
+                    _console.WriteLine("\r\nCopied to Clipboard");
+                    _console.WriteLine($"\r\n{s}");
+                }
+                else
+                {
+                    _console.WriteLine("Nothing to be copied.");
+                }
+                
             }
             catch (Exception ex)
             {
@@ -314,7 +391,16 @@ namespace DailyWallpaper.HashCalc
 
         private void fileSaveButton_Click(object sender, EventArgs e)
         {
-            save2File(m_hashCalc.filePath, CopyOrSaveInfoFile());
+            var s = CopyOrSaveInfoFile();
+            if (!string.IsNullOrEmpty(s))
+            {
+                save2File(m_hashCalc.filePath, s);
+            }
+            else
+            {
+                _console.WriteLine("Nothing to be saved.");
+            }
+            
         }
 
         private void CheckBoxAffectTextBox(CheckBox cb, TextBox tb, string keyInIni)
