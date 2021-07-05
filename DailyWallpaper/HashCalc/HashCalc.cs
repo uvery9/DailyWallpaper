@@ -56,6 +56,19 @@ namespace DailyWallpaper.HashCalc
          *     }));
          * });*/
 
+        private static string GetTimeStringMsOrS(TimeSpan t)
+        {
+            string hashCostTime;
+            if (t.TotalSeconds > 1)
+            {
+                hashCostTime = t.TotalSeconds.ToString() + "s";
+            }
+            else
+            {
+                hashCostTime = t.TotalMilliseconds.ToString() + "ms";
+            }
+            return hashCostTime;
+        }
         public void CalcCRC32(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
             tasks.Add(Task.Run(() => {
@@ -64,7 +77,7 @@ namespace DailyWallpaper.HashCalc
                 {
                     var timer = new Stopwatch();
                     timer.Start();
-                    var crc32 = new CRC32();
+                    var crc32 = new CRC32(token);
                     var hash = String.Empty;
                     using (var stream = new FileInfo(path).OpenRead())
                     {
@@ -73,13 +86,21 @@ namespace DailyWallpaper.HashCalc
                         {
                             hash += b.ToString("X2");
                         }
-                            
                     }
                     // Console.WriteLine("CRC-32 is {0}", hash);
                     ((IProgress<long>)totalProgess).Report(100);
                     timer.Stop();
-                    var hashCostTime = timer.Elapsed.Milliseconds;
-                    action(true, $"{who}", hash, hashCostTime.ToString() + "ms");
+                    string hashCostTime;
+                    TimeSpan t = timer.Elapsed;
+                    if (t.TotalSeconds > 1)
+                    {
+                        hashCostTime = t.TotalSeconds.ToString() + "s";
+                    }
+                    else
+                    {
+                        hashCostTime = t.TotalMilliseconds.ToString() + "ms";
+                    }
+                    action(true, $"{who}", hash, hashCostTime);
                 }
                 catch (OperationCanceledException e)
                 {
@@ -102,7 +123,7 @@ namespace DailyWallpaper.HashCalc
         public void CalcCRC64(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
             tasks.Add(Task.Run(() => {
-                var who = "CRC64ISO3309:   ";
+                var who = "CRC64-ISO3309:   ";
                 try
                 {
                     var timer = new Stopwatch();
@@ -111,7 +132,7 @@ namespace DailyWallpaper.HashCalc
                     * The ISO polynomial, defined in ISO 3309 and used in HDLC.
                     * ISO = 0xD800000000000000
                     */
-                    var crc64 = new CRC64ISO();
+                    var crc64 = new CRC64ISO(token);
                     var hash = String.Empty;
                     using (var fs = new FileInfo(path).OpenRead()) {
                         foreach (byte b in crc64.ComputeHash(fs))
@@ -121,8 +142,8 @@ namespace DailyWallpaper.HashCalc
                     }
                     ((IProgress<long>)totalProgess).Report(100);
                     timer.Stop();
-                    var hashCostTime = timer.Elapsed.Milliseconds;
-                    action(true, $"{who}", hash, hashCostTime.ToString() + "ms");
+                    var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
+                    action(true, $"{who}", hash, hashCostTime);
                 }
                 catch (OperationCanceledException e)
                 {
@@ -280,16 +301,7 @@ namespace DailyWallpaper.HashCalc
                             cancelToken.ThrowIfCancellationRequested();
                     } while (readAheadBytesRead != 0);
                     timer.Stop();
-                    string hashCostTime;
-                    if (timer.Elapsed.TotalSeconds > 1)
-                    {
-                        hashCostTime = Math.Round(timer.Elapsed.TotalSeconds, 2).ToString() + "s";
-                    }
-                    else
-                    {
-                        hashCostTime = Math.Round(timer.Elapsed.TotalMilliseconds, 3).ToString() + "ms";
-                    }
-                    
+                    var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
                     action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime);
                 }
             }

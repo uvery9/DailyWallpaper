@@ -24,7 +24,7 @@ namespace DailyWallpaper.Helpers
             }
             catch (ThreadStateException ex)
             {
-                // MessageBox.Show("STA Failed", ex.Message);
+                MessageBox.Show("STA Failed", ex.Message);
             }
             mySTAThread.Start();
 

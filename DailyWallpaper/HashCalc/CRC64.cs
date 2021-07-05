@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace DailyWallpaper.HashCalc
 {
@@ -24,19 +25,25 @@ namespace DailyWallpaper.HashCalc
 
         readonly UInt64 seed;
         UInt64 hash;
+        static CancellationToken _token;
 
         public CRC64(UInt64 polynomial)
             : this(polynomial, DefaultSeed)
         {
         }
+        public CRC64(UInt64 polynomial, CancellationToken token)
+            : this(polynomial, DefaultSeed, token)
+        {
+        }
 
-        public CRC64(UInt64 polynomial, UInt64 seed)
+        public CRC64(UInt64 polynomial, UInt64 seed, CancellationToken token = default)
         {
             if (!BitConverter.IsLittleEndian)
                 throw new PlatformNotSupportedException("Not supported on Big Endian processors");
 
             table = InitializeTable(polynomial);
             this.seed = hash = seed;
+            _token = token;
         }
 
         public override void Initialize()
@@ -65,6 +72,10 @@ namespace DailyWallpaper.HashCalc
             for (var i = start; i < start + size; i++)
                 unchecked
                 {
+                    if (_token.IsCancellationRequested)
+                    {
+                        _token.ThrowIfCancellationRequested();
+                    }
                     hash = (hash >> 8) ^ table[(buffer[i] ^ hash) & 0xff];
                 }
             return hash;
@@ -118,6 +129,11 @@ namespace DailyWallpaper.HashCalc
 
         public CRC64ISO()
             : base(Iso3309Polynomial)
+        {
+        }
+
+        public CRC64ISO(CancellationToken token)
+            : base(Iso3309Polynomial, token)
         {
         }
 

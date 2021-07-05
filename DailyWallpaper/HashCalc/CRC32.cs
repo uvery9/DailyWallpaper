@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace DailyWallpaper.HashCalc
 {
@@ -20,6 +21,7 @@ namespace DailyWallpaper.HashCalc
     /// </remarks>
     public sealed class CRC32 : HashAlgorithm
     {
+        private static CancellationToken _token;
         public const UInt32 DefaultPolynomial = 0xedb88320u;
         public const UInt32 DefaultSeed = 0xffffffffu;
 
@@ -29,18 +31,19 @@ namespace DailyWallpaper.HashCalc
         readonly UInt32[] table;
         UInt32 hash;
 
-        public CRC32()
-            : this(DefaultPolynomial, DefaultSeed)
+        public CRC32(CancellationToken token = default)
+            : this(DefaultPolynomial, DefaultSeed, token)
         {
         }
 
-        public CRC32(UInt32 polynomial, UInt32 seed)
+        public CRC32(UInt32 polynomial, UInt32 seed, CancellationToken token)
         {
             if (!BitConverter.IsLittleEndian)
                 throw new PlatformNotSupportedException("Not supported on Big Endian processors");
 
             table = InitializeTable(polynomial);
             this.seed = hash = seed;
+            _token = token;
         }
 
         public override void Initialize()
@@ -104,7 +107,13 @@ namespace DailyWallpaper.HashCalc
         {
             var hash = seed;
             for (var i = start; i < start + size; i++)
+            {
+                if (_token.IsCancellationRequested)
+                {
+                    _token.ThrowIfCancellationRequested();
+                }
                 hash = (hash >> 8) ^ table[buffer[i] ^ hash & 0xff];
+            }
             return hash;
         }
 
