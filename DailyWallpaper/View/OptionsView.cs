@@ -62,6 +62,7 @@ namespace DailyWallpaper.View
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
+            FormClosing += OptionsForm_FormClosing;
         }
         private void LaterCheckUpdate()
         {
@@ -1132,7 +1133,15 @@ namespace DailyWallpaper.View
 
         private void Icon_OptionsInContext_Click(object sender, EventArgs e)
         {
-
+            WindowState = FormWindowState.Normal;
+        }
+        private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                WindowState = FormWindowState.Minimized;
+            }
         }
 
         private void Icon_HashCalc_Click(object sender, EventArgs e)
