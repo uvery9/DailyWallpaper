@@ -213,7 +213,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
-git tag &gt; $(TargetDir)GITVERSION
+git describe --tags --abbrev=0  &gt; $(TargetDir)GITVERSION
 set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

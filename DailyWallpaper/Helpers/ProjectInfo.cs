@@ -217,8 +217,11 @@ namespace DailyWallpaper.Helpers
                 {
                     return new Version("1.0.0");
                 }
-                input = File.ReadAllText(file);
-
+                using (var fs = new StreamReader(file))
+                {
+                    // Read the file and display it line by line.  
+                    input = fs.ReadLine();
+                }
             }
             var stripped = Regex.Replace(input, @"[^0-9\.]", "");
             return new Version(stripped);
@@ -327,7 +330,7 @@ namespace DailyWallpaper.Helpers
         {
             var web = new WebClientEx(15 * 1000)
             {
-                //Proxy = WebRequest.DefaultWebProxy,
+                Proxy = WebRequest.DefaultWebProxy,
                 Credentials = CredentialCache.DefaultCredentials
             };
             web.Headers.Add(HttpRequestHeader.UserAgent, "Wget/1.9.1");
