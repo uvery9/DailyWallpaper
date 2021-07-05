@@ -155,7 +155,8 @@ namespace DailyWallpaper.Helpers
             get {
                 if (!connectToWorld && CultureInfo.CurrentUICulture.Equals(CultureInfo.GetCultureInfo("zh-CN"))) {
                     return donationUrlCHN;
-                } else
+                } 
+                else
                 {
                     return donationUrlGlobal;
                 }

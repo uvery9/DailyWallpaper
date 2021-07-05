@@ -48,7 +48,7 @@ namespace DailyWallpaper.View
             _notifyIcon.Visible = true;
             _timerHelper = TimerHelper.GetInstance(233, timer_Elapsed);
             textFromHoursTextBox = "3";
-            _viewWindow = View.LogWindow.GetInstance(Properties.Resources.icon32x32);
+            _viewWindow = LogWindow.GetInstance(Properties.Resources.icon32x32);
             _viewWindow.FormClosing += _viewWindow_FormClosing;
             // _viewWindow.Load += new System.EventHandler(_viewWindow_Load);
             _viewWindow.clearButton.Click += new EventHandler(clearButton_Click);
@@ -58,7 +58,9 @@ namespace DailyWallpaper.View
             _cefWindow.FormClosing += _cefWindow_FormClosing;
             _hashWin.selfFromClosing = false;
             _hashWin.FormClosing += _hashWindow_FormClosing;
-            ActionRegister();
+            _notifyIcon.DoubleClick += notifyIcon_DoubleClick;
+            // _notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
+            _notifyIcon.MouseUp += notifyIcon_MouseUp;
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
         }
@@ -68,10 +70,6 @@ namespace DailyWallpaper.View
             Icon_HashCalc.Text = TranslationHelper.Get("Icon_HashCalc");
             Icon_IssueAndFeedback.ToolTipText = ProjectInfo.NewIssue;
             Icon_IssueAndFeedback.Text = TranslationHelper.Get("Icon_IssueAndFeedback");
-            var _Icon_TitleMenuItem = new ToolStripMenuItem(Application.ProductName + " by "
-                + ProjectInfo.author)
-            { Enabled = false };
-            _Icon_TitleMenuItem.TextAlign = ContentAlignment.MiddleCenter;
 
             Icon_ChangeWallpaper.Text = TranslationHelper.Get("Icon_ChangeWallpaper");
             Icon_ChangeWallpaper.ToolTipText = TranslationHelper.Get("Icon_ChangeWallpaperTit");
@@ -85,7 +83,6 @@ namespace DailyWallpaper.View
 
             Icon_ChangeWallpaper.TextAlign = ContentAlignment.MiddleCenter;
 
-
             Icon_AutoChangeWallpaper.Text = "    "
                 + TranslationHelper.Get("Icon_AutoChangeWallpaper");
             Icon_AutoChangeWallpaper.TextAlign = ContentAlignment.MiddleRight;
@@ -94,7 +91,7 @@ namespace DailyWallpaper.View
             // _Icon_EveryHoursAutoChangeMenuItem
 
             // ooo
-            this.Icon_AutoChangeWallpaper.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            Icon_AutoChangeWallpaper.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             CustomHoursTextboxWithButtonAndUnit(
                 TranslationHelper.Get("Icon_Custom"),
                 TranslationHelper.Get("Icon_Unit")) });
@@ -136,7 +133,7 @@ namespace DailyWallpaper.View
             Icon_DonateAndSupport.ToolTipText = ProjectInfo.DonationUrl;
             Icon_DonateAndSupport.Click +=
                     (e, s) => {
-                        System.Diagnostics.Process.Start(ProjectInfo.DonationUrl);
+                        Process.Start(ProjectInfo.DonationUrl);
                         ShowNotification("", TranslationHelper.Get("Notify_ThanksForDonation"));
                     };
 
@@ -161,24 +158,15 @@ namespace DailyWallpaper.View
                 Process.Start(ProjectInfo.OfficalWebSite);
             });
 
-
-
             Icon_CheckUpdate.Text = TranslationHelper.Get("Icon_CheckUpdate");
             Icon_CheckUpdate.Click += ((e, s) => {
                 Process.Start(ProjectInfo.OfficalLatest);
             });
 
-
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
-
             Icon_About.Text = TranslationHelper.Get("Icon_About");
-
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
         }
-        
-
-
-
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync()).Wait();
@@ -863,13 +851,6 @@ namespace DailyWallpaper.View
             panelHost.BackColor = backColor;
 
             return panelHost;
-        }
-
-        private void ActionRegister()
-        {
-            _notifyIcon.DoubleClick += notifyIcon_DoubleClick;
-            // _notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
-            _notifyIcon.MouseUp += notifyIcon_MouseUp;
         }
         private void InitializeCheckedAndTimer()
         {
