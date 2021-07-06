@@ -39,7 +39,7 @@ namespace DailyWallpaper.View
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_Bing = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_AlwaysDownLoadBingPicture = new System.Windows.Forms.ToolStripMenuItem();
-            this.Icon_BingAddWaterMark = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_BingNotAddWaterMark = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_LocalPath = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_LocalPathSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Spotlight = new System.Windows.Forms.ToolStripMenuItem();
@@ -126,7 +126,7 @@ namespace DailyWallpaper.View
             // 
             this.Icon_Bing.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Icon_AlwaysDownLoadBingPicture,
-            this.Icon_BingAddWaterMark});
+            this.Icon_BingNotAddWaterMark});
             this.Icon_Bing.Name = "Icon_Bing";
             resources.ApplyResources(this.Icon_Bing, "Icon_Bing");
             this.Icon_Bing.Click += new System.EventHandler(this.Icon_Bing_Click);
@@ -137,11 +137,11 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this.Icon_AlwaysDownLoadBingPicture, "Icon_AlwaysDownLoadBingPicture");
             this.Icon_AlwaysDownLoadBingPicture.Click += new System.EventHandler(this.Icon_AlwaysDownLoadBingPicture_Click);
             // 
-            // Icon_BingAddWaterMark
+            // Icon_BingNotAddWaterMark
             // 
-            this.Icon_BingAddWaterMark.Name = "Icon_BingAddWaterMark";
-            resources.ApplyResources(this.Icon_BingAddWaterMark, "Icon_BingAddWaterMark");
-            this.Icon_BingAddWaterMark.Click += new System.EventHandler(this.Icon_BingAddWaterMark_Click);
+            this.Icon_BingNotAddWaterMark.Name = "Icon_BingNotAddWaterMark";
+            resources.ApplyResources(this.Icon_BingNotAddWaterMark, "Icon_BingNotAddWaterMark");
+            this.Icon_BingNotAddWaterMark.Click += new System.EventHandler(this.Icon_BingNotAddWaterMark_Click);
             // 
             // Icon_LocalPath
             // 
@@ -304,7 +304,7 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem Icon_Bing;
         private System.Windows.Forms.ToolStripMenuItem Icon_AlwaysDownLoadBingPicture;
-        private System.Windows.Forms.ToolStripMenuItem Icon_BingAddWaterMark;
+        private System.Windows.Forms.ToolStripMenuItem Icon_BingNotAddWaterMark;
         private System.Windows.Forms.ToolStripMenuItem Icon_LocalPath;
         private System.Windows.Forms.ToolStripMenuItem Icon_Spotlight;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;

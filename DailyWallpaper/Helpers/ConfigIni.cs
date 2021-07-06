@@ -118,7 +118,7 @@ namespace DailyWallpaper
             
             Write("downLoadSavePath", Path.Combine(myPictures, exeName), "Online");
             Write("bing", "yes", "Online");
-            Write("bingWMK", "yes", "Online");
+            Write("bingNotWMK", "no", "Online");
             Write("alwaysDLBingWallpaper", "no", "Online");
             Write("Spotlight", "yes", "Online");
             Write("SpotlightPath", "AUTO", "Online");

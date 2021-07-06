@@ -206,23 +206,24 @@ namespace DailyWallpaper.Helpers
                 }
             }
         }
-
-        private static Version StringOrFile2Version(string input)
+        
+        public static Version GetVerSion()
         {
-             if (input.Equals(@"GIT-VERSION"))
+            var file = Path.Combine(Path.GetDirectoryName(
+                            Assembly.GetExecutingAssembly().Location), "GIT-VERSION");
+            if (File.Exists(file))
             {
-                var file = Path.Combine(Path.GetDirectoryName(
-                             Assembly.GetExecutingAssembly().Location), "GIT-VERSION");
-                if (!File.Exists(file))
-                {
-                    return new Version("1.0.0");
-                }
                 using (var fs = new StreamReader(file))
                 {
-                    // Read the file and display it line by line.  
-                    input = fs.ReadLine();
+                    var input = fs.ReadLine();
+                    var stripped = Regex.Replace(input, @"[^0-9\.]", "");
+                    return new Version(stripped);
                 }
             }
+            return new Version("1.5.2");
+        }
+        private static Version StringOrFile2Version(string input)
+        {
             var stripped = Regex.Replace(input, @"[^0-9\.]", "");
             return new Version(stripped);
         }
@@ -240,8 +241,9 @@ namespace DailyWallpaper.Helpers
                           action(false, false, "No tag_name");
                           return;
                       }
+                      
                       var gitHubVersion = StringOrFile2Version(tag_name);
-                      var currentVersion = StringOrFile2Version("GIT-VERSION");
+                      var currentVersion = GetVerSion();
                       if (currentVersion < gitHubVersion)
                       {                      
                           var msiUrl = (string)json["assets"][0]["browser_download_url"];

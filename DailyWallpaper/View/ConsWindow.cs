@@ -12,22 +12,22 @@ using System.Windows.Forms;
 namespace DailyWallpaper.View
 {
     
-    public partial class LogWindow : Form
+    public partial class ConsWindow : Form
     {
         public TextWriter textWriter = null;
 
-        private static LogWindow _instance;
-        public static LogWindow GetInstance(Icon icon)
+        private static ConsWindow _instance;
+        public static ConsWindow GetInstance(Icon icon)
         {
-            return _instance ?? (_instance = new LogWindow(icon));
+            return _instance ?? (_instance = new ConsWindow(icon));
         }
 
-        public LogWindow ()
+        public ConsWindow ()
         {
             InitializeComponent();
         }
 
-        private LogWindow(Icon icon)
+        private ConsWindow(Icon icon)
         {
             InitializeComponent();
             this.Icon = icon;

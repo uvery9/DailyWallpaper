@@ -1,7 +1,7 @@
 ﻿
 namespace DailyWallpaper.View
 {
-    partial class LogWindow
+    partial class ConsWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -88,9 +88,9 @@ namespace DailyWallpaper.View
             this.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Name = "LogWindow";
+            this.Name = "ConsWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "LogWindow";
+            this.Text = "ConsWindow";
             this.ResumeLayout(false);
             this.PerformLayout();
 

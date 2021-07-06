@@ -132,11 +132,11 @@
     <Compile Include="View\AboutWindow.designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\LogWindow.cs">
+    <Compile Include="View\ConsWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\LogWindow.Designer.cs">
-      <DependentUpon>LogWindow.cs</DependentUpon>
+    <Compile Include="View\ConsWindow.Designer.cs">
+      <DependentUpon>ConsWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="View\OptionsView.cs">
       <SubType>Form</SubType>
@@ -163,8 +163,8 @@
     <EmbeddedResource Include="View\AboutWindow.resx">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\LogWindow.resx">
-      <DependentUpon>LogWindow.cs</DependentUpon>
+    <EmbeddedResource Include="View\ConsWindow.resx">
+      <DependentUpon>ConsWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\OptionsView.resx">
       <DependentUpon>OptionsView.cs</DependentUpon>

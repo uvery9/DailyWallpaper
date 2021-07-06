@@ -59,7 +59,7 @@ namespace DailyWallpaper
                 Console.WriteLine($"Downloading Bing IMG: {bingImg.Copyright}");
                 Console.WriteLine($"Know more: {bingImg.CopyrightLink}");
             }
-            if (ini.EqualsIgnoreCase("bingWMK", "yes", "Online"))
+            if (ini.EqualsIgnoreCase("bingNotWMK", "no", "Online"))
             {
                 if (!File.Exists(wallpaperWMK))
                 {

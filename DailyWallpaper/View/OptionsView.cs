@@ -28,7 +28,7 @@ namespace DailyWallpaper.View
         private bool consRunning = false;
         private bool useTextBoxWriter = false;
         private bool setWallpaperSucceed = false;
-        private LogWindow _viewWindow;
+        private ConsWindow _consWindow;
         private CleanEmptyFoldersForm _cefWindow;
         private NotifyIcon _notifyIcon;
         private bool iStextFromFileNew = true;
@@ -38,31 +38,41 @@ namespace DailyWallpaper.View
         {
             InitializeComponent();
             UpdateTranslation();
-            _ini = ConfigIni.GetInstance();
+
             WindowState = FormWindowState.Minimized;
             ShowInTaskbar = false;
+            FormClosing += OptionsForm_FormClosing;
+            Resize += OptionsForm_Resize;
+            Icon = Properties.Resources.icon32x32;
+
             _notifyIcon.Icon = Properties.Resources.icon32x32;
             _notifyIcon.Text = 
-                string.Format(TranslationHelper.Get("Icon_ToolTip"), Application.ProductVersion);
+                string.Format(TranslationHelper.Get("Icon_ToolTip"), ProjectInfo.GetVerSion());
+
             _notifyIcon.Visible = true;
-            _timerHelper = TimerHelper.GetInstance(233, timer_Elapsed);
-            textFromHoursTextBox = "3";
-            _viewWindow = LogWindow.GetInstance(Properties.Resources.icon32x32);
-            _viewWindow.FormClosing += _viewWindow_FormClosing;
-            // _viewWindow.Load += new System.EventHandler(_viewWindow_Load);
-            _viewWindow.clearButton.Click += new EventHandler(clearButton_Click);
-            _viewWindow.saveToFileButton.Click += new EventHandler(saveToFileButton_Click);
-            _cefWindow = new CleanEmptyFoldersForm();
-            _hashWin = new HashCalc.HashCalcForm();
-            _cefWindow.FormClosing += _cefWindow_FormClosing;
-            _hashWin.selfFromClosing = false;
-            _hashWin.FormClosing += _hashWindow_FormClosing;
             _notifyIcon.DoubleClick += notifyIcon_DoubleClick;
             // _notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
+            
+            SeveralFormInit();
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
-            FormClosing += OptionsForm_FormClosing;
+        }
+
+        private void SeveralFormInit()
+        {
+            _consWindow = ConsWindow.GetInstance(Properties.Resources.icon32x32);
+            _consWindow.FormClosing += _viewWindow_FormClosing;
+            // _consWindow.Load += new System.EventHandler(_viewWindow_Load);
+            _consWindow.clearButton.Click += new EventHandler(clearButton_Click);
+            _consWindow.saveToFileButton.Click += new EventHandler(saveToFileButton_Click);
+
+            _cefWindow = new CleanEmptyFoldersForm();
+            _cefWindow.FormClosing += _cefWindow_FormClosing;
+
+            _hashWin = new HashCalc.HashCalcForm();
+            _hashWin.selfFromClosing = false;
+            _hashWin.FormClosing += _hashWindow_FormClosing;
         }
         private void LaterCheckUpdate()
         {
@@ -86,13 +96,12 @@ namespace DailyWallpaper.View
         {
             Icon_CleanEmptyFolders.Text = TranslationHelper.Get("Icon_CleanEmptyFolders");
             Icon_HashCalc.Text = TranslationHelper.Get("Icon_HashCalc");
-            Icon_IssueAndFeedback.ToolTipText = ProjectInfo.NewIssue;
             Icon_IssueAndFeedback.Text = TranslationHelper.Get("Icon_IssueAndFeedback");
 
             Icon_ChangeWallpaper.Text = TranslationHelper.Get("Icon_ChangeWallpaper");
             Icon_ChangeWallpaper.ToolTipText = TranslationHelper.Get("Icon_ChangeWallpaperTit");
             Icon_ChangeWallpaper.Click += Icon_ChangeWallpaper_Click;
-
+            
             var defFont = Control.DefaultFont;
             Icon_ChangeWallpaper.Font = new Font(defFont.Name, defFont.Size + 1, FontStyle.Bold);
             Icon_ChangeWallpaper.ShowShortcutKeys = true;
@@ -117,28 +126,31 @@ namespace DailyWallpaper.View
             Icon_Bing.Text =
                     TranslationHelper.Get("Icon_Bing");
             Icon_Bing.ToolTipText =
-                    TranslationHelper.Get("Icon_BingTit");
+                    string.Format(TranslationHelper.Get("Icon_FeatureTit"), 
+                    TranslationHelper.Get("Icon_Bing"));
 
             Icon_AlwaysDownLoadBingPicture.Text =
                     "    " + TranslationHelper.Get("Icon_AlwaysDownLoadBingPicture");
             Icon_AlwaysDownLoadBingPicture.Click +=
                     Icon_AlwaysDownLoadBingPicture_Click;
 
-            Icon_BingAddWaterMark.Text =
-                    "    " + TranslationHelper.Get("Icon_BingAddWaterMark");
-            Icon_BingAddWaterMark.Click += Icon_BingAddWaterMark_Click;
+            Icon_BingNotAddWaterMark.Text =
+                    "    " + TranslationHelper.Get("Icon_BingNotAddWaterMark");
+            Icon_BingNotAddWaterMark.Click += Icon_BingNotAddWaterMark_Click;
 
             Icon_LocalPath.Text = TranslationHelper.Get("Icon_LocalPath");
-            Icon_LocalPath.ToolTipText = TranslationHelper.Get("Icon_LocalPathTit");
+            Icon_LocalPath.ToolTipText =
+                    string.Format(TranslationHelper.Get("Icon_FeatureTit"),
+                    TranslationHelper.Get("Icon_LocalPath"));
 
             Icon_LocalPathSetting.Text = TranslationHelper.Get("Icon_LocalPathSetting");
-            Icon_LocalPathSetting.ToolTipText = TranslationHelper.Get("Icon_LocalPathSettingTit");
             Icon_LocalPathSetting.Click += _Icon_LocalPathSettingMenuItem_Click;
 
             Icon_Spotlight.Text =
                     TranslationHelper.Get("Icon_Spotlight");
             Icon_Spotlight.ToolTipText =
-                    TranslationHelper.Get("Icon_SpotlightTit");
+                    string.Format(TranslationHelper.Get("Icon_FeatureTit"),
+                    TranslationHelper.Get("Icon_Spotlight"));
 
             Icon_DisableShortcutKeys.Text =
                     TranslationHelper.Get("Icon_DisableShortcutKeys");
@@ -148,7 +160,6 @@ namespace DailyWallpaper.View
             Icon_Options.Text = TranslationHelper.Get("Icon_Options");
 
             Icon_DonateAndSupport.Text = TranslationHelper.Get("Icon_DonateAndSupport");
-            Icon_DonateAndSupport.ToolTipText = ProjectInfo.DonationUrl;
             Icon_DonateAndSupport.Click +=
                     (e, s) => {
                         Process.Start(ProjectInfo.DonationUrl);
@@ -181,6 +192,8 @@ namespace DailyWallpaper.View
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
+
+            string.Format(TranslationHelper.Get("Icon_FeatureTit"), ProjectInfo.GetVerSion());
         }
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -215,7 +228,7 @@ namespace DailyWallpaper.View
                 if (useTextBoxWriter)
                 {
                     iStextFromFileNew = false;
-                    res = DailyWallpaperCons.GetInstance().ShowDialog(true, _viewWindow.textWriter);
+                    res = DailyWallpaperCons.GetInstance().ShowDialog(true, _consWindow.textWriter);
                 }
                 else
                 {
@@ -307,8 +320,6 @@ namespace DailyWallpaper.View
                 // MessageBox.Show(msg);
                 if (success)
                 {
-                    Icon_DonateAndSupport.ToolTipText = ProjectInfo.DonationUrl;
-                    Icon_IssueAndFeedback.ToolTipText = ProjectInfo.NewIssue;
                     Icon_OpenOfficialWebsite.ToolTipText = ProjectInfo.OfficalWebSite;
                 }
                 else
@@ -475,18 +486,18 @@ namespace DailyWallpaper.View
                 _notifyIcon.ContextMenuStrip.Show();
             }
         }
-        private void Icon_BingAddWaterMark_Click(object sender, EventArgs e)
+        private void Icon_BingNotAddWaterMark_Click(object sender, EventArgs e)
         {
-            var item = Icon_BingAddWaterMark;
+            var item = Icon_BingNotAddWaterMark;
             if (item.Checked)
             {
                 item.Checked = false;
-                _ini.UpdateIniItem("bingWMK", "no", "Online");
+                _ini.UpdateIniItem("bingNotWMK", "no", "Online");
             }
             else
             {
                 item.Checked = true;
-                _ini.UpdateIniItem("bingWMK", "yes", "Online");
+                _ini.UpdateIniItem("bingNotWMK", "yes", "Online");
                 _notifyIcon.ContextMenuStrip.Show();
             }
         }
@@ -519,10 +530,10 @@ namespace DailyWallpaper.View
                 {
                     useTextBoxWriter = false;
                 }
-                //_viewWindow.WindowState = FormWindowState.Minimized;
-                //_viewWindow.ShowInTaskbar = false;
-                _viewWindow.Hide();
-                // _viewWindow.textBoxCons.Text = "";
+                //_consWindow.WindowState = FormWindowState.Minimized;
+                //_consWindow.ShowInTaskbar = false;
+                _consWindow.Hide();
+                // _consWindow.textBoxCons.Text = "";
             }
         }
 
@@ -533,12 +544,12 @@ namespace DailyWallpaper.View
 
         private void clearButton_Click(object sender, EventArgs e)
         {
-            _viewWindow.textBoxCons.Text = "";
+            _consWindow.textBoxCons.Text = "";
         }
 
         private void saveToFileButton_Click(object sender, EventArgs e)
         {
-            if (_viewWindow.textBoxCons.Text.Length < 1)
+            if (_consWindow.textBoxCons.Text.Length < 1)
             {
                 return;
             }
@@ -556,7 +567,7 @@ namespace DailyWallpaper.View
                     using (var stream = saveFileDialog.OpenFile())
                     {
                         // Code to write the stream goes here.
-                        byte[] byteArray = System.Text.Encoding.Default.GetBytes(_viewWindow.textBoxCons.Text);
+                        byte[] byteArray = System.Text.Encoding.Default.GetBytes(_consWindow.textBoxCons.Text);
                         stream.Write(byteArray, 0, byteArray.Length);
                     }
                 }
@@ -570,7 +581,7 @@ namespace DailyWallpaper.View
             {
                 if (useTextBoxWriter)
                 {
-                    _viewWindow.Show();
+                    _consWindow.Show();
                     return;
                 }
                 else
@@ -583,16 +594,16 @@ namespace DailyWallpaper.View
 
             }
             useTextBoxWriter = true;
-            _viewWindow.Show();
+            _consWindow.Show();
             if (iStextFromFileNew)
             {
                 if (File.Exists(ProjectInfo.logFile))
                 {
                     var textBoxCons = File.ReadAllText(ProjectInfo.logFile);
-                    _viewWindow.textBoxCons.Text = textBoxCons;
-                    // _viewWindow.textBoxCons
-                    _viewWindow.textBoxCons.Select(_viewWindow.textBoxCons.TextLength, 0);//光标定位到文本最后
-                    _viewWindow.textBoxCons.ScrollToCaret();
+                    _consWindow.textBoxCons.Text = textBoxCons;
+                    // _consWindow.textBoxCons
+                    _consWindow.textBoxCons.Select(_consWindow.textBoxCons.TextLength, 0);//光标定位到文本最后
+                    _consWindow.textBoxCons.ScrollToCaret();
                 }
             }
         }
@@ -865,17 +876,20 @@ namespace DailyWallpaper.View
         }
         private void InitializeCheckedAndTimer()
         {
+            _ini = ConfigIni.GetInstance();
+            _timerHelper = TimerHelper.GetInstance(233, timer_Elapsed);
+            textFromHoursTextBox = "3";
             if (_ini.EqualsIgnoreCase("bing", "yes", "Online"))
             {
                 Icon_Bing.Checked = true;
                 Icon_AlwaysDownLoadBingPicture.Visible = true;
-                Icon_BingAddWaterMark.Visible = true;
+                Icon_BingNotAddWaterMark.Visible = true;
             }
             else
             {
                 Icon_Bing.Checked = false;
                 Icon_AlwaysDownLoadBingPicture.Visible = false;
-                Icon_BingAddWaterMark.Visible = false;
+                Icon_BingNotAddWaterMark.Visible = false;
             }
 
             if (_ini.EqualsIgnoreCase("alwaysDLBingWallpaper", "yes", "Online"))
@@ -884,9 +898,13 @@ namespace DailyWallpaper.View
             }
 
 
-            if (_ini.EqualsIgnoreCase("bingWMK", "yes", "Online"))
+            if (_ini.EqualsIgnoreCase("bingNotWMK", "yes", "Online"))
             {
-                Icon_BingAddWaterMark.Checked = true;
+                Icon_BingNotAddWaterMark.Checked = true;
+            }
+            else
+            {
+                Icon_BingNotAddWaterMark.Checked = false;
             }
 
             if (AutoStartupHelper.IsAutorun())
@@ -904,13 +922,23 @@ namespace DailyWallpaper.View
             if (_ini.EqualsIgnoreCase("Spotlight", "yes", "Online"))
             {
                 Icon_Spotlight.Checked = true;
+            } 
+            else if(_ini.EqualsIgnoreCase("Spotlight", "no", "Online"))
+            {
+                Icon_Spotlight.Checked = false;
             }
 
             if (_ini.EqualsIgnoreCase("localPath", "yes", "Local"))
             {
-                
                 Icon_LocalPath.Checked = true;
+                Icon_LocalPathSetting.Visible = true;
             }
+            else
+            {
+                Icon_LocalPath.Checked = false;
+                Icon_LocalPathSetting.Visible = false;
+            }
+
             if (_ini.EqualsIgnoreCase("UseShortcutKeys", "yes"))
             {
                 Icon_DisableShortcutKeys.Checked = false;
@@ -1026,7 +1054,7 @@ namespace DailyWallpaper.View
         {
             _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(), "LOG");
  /*           _cefWindow.Dispose();
-            _viewWindow.Dispose();
+            _consWindow.Dispose();
             _notifyIcon.Dispose();*/
             Application.Exit();
         }
@@ -1059,7 +1087,7 @@ namespace DailyWallpaper.View
                 {
                     Process.Start(ProjectInfo.OfficalLatest);
                 }
-                if (downloaded && res) // true true = new download, false true = already downloaded.
+                if (downloaded && res || (click && downloaded && !res)) // true true = new download, false true = already downloaded.
                 {
                     ShowNotification("",
                                 "Update Downloaded, click me to install.",
@@ -1133,7 +1161,10 @@ namespace DailyWallpaper.View
 
         private void Icon_OptionsInContext_Click(object sender, EventArgs e)
         {
+            Show();
             WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+            // notifyIcon.Visible = false;
         }
         private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -1141,6 +1172,22 @@ namespace DailyWallpaper.View
             {
                 e.Cancel = true;
                 WindowState = FormWindowState.Minimized;
+                // ShowInTaskbar = false;
+                // Hide();
+            }
+        }
+
+        private void OptionsForm_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                // mynotifyicon.Visible = true;
+                // mynotifyicon.ShowBalloonTip(500);
+                this.Hide();
+            }
+            else if (FormWindowState.Normal == this.WindowState)
+            {
+                // mynotifyicon.Visible = false;
             }
         }
 
@@ -1159,7 +1206,7 @@ namespace DailyWallpaper.View
             {
                 Icon_Bing.Checked = false;
                 Icon_AlwaysDownLoadBingPicture.Visible = false;
-                Icon_BingAddWaterMark.Visible = false;
+                Icon_BingNotAddWaterMark.Visible = false;
                 /*Icon_BingSetting.Visible = false;
                 Icon_BingSetting.Enabled = false;*/
                 _ini.UpdateIniItem("bing", "no", "Online");
@@ -1170,7 +1217,7 @@ namespace DailyWallpaper.View
                 Icon_Bing.Checked = true;
                 _ini.UpdateIniItem("bing", "yes", "Online");
                 Icon_AlwaysDownLoadBingPicture.Visible = true;
-                Icon_BingAddWaterMark.Visible = true;
+                Icon_BingNotAddWaterMark.Visible = true;
                 /*Icon_BingSetting.Visible = true;
                 Icon_BingSetting.Enabled = true;*/
                 _notifyIcon.ContextMenuStrip.Show();

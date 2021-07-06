@@ -161,10 +161,10 @@
   <data name="Icon_AlwaysDownLoadBingPicture.Text" xml:space="preserve">
     <value>总是下载Bing图片</value>
   </data>
-  <data name="Icon_BingAddWaterMark.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="Icon_BingNotAddWaterMark.Size" type="System.Drawing.Size, System.Drawing">
     <value>257, 34</value>
   </data>
-  <data name="Icon_BingAddWaterMark.Text" xml:space="preserve">
+  <data name="Icon_BingNotAddWaterMark.Text" xml:space="preserve">
     <value>增加Bing水印</value>
   </data>
   <data name="Icon_Bing.Size" type="System.Drawing.Size, System.Drawing">
@@ -372,10 +372,10 @@
   <data name="&gt;&gt;Icon_AlwaysDownLoadBingPicture.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_BingAddWaterMark.Name" xml:space="preserve">
-    <value>Icon_BingAddWaterMark</value>
+  <data name="&gt;&gt;Icon_BingNotAddWaterMark.Name" xml:space="preserve">
+    <value>Icon_BingNotAddWaterMark</value>
   </data>
-  <data name="&gt;&gt;Icon_BingAddWaterMark.Type" xml:space="preserve">
+  <data name="&gt;&gt;Icon_BingNotAddWaterMark.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Icon_LocalPath.Name" xml:space="preserve">
