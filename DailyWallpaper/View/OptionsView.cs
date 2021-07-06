@@ -192,6 +192,7 @@ namespace DailyWallpaper.View
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
+            Icon_Quit.Text = TranslationHelper.Get("Icon_Quit");
 
             string.Format(TranslationHelper.Get("Icon_FeatureTit"), ProjectInfo.GetVerSion());
         }
