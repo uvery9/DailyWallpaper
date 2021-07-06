@@ -1220,6 +1220,8 @@ namespace DailyWallpaper.View
 
         }
 
+        // https://docs.microsoft.com/en-us/dotnet/desktop/winforms/input-mouse/how-to-distinguish-between-clicks-and-double-clicks?view=netdesktop-5.0
+        // There is a solution, but I don't want to use. Complicated my code.
         private void _notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Middle)
