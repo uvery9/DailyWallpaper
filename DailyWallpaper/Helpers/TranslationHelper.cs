@@ -27,8 +27,8 @@ namespace DailyWallpaper.Helpers
     public class TranslationHelper
     {
         private static readonly CultureInfo CurrentCultureInfo = CultureInfo.CurrentUICulture;
-        //private static readonly CultureInfo CurrentCultureInfo = CultureInfo.GetCultureInfo("zh-CN");
-        //private static readonly CultureInfo CurrentCultureInfo = CultureInfo.GetCultureInfo("en");
+        // private static readonly CultureInfo CurrentCultureInfo = CultureInfo.GetCultureInfo("zh-CN");
+        // private static readonly CultureInfo CurrentCultureInfo = CultureInfo.GetCultureInfo("en");
 
         private static readonly Dictionary<string, XPathNavigator> FileCache = new Dictionary<string, XPathNavigator>();
 

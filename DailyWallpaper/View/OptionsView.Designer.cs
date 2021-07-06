@@ -31,7 +31,7 @@ namespace DailyWallpaper.View
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsView));
-            this.Icon_Options = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.Icon_OptionsIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Icon_dailyWallpaperTitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_ChangeWallpaper = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_AutoChangeWallpaper = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,7 +44,7 @@ namespace DailyWallpaper.View
             this.Icon_LocalPathSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Spotlight = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.Icon_OptionsInContext = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_Options = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_DisableShortcutKeys = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_RunAtStartup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
@@ -63,13 +63,13 @@ namespace DailyWallpaper.View
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.Icon_Options.SuspendLayout();
+            this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
-            // Icon_Options
+            // Icon_OptionsIcon
             // 
-            this.Icon_Options.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.Icon_Options.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Icon_OptionsIcon.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.Icon_OptionsIcon.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Icon_dailyWallpaperTitleToolStripMenuItem,
             this.Icon_ChangeWallpaper,
             this.Icon_AutoChangeWallpaper,
@@ -78,7 +78,7 @@ namespace DailyWallpaper.View
             this.Icon_LocalPath,
             this.Icon_Spotlight,
             this.toolStripMenuItem1,
-            this.Icon_OptionsInContext,
+            this.Icon_Options,
             this.Icon_DisableShortcutKeys,
             this.Icon_RunAtStartup,
             this.toolStripMenuItem3,
@@ -87,11 +87,11 @@ namespace DailyWallpaper.View
             this.toolStripMenuItem4,
             this.Icon_DonateAndSupport,
             this.Icon_Quit});
-            this.Icon_Options.Name = "Icon_Options";
-            this.Icon_Options.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.Icon_Options.ShowCheckMargin = true;
-            this.Icon_Options.ShowImageMargin = false;
-            resources.ApplyResources(this.Icon_Options, "Icon_Options");
+            this.Icon_OptionsIcon.Name = "Icon_Options";
+            this.Icon_OptionsIcon.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.Icon_OptionsIcon.ShowCheckMargin = true;
+            this.Icon_OptionsIcon.ShowImageMargin = false;
+            resources.ApplyResources(this.Icon_OptionsIcon, "Icon_OptionsIcon");
             // 
             // Icon_dailyWallpaperTitleToolStripMenuItem
             // 
@@ -167,11 +167,11 @@ namespace DailyWallpaper.View
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             resources.ApplyResources(this.toolStripMenuItem1, "toolStripMenuItem1");
             // 
-            // Icon_OptionsInContext
+            // Icon_Options
             // 
-            this.Icon_OptionsInContext.Name = "Icon_OptionsInContext";
-            resources.ApplyResources(this.Icon_OptionsInContext, "Icon_OptionsInContext");
-            this.Icon_OptionsInContext.Click += new System.EventHandler(this.Icon_OptionsInContext_Click);
+            this.Icon_Options.Name = "Icon_Options";
+            resources.ApplyResources(this.Icon_Options, "Icon_Options");
+            this.Icon_Options.Click += new System.EventHandler(this.Icon_Options_Click);
             // 
             // Icon_DisableShortcutKeys
             // 
@@ -283,7 +283,7 @@ namespace DailyWallpaper.View
             // 
             // _notifyIcon
             // 
-            this._notifyIcon.ContextMenuStrip = this.Icon_Options;
+            this._notifyIcon.ContextMenuStrip = this.Icon_OptionsIcon;
             resources.ApplyResources(this._notifyIcon, "_notifyIcon");
             // 
             // OptionsView
@@ -291,14 +291,14 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "OptionsView";
-            this.Icon_Options.ResumeLayout(false);
+            this.Icon_OptionsIcon.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip Icon_Options;
+        private System.Windows.Forms.ContextMenuStrip Icon_OptionsIcon;
         private System.Windows.Forms.ToolStripMenuItem Icon_ChangeWallpaper;
         private System.Windows.Forms.ToolStripMenuItem Icon_AutoChangeWallpaper;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
@@ -308,7 +308,7 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem Icon_LocalPath;
         private System.Windows.Forms.ToolStripMenuItem Icon_Spotlight;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem Icon_OptionsInContext;
+        private System.Windows.Forms.ToolStripMenuItem Icon_Options;
         private System.Windows.Forms.ToolStripMenuItem Icon_DisableShortcutKeys;
         private System.Windows.Forms.ToolStripMenuItem Icon_RunAtStartup;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;

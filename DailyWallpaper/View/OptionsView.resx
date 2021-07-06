@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="Icon_Options.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="Icon_OptionsIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -194,10 +194,10 @@
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 6</value>
   </data>
-  <data name="Icon_OptionsInContext.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="Icon_Options.Size" type="System.Drawing.Size, System.Drawing">
     <value>317, 30</value>
   </data>
-  <data name="Icon_OptionsInContext.Text" xml:space="preserve">
+  <data name="Icon_Options.Text" xml:space="preserve">
     <value>选项...</value>
   </data>
   <data name="Icon_DisableShortcutKeys.Size" type="System.Drawing.Size, System.Drawing">
@@ -293,13 +293,13 @@
   <data name="Icon_Quit.Text" xml:space="preserve">
     <value>退出</value>
   </data>
-  <data name="Icon_Options.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 418</value>
+  <data name="Icon_OptionsIcon.Size" type="System.Drawing.Size, System.Drawing">
+    <value>318, 451</value>
   </data>
-  <data name="&gt;&gt;Icon_Options.Name" xml:space="preserve">
-    <value>Icon_Options</value>
+  <data name="&gt;&gt;Icon_OptionsIcon.Name" xml:space="preserve">
+    <value>Icon_OptionsIcon</value>
   </data>
-  <data name="&gt;&gt;Icon_Options.Type" xml:space="preserve">
+  <data name="&gt;&gt;Icon_OptionsIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <metadata name="_notifyIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -402,10 +402,10 @@
   <data name="&gt;&gt;toolStripMenuItem1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_OptionsInContext.Name" xml:space="preserve">
-    <value>Icon_OptionsInContext</value>
+  <data name="&gt;&gt;Icon_Options.Name" xml:space="preserve">
+    <value>Icon_Options</value>
   </data>
-  <data name="&gt;&gt;Icon_OptionsInContext.Type" xml:space="preserve">
+  <data name="&gt;&gt;Icon_Options.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Icon_DisableShortcutKeys.Name" xml:space="preserve">

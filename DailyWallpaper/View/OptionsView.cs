@@ -94,6 +94,8 @@ namespace DailyWallpaper.View
 
         void UpdateTranslation()
         {
+            Icon_dailyWallpaperTitleToolStripMenuItem.Text = ProjectInfo.exeName
+                + " v" + ProjectInfo.GetVerSion() + " by " + ProjectInfo.author;
             Icon_CleanEmptyFolders.Text = TranslationHelper.Get("Icon_CleanEmptyFolders");
             Icon_HashCalc.Text = TranslationHelper.Get("Icon_HashCalc");
             Icon_IssueAndFeedback.Text = TranslationHelper.Get("Icon_IssueAndFeedback");
@@ -118,7 +120,7 @@ namespace DailyWallpaper.View
             // _Icon_EveryHoursAutoChangeMenuItem
 
             // ooo
-            Icon_AutoChangeWallpaper.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            Icon_AutoChangeWallpaper.DropDownItems.AddRange(new ToolStripItem[] {
             CustomHoursTextboxWithButtonAndUnit(
                 TranslationHelper.Get("Icon_Custom"),
                 TranslationHelper.Get("Icon_Unit")) });
@@ -193,8 +195,6 @@ namespace DailyWallpaper.View
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
             Icon_Quit.Text = TranslationHelper.Get("Icon_Quit");
-
-            string.Format(TranslationHelper.Get("Icon_FeatureTit"), ProjectInfo.GetVerSion());
         }
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -1160,7 +1160,7 @@ namespace DailyWallpaper.View
             ChangeIconStatus();
         }
 
-        private void Icon_OptionsInContext_Click(object sender, EventArgs e)
+        private void Icon_Options_Click(object sender, EventArgs e)
         {
             Show();
             WindowState = FormWindowState.Normal;
