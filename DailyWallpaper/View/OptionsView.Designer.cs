@@ -285,6 +285,8 @@ namespace DailyWallpaper.View
             // 
             this._notifyIcon.ContextMenuStrip = this.Icon_OptionsIcon;
             resources.ApplyResources(this._notifyIcon, "_notifyIcon");
+            this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
+            this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
             // OptionsView
             // 

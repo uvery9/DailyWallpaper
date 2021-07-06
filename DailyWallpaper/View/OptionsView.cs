@@ -50,7 +50,6 @@ namespace DailyWallpaper.View
                 string.Format(TranslationHelper.Get("Icon_ToolTip"), ProjectInfo.GetVerSion());
 
             _notifyIcon.Visible = true;
-            _notifyIcon.DoubleClick += notifyIcon_DoubleClick;
             // _notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
             
@@ -171,6 +170,8 @@ namespace DailyWallpaper.View
             // open notepad++ / notepad
             Icon_Notepad.Text =
                     TranslationHelper.Get("Icon_Notepad");
+            Icon_Notepad.ShortcutKeyDisplayString = "(Middle)";
+                  
             Icon_Notepad.Click +=
                     Icon_Notepad_Click;
 
@@ -331,18 +332,6 @@ namespace DailyWallpaper.View
             // ProjectInfo.TestConnect(updateUrlTips, "https://www.google.com");
             ProjectInfo.TestConnect(updateUrlTips, "https://www.github.com");
         }
-
-        // call back by timer.
-        private void notifyIcon_DoubleClick(object sender, EventArgs e)
-        {
-            if (_ini.EqualsIgnoreCase("UseShortcutKeys", "yes"))
-            {
-                //DailyWallpaperConsSetWallpaper();
-                // Will NOT wait
-                Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
-            }
-        }
-
 
         private void hoursTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1229,6 +1218,27 @@ namespace DailyWallpaper.View
         private void Icon_AutoChangeWallpaper_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void _notifyIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                Icon_Notepad.PerformClick();
+            }
+        }
+
+        private void _notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (_ini.EqualsIgnoreCase("UseShortcutKeys", "yes"))
+                {
+                    //DailyWallpaperConsSetWallpaper();
+                    // Will NOT wait
+                    Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
+                }
+            }
         }
     }
 }
