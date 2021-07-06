@@ -16,20 +16,16 @@
 
 ## User Interface
 
-<img src="https://user-images.githubusercontent.com/42594123/124373719-62da2c00-dcc7-11eb-9c79-bd33bfa0f366.png" alt="main-interface" style="zoom: 10%;" />
+<img src="https://user-images.githubusercontent.com/42594123/124537354-516e5c80-de4c-11eb-8c59-35a3e8878c44.png" alt="main-interface" style="zoom: 30%;" />
 
-### hash calculator
-<img src="https://user-images.githubusercontent.com/42594123/124373573-eeeb5400-dcc5-11eb-9aa5-f1c991ccd8d7.png"  alt="hash-calculator" style="zoom:10%;" />
 
-### clean empty folders
-<img src="https://user-images.githubusercontent.com/42594123/124373572-edba2700-dcc5-11eb-8e0a-9af21a873800.png" alt="clean-empty-folders" style="zoom:10%;" />
 
 ## Language support list: 
 You could modify the **Translations.config** to support your language,  even executable version.
 The code will detect your location and select the appropriate language. If you don't want to do this, the default is English.
 There may be many syntax errors in the **Translations.config**, help me improve it
 
-<img src="https://user-images.githubusercontent.com/42594123/123509339-71ad5700-d6a7-11eb-9eb4-1a56aebdd3fe.png" alt="main-interface_en" style="zoom: 10%;" />
+<img src="https://user-images.githubusercontent.com/42594123/123509339-71ad5700-d6a7-11eb-9eb4-1a56aebdd3fe.png" alt="main-interface_en" style="zoom: 8%;" />
 
 ### Tray Icon
 **icon will change cause the status**
