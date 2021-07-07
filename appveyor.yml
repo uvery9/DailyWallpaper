@@ -38,7 +38,7 @@ after_build:
     #echo signtool.exe sign /fd SHA256 /n "SHA256" "DailyWallpaper.Installer-%GIT_TAG%.msi" >> sign.bat
     #call sign.bat
     
-version: %GIT_TAG%.{build}    
+version: DW.%GIT_TAG%.{build}
 
 artifacts:
 - path: OUTPUT\DailyWallpaper.Installer-%GIT_TAG%.msi
