@@ -38,7 +38,6 @@ namespace DailyWallpaper.View
             // 
             this.textBoxCons.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(12)))), ((int)(((byte)(12)))));
             this.textBoxCons.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBoxCons.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.textBoxCons.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.textBoxCons.Location = new System.Drawing.Point(0, 0);
             this.textBoxCons.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -84,7 +83,6 @@ namespace DailyWallpaper.View
             this.Controls.Add(this.saveToFileButton);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.textBoxCons);
-            this.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);

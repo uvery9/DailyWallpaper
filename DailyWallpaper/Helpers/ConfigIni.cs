@@ -25,8 +25,8 @@ namespace DailyWallpaper
         private ConfigIni(string IniPath = null, string exeName = null)
         {
             this.exeName = exeName ?? Helpers.ProjectInfo.exeName;
-            iniPath = new FileInfo(IniPath ?? "config.ini").FullName;
-            logIniPath = new FileInfo(IniPath ?? "configlog.ini").FullName;
+            iniPath = new FileInfo(IniPath ?? this.exeName + ".config.ini").FullName;
+            logIniPath = new FileInfo(IniPath ?? this.exeName + ".config.log.ini").FullName;
             if (!File.Exists(iniPath))
             {
                 CreateDefIni();
