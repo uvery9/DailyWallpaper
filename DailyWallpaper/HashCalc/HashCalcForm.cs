@@ -381,33 +381,32 @@ namespace DailyWallpaper.HashCalc
                 tb.Enabled = false;
             }
             m_ini.UpdateIniItem(keyInIni, tb.Enabled.ToString(), "HashCalc");
-
         }
-        private void MD5checkBox_CheckedChanged(object sender, EventArgs e)
+        private void MD5checkBox_Click(object sender, EventArgs e)
         {
             CheckBoxAffectTextBox(MD5checkBox, MD5TextBox, "MD5");
         }
 
-        private void CRC64checkBox_CheckedChanged(object sender, EventArgs e)
+        private void CRC64checkBox_Click(object sender, EventArgs e)
         {
             CheckBoxAffectTextBox(CRC64checkBox, CRC64TextBox, "CRC64");
         }
 
-        private void SHA1checkBox_CheckedChanged(object sender, EventArgs e)
+        private void SHA1checkBox_Click(object sender, EventArgs e)
         {
             CheckBoxAffectTextBox(SHA1checkBox, SHA1TextBox, "SHA1");
         }
 
-        private void CRC32checkBox_CheckedChanged(object sender, EventArgs e)
+        private void CRC32checkBox_Click(object sender, EventArgs e)
         {
             CheckBoxAffectTextBox(CRC32checkBox, CRC32TextBox, "CRC32");
         }
 
-        private void SHA256checkBox_CheckedChanged(object sender, EventArgs e)
+        private void SHA256checkBox_Click(object sender, EventArgs e)
         {
             CheckBoxAffectTextBox(SHA256checkBox, SHA256TextBox, "SHA256");
         }
-        private void SHA512checkBox_CheckedChanged(object sender, EventArgs e)
+        private void SHA512checkBox_Click(object sender, EventArgs e)
         {
             CheckBoxAffectTextBox(SHA512checkBox, SHA512TextBox, "SHA512");
         }
@@ -416,17 +415,30 @@ namespace DailyWallpaper.HashCalc
         {
             fileCancel = new CancellationTokenSource();
             var token = fileCancel.Token;
-            HashAlgorithmCalc(CRC32TextBox, CRC32checkBox, hashCalc.CalcCRC32, token);
-            HashAlgorithmCalc(CRC64TextBox, CRC64checkBox, hashCalc.CalcCRC64, token);
+            
+            hashCalc.succeedCnt = 0;
+            hashCalc.hashProgressBar.Value = 0;
+            hashCalc.percent = 0.0;
+
+            hashCalc.hashCalcCnt = 0;
+            if (MD5checkBox.Checked)
+                hashCalc.hashCalcCnt += 1;
+            if (SHA1checkBox.Checked)
+                hashCalc.hashCalcCnt += 1;
+            if (SHA256checkBox.Checked)
+                hashCalc.hashCalcCnt += 1;
+            if (SHA512checkBox.Checked)
+                hashCalc.hashCalcCnt += 1;
+
+            HashAlgorithmCalc(CRC32TextBox, CRC32checkBox, hashCalc.CalcCRC32, token, totalProgress: false);
+            HashAlgorithmCalc(CRC64TextBox, CRC64checkBox, hashCalc.CalcCRC64, token, totalProgress: false);
             HashAlgorithmCalc(MD5TextBox, MD5checkBox, hashCalc.CalcMD5, token);
             HashAlgorithmCalc(SHA1TextBox, SHA1checkBox, hashCalc.CalcSHA1, token);
             HashAlgorithmCalc(SHA256TextBox, SHA256checkBox, hashCalc.CalcSHA256, token);
             HashAlgorithmCalc(SHA512TextBox, SHA512checkBox, hashCalc.CalcSHA512, token);
         }
 
-
-
-        private void HashAlgorithmCalc(TextBox tx, CheckBox cb, CalcMethod Calcmethod, CancellationToken token)
+        private void HashAlgorithmCalc(TextBox tx, CheckBox cb, CalcMethod Calcmethod, CancellationToken token, bool totalProgress = true)
         {
             void TellResultAsync(bool res, string who, string result, string costTimeOrReson)
             {
@@ -439,6 +451,12 @@ namespace DailyWallpaper.HashCalc
                     }
                     tx.Text = result;
                     _console.WriteLine("" + who + result + "\r\n        cost time: " + costTimeOrReson);
+                    if (totalProgress) 
+                        m_hashCalc.succeedCnt += 1;
+                    if (m_hashCalc.succeedCnt == m_hashCalc.hashCalcCnt)
+                    {
+                        m_hashCalc.hashProgressBar.Value = 100;
+                    }
                 }
                 else
                 {
@@ -447,9 +465,10 @@ namespace DailyWallpaper.HashCalc
                 }
                 mut.ReleaseMutex();
             }
+            tx.Text = "";
             if (cb.Checked)
             {
-                // m_hashCalc.CalcMD5
+                // hashCalc.CalcMD5
                 Calcmethod(m_hashCalc.filePath, TellResultAsync, token);
             }
         }
