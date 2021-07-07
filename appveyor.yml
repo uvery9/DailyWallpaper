@@ -56,7 +56,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure:  jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD
-  artifact: DailyWallpaper.Installer, DailyWallpaper.Protable
+  artifact: DailyWallpaper.Installer, DailyWallpaper.Installer.Hash, DailyWallpaper.Protable, DailyWallpaper.Protable.Hash
   draft: true
   prerelease: false
   on:
