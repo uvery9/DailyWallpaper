@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace DailyWallpaper.HashCalc
 {
-    class HashCalc
+    class HashCalculator
     {
         public string help;
         public string filePath;
@@ -27,7 +27,7 @@ namespace DailyWallpaper.HashCalc
         public double percent;
         public int succeedCnt;
 
-        public HashCalc()
+        public HashCalculator()
         {
             help = "You can drag FILE to picture/hash panel, \r\n  drag text file to console if \"Allow ConsoleTextBox Drop\" is Enabled).";
             // totalHashProgess = new ProgressImpl();
@@ -186,24 +186,24 @@ namespace DailyWallpaper.HashCalc
         }
         public void CalcMD5(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            tasks.Add(Task.Run(() => ComputeHashAsync(action,
-                "MD5:    ", MD5.Create(), path, token, totalProgessDouble)));
+            tasks.Add(Task.Run(() => ComputeHashAsync(
+                MD5.Create(), path, token, "MD5:    ", action, totalProgessDouble)));
         }
         public void CalcSHA1(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            tasks.Add(Task.Run(async () => await ComputeHashAsync(action,
-                "SHA1:   ", SHA1.Create(), path, token, totalProgessDouble)));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(
+                SHA1.Create(), path, token, "SHA1:   ", action, totalProgessDouble)));
         }
         public void CalcSHA256(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA256: ", 
-                SHA256.Create(), path, token, totalProgessDouble)));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(
+                SHA256.Create(), path, token, "SHA256: ", action, totalProgessDouble)));
         }
         
         public void CalcSHA512(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA512: ", 
-                SHA512.Create(), path, token, totalProgessDouble)));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(
+                SHA512.Create(), path, token, "SHA512: ", action, totalProgessDouble)));
         }
         public string ComputeHashOfString(HashAlgorithm hashAlgorithm, string input)
         {
@@ -292,9 +292,9 @@ namespace DailyWallpaper.HashCalc
         /// <param name="progress"></param>
         /// <param name="bufferSize"></param>
         /// <returns></returns>
-        public static async Task ComputeHashAsync(Action<bool, string, string, string> action,
-            string who, HashAlgorithm hashAlgorithm, string path,
-            CancellationToken cancelToken = default,
+        public static async Task ComputeHashAsync(HashAlgorithm hashAlgorithm, string path,
+            CancellationToken cancelToken = default, string who = null, 
+            Action<bool, string, string, string> action = null,
             IProgress<double> progress = null, int bufferSize = 1024 * 1024 * 10)
         {
             try
@@ -335,17 +335,26 @@ namespace DailyWallpaper.HashCalc
                     } while (readAheadBytesRead != 0);
                     timer.Stop();
                     var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
-                    action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime);
+                    if (action != null)
+                    {
+                        action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime);
+                    }
+                    
                 }
             }
             catch (OperationCanceledException e)
             {
-                action(false, $"Info {who}", null, e.Message);
+                if (action != null)
+                {
+                    action(false, $"Info {who}", null, e.Message);
+                }
             }
             catch (Exception e)
             {
-                action(false, $"ERROR {who}", null, e.Message);
-                MessageBox.Show(e.Message);
+                if (action != null)
+                {
+                    action(false, $"ERROR {who}", null, e.Message);
+                }
             }
         }
             

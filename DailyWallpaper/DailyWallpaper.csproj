@@ -199,7 +199,7 @@
     <None Include="res\cef32x32.ico" />
     <None Include="res\HASH32x32.ico" />
     <None Include="res\draganddrop.png" />
-    <None Include="res\draganddrop_long.png" />
+    <None Include="res\GE32X32.ico" />
     <Content Include="Translations.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

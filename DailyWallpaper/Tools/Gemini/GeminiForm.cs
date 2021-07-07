@@ -11,6 +11,7 @@ using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using static DailyWallpaper.Gemini;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -20,17 +21,26 @@ namespace DailyWallpaper
         private Gemini gemini;
         private TextBoxCons _console;
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        private CancellationTokenSource _source;
+        private CancellationTokenSource _source = null;
         private bool deletePermanently = false;
 
         // Speed up the next scan
-        private List<string> emptyFolderList;
-        private string printPath = null;
+        private string analyzePath = null;
         private bool scanRes = false;
         private List<string> folderFilter;
         private string regexFilter;
         private Regex regex;
-        private List<string> tbTargetFolderHistory = new List<string>();
+        
+        private List<string> targetFolder1History = new List<string>();
+        private List<string> targetFolder2History = new List<string>();
+        private string targetFolder1 = null;
+        private string targetFolder2 = null;
+        private List<string> filesList1;
+        private List<string> filesList2;
+
+        private List<GeminiFileStruct> geminiFileStructList1;
+        private List<GeminiFileStruct> geminiFileStructList2;
+
         private enum FilterMode : int
         {
             REGEX_FIND,
@@ -43,34 +53,48 @@ namespace DailyWallpaper
         public GeminiForm()
         {
             InitializeComponent();
-            this.targetFolder1TextBox.KeyDown += tbTargetFolder_KeyDown;
+            targetFolder1TextBox.KeyDown += targetFolder1_KeyDown;
+            targetFolder2TextBox.KeyDown += targetFolder2_KeyDown;
             folderFilterTextBox.KeyDown += folderFilterTextBox_KeyDown;
-            Icon = Properties.Resources.icon32x32;
+            Icon = Properties.Resources.GE32X32;
             gemini = new Gemini();
             _console = new TextBoxCons(new ConsWriter(tbConsole));
             _console.WriteLine(gemini.helpString);
-            var init = gemini.ini.Read("CleanEmptyFoldersPath", "LOG");
+
+            
+            // init targetfolder 1&2
+            targetFolder1TextBox.Text = desktopPath;
+            targetFolder2TextBox.Text = "";
+            var init = gemini.ini.Read("TargetFolder1", "Gemini");
             if (Directory.Exists(init))
             {
-                UpdateTextAndIniFile(init, updateIni: false);
-            } else
-            {
-                targetFolder1TextBox.Text = desktopPath;
+                UpdateTextAndIniFile("TargetFolder1", init, ref targetFolder1, 
+                    targetFolder1History, targetFolder1TextBox, updateIni: false); 
             }
-            _source = new CancellationTokenSource();
+
+            init = gemini.ini.Read("TargetFolder2", "Gemini");
+            if (Directory.Exists(init))
+            {
+                UpdateTextAndIniFile("TargetFolder2", init, ref targetFolder2,
+                    targetFolder2History, targetFolder2TextBox, updateIni: false);
+            }
+
             btnStop.Enabled = false;
             // default: send to RecycleBin
             deleteOrRecycleBin.Checked = false;
             DeleteOrRecycleBin(deletePermanently: false);
-            emptyFolderList = new List<string>();
             listOrLog.Checked = true;
             folderFilter = new List<string>();
-            this.MaximizeBox = false;
+            MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             SetUpFilterMode();
-            this.regexCheckBox.CheckedChanged += new System.EventHandler(this.regexCheckBox_CheckedChanged);
+            regexCheckBox.CheckedChanged += new EventHandler(regexCheckBox_CheckedChanged);
             // _console.WriteLine("You could always TYPE help in folder filter textbox and press ENTER.");
-            Icon = Properties.Resources.cef32x32;
+            InitFileSameMode();
+            filesList1 = new List<string>();
+            filesList2 = new List<string>();
+            geminiFileStructList1 = new List<GeminiFileStruct>();
+            geminiFileStructList2 = new List<GeminiFileStruct>();
         }
         /// <summary>
         /// bind to tbTargetFolderHistory
@@ -115,21 +139,26 @@ namespace DailyWallpaper
             tb.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             tb.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
-        private void btnSelectOutFolder_Click(object sender, EventArgs e)
+        private void btnSelectTargetFolder1_Click(object sender, EventArgs e)
         {
-            /*  Note that you need to install the Microsoft.WindowsAPICodePack.Shell package 
-                through NuGet before you can use this CommonOpenFileDialog
-                
-                VS->Tools->NuGet Package manager->Program Package Manager Terminal->
-                Type: Install-Package Microsoft.WindowsAPICodePack-Shell    Enter 
-                using Microsoft.WindowsAPICodePack.Dialogs;
-            */
+            SelectFolder("TargetFolder1", targetFolder1TextBox,
+            ref targetFolder1, targetFolder1History);
+        }
 
+        private void btnSelectTargetFolder2_Click(object sender, EventArgs e)
+        {
+            SelectFolder("TargetFolder2", targetFolder2TextBox,
+            ref targetFolder2, targetFolder2History);
+        }
+
+        private void SelectFolder(string keyInIni, System.Windows.Forms.TextBox tx, 
+            ref string targetFolder, List<string> targetFolderHistory)
+        {
             using (var dialog = new CommonOpenFileDialog())
             {
-                if (Directory.Exists(targetFolder1TextBox.Text))
+                if (Directory.Exists(tx.Text))
                 {
-                    dialog.InitialDirectory = targetFolder1TextBox.Text;
+                    dialog.InitialDirectory = tx.Text;
                 }
                 else
                 {
@@ -138,43 +167,91 @@ namespace DailyWallpaper
                 dialog.IsFolderPicker = true;
                 dialog.EnsurePathExists = true;
                 dialog.Multiselect = false;
-                dialog.Title = "Clean Empty Folders";
+                dialog.Title = "Select Target Folders";
 
                 // maybe add some log
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
                     var path = dialog.FileName;
-                    if (!UpdateTextAndIniFile(path))
+                    if (!UpdateTextAndIniFile(keyInIni, path, ref targetFolder, targetFolderHistory, tx))
                     {
                         return;
                     }
-                    targetFolder1TextBox.Text = path;
+                    tx.Text = path;
                 }
             }
         }
 
-        private void btnClean_Click(object sender, EventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
-            PrintDir(delete: true);
+            DeleteSlected();
         }
 
-        private void PrintDir(bool delete = false)
+        private void DeleteSlected()
+        {
+
+        }
+
+        private async void StartAnalyze(bool delete = false)
         {
             if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
             {
                 return;
             }
             _source = new CancellationTokenSource();
+            var token = _source.Token;
             btnStop.Enabled = true;
-            btnDelete.Enabled = false;
             btnAnalyze.Enabled = false;
-            RecurseScanDir(gemini.targetFolderPath, _source.Token, delete);
-        }
-        private void btnPrint_Click(object sender, EventArgs e)
-        {
-            PrintDir();
+            var task = Task.Run(async() =>
+            {
+                RecurseScanDir(targetFolder1TextBox.Text, filesList1, token);
+                _console.WriteLine();
+                RecurseScanDir(targetFolder2TextBox.Text, filesList2, token);
+                FileList2GeminiFileStructList(filesList1, geminiFileStructList1, token);
+                FileList2GeminiFileStructList(filesList2, geminiFileStructList2, token);
+                foreach(var gs in geminiFileStructList1)
+                {
+                    _console.WriteLine(gs.ToString());
+                    _console.WriteLine();
+                }
+                geminiFileStructList2 =  Gemini.ForceGetHashGeminiFileStructList(geminiFileStructList2, token,
+                    fileSHA1CheckBox.Checked, fileMD5CheckBox.Checked).Result;
+                foreach (var gs in geminiFileStructList2)
+                {
+                    _console.WriteLine(gs.ToString());
+                    _console.WriteLine();
+                }
+                
+            }, _source.Token);
+            try
+            {
+                await task;
+                // No Error, filesList is usable
+                scanRes = true;
+            }
+            catch (OperationCanceledException e)
+            {
+                scanRes = false;
+                _console.WriteLine($"\r\n>>> RecurseScanDir throw exception message: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                scanRes = false;
+                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e.Message}");
+                _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
+            }
+            finally
+            {
+                _console.WriteLine(">>> Analyse is over.");
+            }
+            btnAnalyze.Enabled = true;
 
         }
+        private void btnAnalyze_Click(object sender, EventArgs e)
+        {
+            StartAnalyze();
+        }
+
         private void btnStop_Click(object sender, EventArgs e)
         {
             if (_source != null)
@@ -183,9 +260,8 @@ namespace DailyWallpaper
                 //_source.Dispose();
                 //_source = null;
             }
-            btnDelete.Enabled = true;
+            _console.WriteLine("Stop...");
             btnAnalyze.Enabled = true;
-            btnStop.Enabled = false;
         }
         private void btnClear_Click(object sender, EventArgs e)
         {
@@ -199,7 +275,7 @@ namespace DailyWallpaper
         /// <summary>
         /// TODO: When folder To much, try to not use Recurse
         /// </summary>
-        private async void RecurseScanDir(string path, CancellationToken token, bool delete = false)
+        private void RecurseScanDir(string path, List<string> filesList, CancellationToken token)
         {
             //token.ThrowIfCancellationRequested();
             // DO NOT KNOW WHY D: DOESNOT WORK WHILE D:\ WORK.
@@ -208,97 +284,31 @@ namespace DailyWallpaper
                 _console.WriteLine("Invalid directory path: {0}", path);
                 return;
             }
-            string option = "Delete";
-            if (!delete)
-            {
-                option = "Print";
-                printPath = path;
-                scanRes = false;
-                emptyFolderList = new List<string>();
-            }
 
-            _console.WriteLine($"#---- Started  {option} Operation ----#");
-            _console.WriteLine();
-            _console.WriteLine($"The following folders will be deleted:\r\n");
+            analyzePath = path;
 
-            var task = Task.Run(() =>
+            _console.WriteLine($"\r\n#---- Started Analyze Operation ----#\r\n");
+            if (scanRes && filesList.Count > 0)
             {
-                // Were we already canceled?
-                // token.ThrowIfCancellationRequested();
-                try
+                foreach (var folder in filesList)
                 {
-                    // Set a variable to the My Documents path.
-                    // string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); 
-
-                    if (scanRes && path.Equals(printPath))
-                    {
-                        if (emptyFolderList.Count > 0)
-                        {
-                            foreach (var folder in emptyFolderList)
-                            {
-                                _console.WriteLine($"delete ###  {folder}");
-                                FileSystem.DeleteDirectory(folder, UIOption.OnlyErrorDialogs,
-                                deletePermanently ?
-                                RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                                UICancelOption.DoNothing);
-                            }
-                        }
-                        return;
-                    }
-                    int cnt = 0;
-                    if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
-                    {
-                        ScanEmptyDirsFindMode(path, ref cnt, delete, token, re: false);
-                    }
-                    else if (filterMode == FilterMode.REGEX_FIND && regex != null)
-                    {
-                        ScanEmptyDirsFindMode(path, ref cnt, delete, token, re: true);
-                    }
-                    else
-                    {
-                        ScanEmptyDirs(path, ref cnt, token, delete, deletePermanently);
-                    }
-                    if (cnt == 0)
-                    {
-                        _console.WriteLine("[NOTHING]");
-                        _console.WriteLine();
-                        _console.WriteLine("The folder is clean.");
-                    }
-                    else
-                    {
-                        _console.WriteLine();
-                        _console.WriteLine($"Found {cnt} empty folder(s).");
-                    }
+                    _console.WriteLine($"found ###  {folder}");
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
-            }, token); // Pass same token to Task.Run.
-            try
-            {
-                await task;
-
-                // No Error, emptyFolderList is usable
-                scanRes = true;
-                _console.WriteLine();
-                _console.WriteLine($"\r\n#---- Finished {option} Operation ----#");
+                return;
             }
-            catch (OperationCanceledException e)
+            if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
             {
-                scanRes = false;
-                _console.WriteLine($"\r\n>>> RecurseScanDir throw exception message: {e.Message}");
+                FindFilesWithFindMode(path, filesList, token, re: false);
             }
-            catch (Exception e)
+            else if (filterMode == FilterMode.REGEX_FIND && regex != null)
             {
-                scanRes = false;
-                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e.Message}");
-                _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
+                FindFilesWithFindMode(path, filesList, token, re: true);
             }
-
-            btnDelete.Enabled = true;
-            btnAnalyze.Enabled = true;
-            btnStop.Enabled = false;
+            else
+            {
+                FindFilesWithProtectMode(path, filesList, token);
+            }
+            _console.WriteLine($"\r\n#---- Finished Analyze Operation ----#\r\n");
         }
 
         private bool FolderFilter(string path, FilterMode mode)
@@ -346,7 +356,7 @@ namespace DailyWallpaper
         /// 1)games 2)D:\games 3)games,Steam\logs 4)D:\games,Steam\logs
         /// </summary>
 
-        private void ScanEmptyDirsFindMode(string path, ref int cnt, bool delete, CancellationToken token, bool re = false)
+        private void FindFilesWithFindMode(string path, List<string> filesList, CancellationToken token, bool re = false)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -366,13 +376,13 @@ namespace DailyWallpaper
                     {
                         continue;
                     }
-                    ScanEmptyDirsFindMode(d, ref cnt, delete, token, re);
+                    FindFilesWithFindMode(d, filesList, token, re);
                 }
                 if (re)
                 {
                     if (regex.IsMatch(path))
                     {
-                        EmptyJudge(path, ref cnt, delete);
+                        FindFilesInDir(path, filesList, token);
                         return;
                     }
                 }
@@ -386,7 +396,7 @@ namespace DailyWallpaper
                         }
                         if (path.Contains(filter))
                         {
-                            EmptyJudge(path, ref cnt, delete);
+                            FindFilesInDir(path, filesList, token);
                             continue;
                         }
                     }
@@ -399,37 +409,49 @@ namespace DailyWallpaper
                 throw;
             }
         }
+        //calcSHA1: fileSHA1CheckBox.Checked,
+        // calcMD5: fileMD5CheckBox.Checked
 
-        private void EmptyJudge(string dir, ref int cnt, bool delete)
+        void FileList2GeminiFileStructList(List<string> filesList, List<GeminiFileStruct> gList, CancellationToken token)
         {
-            var entries = Directory.EnumerateFileSystemEntries(dir);
-            if (!entries.Any())
+            if (filesList.Count > 0)
             {
-                try
+                _console.WriteLine(">>> Start to analyze files.");
+                foreach (var f in filesList)
                 {
-                    cnt++;
-                    // Directory.Delete(dir);
-                    emptyFolderList.Add(dir);
-                    if (delete)
+                    if (token.IsCancellationRequested)
                     {
-                        _console.WriteLine($"deleted >>>  {dir}");
-                        FileSystem.DeleteDirectory(dir, UIOption.OnlyErrorDialogs,
-                            deletePermanently ?
-                            RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                            UICancelOption.DoNothing);
+                        token.ThrowIfCancellationRequested();
                     }
-                    else
-                    {
-                        _console.WriteLine($"print >>>  {dir}");
-                    }
+                    gList.Add(Gemini.FillGeminiFileStruct(f));
                 }
-                catch (UnauthorizedAccessException) { }
-                catch (DirectoryNotFoundException) { }
+                _console.WriteLine(">>> Analyse finished.");
+            }
+            else
+            {
+                _console.WriteLine("No files.");
             }
         }
 
-        private void ScanEmptyDirs(string dir, ref int cnt, CancellationToken token, bool delete = false,
-            bool deletePermanently = false)
+        private void FindFilesInDir(string dir, List<string> filesList, CancellationToken token)
+        {
+            try
+            {
+                foreach (var fi in Directory.EnumerateFiles(dir))
+                {
+                    filesList.Add(fi);
+                    _console.WriteLine($"print >>>  {fi}");
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException) { }
+            catch (DirectoryNotFoundException) { }
+        }
+
+        private void FindFilesWithProtectMode(string dir, List<string> filesList, CancellationToken token)
         {
             if (String.IsNullOrEmpty(dir))
             {
@@ -451,9 +473,9 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    ScanEmptyDirs(d, ref cnt, token, delete, deletePermanently);
+                    FindFilesWithProtectMode(d, filesList, token);
                 }
-                EmptyJudge(dir, ref cnt, delete);
+                FindFilesInDir(dir, filesList, token);
             }
             catch (UnauthorizedAccessException) { }
         }
@@ -467,30 +489,18 @@ namespace DailyWallpaper
                 if (print)
                 {
                     _console.WriteLine($"\r\nThe folder is CONTROLLED, please re-select:\r\n   {path}");
-                    _console.WriteLine("\r\nYou could Type \" list controlled \" in the Folder Filter and Type ENTER" +
+                    _console.WriteLine("\r\nYou could Type \" list controlled \" in the \r\n" + 
+                        "\"Folder Filter\" and Type ENTER" +
                         " to see all the controlled folders.");
                 }
                 return true;
             }
             return false;
         }
-
-
-        private void tbTargetFolder_TextChanged(object sender, EventArgs e)
-        {
-            // DONOTHING
-        }
-
-        private void CleanEmptyFoldersForm_Load(object sender, EventArgs e)
-        {
-
-        }
-        private void cefWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
-
-        }
         
-        private bool UpdateTextAndIniFile(string path, bool updateIni = true, bool print = true)
+        private bool UpdateTextAndIniFile(string keyInIni, string path, ref string targetFolder, 
+            List<string> targetFolderHistory, System.Windows.Forms.TextBox tx = null,
+            bool updateIni = true, bool print = true)
         {
             if (IsControlled(path))
             {
@@ -500,23 +510,26 @@ namespace DailyWallpaper
             {
                 if (print)
                 {
-                    _console.WriteLine($"\r\nThe folder dose NOT EXIST, please re-select:\r\n   {path}");
+                    _console.WriteLine($"\r\nThe {keyInIni} folder dose NOT EXIST, please re-select:\r\n   {path}");
                 }
                 return false;
             }
             // DirectoryIn
             path = Path.GetFullPath(path);
-            tbTargetFolderHistory.Add(path);
-            BindHistory(targetFolder1TextBox, tbTargetFolderHistory);
-            gemini.targetFolderPath = path;
-            targetFolder1TextBox.Text = path;
+            if (tx != null)
+            {
+                tx.Text = path;
+                targetFolderHistory.Add(path);
+                BindHistory(tx, targetFolderHistory);
+            }
+            targetFolder = path;
             if (updateIni)
             {
-                gemini.ini.UpdateIniItem("CleanEmptyFoldersPath", path, "LOG");
+                gemini.ini.UpdateIniItem(keyInIni, path, "Gemini");
             }
             if (print)
             {
-                _console.WriteLine($"\r\nYou have selected this folder:\r\n  {path}");
+                _console.WriteLine($"\r\nYou have selected {keyInIni} folder:\r\n  {path}");
             }
             return true;
         }
@@ -652,7 +665,7 @@ namespace DailyWallpaper
             }
             return false;
         }
-        private void tbTargetFolder_KeyDown(object sender, KeyEventArgs e)
+        private void targetFolder1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -660,9 +673,25 @@ namespace DailyWallpaper
                 {
                     var path = box.Text;
                     path = path.Trim();
-                    if (UpdateTextAndIniFile(path))
+                    if (!UpdateTextAndIniFile("TargetFolder1", path, ref targetFolder1, targetFolder1History))
                     {
-                        // PrintDir();
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void targetFolder2_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (sender is System.Windows.Forms.TextBox box)
+                {
+                    var path = box.Text;
+                    path = path.Trim();
+                    if (!UpdateTextAndIniFile("TargetFolder2", path, ref targetFolder2, targetFolder2History))
+                    {
+                        return;
                     }
                 }
             }
@@ -694,12 +723,12 @@ namespace DailyWallpaper
         private void saveList2File_Click(object sender, EventArgs e)
         {
 
-            if (listOrLog.Checked && emptyFolderList.Count < 1)
+            if (listOrLog.Checked && (filesList1.Count < 1 || filesList2.Count < 1))
             {
                 _console.WriteLine("You SHOULD scan one folder first.");
                 return;
             }
-            if (listOrLog.Checked && !Directory.Exists(gemini.targetFolderPath))
+            if (listOrLog.Checked && !Directory.Exists(targetFolder1))
             {
                 return;
             }
@@ -714,7 +743,8 @@ namespace DailyWallpaper
                 saveFileDialog.Filter = "Txt files (*.txt)|*.txt";
                 // saveFileDialog.FilterIndex = 2;
                 saveFileDialog.RestoreDirectory = true;
-                var name = new DirectoryInfo(gemini.targetFolderPath).Name;
+                var name = new DirectoryInfo(targetFolder1).Name + "-" +
+                    new DirectoryInfo(targetFolder2).Name;
                 
                 // E:, D: -> D-Disk
                 // need TEST here
@@ -724,11 +754,11 @@ namespace DailyWallpaper
                 }
                 if (listOrLog.Checked)
                 {
-                    saveFileDialog.FileName = "EmptyFolders-List_" + name + "_" +
+                    saveFileDialog.FileName = "Gemini-List_" + name + "_" +
                                          DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
                 } else
                 {
-                    saveFileDialog.FileName = "EmptyFolders-Log_" + name + "_" +
+                    saveFileDialog.FileName = "Gemini-Log_" + name + "_" +
                                          DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
                 }
                 
@@ -742,7 +772,7 @@ namespace DailyWallpaper
 
                         if (listOrLog.Checked)
                         {
-                            dataAsBytes = emptyFolderList.SelectMany(s =>
+                            dataAsBytes = filesList1.SelectMany(s =>
                             System.Text.Encoding.Default.GetBytes(s + Environment.NewLine)).ToArray();
                         }
                         else
@@ -906,7 +936,20 @@ namespace DailyWallpaper
 
 
 
-        private void tbConsole_DragDrop(object sender, DragEventArgs e)
+        
+        private void targetFolder1_DragDrop(object sender, DragEventArgs e)
+        {
+            targetFolder_DragDrop(sender, e, "TargetFolder1", ref targetFolder1, targetFolder1History,
+                targetFolder1TextBox);
+        }
+        private void targetFolder2_DragDrop(object sender, DragEventArgs e)
+        {
+            targetFolder_DragDrop(sender, e, "TargetFolder2", ref targetFolder2, targetFolder2History,
+                targetFolder2TextBox);
+        }
+
+        private void targetFolder_DragDrop(object sender, DragEventArgs e, string keyInIni,
+            ref string targetFolder, List<string> targetFolderHistory, System.Windows.Forms.TextBox tx)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -917,11 +960,11 @@ namespace DailyWallpaper
                     var path = filePaths[0];
                     if (Directory.Exists(path))
                     {
-                        if (!UpdateTextAndIniFile(path))
+                        if (Directory.Exists(path))
                         {
-                            return;
+                            UpdateTextAndIniFile(keyInIni, path, ref targetFolder,
+                                targetFolderHistory, tx);
                         }
-                        targetFolder1TextBox.Text = path;
                     }
                 }
                 else
@@ -932,7 +975,7 @@ namespace DailyWallpaper
             }
         }
 
-        private void tbConsole_DragEnter(object sender, DragEventArgs e)
+        private void targetFolder1_2_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -947,6 +990,77 @@ namespace DailyWallpaper
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void InitFileSameMode()
+        {
+            // if no ini, just filename and filesize.
+            fileNameCheckBox.Checked = true;
+            fileSizeCheckBox.Checked = true;
+            fileExtNameCheckBox.Checked = false;
+            fileMD5CheckBox.Checked = false;
+            fileSHA1CheckBox.Checked = false;
+            
+            ReadFileSameModeFromIni("SameFileName", fileNameCheckBox);
+            ReadFileSameModeFromIni("SameFileExtName", fileExtNameCheckBox);
+            ReadFileSameModeFromIni("SameFileSize", fileSizeCheckBox);
+            ReadFileSameModeFromIni("SameFileMD5", fileMD5CheckBox);
+            ReadFileSameModeFromIni("SameFileSHA1", fileSHA1CheckBox);
+
+            fileNameCheckBox.Click += fileNameCheckBox_Click;
+            fileExtNameCheckBox.Click += fileExtNameCheckBox_Click;
+            fileSizeCheckBox.Click += fileSizeCheckBox_Click;
+            fileMD5CheckBox.Click += fileMD5CheckBox_Click;
+            fileSHA1CheckBox.Click += fileSHA1CheckBox_Click;
+        }
+
+        private void ReadFileSameModeFromIni(string key, System.Windows.Forms.CheckBox cb)
+        {
+            if (gemini.ini.EqualsIgnoreCase(key, "true", "Gemini"))
+            {
+                cb.Checked = true;
+            }
+
+            if (gemini.ini.EqualsIgnoreCase(key, "false", "Gemini"))
+            {
+                cb.Checked = false;
+            }
+        }
+        private void FileSameModeClick(string key, System.Windows.Forms.CheckBox cb)
+        {
+            if (cb.Checked)
+            {
+
+            }
+            else
+            {
+
+            }
+            gemini.ini.UpdateIniItem(key, cb.Checked.ToString(), "Gemini");
+        }
+        private void fileNameCheckBox_Click(object sender, EventArgs e)
+        {
+            FileSameModeClick("SameFileName", fileNameCheckBox);
+        }
+
+        private void fileExtNameCheckBox_Click(object sender, EventArgs e)
+        {
+            FileSameModeClick("SameFileExtName", fileExtNameCheckBox);
+        }
+
+        private void fileSizeCheckBox_Click(object sender, EventArgs e)
+        {
+            FileSameModeClick("SameFileSize", fileSizeCheckBox);
+        }
+
+        private void fileMD5CheckBox_Click(object sender, EventArgs e)
+        {
+            FileSameModeClick("SameFileMD5", fileMD5CheckBox);
+        }
+
+        private void fileSHA1CheckBox_Click(object sender, EventArgs e)
+        {
+            FileSameModeClick("SameFileSHA1", fileSHA1CheckBox);
         }
     }
 }

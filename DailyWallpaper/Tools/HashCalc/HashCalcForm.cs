@@ -17,7 +17,7 @@ namespace DailyWallpaper.HashCalc
 {
     public partial class HashCalcForm : Form
     {
-        private HashCalc m_hashCalc;
+        private HashCalculator m_hashCalc;
         private TextBoxCons _console;
         delegate void CalcMethod(string path, Action<bool, string, string, string> action, CancellationToken token);
         private Mutex mut = new Mutex();
@@ -32,7 +32,7 @@ namespace DailyWallpaper.HashCalc
             Icon = Properties.Resources.HASH32x32;
             hashPicBox.AllowDrop = true;
             hashPicBox.Image = Properties.Resources.draganddrop;
-            m_hashCalc = new HashCalc
+            m_hashCalc = new HashCalculator
             {
                 hashProgressBar = fileProgressBar
             };
@@ -411,7 +411,7 @@ namespace DailyWallpaper.HashCalc
             CheckBoxAffectTextBox(SHA512checkBox, SHA512TextBox, "SHA512");
         }
 
-        private void Calculate(HashCalc hashCalc)
+        private void Calculate(HashCalculator hashCalc)
         {
             fileCancel = new CancellationTokenSource();
             var token = fileCancel.Token;

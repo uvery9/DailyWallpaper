@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DailyWallpaper
 {
     class Gemini
     {
-        public string targetFolderPath = null;
+
         public string helpString =
             "******************************************** USAGE ********************************************\r\n" +
            "1.\"Select\":                    Select / (TYPE + ENTER), PS: When you type, ENTER is NEEDED\r\n" +
            "2.\"Print\" :                    Show all the empty folders recursively\r\n" +
            "3.\"Clear\" :                    Clear screen.\r\n" +
            "4.\"STOP\"  :                    Stop Scanning\r\n" +
-           "5.\"RecycleBin/Delete\" :        literally.\r\n" +                                   
+           "5.\"RecycleBin/Delete\" :        literally.\r\n" +
            "6.\"Save list/log to File\":     literally.\r\n" +
            "7.\"Folder filter CHECKBOX:\":   use CHECKBOX select general/regex\r\n" +
            "8.\"Folder filter TEXTBOX\":\r\n" +
@@ -29,6 +31,7 @@ namespace DailyWallpaper
         public ConfigIni ini;
         public List<string> controlledFolder1st;
         public List<string> controlledFolderAll;
+
         public Gemini()
         {
             ini = ConfigIni.GetInstance();
@@ -50,7 +53,120 @@ namespace DailyWallpaper
                 @"And their fist subfolder, such as C:\Users\SOMEONE"
             };
         }
-        
+        public struct GeminiFileStruct
+        {
+            public bool available;
+            public bool willDelete;
+            public bool selected;
+            public long size;
+            public string name;
+            public string extName;
+            public string fullPath;
+            public string sha1;
+            public string md5;
+            public DateTime lastMtime;
+            public DateTime crtTime;
+
+            public override string ToString()
+            {
+                string tmp ="" +
+                       "fullPath:         " + fullPath ?? "";
+                tmp += "\r\nname:         " + name ?? "";
+                tmp += "\r\nextName:      " + extName ?? "";
+                tmp += "\r\nsize:         " + size.ToString() ?? "";
+                tmp += "\r\nmd5:          " + md5 ?? "";
+                tmp += "\r\nsha1:         " + sha1 ?? "";
+                tmp += "\r\nCreateTime:   " + crtTime.ToString() ?? "";
+                tmp += "\r\nlastMtime:    " + lastMtime.ToString() ?? "";
+                tmp += "\r\navailable:    " + available.ToString() ?? "";
+                tmp += "\r\nwillDelete:   " + willDelete.ToString() ?? "";
+                return tmp;
+            }
+        }
+
+        public static GeminiFileStruct FillGeminiFileStruct(string fullPath)
+        {
+            var tmp = new GeminiFileStruct
+            {
+                fullPath = fullPath,
+                willDelete = false,
+                available = false,
+                selected = false,
+
+                name = null,
+                extName = null,
+                size = 0,
+                sha1 = null,
+                md5 = null,
+            };
+            try
+            {
+                if (!File.Exists(fullPath))
+                {
+                    return tmp;
+                }
+                tmp.name = Path.GetFileName(fullPath);
+                tmp.size = new FileInfo(fullPath).Length;
+                tmp.lastMtime = new FileInfo(fullPath).LastWriteTime;
+                tmp.crtTime = new FileInfo(fullPath).CreationTime;
+                tmp.extName = Path.GetExtension(fullPath);
+                tmp.available = true;
+            }
+            catch
+            {
+                tmp.available = false;
+                throw;
+            }
+            finally
+            {
+                
+            }
+            return tmp;
+        }
+
+        private static void UpdateHash(GeminiFileStruct g, string md5 = null, string sha1 = null)
+        {
+            g.md5 = md5 ?? "";
+            g.sha1 = sha1 ?? "";
+        }
+
+        public static async Task<List<GeminiFileStruct>> ForceGetHashGeminiFileStructList(
+            List<GeminiFileStruct> li, CancellationToken token, bool calcSHA1 = false, bool calcMD5 = false)
+        {
+            var ret = new List<GeminiFileStruct>();
+            foreach(var one in li)
+            {
+                var tmp = one;
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+                if (calcSHA1)
+                {
+                    void getRes(bool res, string who, string sha1, string costTimeOrMsg)
+                    {
+                        if (res)
+                        {
+                            tmp.sha1 = sha1;
+                        }
+                    }
+                    await HashCalc.HashCalculator.ComputeHashAsync(SHA1.Create(), one.fullPath, token, "SHA1", getRes);
+                }
+                if (calcMD5)
+                {
+                    void getRes(bool res, string who, string md5, string costTimeOrMsg)
+                    {
+                        if (res)
+                        {
+                            tmp.md5 = md5;
+                        }
+                    }
+                    await HashCalc.HashCalculator.ComputeHashAsync(MD5.Create(), one.fullPath, token, "MD5", getRes);
+                }
+                ret.Add(tmp);
+            }
+            return ret;
+        }
         public List<string> GetAllControlledFolders()
         {
             var temp = controlledFolderAll;
