@@ -46,6 +46,7 @@
             this.deleteOrRecycleBin = new System.Windows.Forms.CheckBox();
             this.saveList2File = new System.Windows.Forms.Button();
             this.listOrLog = new System.Windows.Forms.CheckBox();
+            this.alwaysOnTopcheckBox = new System.Windows.Forms.CheckBox();
             this.groupBoxTarget.SuspendLayout();
             this.groupBoxConsole.SuspendLayout();
             this.SuspendLayout();
@@ -267,11 +268,23 @@
             this.listOrLog.UseVisualStyleBackColor = true;
             this.listOrLog.CheckedChanged += new System.EventHandler(this.listOrLog_CheckedChanged);
             // 
+            // alwaysOnTopcheckBox
+            // 
+            this.alwaysOnTopcheckBox.AutoSize = true;
+            this.alwaysOnTopcheckBox.Location = new System.Drawing.Point(159, 88);
+            this.alwaysOnTopcheckBox.Name = "alwaysOnTopcheckBox";
+            this.alwaysOnTopcheckBox.Size = new System.Drawing.Size(151, 22);
+            this.alwaysOnTopcheckBox.TabIndex = 8;
+            this.alwaysOnTopcheckBox.Text = "Always on Top";
+            this.alwaysOnTopcheckBox.UseVisualStyleBackColor = true;
+            this.alwaysOnTopcheckBox.Click += new System.EventHandler(this.alwaysOnTopcheckBox_Click);
+            // 
             // CleanEmptyFoldersForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1028, 701);
+            this.Controls.Add(this.alwaysOnTopcheckBox);
             this.Controls.Add(this.listOrLog);
             this.Controls.Add(this.saveList2File);
             this.Controls.Add(this.btnClean);
@@ -315,5 +328,6 @@
         private System.Windows.Forms.TextBox filterExample;
         private System.Windows.Forms.CheckBox regexCheckBox;
         private System.Windows.Forms.CheckBox modeCheckBox;
+        private System.Windows.Forms.CheckBox alwaysOnTopcheckBox;
     }
 }

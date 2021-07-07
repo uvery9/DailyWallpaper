@@ -922,6 +922,15 @@ namespace DailyWallpaper
                         }
                         tbTargetFolder.Text = path;
                     }
+                    if (File.Exists(path))
+                    {
+                        path = Path.GetDirectoryName(path);
+                        if (!UpdateTextAndIniFile(path))
+                        {
+                            return;
+                        }
+                        tbTargetFolder.Text = path;
+                    }
                 }
                 else
                 {
@@ -940,6 +949,18 @@ namespace DailyWallpaper
             else
             {
                 e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void alwaysOnTopcheckBox_Click(object sender, EventArgs e)
+        {
+            if (alwaysOnTopcheckBox.Checked)
+            {
+                TopMost = true;
+            }
+            else
+            {
+                TopMost = false;
             }
         }
     }
