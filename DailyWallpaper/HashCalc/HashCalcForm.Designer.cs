@@ -216,7 +216,7 @@ namespace DailyWallpaper.HashCalc
             this.CRC64checkBox.TabIndex = 1;
             this.CRC64checkBox.Text = "CRC64ISO";
             this.CRC64checkBox.UseVisualStyleBackColor = true;
-            this.CRC64checkBox.CheckedChanged += new System.EventHandler(this.CRC64checkBox_CheckedChanged);
+            this.CRC64checkBox.Click += new System.EventHandler(this.CRC64checkBox_Click);
             // 
             // fileProgressBar
             // 
@@ -234,7 +234,7 @@ namespace DailyWallpaper.HashCalc
             this.CRC32checkBox.TabIndex = 1;
             this.CRC32checkBox.Text = "CRC32";
             this.CRC32checkBox.UseVisualStyleBackColor = true;
-            this.CRC32checkBox.CheckedChanged += new System.EventHandler(this.CRC32checkBox_CheckedChanged);
+            this.CRC32checkBox.Click += new System.EventHandler(this.CRC32checkBox_Click);
             // 
             // MD5checkBox
             // 
@@ -245,7 +245,7 @@ namespace DailyWallpaper.HashCalc
             this.MD5checkBox.TabIndex = 1;
             this.MD5checkBox.Text = "MD5";
             this.MD5checkBox.UseVisualStyleBackColor = true;
-            this.MD5checkBox.CheckedChanged += new System.EventHandler(this.MD5checkBox_CheckedChanged);
+            this.MD5checkBox.Click += new System.EventHandler(this.MD5checkBox_Click);
             // 
             // SHA512checkBox
             // 
@@ -256,7 +256,7 @@ namespace DailyWallpaper.HashCalc
             this.SHA512checkBox.TabIndex = 1;
             this.SHA512checkBox.Text = "SHA512";
             this.SHA512checkBox.UseVisualStyleBackColor = true;
-            this.SHA512checkBox.CheckedChanged += new System.EventHandler(this.SHA512checkBox_CheckedChanged);
+            this.SHA512checkBox.Click += new System.EventHandler(this.SHA512checkBox_Click);
             // 
             // SHA256checkBox
             // 
@@ -267,7 +267,7 @@ namespace DailyWallpaper.HashCalc
             this.SHA256checkBox.TabIndex = 1;
             this.SHA256checkBox.Text = "SHA256";
             this.SHA256checkBox.UseVisualStyleBackColor = true;
-            this.SHA256checkBox.CheckedChanged += new System.EventHandler(this.SHA256checkBox_CheckedChanged);
+            this.SHA256checkBox.Click += new System.EventHandler(this.SHA256checkBox_Click);
             // 
             // SHA1checkBox
             // 
@@ -278,7 +278,7 @@ namespace DailyWallpaper.HashCalc
             this.SHA1checkBox.TabIndex = 1;
             this.SHA1checkBox.Text = "SHA1";
             this.SHA1checkBox.UseVisualStyleBackColor = true;
-            this.SHA1checkBox.CheckedChanged += new System.EventHandler(this.SHA1checkBox_CheckedChanged);
+            this.SHA1checkBox.Click += new System.EventHandler(this.SHA1checkBox_Click);
             // 
             // SHA512TextBox
             // 

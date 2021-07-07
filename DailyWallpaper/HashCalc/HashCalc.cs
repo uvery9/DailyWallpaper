@@ -18,15 +18,20 @@ namespace DailyWallpaper.HashCalc
         public string filePath;
         public ProgressBar hashProgressBar;
 
-        private Progress<long> totalProgess;
+        private Progress<double> totalProgessDouble;
+        private Progress<int> progessBar;
         public List<string> hashList;
         public List<Task> tasks;
+        private static Mutex m_mut;
+        public int hashCalcCnt;
+        public double percent;
+        public int succeedCnt;
 
         public HashCalc()
         {
             help = "You can drag FILE to picture/hash panel, \r\n  drag text file to console if \"Allow ConsoleTextBox Drop\" is Enabled).";
             // totalHashProgess = new ProgressImpl();
-            void ProgressAction(long i)
+            void ProgressActionD(double i) // percent in file.
             {
                 // readTotal += i;
                 // FIX ERROR: System.InvalidOperationException
@@ -34,13 +39,37 @@ namespace DailyWallpaper.HashCalc
                 {
                     hashProgressBar.Invoke(new Action(() =>
                     {
-                        hashProgressBar.Value = (int)i;
+                        m_mut.WaitOne();
+                        percent += (i / hashCalcCnt * 100);
+                        var percentInt = (int)percent;
+                        if (percentInt > 99.9)
+                            percentInt = 100;
+                        hashProgressBar.Value = percentInt;
+                        m_mut.ReleaseMutex();
                     }));
                 }
             }
-            totalProgess = new Progress<long>(ProgressAction);
+            totalProgessDouble = new Progress<double>(ProgressActionD);
+
+
+            void ProgressAction(int i) // percent in file.
+            {
+                // readTotal += i;
+                // FIX ERROR: System.InvalidOperationException
+                if (hashProgressBar.IsHandleCreated)
+                {
+                    hashProgressBar.Invoke(new Action(() =>
+                    {
+                        m_mut.WaitOne();
+                        hashProgressBar.Value = i;
+                        m_mut.ReleaseMutex();
+                    }));
+                }
+            }
+            progessBar = new Progress<int>(ProgressAction);
             tasks = new List<Task>();
             hashList = new List<string>();
+            m_mut = new Mutex();
         }
 
         /* new ProgressImpl(i => hashProgressBar.Invoke(new Action(() =>
@@ -88,7 +117,7 @@ namespace DailyWallpaper.HashCalc
                         }
                     }
                     // Console.WriteLine("CRC-32 is {0}", hash);
-                    ((IProgress<long>)totalProgess).Report(100);
+                    ((IProgress<int>)progessBar).Report(100);
                     timer.Stop();
                     string hashCostTime;
                     TimeSpan t = timer.Elapsed;
@@ -140,7 +169,7 @@ namespace DailyWallpaper.HashCalc
                             hash += b.ToString("X2");
                         }
                     }
-                    ((IProgress<long>)totalProgess).Report(100);
+                    ((IProgress<int>)progessBar).Report(100);
                     timer.Stop();
                     var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
                     action(true, $"{who}", hash, hashCostTime);
@@ -152,28 +181,29 @@ namespace DailyWallpaper.HashCalc
                 catch (Exception e)
                 {
                     action(false, $"ERROR {who}", null, e.Message);
-                    MessageBox.Show(e.Message);
                 }
             }));
         }
         public void CalcMD5(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
             tasks.Add(Task.Run(() => ComputeHashAsync(action,
-                "MD5:    ", MD5.Create(), path, token, totalProgess)));
+                "MD5:    ", MD5.Create(), path, token, totalProgessDouble)));
         }
         public void CalcSHA1(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
             tasks.Add(Task.Run(async () => await ComputeHashAsync(action,
-                "SHA1:   ", SHA1.Create(), path, token, totalProgess)));
+                "SHA1:   ", SHA1.Create(), path, token, totalProgessDouble)));
         }
         public void CalcSHA256(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA256: ", SHA256.Create(), path, token, totalProgess)));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA256: ", 
+                SHA256.Create(), path, token, totalProgessDouble)));
         }
         
         public void CalcSHA512(string path, Action<bool, string, string, string> action, CancellationToken token)
         {
-            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA512: ", SHA512.Create(), path, token, totalProgess)));
+            tasks.Add(Task.Run(async () => await ComputeHashAsync(action, "SHA512: ", 
+                SHA512.Create(), path, token, totalProgessDouble)));
         }
         public string ComputeHashOfString(HashAlgorithm hashAlgorithm, string input)
         {
@@ -265,7 +295,7 @@ namespace DailyWallpaper.HashCalc
         public static async Task ComputeHashAsync(Action<bool, string, string, string> action,
             string who, HashAlgorithm hashAlgorithm, string path,
             CancellationToken cancelToken = default,
-            IProgress<long> progress = null, int bufferSize = 1024 * 1024 * 10)
+            IProgress<double> progress = null, int bufferSize = 1024 * 1024 * 10)
         {
             try
             {
@@ -296,7 +326,10 @@ namespace DailyWallpaper.HashCalc
                         else
                             hashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0);
                         if (progress != null)
-                            progress.Report((int)((double)totalBytesRead / size * 100));
+                        {
+                            progress.Report((double)readAheadBytesRead / size);
+                        }
+                            
                         if (cancelToken.IsCancellationRequested)
                             cancelToken.ThrowIfCancellationRequested();
                     } while (readAheadBytesRead != 0);
