@@ -110,7 +110,6 @@
             this.folderFilterTextBox.Name = "folderFilterTextBox";
             this.folderFilterTextBox.Size = new System.Drawing.Size(337, 28);
             this.folderFilterTextBox.TabIndex = 7;
-            this.folderFilterTextBox.TextChanged += new System.EventHandler(this.folderFilterTextBox_TextChanged);
             // 
             // textBox1
             // 

@@ -824,10 +824,6 @@ namespace DailyWallpaper
             }
             return true;
         }
-        private void folderFilterTextBox_TextChanged(object sender, EventArgs e)
-        {
-            // DONOTHING
-        }
 
         private void UpdateFilterExampleText(FilterMode mode)
         {

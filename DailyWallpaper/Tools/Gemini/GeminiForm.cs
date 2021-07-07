@@ -212,21 +212,23 @@ namespace DailyWallpaper
                 RecurseScanDir(targetFolder2TextBox.Text, filesList2, token);
                 FileList2GeminiFileStructList(filesList1, geminiFileStructList1, token);
                 FileList2GeminiFileStructList(filesList2, geminiFileStructList2, token);
-                foreach(var gs in geminiFileStructList1)
+                
+               /* geminiFileStructList2 =  Gemini.ForceGetHashGeminiFileStructList(geminiFileStructList2, token,
+                    fileSHA1CheckBox.Checked, fileMD5CheckBox.Checked).Result;*/
+                
+
+                var sameList = Gemini.ComparerTwoList(geminiFileStructList1, geminiFileStructList2);
+                if (sameList.Count > 1)
                 {
-                    _console.WriteLine(gs.ToString());
-                    _console.WriteLine();
-                }
-                geminiFileStructList2 =  Gemini.ForceGetHashGeminiFileStructList(geminiFileStructList2, token,
-                    fileSHA1CheckBox.Checked, fileMD5CheckBox.Checked).Result;
-                foreach (var gs in geminiFileStructList2)
-                {
-                    if (token.IsCancellationRequested)
+                    foreach (var s in sameList)
                     {
-                        token.ThrowIfCancellationRequested();
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        _console.WriteLine(s.ToStringSimple());
+                        _console.WriteLine();
                     }
-                    _console.WriteLine(gs.ToString());
-                    _console.WriteLine();
                 }
             }, _source.Token);
             try
@@ -863,10 +865,6 @@ namespace DailyWallpaper
             }
             return true;
         }
-        private void folderFilterTextBox_TextChanged(object sender, EventArgs e)
-        {
-            // DONOTHING
-        }
 
         private void UpdateFilterExampleText(FilterMode mode)
         {
@@ -1159,6 +1157,18 @@ namespace DailyWallpaper
                 e.Cancel = false;
             }
             );
+        }
+
+        private void alwaysOnTopCheckBox_Click(object sender, EventArgs e)
+        {
+            if (alwaysOnTopCheckBox.Checked)
+            {
+                TopMost = true;
+            }
+            else
+            {
+                TopMost = false;
+            }
         }
     }
 }

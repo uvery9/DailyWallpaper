@@ -55,6 +55,7 @@
             this.summaryTextBox = new System.Windows.Forms.TextBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.resultGroupBox = new System.Windows.Forms.GroupBox();
+            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.fileModeGroupBox = new System.Windows.Forms.GroupBox();
             this.fileExtNameCheckBox = new System.Windows.Forms.CheckBox();
             this.fileNameCheckBox = new System.Windows.Forms.CheckBox();
@@ -207,7 +208,6 @@
             this.folderFilterTextBox.Name = "folderFilterTextBox";
             this.folderFilterTextBox.Size = new System.Drawing.Size(265, 28);
             this.folderFilterTextBox.TabIndex = 7;
-            this.folderFilterTextBox.TextChanged += new System.EventHandler(this.folderFilterTextBox_TextChanged);
             // 
             // fldFilterText
             // 
@@ -362,6 +362,7 @@
             // 
             // resultGroupBox
             // 
+            this.resultGroupBox.Controls.Add(this.alwaysOnTopCheckBox);
             this.resultGroupBox.Controls.Add(this.tbConsole);
             this.resultGroupBox.Controls.Add(this.resultListView);
             this.resultGroupBox.Location = new System.Drawing.Point(8, 120);
@@ -370,6 +371,17 @@
             this.resultGroupBox.TabIndex = 13;
             this.resultGroupBox.TabStop = false;
             this.resultGroupBox.Text = "Result";
+            // 
+            // alwaysOnTopCheckBox
+            // 
+            this.alwaysOnTopCheckBox.AutoSize = true;
+            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(88, 0);
+            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
+            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(151, 22);
+            this.alwaysOnTopCheckBox.TabIndex = 3;
+            this.alwaysOnTopCheckBox.Text = "Always On Top";
+            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
+            this.alwaysOnTopCheckBox.Click += new System.EventHandler(this.alwaysOnTopCheckBox_Click);
             // 
             // fileModeGroupBox
             // 
@@ -567,5 +579,6 @@
         private System.Windows.Forms.CheckBox ignoreFileCheckBox;
         private System.Windows.Forms.ComboBox ignoreFileSizecomboBox;
         private System.Windows.Forms.TextBox ignoreFileSizeTextBox;
+        private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
     }
 }

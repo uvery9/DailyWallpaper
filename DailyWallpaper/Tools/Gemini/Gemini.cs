@@ -53,6 +53,7 @@ namespace DailyWallpaper
                 @"And their fist subfolder, such as C:\Users\SOMEONE"
             };
         }
+
         public struct GeminiFileStruct
         {
             public bool available;
@@ -67,9 +68,68 @@ namespace DailyWallpaper
             public DateTime lastMtime;
             public DateTime crtTime;
 
+            public bool EqualsHash(object obj)
+            {
+                return obj is GeminiFileStruct @struct &&
+                       size == @struct.size &&
+                       name == @struct.name &&
+                       extName == @struct.extName &&
+                       sha1 == @struct.sha1 &&
+                       md5 == @struct.md5;
+            }
+            public bool EqualsMD5(object obj)
+            {
+                return obj is GeminiFileStruct @struct &&
+                       size == @struct.size &&
+                       extName == @struct.extName &&
+                       md5 == @struct.md5;
+            }
+
+            public async Task<bool> EqualsSHA1(object obj, CancellationToken token)
+            {
+                if (sha1 == null)
+                {
+                    var tmp = this;
+                    void getRes(bool res, string who, string sha1, string costTimeOrMsg)
+                    {
+                        if (res)
+                        {
+                            tmp.sha1 = sha1;
+                        }
+                    }
+                    await HashCalc.HashCalculator.ComputeHashAsync(SHA1.Create(), tmp.fullPath, token, "SHA1", getRes);
+                    sha1 = tmp.sha1;
+                }
+                if (((GeminiFileStruct)obj).sha1 == null)
+                {
+                    var tmp = (GeminiFileStruct)obj;
+                    void getRes(bool res, string who, string sha1, string costTimeOrMsg)
+                    {
+                        if (res)
+                        {
+                            tmp.sha1 = sha1;
+                        }
+                    }
+                    await HashCalc.HashCalculator.ComputeHashAsync(SHA1.Create(), tmp.fullPath, token, "SHA1", getRes);
+                    obj = tmp;
+                }
+                return obj is GeminiFileStruct @struct &&
+                       size == @struct.size &&
+                       extName == @struct.extName &&
+                       sha1 == @struct.sha1;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is GeminiFileStruct @struct &&
+                       size == @struct.size &&
+                       name == @struct.name &&
+                       extName == @struct.extName;
+            }
+
             public override string ToString()
             {
-                string tmp ="" +
+                string tmp = "" +
                        "fullPath:         " + fullPath ?? "";
                 tmp += "\r\nname:         " + name ?? "";
                 tmp += "\r\nextName:      " + extName ?? "";
@@ -81,6 +141,23 @@ namespace DailyWallpaper
                 tmp += "\r\navailable:    " + available.ToString() ?? "";
                 tmp += "\r\nwillDelete:   " + willDelete.ToString() ?? "";
                 return tmp;
+            }
+            public string ToStringSimple()
+            {
+                string tmp = "" +
+                       "fullPath:         " + fullPath ?? "";
+                tmp += "\r\nname:         " + name ?? "";
+                tmp += "\r\nsize:         " + size.ToString() ?? "";
+                return tmp;
+            }
+
+            public override int GetHashCode()
+            {
+                int hashCode = -1158680255;
+                hashCode = hashCode * -1521134295 + size.GetHashCode();
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(extName);
+                return hashCode;
             }
         }
 
@@ -119,7 +196,24 @@ namespace DailyWallpaper
             }
             finally
             {
-                
+
+            }
+            return tmp;
+        }
+
+        public static List<GeminiFileStruct> ComparerTwoList(List<GeminiFileStruct> li1, List<GeminiFileStruct> li2)
+        {
+            var tmp = new List<GeminiFileStruct>();
+            foreach (var l1 in li1)
+            {
+                foreach(var l2 in li2)
+                {
+                    if (l1.Equals(l2))
+                    {
+                        tmp.Add(l1);
+                        tmp.Add(l2);
+                    }
+                }
             }
             return tmp;
         }
