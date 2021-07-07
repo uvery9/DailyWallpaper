@@ -7,9 +7,10 @@ environment:
 image: Visual Studio 2019
 configuration: Release
 test: off
+# nuget restore -verbosity detailed 
 before_build:
 - ps: >-
-     nuget restore -verbosity detailed
+     nuget restore
 build:
   parallel: true
   verbosity: minimal
