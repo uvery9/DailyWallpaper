@@ -63,6 +63,7 @@ namespace DailyWallpaper.View
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.geminiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -242,7 +243,8 @@ namespace DailyWallpaper.View
             this.Icon_Toolbox.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Icon_CleanEmptyFolders,
             this.Icon_HashCalc,
-            this.Icon_Notepad});
+            this.Icon_Notepad,
+            this.geminiToolStripMenuItem});
             this.Icon_Toolbox.Name = "Icon_Toolbox";
             resources.ApplyResources(this.Icon_Toolbox, "Icon_Toolbox");
             // 
@@ -288,6 +290,12 @@ namespace DailyWallpaper.View
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
+            // geminiToolStripMenuItem
+            // 
+            this.geminiToolStripMenuItem.Name = "geminiToolStripMenuItem";
+            resources.ApplyResources(this.geminiToolStripMenuItem, "geminiToolStripMenuItem");
+            this.geminiToolStripMenuItem.Click += new System.EventHandler(this.geminiToolStripMenuItem_Click);
+            // 
             // OptionsView
             // 
             resources.ApplyResources(this, "$this");
@@ -331,5 +339,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem Icon_OpenConsole;
         private System.Windows.Forms.ToolStripMenuItem Icon_About;
         private System.Windows.Forms.ToolStripMenuItem Icon_LocalPathSetting;
+        private System.Windows.Forms.ToolStripMenuItem geminiToolStripMenuItem;
     }
 }

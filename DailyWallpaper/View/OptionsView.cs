@@ -1240,5 +1240,10 @@ namespace DailyWallpaper.View
                 }
             }
         }
+
+        private void geminiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new GeminiForm().Show();
+        }
     }
 }

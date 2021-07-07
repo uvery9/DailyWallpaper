@@ -110,6 +110,13 @@
     <Compile Include="Cons\LocalImage.cs" />
     <Compile Include="Cons\OnlineImage.cs" />
     <Compile Include="Cons\Wallpaper.cs" />
+    <Compile Include="Tools\Gemini\Gemini.cs" />
+    <Compile Include="Tools\Gemini\GeminiForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\Gemini\GeminiForm.designer.cs">
+      <DependentUpon>GeminiForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\HashCalc\CRC32.cs" />
     <Compile Include="Tools\HashCalc\CRC64.cs" />
     <Compile Include="Tools\HashCalc\HashCalcForm.cs">
@@ -149,6 +156,9 @@
     </Compile>
     <EmbeddedResource Include="Tools\CleanEmptyFolders\CleanEmptyFoldersForm.resx">
       <DependentUpon>CleanEmptyFoldersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Gemini\GeminiForm.resx">
+      <DependentUpon>GeminiForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\HashCalc\HashCalcForm.resx">
       <DependentUpon>HashCalcForm.cs</DependentUpon>
@@ -213,9 +223,7 @@
     <None Include="res\icon32x32_exclamation.ico" />
     <None Include="res\icon32x32_good.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tools\Gemini\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
