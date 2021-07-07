@@ -40,6 +40,8 @@ namespace DailyWallpaper
 
         private List<GeminiFileStruct> geminiFileStructList1;
         private List<GeminiFileStruct> geminiFileStructList2;
+        private long minimumFileLimit = 0;
+        private List<Task> _tasks = new List<Task>();
 
         private enum FilterMode : int
         {
@@ -202,7 +204,8 @@ namespace DailyWallpaper
             var token = _source.Token;
             btnStop.Enabled = true;
             btnAnalyze.Enabled = false;
-            var task = Task.Run(async() =>
+            
+            var _task = Task.Run(() =>
             {
                 RecurseScanDir(targetFolder1TextBox.Text, filesList1, token);
                 _console.WriteLine();
@@ -218,14 +221,18 @@ namespace DailyWallpaper
                     fileSHA1CheckBox.Checked, fileMD5CheckBox.Checked).Result;
                 foreach (var gs in geminiFileStructList2)
                 {
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
                     _console.WriteLine(gs.ToString());
                     _console.WriteLine();
                 }
-                
             }, _source.Token);
             try
             {
-                await task;
+                _tasks.Add(_task);
+                await _task;
                 // No Error, filesList is usable
                 scanRes = true;
             }
@@ -249,6 +256,7 @@ namespace DailyWallpaper
         }
         private void btnAnalyze_Click(object sender, EventArgs e)
         {
+            SetMinimumFileLimit();
             StartAnalyze();
         }
 
@@ -934,9 +942,6 @@ namespace DailyWallpaper
             UpdateIniAndTextBox();
         }
 
-
-
-        
         private void targetFolder1_DragDrop(object sender, DragEventArgs e)
         {
             targetFolder_DragDrop(sender, e, "TargetFolder1", ref targetFolder1, targetFolder1History,
@@ -1012,6 +1017,31 @@ namespace DailyWallpaper
             fileSizeCheckBox.Click += fileSizeCheckBox_Click;
             fileMD5CheckBox.Click += fileMD5CheckBox_Click;
             fileSHA1CheckBox.Click += fileSHA1CheckBox_Click;
+
+            ReadIgnoreFileFromIni();
+        }
+
+        private void ReadIgnoreFileFromIni()
+        {
+            minimumFileLimit = 1024 * 1024; // 1MB
+            ignoreFileSizecomboBox.SelectedIndex = 2;
+            ignoreFileSizeTextBox.Text = "1";
+            ignoreFileCheckBox.Checked = false;
+            ignoreFileSizeTextBox.Enabled = false;
+
+            if (int.TryParse(gemini.ini.Read("ignoreFileIndex", "Gemini"), out int retIndex)){
+                if (int.TryParse(gemini.ini.Read("ignoreFileTextBox", "Gemini"), out int retNum))
+                {
+                    minimumFileLimit = retNum * 1024 ^ retIndex;
+                    ignoreFileSizecomboBox.SelectedIndex = retIndex;
+                    ignoreFileSizeTextBox.Text = retNum.ToString();
+                }
+            }
+            if (gemini.ini.EqualsIgnoreCase("ignoreFileEnabled", "true", "Gemini"))
+            {
+                ignoreFileCheckBox.Checked = true;
+            }
+            ignoreFileSizeTextBox.Enabled = ignoreFileCheckBox.Checked;
         }
 
         private void ReadFileSameModeFromIni(string key, System.Windows.Forms.CheckBox cb)
@@ -1061,6 +1091,74 @@ namespace DailyWallpaper
         private void fileSHA1CheckBox_Click(object sender, EventArgs e)
         {
             FileSameModeClick("SameFileSHA1", fileSHA1CheckBox);
+        }
+
+        private void ignoreFileSizecomboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SetMinimumFileLimit();
+        }
+
+        private void SetMinimumFileLimit()
+        {
+            minimumFileLimit = 0;
+            if (ignoreFileCheckBox.Checked)
+            {
+                ignoreFileSizeTextBox.Enabled = true;
+                if (int.TryParse(ignoreFileSizeTextBox.Text, out int ret))
+                {
+                    switch (ignoreFileSizecomboBox.SelectedIndex)
+                    {
+                        case 0:
+                            minimumFileLimit = ret * 1;
+                            break;
+                        case 1:
+                            minimumFileLimit = ret * 1024;
+                            break;
+                        case 2:
+                            minimumFileLimit = ret * 1024 * 1024;
+                            break;
+                        case 3:
+                            minimumFileLimit = ret * 1024 * 1024 * 1024;
+                            break;
+                        default:
+                            minimumFileLimit = ret * 1024 * 1024;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                ignoreFileSizeTextBox.Enabled = false;
+            }
+            gemini.ini.UpdateIniItem("ignoreFileEnabled", ignoreFileCheckBox.Checked.ToString(), "Gemini");
+            gemini.ini.UpdateIniItem("ignoreFileIndex", ignoreFileSizecomboBox.SelectedIndex.ToString(), "Gemini");
+            gemini.ini.UpdateIniItem("ignoreFileTextBox", ignoreFileSizeTextBox.Text, "Gemini");
+        }
+        private void ignoreFileCheckBox_Click(object sender, EventArgs e)
+        {
+            SetMinimumFileLimit();
+        }
+
+        private void GeminiForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            targetFolder1TextBox.AllowDrop = false;
+            targetFolder2TextBox.AllowDrop = false;
+
+            btnStop.PerformClick();
+            btnStop.PerformClick();
+            btnStop.PerformClick();
+
+            Hide();
+
+            Task.Run(() =>
+            {   
+                // MessageBox.Show("Start WaitAll.");
+                Task.WaitAll(_tasks.ToArray());
+                // MessageBox.Show("finished.");
+                e.Cancel = false;
+            }
+            );
         }
     }
 }

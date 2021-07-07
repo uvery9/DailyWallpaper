@@ -59,6 +59,9 @@
             this.fileExtNameCheckBox = new System.Windows.Forms.CheckBox();
             this.fileNameCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ignoreFileSizeTextBox = new System.Windows.Forms.TextBox();
+            this.ignoreFileSizecomboBox = new System.Windows.Forms.ComboBox();
+            this.ignoreFileCheckBox = new System.Windows.Forms.CheckBox();
             this.fileSHA1CheckBox = new System.Windows.Forms.CheckBox();
             this.fileSizeCheckBox = new System.Windows.Forms.CheckBox();
             this.fileMD5CheckBox = new System.Windows.Forms.CheckBox();
@@ -378,46 +381,87 @@
             this.fileModeGroupBox.Size = new System.Drawing.Size(367, 151);
             this.fileModeGroupBox.TabIndex = 14;
             this.fileModeGroupBox.TabStop = false;
-            this.fileModeGroupBox.Text = "File Mode (Same)";
+            this.fileModeGroupBox.Text = "File Mode";
             // 
             // fileExtNameCheckBox
             // 
             this.fileExtNameCheckBox.AutoSize = true;
-            this.fileExtNameCheckBox.Location = new System.Drawing.Point(129, 36);
+            this.fileExtNameCheckBox.Location = new System.Drawing.Point(162, 27);
             this.fileExtNameCheckBox.Name = "fileExtNameCheckBox";
             this.fileExtNameCheckBox.Size = new System.Drawing.Size(205, 22);
             this.fileExtNameCheckBox.TabIndex = 0;
-            this.fileExtNameCheckBox.Text = "File extension Name";
+            this.fileExtNameCheckBox.Text = "Same File extension";
             this.fileExtNameCheckBox.UseVisualStyleBackColor = true;
             // 
             // fileNameCheckBox
             // 
             this.fileNameCheckBox.AutoSize = true;
-            this.fileNameCheckBox.Location = new System.Drawing.Point(6, 36);
+            this.fileNameCheckBox.Location = new System.Drawing.Point(6, 27);
             this.fileNameCheckBox.Name = "fileNameCheckBox";
-            this.fileNameCheckBox.Size = new System.Drawing.Size(115, 22);
+            this.fileNameCheckBox.Size = new System.Drawing.Size(160, 22);
             this.fileNameCheckBox.TabIndex = 0;
-            this.fileNameCheckBox.Text = "File Name";
+            this.fileNameCheckBox.Text = "Same File Name";
             this.fileNameCheckBox.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ignoreFileSizeTextBox);
+            this.panel1.Controls.Add(this.ignoreFileSizecomboBox);
+            this.panel1.Controls.Add(this.ignoreFileCheckBox);
             this.panel1.Controls.Add(this.fileSHA1CheckBox);
             this.panel1.Controls.Add(this.fileSizeCheckBox);
             this.panel1.Controls.Add(this.fileMD5CheckBox);
-            this.panel1.Location = new System.Drawing.Point(6, 73);
+            this.panel1.Location = new System.Drawing.Point(6, 55);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(361, 72);
+            this.panel1.Size = new System.Drawing.Size(361, 90);
             this.panel1.TabIndex = 3;
+            // 
+            // ignoreFileSizeTextBox
+            // 
+            this.ignoreFileSizeTextBox.Location = new System.Drawing.Point(232, 60);
+            this.ignoreFileSizeTextBox.Name = "ignoreFileSizeTextBox";
+            this.ignoreFileSizeTextBox.Size = new System.Drawing.Size(56, 28);
+            this.ignoreFileSizeTextBox.TabIndex = 2;
+            this.ignoreFileSizeTextBox.Text = "1024";
+            this.ignoreFileSizeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // ignoreFileSizecomboBox
+            // 
+            this.ignoreFileSizecomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ignoreFileSizecomboBox.FormattingEnabled = true;
+            this.ignoreFileSizecomboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.ignoreFileSizecomboBox.Items.AddRange(new object[] {
+            "B",
+            "KB",
+            "MB",
+            "GB"});
+            this.ignoreFileSizecomboBox.Location = new System.Drawing.Point(294, 61);
+            this.ignoreFileSizecomboBox.MaxDropDownItems = 3;
+            this.ignoreFileSizecomboBox.Name = "ignoreFileSizecomboBox";
+            this.ignoreFileSizecomboBox.Size = new System.Drawing.Size(61, 26);
+            this.ignoreFileSizecomboBox.TabIndex = 1;
+            this.ignoreFileSizecomboBox.TabStop = false;
+            this.ignoreFileSizecomboBox.SelectedIndexChanged += new System.EventHandler(this.ignoreFileSizecomboBox_SelectedIndexChanged);
+            // 
+            // ignoreFileCheckBox
+            // 
+            this.ignoreFileCheckBox.AutoSize = true;
+            this.ignoreFileCheckBox.Location = new System.Drawing.Point(3, 62);
+            this.ignoreFileCheckBox.Name = "ignoreFileCheckBox";
+            this.ignoreFileCheckBox.Size = new System.Drawing.Size(232, 22);
+            this.ignoreFileCheckBox.TabIndex = 0;
+            this.ignoreFileCheckBox.Text = "Ignore files less than";
+            this.ignoreFileCheckBox.UseVisualStyleBackColor = true;
+            this.ignoreFileCheckBox.Click += new System.EventHandler(this.ignoreFileCheckBox_Click);
             // 
             // fileSHA1CheckBox
             // 
             this.fileSHA1CheckBox.AutoSize = true;
-            this.fileSHA1CheckBox.Location = new System.Drawing.Point(192, 37);
+            this.fileSHA1CheckBox.Location = new System.Drawing.Point(173, 35);
             this.fileSHA1CheckBox.Name = "fileSHA1CheckBox";
             this.fileSHA1CheckBox.Size = new System.Drawing.Size(115, 22);
             this.fileSHA1CheckBox.TabIndex = 0;
-            this.fileSHA1CheckBox.Text = "File SHA1";
+            this.fileSHA1CheckBox.Text = "Same SHA1";
             this.fileSHA1CheckBox.UseVisualStyleBackColor = true;
             // 
             // fileSizeCheckBox
@@ -425,19 +469,19 @@
             this.fileSizeCheckBox.AutoSize = true;
             this.fileSizeCheckBox.Location = new System.Drawing.Point(3, 7);
             this.fileSizeCheckBox.Name = "fileSizeCheckBox";
-            this.fileSizeCheckBox.Size = new System.Drawing.Size(178, 22);
+            this.fileSizeCheckBox.Size = new System.Drawing.Size(223, 22);
             this.fileSizeCheckBox.TabIndex = 0;
-            this.fileSizeCheckBox.Text = "File Size (Fast)";
+            this.fileSizeCheckBox.Text = "Same File Size (Fast)";
             this.fileSizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // fileMD5CheckBox
             // 
             this.fileMD5CheckBox.AutoSize = true;
-            this.fileMD5CheckBox.Location = new System.Drawing.Point(65, 37);
+            this.fileMD5CheckBox.Location = new System.Drawing.Point(37, 35);
             this.fileMD5CheckBox.Name = "fileMD5CheckBox";
             this.fileMD5CheckBox.Size = new System.Drawing.Size(106, 22);
             this.fileMD5CheckBox.TabIndex = 0;
-            this.fileMD5CheckBox.Text = "File MD5";
+            this.fileMD5CheckBox.Text = "Same MD5";
             this.fileMD5CheckBox.UseVisualStyleBackColor = true;
             // 
             // splitContainer1
@@ -465,6 +509,7 @@
             this.MinimumSize = new System.Drawing.Size(754, 536);
             this.Name = "GeminiForm";
             this.Text = "Gemini: find duplicate files and delete.";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GeminiForm_FormClosing);
             this.groupBoxTarget.ResumeLayout(false);
             this.groupBoxTarget.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
@@ -519,5 +564,8 @@
         private System.Windows.Forms.CheckBox fileExtNameCheckBox;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.CheckBox ignoreFileCheckBox;
+        private System.Windows.Forms.ComboBox ignoreFileSizecomboBox;
+        private System.Windows.Forms.TextBox ignoreFileSizeTextBox;
     }
 }
