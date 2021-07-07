@@ -101,15 +101,15 @@ namespace DailyWallpaper.View
 
             Icon_ChangeWallpaper.Text = TranslationHelper.Get("Icon_ChangeWallpaper");
             Icon_ChangeWallpaper.ToolTipText = TranslationHelper.Get("Icon_ChangeWallpaperTit");
-            Icon_ChangeWallpaper.Click += Icon_ChangeWallpaper_Click;
             
-            var defFont = Control.DefaultFont;
+            var defFont = Icon_CleanEmptyFolders.Font; // default font so little.
             Icon_ChangeWallpaper.Font = new Font(defFont.Name, defFont.Size + 1, FontStyle.Bold);
             Icon_ChangeWallpaper.ShowShortcutKeys = true;
             Icon_ChangeWallpaper.ShortcutKeyDisplayString =
                 TranslationHelper.Get("TrayIcon_ShortcutKeys");
 
             Icon_ChangeWallpaper.TextAlign = ContentAlignment.MiddleCenter;
+            Icon_ChangeWallpaper.AutoSize = true;
 
             Icon_AutoChangeWallpaper.Text = "    "
                 + TranslationHelper.Get("Icon_AutoChangeWallpaper");
@@ -436,8 +436,6 @@ namespace DailyWallpaper.View
 
         private void Icon_ChangeWallpaper_Click(object sender, EventArgs e)
         {
-            // DailyWallpaperConsSetWallpaper();
-            // NOT WAIT
             Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
         }
         

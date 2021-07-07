@@ -362,7 +362,6 @@ namespace DailyWallpaper.HashCalc
             // hashfileTextBox
             // 
             this.hashfileTextBox.AllowDrop = true;
-            this.hashfileTextBox.Font = new System.Drawing.Font("宋体", 10F);
             this.hashfileTextBox.Location = new System.Drawing.Point(62, 296);
             this.hashfileTextBox.Name = "hashfileTextBox";
             this.hashfileTextBox.Size = new System.Drawing.Size(683, 30);

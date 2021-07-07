@@ -50,7 +50,6 @@ namespace DailyWallpaper.View
             // 
             this.progarmNametextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));
             this.progarmNametextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.progarmNametextBox.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold);
             this.progarmNametextBox.Location = new System.Drawing.Point(219, 121);
             this.progarmNametextBox.Name = "progarmNametextBox";
             this.progarmNametextBox.ReadOnly = true;
