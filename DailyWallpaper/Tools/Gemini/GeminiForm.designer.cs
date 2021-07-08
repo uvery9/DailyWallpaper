@@ -30,10 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBoxTarget = new System.Windows.Forms.GroupBox();
+            this.updateButton = new System.Windows.Forms.Button();
             this.filterExample = new System.Windows.Forms.TextBox();
             this.btnSelectTargetFolder2 = new System.Windows.Forms.Button();
             this.modeCheckBox = new System.Windows.Forms.CheckBox();
             this.regexCheckBox = new System.Windows.Forms.CheckBox();
+            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.labelTargetFolder1 = new System.Windows.Forms.Label();
             this.labelTargetFolder2 = new System.Windows.Forms.Label();
             this.folderFilterTextBox = new System.Windows.Forms.TextBox();
@@ -69,11 +71,9 @@
             this.fileSizeCheckBox = new System.Windows.Forms.CheckBox();
             this.fileMD5CheckBox = new System.Windows.Forms.CheckBox();
             this.tbConsole = new System.Windows.Forms.TextBox();
-            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.resultGroupBox = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.updateButton = new System.Windows.Forms.Button();
             this.groupBoxTarget.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -93,6 +93,7 @@
             this.groupBoxTarget.Controls.Add(this.btnSelectTargetFolder2);
             this.groupBoxTarget.Controls.Add(this.modeCheckBox);
             this.groupBoxTarget.Controls.Add(this.regexCheckBox);
+            this.groupBoxTarget.Controls.Add(this.alwaysOnTopCheckBox);
             this.groupBoxTarget.Controls.Add(this.labelTargetFolder1);
             this.groupBoxTarget.Controls.Add(this.labelTargetFolder2);
             this.groupBoxTarget.Controls.Add(this.folderFilterTextBox);
@@ -108,6 +109,15 @@
             this.groupBoxTarget.TabIndex = 1;
             this.groupBoxTarget.TabStop = false;
             this.groupBoxTarget.Text = "Paths (Allow Drop)";
+            // 
+            // updateButton
+            // 
+            this.updateButton.Location = new System.Drawing.Point(810, 96);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(77, 28);
+            this.updateButton.TabIndex = 11;
+            this.updateButton.Text = "Update";
+            this.updateButton.UseVisualStyleBackColor = true;
             // 
             // filterExample
             // 
@@ -152,6 +162,17 @@
             this.regexCheckBox.TabIndex = 9;
             this.regexCheckBox.Text = "RE";
             this.regexCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // alwaysOnTopCheckBox
+            // 
+            this.alwaysOnTopCheckBox.AutoSize = true;
+            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(177, 0);
+            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
+            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(151, 22);
+            this.alwaysOnTopCheckBox.TabIndex = 0;
+            this.alwaysOnTopCheckBox.Text = "Always On Top";
+            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
+            this.alwaysOnTopCheckBox.Click += new System.EventHandler(this.alwaysOnTopCheckBox_Click);
             // 
             // labelTargetFolder1
             // 
@@ -309,6 +330,7 @@
             // 
             // resultListView
             // 
+            this.resultListView.AllowDrop = true;
             this.resultListView.CheckBoxes = true;
             this.resultListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.nameColumnHeader,
@@ -326,6 +348,8 @@
             this.resultListView.View = System.Windows.Forms.View.Details;
             this.resultListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.resultListView_ColumnClick);
             this.resultListView.SelectedIndexChanged += new System.EventHandler(this.resultListView_SelectedIndexChanged);
+            this.resultListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
+            this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
             // 
             // nameColumnHeader
             // 
@@ -513,20 +537,8 @@
             this.tbConsole.TabIndex = 0;
             this.tbConsole.WordWrap = false;
             // 
-            // alwaysOnTopCheckBox
-            // 
-            this.alwaysOnTopCheckBox.AutoSize = true;
-            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(358, -18);
-            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
-            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(151, 22);
-            this.alwaysOnTopCheckBox.TabIndex = 3;
-            this.alwaysOnTopCheckBox.Text = "Always On Top";
-            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
-            this.alwaysOnTopCheckBox.Click += new System.EventHandler(this.alwaysOnTopCheckBox_Click);
-            // 
             // resultGroupBox
             // 
-            this.resultGroupBox.Controls.Add(this.alwaysOnTopCheckBox);
             this.resultGroupBox.Controls.Add(this.resultListView);
             this.resultGroupBox.Location = new System.Drawing.Point(12, 164);
             this.resultGroupBox.Name = "resultGroupBox";
@@ -553,15 +565,6 @@
             this.panel4.Size = new System.Drawing.Size(1286, 157);
             this.panel4.TabIndex = 16;
             // 
-            // updateButton
-            // 
-            this.updateButton.Location = new System.Drawing.Point(810, 96);
-            this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(77, 28);
-            this.updateButton.TabIndex = 11;
-            this.updateButton.Text = "Update";
-            this.updateButton.UseVisualStyleBackColor = true;
-            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -586,7 +589,6 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.resultGroupBox.ResumeLayout(false);
-            this.resultGroupBox.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -634,11 +636,11 @@
         private System.Windows.Forms.ColumnHeader extNameColumnHeader;
         private System.Windows.Forms.ColumnHeader fullPathColumnHeader;
         public System.Windows.Forms.TextBox tbConsole;
-        private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
         private System.Windows.Forms.GroupBox resultGroupBox;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ProgressBar geminiProgressBar;
         private System.Windows.Forms.Button updateButton;
+        private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
     }
 }

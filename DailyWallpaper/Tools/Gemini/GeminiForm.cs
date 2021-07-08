@@ -1337,7 +1337,8 @@ namespace DailyWallpaper
 
         private void alwaysOnTopCheckBox_Click(object sender, EventArgs e)
         {
-            if (alwaysOnTopCheckBox.Checked)
+            //if (alwaysOnTopCheckBox.Checked)
+            if(alwaysOnTopCheckBox.Checked)
             {
                 TopMost = true;
             }
