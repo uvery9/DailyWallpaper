@@ -251,6 +251,7 @@ namespace DailyWallpaper.Tools
             return tmp;
         }
 
+
         public static async Task<List<GeminiFileStruct>> ComparerTwoList(
             List<GeminiFileStruct> li1, List<GeminiFileStruct> li2,
             CompareMode mode,

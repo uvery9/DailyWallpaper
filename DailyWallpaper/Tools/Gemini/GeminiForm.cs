@@ -66,7 +66,7 @@ namespace DailyWallpaper
             gemini = new Gemini();
             _console = new TextBoxCons(new ConsWriter(tbConsole));
 
-            System.Windows.Forms.TextBox.CheckForIllegalCrossThreadCalls = false;
+            // System.Windows.Forms.TextBox.CheckForIllegalCrossThreadCalls = false;
             // _console.WriteLine(gemini.helpString);
 
 
@@ -269,6 +269,7 @@ namespace DailyWallpaper
             var token = _source.Token;
             btnStop.Enabled = true;
             btnAnalyze.Enabled = false;
+            var limit = SetMinimumFileLimit();
             try
             {
                 var _task = Task.Run(() =>
@@ -308,7 +309,6 @@ namespace DailyWallpaper
                         // compare folders and themselves, return duplicated files list.
                         _console.WriteLine(">>> Start comparing...");
                     CompareMode mode = SetCompareMode();
-                    var limit = SetMinimumFileLimit();
                     sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
                             geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
                     _console.WriteLine(">>> Compare finished...");
@@ -399,14 +399,15 @@ namespace DailyWallpaper
                 var percentInt = (int)percent;
                 if (percentInt > 99)
                     percentInt = 100;
-                if (pb.IsHandleCreated)
+/*                if (pb.IsHandleCreated)
                 {
                     pb.Invoke(new Action(() =>
-                    {
-                        pb.Value = percentInt;
+                    {*/
+                        // pb.Value = percentInt;
+                        SetProgressMessage(percentInt, pb);
 
-                    }));
-                }
+/*                    }));
+                }*/
                 _mutexPb.ReleaseMutex();
             }
             var totalProgess = new Progress<long>(ProgressAction);
@@ -1442,6 +1443,26 @@ namespace DailyWallpaper
 
             // Perform the sort with these new sort options.
             resultListView.Sort();
+        }
+
+        private delegate void DelSetPro(int pro, System.Windows.Forms.ProgressBar proBar);
+        private void SetProgressMessage(int pro, System.Windows.Forms.ProgressBar proBar)
+        {
+            //如果当前调用方不是创建控件的一方，则需要使用this.Invoke()
+            //在这里，ProgressBar控件是由主线程创建的，所以子线程要对该控件进行操作
+            //必须执行this.InvokeRequired进行判断。
+            if (InvokeRequired)
+            {
+                if (proBar.IsHandleCreated)
+                {
+                    DelSetPro setPro = new DelSetPro(SetProgressMessage);
+                    Invoke(setPro, new object[] { pro, proBar });
+                }
+            }
+            else
+            {
+                proBar.Value = Convert.ToInt32(pro);
+            }
         }
 
         private void geminiProgressBar_Click(object sender, EventArgs e)

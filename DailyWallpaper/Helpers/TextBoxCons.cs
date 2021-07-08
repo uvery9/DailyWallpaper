@@ -55,19 +55,49 @@ namespace DailyWallpaper
             this.textbox = textbox;
         }
 
-        public override void Write(char value)
+        public /*override*/ void WriteC(char value)
         {
             string s = "";
             s += value;
             textbox.AppendText(s);
         }
 
-        public override void Write(string value)
+        delegate void SetWriteCBack(char value);
+        public override void Write(char value)
+        {
+            if (textbox.InvokeRequired)
+            {
+                var stcb = new SetWriteCBack(Write);
+                textbox.Invoke(stcb, new object[] { value });
+            }
+            else
+            {
+                string s = "";
+                s += value;
+                textbox.AppendText(s);
+            }
+        }
+
+        public /*override*/ void WriteT(string value)
         {
             textbox.AppendText(value);
         }
 
-        public override void WriteLine(string value)
+        public override void Write(string text)
+        {
+            if (textbox.InvokeRequired)
+            {
+                SetWriteLineBack stcb = new SetWriteLineBack(Write);
+                textbox.Invoke(stcb, new object[] { text });
+            }
+            else
+            {
+                textbox.AppendText(text);
+            }
+        }
+
+
+        public /*override*/ void WriteLineOLD(string value)
         {
             // two long cause problem, maybe.
 /*            if (textbox.Text.Length > 10000)
@@ -80,6 +110,20 @@ namespace DailyWallpaper
             textbox.Update();
         }
 
+        delegate void SetWriteLineBack(string text);
+        public override void WriteLine(string text)
+        {
+            if (textbox.InvokeRequired)
+            {
+                SetWriteLineBack stcb = new SetWriteLineBack(WriteLine);
+                textbox.Invoke(stcb, new object[] { text });
+            }
+            else
+            {
+                textbox.AppendText(text + NewLine);
+                textbox.Update();
+            }
+        }
         public override Encoding Encoding
         {
             get { return Encoding.Default; }
