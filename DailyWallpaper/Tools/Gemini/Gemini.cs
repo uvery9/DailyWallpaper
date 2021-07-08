@@ -251,7 +251,7 @@ namespace DailyWallpaper.Tools
             return tmp;
         }
 
-        public static List<GeminiFileStruct> ComparerTwoList(
+        public static async Task<List<GeminiFileStruct>> ComparerTwoList(
             List<GeminiFileStruct> li1, List<GeminiFileStruct> li2,
             CompareMode mode,
             CancellationToken token = default, Action<bool,
@@ -265,6 +265,9 @@ namespace DailyWallpaper.Tools
                 action(false, tmp);
                 return tmp;
             }
+            
+            await Task.Run(() => {
+            long cnt = 0;
             foreach (var l1 in li1)
             {
                 foreach(var l2 in li2)
@@ -275,7 +278,12 @@ namespace DailyWallpaper.Tools
                     }
                     if (progress != null)
                     {
-                        progress.Report(1024);
+                        cnt++;
+                        if (cnt >= 1000)
+                        {
+                            progress.Report(1000);
+                            cnt = 0;
+                        }
                     }
                     if (mode == CompareMode.ExtAndSize)
                     {
@@ -304,6 +312,7 @@ namespace DailyWallpaper.Tools
 
                 }
             }
+            });
             action(true, tmp);
             return tmp;
         }

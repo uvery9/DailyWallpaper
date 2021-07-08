@@ -31,7 +31,7 @@ namespace DailyWallpaper
         private List<string> folderFilter;
         private string regexFilter;
         private Regex regex;
-        
+
         private List<string> targetFolder1History = new List<string>();
         private List<string> targetFolder2History = new List<string>();
         private List<string> filesList1;
@@ -43,7 +43,9 @@ namespace DailyWallpaper
         private long minimumFileLimit = 0;
         private List<Task> _tasks = new List<Task>();
         private Mutex _mutex;
+        private Mutex _mutexPb;
         private ListViewColumnSorter lvwColumnSorter;
+        private List<string> deleteList;
 
         private enum FilterMode : int
         {
@@ -63,17 +65,19 @@ namespace DailyWallpaper
             Icon = Properties.Resources.GE32X32;
             gemini = new Gemini();
             _console = new TextBoxCons(new ConsWriter(tbConsole));
+
+            System.Windows.Forms.TextBox.CheckForIllegalCrossThreadCalls = false;
             // _console.WriteLine(gemini.helpString);
 
-            
+
             // init targetfolder 1&2
             targetFolder1TextBox.Text = desktopPath;
             targetFolder2TextBox.Text = "";
-            var init = gemini.ini.Read("TargetFolder1", "Gemini");
+            /*var init = gemini.ini.Read("TargetFolder1", "Gemini");
             if (Directory.Exists(init))
             {
-                UpdateTextAndIniFile("TargetFolder1", init, 
-                    targetFolder1History, targetFolder1TextBox, updateIni: false); 
+                UpdateTextAndIniFile("TargetFolder1", init,
+                    targetFolder1History, targetFolder1TextBox, updateIni: false);
             }
 
             init = gemini.ini.Read("TargetFolder2", "Gemini");
@@ -81,13 +85,13 @@ namespace DailyWallpaper
             {
                 UpdateTextAndIniFile("TargetFolder2", init,
                     targetFolder2History, targetFolder2TextBox, updateIni: false);
-            }
+            }*/
 
             btnStop.Enabled = false;
             // default: send to RecycleBin
             deleteOrRecycleBin.Checked = false;
             DeleteOrRecycleBin(deletePermanently: false);
-            
+
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             SetUpFilterMode();
@@ -100,6 +104,7 @@ namespace DailyWallpaper
             geminiFileStructList2 = new List<GeminiFileStruct>();
             InitSaveLogOrListToFile();
             _mutex = new Mutex();
+            _mutexPb = new Mutex();
 
             // Create an instance of a ListView column sorter and assign it
             // to the ListView control.
@@ -111,7 +116,8 @@ namespace DailyWallpaper
         {
             listOrLog.Checked = false;
             saveList2File.Text = "Save log to File";
-            listOrLog.Click += (e, s) => {
+            listOrLog.Click += (e, s) =>
+            {
                 if (listOrLog.Checked)
                 {
                     saveList2File.Text = "Save list to File";
@@ -178,7 +184,7 @@ namespace DailyWallpaper
             targetFolder2History);
         }
 
-        private void SelectFolder(string keyInIni, System.Windows.Forms.TextBox tx, 
+        private void SelectFolder(string keyInIni, System.Windows.Forms.TextBox tx,
             List<string> targetFolderHistory)
         {
             using (var dialog = new CommonOpenFileDialog())
@@ -263,49 +269,72 @@ namespace DailyWallpaper
             var token = _source.Token;
             btnStop.Enabled = true;
             btnAnalyze.Enabled = false;
-            
-            var _task = Task.Run(() =>
-            {
-                var timer = new Stopwatch();
-                timer.Start();
-                // Get all files from folder1/2
-                
-                RecurseScanDir(targetFolder1TextBox.Text, ref filesList1, token);
-                if(!targetFolder1TextBox.Text.Equals(targetFolder2TextBox.Text))
-                    RecurseScanDir(targetFolder2TextBox.Text, ref filesList2, token);
-                
-                // get files info exclude HASH.(FASTER) 
-                FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
-                FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
-
-                // compare folders and themselves, return duplicated files list.
-                _console.WriteLine(">>> Start comparing...");
-                CompareMode mode = SetCompareMode();
-                var limit = SetMinimumFileLimit();
-                sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
-                    geminiFileStructList2, mode, limit, token).Result;
-                _console.WriteLine(">>> Compare finished...");
-                // group by size
-
-                _console.WriteLine(">>> Show to ListView...");
-                GeminiList2Group(sameListNoDup, token);
-                timer.Stop();
-                string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
-                _console.WriteLine($">>> Cost time: {hashCostTime}");
-
-            }, _source.Token);
             try
             {
+                var _task = Task.Run(() =>
+                {
+                    var timer = new Stopwatch();
+                    timer.Start();
+                        // Get all files from folder1/2
+                        bool fld1 = false;
+                    bool fld2 = false;
+                    var t1 = targetFolder1TextBox.Text;
+                    var t2 = targetFolder2TextBox.Text;
+
+                    if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
+                    {
+                        fld2 = true;
+                        RecurseScanDir(t2, ref filesList2, token);
+                        _console.WriteLine($">>> Found {filesList2.Count} file(s) in: {t2}");
+                    }
+
+                    if (!string.IsNullOrEmpty(t1) && Directory.Exists(t1) && !t1.Equals(t2))
+                    {
+                        fld1 = true;
+                        RecurseScanDir(t1, ref filesList1, token);
+                        _console.WriteLine($">>> Found {filesList1.Count} file(s) in: {t1}");
+                    }
+
+                    if (!fld2 && !fld1)
+                    {
+                        _console.WriteLine("!!! Two folder invalid.");
+                        return;
+                    }
+
+                        // get files info exclude HASH.(FASTER) 
+                    FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
+                    FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
+
+                        // compare folders and themselves, return duplicated files list.
+                        _console.WriteLine(">>> Start comparing...");
+                    CompareMode mode = SetCompareMode();
+                    var limit = SetMinimumFileLimit();
+                    sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
+                            geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
+                    _console.WriteLine(">>> Compare finished...");
+                        // group by size
+
+                        _console.WriteLine(">>> Show to ListView...");
+                    GeminiList2Group(sameListNoDup, token);
+                    timer.Stop();
+                    string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
+                    _console.WriteLine($">>> Cost time: {hashCostTime}");
+
+                }, _source.Token);
+
                 _tasks.Add(_task);
                 await _task;
                 // No Error, filesList is usable
                 scanRes = true;
-                geminiProgressBar.Visible = false;
             }
             catch (OperationCanceledException e)
             {
                 scanRes = false;
-                _console.WriteLine($"\r\n>>> RecurseScanDir throw exception message: {e.Message}");
+                _console.WriteLine($"\r\n>>> OperationCanceledException: {e.Message}");
+            }
+            catch (AggregateException e)
+            {
+                _console.WriteLine($"\r\n>>> AggregateException[Cancel exception]: {e.Message}");
             }
             catch (Exception e)
             {
@@ -316,6 +345,7 @@ namespace DailyWallpaper
             }
             finally
             {
+                geminiProgressBar.Visible = false;
                 _console.WriteLine(">>> Analyse is over.");
             }
             btnAnalyze.Enabled = true;
@@ -323,9 +353,10 @@ namespace DailyWallpaper
         }
 
         private async Task<List<GeminiFileStruct>> ComparerTwoFolderGetList(List<GeminiFileStruct> l1,
-            List<GeminiFileStruct> l2, CompareMode mode, long limit = 0, CancellationToken token = default)
+            List<GeminiFileStruct> l2, CompareMode mode, long limit = 0, CancellationToken token = default,
+            System.Windows.Forms.ProgressBar pb = null)
         {
-            
+
             if (ignoreFileCheckBox.Checked)
             {
                 var limited =
@@ -354,12 +385,38 @@ namespace DailyWallpaper
                 }
                 _mutex.ReleaseMutex();
             }
-            await Task.Run(() => ComparerTwoList(l1,
-                l1, mode, token, retAction));
-            await Task.Run(() => ComparerTwoList(l2,
-                l2, mode, token, retAction));
-            await Task.Run(() => ComparerTwoList(l1,
-                l2, mode, token, retAction));
+            var cnt1 = l1.Count;
+            var cnt2 = l2.Count;
+            long totalCmpCnt = cnt1 * cnt1 + cnt1 * cnt2 + cnt2 * cnt2;
+
+            double percent = 0.0;
+            pb.Visible = true;
+            void ProgressAction(long i) // percent in file.
+            {
+                // FIX ERROR: System.InvalidOperationException
+                _mutexPb.WaitOne();
+                percent += (double)i / totalCmpCnt * 100;
+                var percentInt = (int)percent;
+                if (percentInt > 99)
+                    percentInt = 100;
+                if (pb.IsHandleCreated)
+                {
+                    pb.Invoke(new Action(() =>
+                    {
+                        pb.Value = percentInt;
+
+                    }));
+                }
+                _mutexPb.ReleaseMutex();
+            }
+            var totalProgess = new Progress<long>(ProgressAction);
+            await Task.Run(async () => await ComparerTwoList(l1,
+                l1, mode, token, retAction, totalProgess));
+            await Task.Run(async () => await ComparerTwoList(l2,
+                l2, mode, token, retAction, totalProgess));
+            await Task.Run(async () => await ComparerTwoList(l1,
+                l2, mode, token, retAction, totalProgess));
+
 
             return sameList.Distinct().ToList();
         }
@@ -379,7 +436,7 @@ namespace DailyWallpaper
         {
 
         }
-        private void GeminiList2Group(List<GeminiFileStruct> listNoDup, 
+        private void GeminiList2Group(List<GeminiFileStruct> listNoDup,
             CancellationToken token, bool printToCons = false)
         {
             if (listNoDup.Count > 0)
@@ -427,7 +484,7 @@ namespace DailyWallpaper
                     }
                     if (printToCons) _console.WriteLine($">>> Group Size[{index}] {item.Key}\r\n");
                 }
-                
+
                 _console.WriteLine($">>> Summay: Found {listNoDup.Count:n0} duplicate files.");
             }
             else
@@ -441,6 +498,7 @@ namespace DailyWallpaper
         {
             btnClear.PerformClick();
             geminiProgressBar.Visible = true;
+            deleteList = new List<string>();
             StartAnalyze();
         }
 
@@ -556,7 +614,7 @@ namespace DailyWallpaper
             }
             try
             {
-                
+
                 foreach (var d in Directory.EnumerateDirectories(path))
                 {
                     if (token.IsCancellationRequested)
@@ -604,7 +662,7 @@ namespace DailyWallpaper
         //calcSHA1: fileSHA1CheckBox.Checked,
         // calcMD5: fileMD5CheckBox.Checked
 
-        void FileList2GeminiFileStructList(List<string> filesList, 
+        void FileList2GeminiFileStructList(List<string> filesList,
             ref List<GeminiFileStruct> gList, CancellationToken token)
         {
             gList = new List<GeminiFileStruct>();
@@ -652,13 +710,14 @@ namespace DailyWallpaper
                 foreach (var d in Directory.EnumerateDirectories(dir))
                 {
                     // FUCK THE $RECYCLE.BIN
-                    if (d.ToLower().Contains("$RECYCLE.BIN".ToLower())) {
+                    if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
+                    {
                         continue;
                     }
                     if (FolderFilter(d, filterMode))
                     {
                         continue;
-                    }                   
+                    }
                     if (token.IsCancellationRequested)
                     {
                         token.ThrowIfCancellationRequested();
@@ -675,11 +734,12 @@ namespace DailyWallpaper
         /// </summary>
         private bool IsControlled(string path, bool print = true)
         {
-            if (gemini.IsControlledFolder(path)){
+            if (gemini.IsControlledFolder(path))
+            {
                 if (print)
                 {
                     _console.WriteLine($"\r\nThe folder is CONTROLLED, please re-select:\r\n   {path}");
-                    _console.WriteLine("\r\nYou could Type \" list controlled \" in the \r\n" + 
+                    _console.WriteLine("\r\nYou could Type \" list controlled \" in the \r\n" +
                         "\"Folder Filter\" and Type ENTER" +
                         " to see all the controlled folders.");
                 }
@@ -687,8 +747,8 @@ namespace DailyWallpaper
             }
             return false;
         }
-        
-        private bool UpdateTextAndIniFile(string keyInIni, string path, 
+
+        private bool UpdateTextAndIniFile(string keyInIni, string path,
             List<string> targetFolderHistory, System.Windows.Forms.TextBox tx = null,
             bool updateIni = true, bool print = true)
         {
@@ -761,7 +821,7 @@ namespace DailyWallpaper
             }
         }
         private void UpdateIniAndTextBox()
-        {    
+        {
             _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
             UpdateFilterExampleText(filterMode);
             gemini.ini.UpdateIniItem("FilterMode", filterMode.ToString());
@@ -772,7 +832,7 @@ namespace DailyWallpaper
 
             // command mode
             bool useCommand = false;
-            
+
             if (cmd.ToLower().Equals("list controlled"))
             {
                 _console.WriteLine("\r\nThe following is a list of controlled folders:");
@@ -891,11 +951,12 @@ namespace DailyWallpaper
             if (!deletePermanently)
             {
                 btnDelete.Text = "RecycleBin";
-            } else
+            }
+            else
             {
                 btnDelete.Text = "Delete Permanently";
             }
-            
+
         }
         private void deleteOrRecycleBin_CheckedChanged(object sender, EventArgs e)
         {
@@ -918,7 +979,7 @@ namespace DailyWallpaper
 
             using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
             {
-                
+
                 var saveDir = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOG");
                 if (!Directory.Exists(saveDir))
@@ -949,8 +1010,8 @@ namespace DailyWallpaper
                 {
                     t2 = new DirectoryInfo(f2).Name;
                 }
-                
-                var name = t1 + "-" +  t2;
+
+                var name = t1 + "-" + t2;
                 // E:, D: -> D-Disk
                 // need TEST here
                 name = name.Replace(":", "_");
@@ -958,12 +1019,13 @@ namespace DailyWallpaper
                 {
                     saveFileDialog.FileName = "Gemini-List_" + name + "_" +
                                          DateTime.Now.ToString("yyyy-MM-dd_HH-mm"); //+ ".txt"
-                } else
+                }
+                else
                 {
                     saveFileDialog.FileName = "Gemini-Log_" + name + "_" +
                                          DateTime.Now.ToString("yyyy-MM-dd_HH-mm"); //+ ".txt"
                 }
-                
+
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -1014,7 +1076,7 @@ namespace DailyWallpaper
                     _console.WriteLine($"\r\n!!! ERROR: {e.Message}");
                     regex = null;
                     return false;
-                } 
+                }
                 if (print)
                 {
                     _console.WriteLine($"\r\nYou have set the regex filter: \" {regexFilter} \"");
@@ -1139,7 +1201,7 @@ namespace DailyWallpaper
                     {
                         if (Directory.Exists(path))
                         {
-                            UpdateTextAndIniFile(keyInIni, path, 
+                            UpdateTextAndIniFile(keyInIni, path,
                                 targetFolderHistory, tx);
                         }
                     }
@@ -1148,7 +1210,7 @@ namespace DailyWallpaper
                 {
                     _console.WriteLine("\r\nAttention: File or multiple folders are not allowed!");
                 }
-                
+
             }
         }
 
@@ -1172,7 +1234,7 @@ namespace DailyWallpaper
             fileExtNameCheckBox.Checked = false;
             fileMD5CheckBox.Checked = false;
             fileSHA1CheckBox.Checked = false;
-            
+
             ReadFileSameModeFromIni("SameFileName", fileNameCheckBox);
             ReadFileSameModeFromIni("SameFileExtName", fileExtNameCheckBox);
             ReadFileSameModeFromIni("SameFileSize", fileSizeCheckBox);
@@ -1201,7 +1263,8 @@ namespace DailyWallpaper
                 ignoreFileCheckBox.Checked = true;
             }
 
-            if (int.TryParse(gemini.ini.Read("ignoreFileIndex", "Gemini"), out int retIndex)){
+            if (int.TryParse(gemini.ini.Read("ignoreFileIndex", "Gemini"), out int retIndex))
+            {
                 if (int.TryParse(gemini.ini.Read("ignoreFileTextBox", "Gemini"), out int retNum))
                 {
                     minimumFileLimit = retNum * 1024 ^ retIndex;
@@ -1326,7 +1389,7 @@ namespace DailyWallpaper
             Hide();
 
             Task.Run(() =>
-            {   
+            {
                 // MessageBox.Show("Start WaitAll.");
                 Task.WaitAll(_tasks.ToArray());
                 // MessageBox.Show("finished.");
@@ -1338,7 +1401,7 @@ namespace DailyWallpaper
         private void alwaysOnTopCheckBox_Click(object sender, EventArgs e)
         {
             //if (alwaysOnTopCheckBox.Checked)
-            if(alwaysOnTopCheckBox.Checked)
+            if (alwaysOnTopCheckBox.Checked)
             {
                 TopMost = true;
             }
@@ -1384,6 +1447,29 @@ namespace DailyWallpaper
         private void geminiProgressBar_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void resultListView_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // e.Index
+            var tex = resultListView.Items[e.Index].SubItems[4].Text;
+            if (deleteList != null)
+            {
+                 // fullPath
+                // .SubItems["fullPath"].Text
+                // deleteList.Add(tex);
+                // 
+                deleteList.Add(tex);
+                _console.WriteLine(tex);
+                var sel = resultListView.SelectedItems;
+                foreach (var item in sel)
+                {
+                    _console.WriteLine(item.ToString());
+                }
+                
+
+            }
+            
         }
     }
 }

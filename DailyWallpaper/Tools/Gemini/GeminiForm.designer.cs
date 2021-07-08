@@ -347,6 +347,7 @@
             this.resultListView.UseCompatibleStateImageBehavior = false;
             this.resultListView.View = System.Windows.Forms.View.Details;
             this.resultListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.resultListView_ColumnClick);
+            this.resultListView.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.resultListView_ItemCheck);
             this.resultListView.SelectedIndexChanged += new System.EventHandler(this.resultListView_SelectedIndexChanged);
             this.resultListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
             this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
@@ -394,9 +395,9 @@
             // 
             // geminiProgressBar
             // 
-            this.geminiProgressBar.Location = new System.Drawing.Point(4, 45);
+            this.geminiProgressBar.Location = new System.Drawing.Point(4, 46);
             this.geminiProgressBar.Name = "geminiProgressBar";
-            this.geminiProgressBar.Size = new System.Drawing.Size(355, 29);
+            this.geminiProgressBar.Size = new System.Drawing.Size(356, 28);
             this.geminiProgressBar.TabIndex = 10;
             this.geminiProgressBar.Click += new System.EventHandler(this.geminiProgressBar_Click);
             // 
