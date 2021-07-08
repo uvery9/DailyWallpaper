@@ -269,6 +269,7 @@ namespace DailyWallpaper
             var token = _source.Token;
             btnStop.Enabled = true;
             btnAnalyze.Enabled = false;
+            geminiProgressBar.Visible = true;
             var limit = SetMinimumFileLimit();
             try
             {
@@ -390,7 +391,6 @@ namespace DailyWallpaper
             long totalCmpCnt = cnt1 * cnt1 + cnt1 * cnt2 + cnt2 * cnt2;
 
             double percent = 0.0;
-            pb.Visible = true;
             void ProgressAction(long i) // percent in file.
             {
                 // FIX ERROR: System.InvalidOperationException
@@ -422,17 +422,26 @@ namespace DailyWallpaper
             return sameList.Distinct().ToList();
         }
 
+
+        private delegate void AddItemToListViewCallback(GeminiFileStruct gf);
         private void AddItemToListView(GeminiFileStruct gf)
         {
-            var item = new System.Windows.Forms.ListViewItem(gf.name);
-            item.SubItems.Add(gf.lastMtime.ToString());
-            item.SubItems.Add(gf.extName);
-            item.SubItems.Add(gf.sizeStr);
-            // item.SubItems.Add(gf.sizeStr + "(" + gf.size.ToString() + ")");
-            item.SubItems.Add(gf.fullPath);
-            resultListView.Items.Add(item);
+            if (InvokeRequired)
+            {
+                var f = new AddItemToListViewCallback(AddItemToListView);
+                Invoke(f, new object[] { gf });
+            }
+            else
+            {
+                var item = new System.Windows.Forms.ListViewItem(gf.name);
+                item.SubItems.Add(gf.lastMtime.ToString());
+                item.SubItems.Add(gf.extName);
+                item.SubItems.Add(gf.sizeStr);
+                // item.SubItems.Add(gf.sizeStr + "(" + gf.size.ToString() + ")");
+                item.SubItems.Add(gf.fullPath);
+                resultListView.Items.Add(item);
+            }
         }
-
         private void AddGroupTitleToListView()
         {
 
@@ -442,7 +451,7 @@ namespace DailyWallpaper
         {
             if (listNoDup.Count > 0)
             {
-                summaryTextBox.Text = $"Summay: Found {listNoDup.Count:N0} duplicate files.";
+                SetText($"Summay: Found {listNoDup.Count:N0} duplicate files.", summaryTextBox);
                 // same size to one group
                 // check HASH before.
                 var duplicateGrp =
@@ -490,9 +499,24 @@ namespace DailyWallpaper
             }
             else
             {
-                summaryTextBox.Text = $">>> Summay: Found No duplicate files.";
+                // summaryTextBox.Text = ;
+                SetText($">>> Summay: Found No duplicate files.", summaryTextBox);
             }
 
+        }
+
+        delegate void SetTextCallBack(string text, System.Windows.Forms.TextBox tb);
+        private void SetText(string text, System.Windows.Forms.TextBox tb)
+        {
+            if (summaryTextBox.InvokeRequired)
+            {
+                SetTextCallBack stcb = new SetTextCallBack(SetText);
+                Invoke(stcb, new object[] { text, tb });
+            }
+            else
+            {
+                tb.Text = text;
+            }
         }
 
         private void btnAnalyze_Click(object sender, EventArgs e)
