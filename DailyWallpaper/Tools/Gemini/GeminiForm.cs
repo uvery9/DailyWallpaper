@@ -499,7 +499,7 @@ namespace DailyWallpaper
                         var color = Color.White;
                         if (j % 2 == 1)
                         {
-                            color = Color.Orange;
+                            color = Color.FromArgb(250, 234, 192);
                         }
                         foreach (var t in it)
                         {

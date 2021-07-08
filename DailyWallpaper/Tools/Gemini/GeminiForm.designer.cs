@@ -338,6 +338,7 @@
             this.extNameColumnHeader,
             this.sizeColumnHeader,
             this.fullPathColumnHeader});
+            this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
             this.resultListView.Location = new System.Drawing.Point(1, 25);
             this.resultListView.Name = "resultListView";
