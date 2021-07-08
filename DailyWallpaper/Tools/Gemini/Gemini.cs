@@ -71,18 +71,21 @@ namespace DailyWallpaper
             public bool EqualsHash(object obj)
             {
                 return obj is GeminiFileStruct @struct &&
+                       fullPath != @struct.fullPath &&
                        size == @struct.size &&
                        name == @struct.name &&
                        extName == @struct.extName &&
                        sha1 == @struct.sha1 &&
                        md5 == @struct.md5;
             }
+
             public bool EqualsMD5(object obj)
             {
                 return obj is GeminiFileStruct @struct &&
-                       size == @struct.size &&
-                       extName == @struct.extName &&
-                       md5 == @struct.md5;
+                        fullPath != @struct.fullPath &&
+                        size == @struct.size &&
+                        extName == @struct.extName &&
+                        md5 == @struct.md5;
             }
 
             public async Task<bool> EqualsSHA1(object obj, CancellationToken token)
@@ -119,12 +122,11 @@ namespace DailyWallpaper
                        sha1 == @struct.sha1;
             }
 
-            public override bool Equals(object obj)
+            public bool EqualSize(object obj)
             {
                 return obj is GeminiFileStruct @struct &&
-                       size == @struct.size &&
-                       name == @struct.name &&
-                       extName == @struct.extName;
+                       fullPath != @struct.fullPath &&
+                       size == @struct.size;
             }
 
             public override string ToString()
@@ -151,13 +153,15 @@ namespace DailyWallpaper
                 return tmp;
             }
 
+            public override bool Equals(object obj)
+            {
+                return obj is GeminiFileStruct @struct &&
+                       fullPath == @struct.fullPath;
+            }
+
             public override int GetHashCode()
             {
-                int hashCode = -1158680255;
-                hashCode = hashCode * -1521134295 + size.GetHashCode();
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(name);
-                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(extName);
-                return hashCode;
+                return -1906184077 + EqualityComparer<string>.Default.GetHashCode(fullPath);
             }
         }
 
@@ -201,20 +205,49 @@ namespace DailyWallpaper
             return tmp;
         }
 
-        public static List<GeminiFileStruct> ComparerTwoList(List<GeminiFileStruct> li1, List<GeminiFileStruct> li2)
+        public static List<GeminiFileStruct> ComparerTwoList(
+            List<GeminiFileStruct> li1, List<GeminiFileStruct> li2, 
+            List<GeminiFileStruct> check = default, CancellationToken token = default)
         {
             var tmp = new List<GeminiFileStruct>();
+
+            if (li1.Count < 1 || li2.Count < 1)
+            {
+                return tmp;
+            }
             foreach (var l1 in li1)
             {
                 foreach(var l2 in li2)
                 {
-                    if (l1.Equals(l2))
+                    if (token.IsCancellationRequested)
                     {
-                        tmp.Add(l1);
-                        tmp.Add(l2);
+                        token.ThrowIfCancellationRequested();
+                    }
+                    if (l1.EqualSize(l2))
+                    {
+                        if (check.Count > 0)
+                        {
+                            foreach(var ck in check)
+                            {
+                                if (token.IsCancellationRequested)
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                }
+                                if (!ck.Equals(l1) && !ck.Equals(l2))
+                                {
+                                    tmp.Add(l1);
+                                    tmp.Add(l2);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            tmp.Add(l1);
+                            tmp.Add(l2);
+                        }
                     }
                 }
-            }
+            }           
             return tmp;
         }
 

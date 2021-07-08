@@ -453,7 +453,6 @@
             this.ignoreFileSizecomboBox.Size = new System.Drawing.Size(61, 26);
             this.ignoreFileSizecomboBox.TabIndex = 1;
             this.ignoreFileSizecomboBox.TabStop = false;
-            this.ignoreFileSizecomboBox.SelectedIndexChanged += new System.EventHandler(this.ignoreFileSizecomboBox_SelectedIndexChanged);
             // 
             // ignoreFileCheckBox
             // 
@@ -464,7 +463,6 @@
             this.ignoreFileCheckBox.TabIndex = 0;
             this.ignoreFileCheckBox.Text = "Ignore files less than";
             this.ignoreFileCheckBox.UseVisualStyleBackColor = true;
-            this.ignoreFileCheckBox.Click += new System.EventHandler(this.ignoreFileCheckBox_Click);
             // 
             // fileSHA1CheckBox
             // 
