@@ -15,6 +15,7 @@ using DailyWallpaper.Tools;
 using System.Diagnostics;
 using System.Collections;
 using static DailyWallpaper.Tools.Gemini;
+using System.Drawing;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -217,13 +218,17 @@ namespace DailyWallpaper
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            DeleteSlected();
+            if (deleteList.Count < 1)
+            {
+                _console.WriteLine("!!! EMPTY!");
+                return;
+            }
+            foreach (var item in deleteList)
+            {
+                _console.WriteLine("FKU:" + item);
+            }
         }
 
-        private void DeleteSlected()
-        {
-
-        }
 
         private static string GetTimeStringMsOrS(TimeSpan t)
         {
@@ -242,9 +247,14 @@ namespace DailyWallpaper
         {
             CompareMode mode = CompareMode.NameAndSize;
 
-            if (fileSizeCheckBox.Checked)
+            if (fileSHA1CheckBox.Checked)
             {
-                mode = CompareMode.SizeAndHash;
+                mode = CompareMode.SHA1;
+            }
+
+            if (fileMD5CheckBox.Checked)
+            {
+                mode = CompareMode.MD5;
             }
 
             if (fileExtNameCheckBox.Checked)
@@ -423,25 +433,31 @@ namespace DailyWallpaper
         }
 
 
-        private delegate void AddItemToListViewCallback(GeminiFileStruct gf);
-        private void AddItemToListView(GeminiFileStruct gf)
+        private delegate void AddItemToListViewCallback(GeminiFileStruct gf, Color c);
+        private void AddItemToListView(GeminiFileStruct gf, Color c)
         {
             if (InvokeRequired)
             {
                 var f = new AddItemToListViewCallback(AddItemToListView);
-                Invoke(f, new object[] { gf });
+                Invoke(f, new object[] { gf, c });
             }
             else
             {
                 var item = new System.Windows.Forms.ListViewItem(gf.name);
-                item.SubItems.Add(gf.lastMtime.ToString());
-                item.SubItems.Add(gf.extName);
-                item.SubItems.Add(gf.sizeStr);
-                // item.SubItems.Add(gf.sizeStr + "(" + gf.size.ToString() + ")");
-                item.SubItems.Add(gf.fullPath);
+                item.BackColor = c;
+                AddSubItem(item, "lastMtime", gf.lastMtime);
+                AddSubItem(item, "extName", gf.extName);
+                AddSubItem(item, "sizeStr", gf.sizeStr);
+                AddSubItem(item, "fullPath", gf.fullPath);
                 resultListView.Items.Add(item);
             }
         }
+        public static void AddSubItem(System.Windows.Forms.ListViewItem i, string name, string text)
+        {
+            i.SubItems.Add(new System.Windows.Forms.ListViewItem.ListViewSubItem() 
+                { Name = name, Text = text });
+        }
+
         private void AddGroupTitleToListView()
         {
 
@@ -480,6 +496,11 @@ namespace DailyWallpaper
                     {
                         j++;
                         if (printToCons) _console.WriteLine($">>> Group Ext[{j}] {it.Key}");
+                        var color = Color.White;
+                        if (j % 2 == 1)
+                        {
+                            color = Color.Orange;
+                        }
                         foreach (var t in it)
                         {
                             if (token.IsCancellationRequested)
@@ -487,7 +508,7 @@ namespace DailyWallpaper
                                 token.ThrowIfCancellationRequested();
                             }
                             if (printToCons) _console.WriteLine("<file>\r\n" + t + "\r\n</file>\r\n");
-                            AddItemToListView(t);
+                            AddItemToListView(t, color);
                         }
                         if (printToCons) _console.WriteLine($">>> Group Ext[{j}] {it.Key}");
                         // update list name
@@ -522,6 +543,7 @@ namespace DailyWallpaper
         private void btnAnalyze_Click(object sender, EventArgs e)
         {
             btnClear.PerformClick();
+            resultListView.Items.Clear();
             geminiProgressBar.Visible = true;
             deleteList = new List<string>();
             StartAnalyze();
@@ -541,7 +563,6 @@ namespace DailyWallpaper
         private void btnClear_Click(object sender, EventArgs e)
         {
             tbConsole.Clear();
-            resultListView.Items.Clear();
             summaryTextBox.Text = "";
             geminiProgressBar.Value = 0;
             // Invoke(new Action(Program.RunClear));
@@ -1253,22 +1274,23 @@ namespace DailyWallpaper
 
         private void InitFileSameMode()
         {
+            // FIX CFG
+            fileSizeCheckBox.Checked = true;
+            fileSizeCheckBox.Enabled = false;
+
             // if no ini, just filename and filesize.
             fileNameCheckBox.Checked = true;
-            fileSizeCheckBox.Checked = true;
             fileExtNameCheckBox.Checked = false;
             fileMD5CheckBox.Checked = false;
             fileSHA1CheckBox.Checked = false;
 
             ReadFileSameModeFromIni("SameFileName", fileNameCheckBox);
             ReadFileSameModeFromIni("SameFileExtName", fileExtNameCheckBox);
-            ReadFileSameModeFromIni("SameFileSize", fileSizeCheckBox);
             ReadFileSameModeFromIni("SameFileMD5", fileMD5CheckBox);
             ReadFileSameModeFromIni("SameFileSHA1", fileSHA1CheckBox);
 
             fileNameCheckBox.Click += fileNameCheckBox_Click;
             fileExtNameCheckBox.Click += fileExtNameCheckBox_Click;
-            fileSizeCheckBox.Click += fileSizeCheckBox_Click;
             fileMD5CheckBox.Click += fileMD5CheckBox_Click;
             fileSHA1CheckBox.Click += fileSHA1CheckBox_Click;
 
@@ -1315,41 +1337,39 @@ namespace DailyWallpaper
                 cb.Checked = false;
             }
         }
-        private void FileSameModeClick(string key, System.Windows.Forms.CheckBox cb)
+        private void FileSameModeClick(string key, System.Windows.Forms.CheckBox cb, 
+            string conflictKey = null, System.Windows.Forms.CheckBox cbConflict = null)
         {
             if (cb.Checked)
             {
-
+                cbConflict.Checked = false;
             }
             else
             {
 
             }
             gemini.ini.UpdateIniItem(key, cb.Checked.ToString(), "Gemini");
+            gemini.ini.UpdateIniItem(conflictKey, cbConflict.Checked.ToString(), "Gemini");
         }
+
         private void fileNameCheckBox_Click(object sender, EventArgs e)
         {
-            FileSameModeClick("SameFileName", fileNameCheckBox);
+            FileSameModeClick("SameFileName", fileNameCheckBox, "SameFileExtName", fileExtNameCheckBox);
         }
 
         private void fileExtNameCheckBox_Click(object sender, EventArgs e)
         {
-            FileSameModeClick("SameFileExtName", fileExtNameCheckBox);
-        }
-
-        private void fileSizeCheckBox_Click(object sender, EventArgs e)
-        {
-            FileSameModeClick("SameFileSize", fileSizeCheckBox);
+            FileSameModeClick("SameFileExtName", fileExtNameCheckBox, "SameFileName", fileNameCheckBox);
         }
 
         private void fileMD5CheckBox_Click(object sender, EventArgs e)
         {
-            FileSameModeClick("SameFileMD5", fileMD5CheckBox);
+            FileSameModeClick("SameFileMD5", fileMD5CheckBox, "SameFileSHA1", fileSHA1CheckBox);
         }
 
         private void fileSHA1CheckBox_Click(object sender, EventArgs e)
         {
-            FileSameModeClick("SameFileSHA1", fileSHA1CheckBox);
+            FileSameModeClick("SameFileSHA1", fileSHA1CheckBox, "SameFileMD5", fileMD5CheckBox);
         }
 
 
@@ -1435,7 +1455,6 @@ namespace DailyWallpaper
                 TopMost = false;
             }
         }
-
         private void resultListView_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -1472,9 +1491,6 @@ namespace DailyWallpaper
         private delegate void DelSetPro(int pro, System.Windows.Forms.ProgressBar proBar);
         private void SetProgressMessage(int pro, System.Windows.Forms.ProgressBar proBar)
         {
-            //如果当前调用方不是创建控件的一方，则需要使用this.Invoke()
-            //在这里，ProgressBar控件是由主线程创建的，所以子线程要对该控件进行操作
-            //必须执行this.InvokeRequired进行判断。
             if (InvokeRequired)
             {
                 if (proBar.IsHandleCreated)
@@ -1496,25 +1512,28 @@ namespace DailyWallpaper
 
         private void resultListView_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // e.Index
-            var tex = resultListView.Items[e.Index].SubItems[4].Text;
-            if (deleteList != null)
-            {
-                 // fullPath
-                // .SubItems["fullPath"].Text
-                // deleteList.Add(tex);
-                // 
-                deleteList.Add(tex);
-                _console.WriteLine(tex);
-                var sel = resultListView.SelectedItems;
-                foreach (var item in sel)
-                {
-                    _console.WriteLine(item.ToString());
-                }
-                
+            // Handles the ItemCheck event. The method uses the CurrentValue
+            // property of the ItemCheckEventArgs to retrieve and tally the  
+            // price of the menu items selected.  
 
+            var txet = resultListView.Items[e.Index].SubItems["fullPath"].Text;
+            if (e.CurrentValue == CheckState.Unchecked)
+            {
+                deleteList.Add(txet);
+                // _console.WriteLine($"Add {txet}");
             }
-            
+            else if ((e.CurrentValue == CheckState.Checked))
+            {
+                try
+                {
+                    deleteList.Remove(txet);
+                }
+                catch
+                {
+                    _console.WriteLine("NO EXIT");
+                }
+                // _console.WriteLine($"Remove {txet}");
+            }
         }
     }
 }

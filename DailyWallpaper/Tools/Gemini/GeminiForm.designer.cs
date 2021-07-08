@@ -348,7 +348,6 @@
             this.resultListView.View = System.Windows.Forms.View.Details;
             this.resultListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.resultListView_ColumnClick);
             this.resultListView.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.resultListView_ItemCheck);
-            this.resultListView.SelectedIndexChanged += new System.EventHandler(this.resultListView_SelectedIndexChanged);
             this.resultListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
             this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
             // 
@@ -505,11 +504,14 @@
             // fileSizeCheckBox
             // 
             this.fileSizeCheckBox.AutoSize = true;
+            this.fileSizeCheckBox.Checked = true;
+            this.fileSizeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fileSizeCheckBox.Enabled = false;
             this.fileSizeCheckBox.Location = new System.Drawing.Point(3, 7);
             this.fileSizeCheckBox.Name = "fileSizeCheckBox";
             this.fileSizeCheckBox.Size = new System.Drawing.Size(223, 22);
             this.fileSizeCheckBox.TabIndex = 0;
-            this.fileSizeCheckBox.Text = "Same File Size (Fast)";
+            this.fileSizeCheckBox.Text = "Same File Size (Base)";
             this.fileSizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // fileMD5CheckBox

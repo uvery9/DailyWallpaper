@@ -35,7 +35,9 @@ namespace DailyWallpaper.Tools
         {
             NameAndSize,
             ExtAndSize,
-            SizeAndHash
+            HASH,
+            MD5,
+            SHA1
         }
 
         public Gemini()
@@ -302,7 +304,7 @@ namespace DailyWallpaper.Tools
                             tmp.Add(l2);
                         }
                     }
-                    else if (mode == CompareMode.SizeAndHash)
+                    else if (mode == CompareMode.HASH)
                     {
                         if (l1.EqualSize(l2))
                         {
