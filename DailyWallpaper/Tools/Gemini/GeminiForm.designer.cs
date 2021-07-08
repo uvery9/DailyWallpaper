@@ -74,6 +74,7 @@
             this.resultGroupBox = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBoxTarget.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -279,7 +280,7 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(4, 6);
+            this.btnClear.Location = new System.Drawing.Point(5, 37);
             this.btnClear.Margin = new System.Windows.Forms.Padding(4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(61, 32);
@@ -291,7 +292,7 @@
             // btnStop
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStop.Location = new System.Drawing.Point(131, 120);
+            this.btnStop.Location = new System.Drawing.Point(132, 120);
             this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(57, 32);
@@ -312,9 +313,9 @@
             // 
             // saveList2File
             // 
-            this.saveList2File.Location = new System.Drawing.Point(194, 6);
+            this.saveList2File.Location = new System.Drawing.Point(190, 5);
             this.saveList2File.Name = "saveList2File";
-            this.saveList2File.Size = new System.Drawing.Size(169, 33);
+            this.saveList2File.Size = new System.Drawing.Size(169, 29);
             this.saveList2File.TabIndex = 7;
             this.saveList2File.Text = "Save list to File";
             this.saveList2File.UseVisualStyleBackColor = true;
@@ -322,7 +323,7 @@
             // listOrLog
             // 
             this.listOrLog.AutoSize = true;
-            this.listOrLog.Location = new System.Drawing.Point(166, 13);
+            this.listOrLog.Location = new System.Drawing.Point(167, 10);
             this.listOrLog.Name = "listOrLog";
             this.listOrLog.Size = new System.Drawing.Size(22, 21);
             this.listOrLog.TabIndex = 8;
@@ -380,8 +381,9 @@
             // panel2
             // 
             this.panel2.Controls.Add(this.listOrLog);
-            this.panel2.Controls.Add(this.btnAnalyze);
             this.panel2.Controls.Add(this.saveList2File);
+            this.panel2.Controls.Add(this.btnAnalyze);
+            this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.btnClear);
             this.panel2.Controls.Add(this.deleteOrRecycleBin);
             this.panel2.Controls.Add(this.btnDelete);
@@ -395,7 +397,7 @@
             // 
             // geminiProgressBar
             // 
-            this.geminiProgressBar.Location = new System.Drawing.Point(4, 46);
+            this.geminiProgressBar.Location = new System.Drawing.Point(4, 73);
             this.geminiProgressBar.Name = "geminiProgressBar";
             this.geminiProgressBar.Size = new System.Drawing.Size(356, 28);
             this.geminiProgressBar.TabIndex = 10;
@@ -403,10 +405,10 @@
             // 
             // summaryTextBox
             // 
-            this.summaryTextBox.Location = new System.Drawing.Point(5, 46);
+            this.summaryTextBox.Location = new System.Drawing.Point(5, 73);
             this.summaryTextBox.Name = "summaryTextBox";
             this.summaryTextBox.ReadOnly = true;
-            this.summaryTextBox.Size = new System.Drawing.Size(354, 28);
+            this.summaryTextBox.Size = new System.Drawing.Size(350, 28);
             this.summaryTextBox.TabIndex = 9;
             this.summaryTextBox.Text = "Summay: Found 1,500 duplicate files.";
             this.summaryTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -569,6 +571,18 @@
             this.panel4.Size = new System.Drawing.Size(1286, 157);
             this.panel4.TabIndex = 16;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(4, 6);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(144, 26);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "(Un)Select All";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnSelectAllOrNot_Click);
+            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -646,5 +660,6 @@
         private System.Windows.Forms.ProgressBar geminiProgressBar;
         private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
+        private System.Windows.Forms.Button button1;
     }
 }

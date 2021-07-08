@@ -218,15 +218,22 @@ namespace DailyWallpaper
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (deleteList.Count < 1)
+            if(deleteList == null)
             {
-                _console.WriteLine("!!! EMPTY!");
+                _console.WriteLine($"\r\n!!! You should ANALYZE first.");
                 return;
             }
-            foreach (var item in deleteList)
+
+            _console.WriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
+            if (deleteList.Count < 1)
+            {
+                return;
+            }
+            /*foreach (var item in deleteList)
             {
                 _console.WriteLine("FKU:" + item);
-            }
+            }*/
+
         }
 
 
@@ -565,7 +572,30 @@ namespace DailyWallpaper
             tbConsole.Clear();
             summaryTextBox.Text = "";
             geminiProgressBar.Value = 0;
-            // Invoke(new Action(Program.RunClear));
+        }
+
+        private static bool allChecked = false;
+        private void btnSelectAllOrNot_Click(object sender, EventArgs e)
+        {
+            if (resultListView.Items.Count > 1)
+            {
+                if (allChecked)
+                {
+                    foreach (var item in resultListView.Items)
+                    {
+                        ((System.Windows.Forms.ListViewItem)item).Checked = false;
+                    }
+                    allChecked = false;
+                }
+                else
+                {
+                    foreach (var item in resultListView.Items)
+                    {
+                        ((System.Windows.Forms.ListViewItem)item).Checked = true;
+                    }
+                    allChecked = true;
+                }
+            }
         }
 
         // Thanks to João Angelo
