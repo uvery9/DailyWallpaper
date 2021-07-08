@@ -119,16 +119,7 @@ namespace DailyWallpaper.HashCalc
                     // Console.WriteLine("CRC-32 is {0}", hash);
                     ((IProgress<int>)progessBar).Report(100);
                     timer.Stop();
-                    string hashCostTime;
-                    TimeSpan t = timer.Elapsed;
-                    if (t.TotalSeconds > 1)
-                    {
-                        hashCostTime = t.TotalSeconds.ToString() + "s";
-                    }
-                    else
-                    {
-                        hashCostTime = t.TotalMilliseconds.ToString() + "ms";
-                    }
+                    string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
                     action(true, $"{who}", hash, hashCostTime);
                 }
                 catch (OperationCanceledException e)

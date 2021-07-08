@@ -776,15 +776,14 @@ namespace DailyWallpaper
         {
             _console.WriteLine($">>> Using: {filterMode}");
             string filter = text;
+            folderFilter = new List<string>();
             if (string.IsNullOrEmpty(filter))
             {
-                folderFilter = new List<string>();
                 regexFilter = "";
                 regex = null;
                 _console.WriteLine(">>> But there is no valid filter value.");
                 return true;
             }
-            folderFilter = new List<string>();
             regexFilter = "";
             if (regexCheckBox.Checked)
             {

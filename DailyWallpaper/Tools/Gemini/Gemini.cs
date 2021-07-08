@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DailyWallpaper
+namespace DailyWallpaper.Tools
 {
     class Gemini
     {
@@ -31,6 +31,12 @@ namespace DailyWallpaper
         public ConfigIni ini;
         public List<string> controlledFolder1st;
         public List<string> controlledFolderAll;
+        public enum CompareMode
+        {
+            NameAndSize,
+            ExtAndSize,
+            SizeAndHash
+        }
 
         public Gemini()
         {
@@ -60,13 +66,14 @@ namespace DailyWallpaper
             public bool willDelete;
             public bool selected;
             public long size;
+            public string sizeStr;
             public string name;
             public string extName;
             public string fullPath;
             public string sha1;
             public string md5;
-            public DateTime lastMtime;
-            public DateTime crtTime;
+            public string lastMtime;
+            public string crtTime;
 
             public bool EqualsHash(object obj)
             {
@@ -129,13 +136,31 @@ namespace DailyWallpaper
                        size == @struct.size;
             }
 
+            public bool EqualExtSize(object obj)
+            {
+                return obj is GeminiFileStruct @struct &&
+                       fullPath != @struct.fullPath &&
+                       extName == @struct.extName &&
+                       size == @struct.size;
+            }
+
+            // fastest
+            public bool EqualNameSize(object obj)
+            {
+                return obj is GeminiFileStruct @struct &&
+                       fullPath != @struct.fullPath &&
+                       name == @struct.name &&
+                       size == @struct.size;
+            }
+
             public override string ToString()
             {
                 string tmp = "" +
                        "fullPath:         " + fullPath ?? "";
                 tmp += "\r\nname:         " + name ?? "";
                 tmp += "\r\nextName:      " + extName ?? "";
-                tmp += "\r\nsize:         " + size.ToString() ?? "";
+                tmp += "\r\nsize:         " + size.ToString();
+                tmp += "\r\nsizeStr:      " + sizeStr;
                 tmp += "\r\nmd5:          " + md5 ?? "";
                 tmp += "\r\nsha1:         " + sha1 ?? "";
                 tmp += "\r\nCreateTime:   " + crtTime.ToString() ?? "";
@@ -164,7 +189,27 @@ namespace DailyWallpaper
                 return -1906184077 + EqualityComparer<string>.Default.GetHashCode(fullPath);
             }
         }
-
+        private static string Len2Str(long len)
+        {
+            var str = "";
+            if (len > 1024 * 1024 * 1024)
+            {
+                str = (len / 1024 / 1024 / 1024) + "GB";
+            }
+            else if (len > 1024 * 1024)
+            {
+                str = (len / 1024 / 1024) + "MB";
+            }
+            else if (len > 1024)
+            {
+                str = (len / 1024) + "KB";
+            }
+            else
+            {
+                str = (len) + "B";
+            }
+            return str;
+        }
         public static GeminiFileStruct FillGeminiFileStruct(string fullPath)
         {
             var tmp = new GeminiFileStruct
@@ -188,8 +233,9 @@ namespace DailyWallpaper
                 }
                 tmp.name = Path.GetFileName(fullPath);
                 tmp.size = new FileInfo(fullPath).Length;
-                tmp.lastMtime = new FileInfo(fullPath).LastWriteTime;
-                tmp.crtTime = new FileInfo(fullPath).CreationTime;
+                tmp.sizeStr = Len2Str(tmp.size);
+                tmp.lastMtime = new FileInfo(fullPath).LastWriteTime.ToString("yyyy/M/d H:mm");
+                tmp.crtTime = new FileInfo(fullPath).CreationTime.ToString("yyyy/M/d H:mm");
                 tmp.extName = Path.GetExtension(fullPath);
                 tmp.available = true;
             }
@@ -206,13 +252,17 @@ namespace DailyWallpaper
         }
 
         public static List<GeminiFileStruct> ComparerTwoList(
-            List<GeminiFileStruct> li1, List<GeminiFileStruct> li2, 
-            List<GeminiFileStruct> check = default, CancellationToken token = default)
+            List<GeminiFileStruct> li1, List<GeminiFileStruct> li2,
+            CompareMode mode,
+            CancellationToken token = default, Action<bool,
+            List<GeminiFileStruct>> action = default,
+            IProgress<long> progress = null)
         {
             var tmp = new List<GeminiFileStruct>();
 
             if (li1.Count < 1 || li2.Count < 1)
             {
+                action(false, tmp);
                 return tmp;
             }
             foreach (var l1 in li1)
@@ -223,31 +273,38 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    if (l1.EqualSize(l2))
+                    if (progress != null)
                     {
-                        if (check.Count > 0)
-                        {
-                            foreach(var ck in check)
-                            {
-                                if (token.IsCancellationRequested)
-                                {
-                                    token.ThrowIfCancellationRequested();
-                                }
-                                if (!ck.Equals(l1) && !ck.Equals(l2))
-                                {
-                                    tmp.Add(l1);
-                                    tmp.Add(l2);
-                                }
-                            }
-                        }
-                        else
+                        progress.Report(1024);
+                    }
+                    if (mode == CompareMode.ExtAndSize)
+                    {
+                        if (l1.EqualExtSize(l2))
                         {
                             tmp.Add(l1);
                             tmp.Add(l2);
                         }
                     }
+                    else if (mode == CompareMode.NameAndSize) // Fastest.
+                    {
+                        if (l1.EqualNameSize(l2))
+                        {
+                            tmp.Add(l1);
+                            tmp.Add(l2);
+                        }
+                    }
+                    else if (mode == CompareMode.SizeAndHash)
+                    {
+                        if (l1.EqualSize(l2))
+                        {
+                            tmp.Add(l1);
+                            tmp.Add(l2);
+                        }
+                    }
+
                 }
-            }           
+            }
+            action(true, tmp);
             return tmp;
         }
 

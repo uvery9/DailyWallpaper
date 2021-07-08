@@ -11,7 +11,10 @@ using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
-using static DailyWallpaper.Gemini;
+using DailyWallpaper.Tools;
+using System.Diagnostics;
+using System.Collections;
+using static DailyWallpaper.Tools.Gemini;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -24,8 +27,6 @@ namespace DailyWallpaper
         private CancellationTokenSource _source = null;
         private bool deletePermanently = false;
 
-        // Speed up the next scan
-        private string analyzePath = null;
         private bool scanRes = false;
         private List<string> folderFilter;
         private string regexFilter;
@@ -33,8 +34,6 @@ namespace DailyWallpaper
         
         private List<string> targetFolder1History = new List<string>();
         private List<string> targetFolder2History = new List<string>();
-        private string targetFolder1 = null;
-        private string targetFolder2 = null;
         private List<string> filesList1;
         private List<string> filesList2;
 
@@ -43,6 +42,8 @@ namespace DailyWallpaper
         private List<GeminiFileStruct> sameListNoDup;
         private long minimumFileLimit = 0;
         private List<Task> _tasks = new List<Task>();
+        private Mutex _mutex;
+        private ListViewColumnSorter lvwColumnSorter;
 
         private enum FilterMode : int
         {
@@ -62,7 +63,7 @@ namespace DailyWallpaper
             Icon = Properties.Resources.GE32X32;
             gemini = new Gemini();
             _console = new TextBoxCons(new ConsWriter(tbConsole));
-            _console.WriteLine(gemini.helpString);
+            // _console.WriteLine(gemini.helpString);
 
             
             // init targetfolder 1&2
@@ -71,14 +72,14 @@ namespace DailyWallpaper
             var init = gemini.ini.Read("TargetFolder1", "Gemini");
             if (Directory.Exists(init))
             {
-                UpdateTextAndIniFile("TargetFolder1", init, ref targetFolder1, 
+                UpdateTextAndIniFile("TargetFolder1", init, 
                     targetFolder1History, targetFolder1TextBox, updateIni: false); 
             }
 
             init = gemini.ini.Read("TargetFolder2", "Gemini");
             if (Directory.Exists(init))
             {
-                UpdateTextAndIniFile("TargetFolder2", init, ref targetFolder2,
+                UpdateTextAndIniFile("TargetFolder2", init,
                     targetFolder2History, targetFolder2TextBox, updateIni: false);
             }
 
@@ -86,8 +87,7 @@ namespace DailyWallpaper
             // default: send to RecycleBin
             deleteOrRecycleBin.Checked = false;
             DeleteOrRecycleBin(deletePermanently: false);
-            listOrLog.Checked = true;
-            folderFilter = new List<string>();
+            
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             SetUpFilterMode();
@@ -98,6 +98,30 @@ namespace DailyWallpaper
             filesList2 = new List<string>();
             geminiFileStructList1 = new List<GeminiFileStruct>();
             geminiFileStructList2 = new List<GeminiFileStruct>();
+            InitSaveLogOrListToFile();
+            _mutex = new Mutex();
+
+            // Create an instance of a ListView column sorter and assign it
+            // to the ListView control.
+            lvwColumnSorter = new ListViewColumnSorter();
+            resultListView.ListViewItemSorter = lvwColumnSorter;
+        }
+
+        private void InitSaveLogOrListToFile()
+        {
+            listOrLog.Checked = false;
+            saveList2File.Text = "Save log to File";
+            listOrLog.Click += (e, s) => {
+                if (listOrLog.Checked)
+                {
+                    saveList2File.Text = "Save list to File";
+                }
+                else
+                {
+                    saveList2File.Text = "Save log to File";
+                }
+            };
+            saveList2File.Click += new EventHandler(saveList2File_Click);
         }
         /// <summary>
         /// bind to tbTargetFolderHistory
@@ -145,17 +169,17 @@ namespace DailyWallpaper
         private void btnSelectTargetFolder1_Click(object sender, EventArgs e)
         {
             SelectFolder("TargetFolder1", targetFolder1TextBox,
-            ref targetFolder1, targetFolder1History);
+                targetFolder1History);
         }
 
         private void btnSelectTargetFolder2_Click(object sender, EventArgs e)
         {
             SelectFolder("TargetFolder2", targetFolder2TextBox,
-            ref targetFolder2, targetFolder2History);
+            targetFolder2History);
         }
 
         private void SelectFolder(string keyInIni, System.Windows.Forms.TextBox tx, 
-            ref string targetFolder, List<string> targetFolderHistory)
+            List<string> targetFolderHistory)
         {
             using (var dialog = new CommonOpenFileDialog())
             {
@@ -176,7 +200,7 @@ namespace DailyWallpaper
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
                     var path = dialog.FileName;
-                    if (!UpdateTextAndIniFile(keyInIni, path, ref targetFolder, targetFolderHistory, tx))
+                    if (!UpdateTextAndIniFile(keyInIni, path, targetFolderHistory, tx))
                     {
                         return;
                     }
@@ -195,6 +219,40 @@ namespace DailyWallpaper
 
         }
 
+        private static string GetTimeStringMsOrS(TimeSpan t)
+        {
+            string hashCostTime;
+            if (t.TotalSeconds > 1)
+            {
+                hashCostTime = t.TotalSeconds.ToString("f2") + "s";
+            }
+            else
+            {
+                hashCostTime = t.TotalMilliseconds.ToString("f3") + "ms";
+            }
+            return hashCostTime;
+        }
+        private CompareMode SetCompareMode()
+        {
+            CompareMode mode = CompareMode.NameAndSize;
+
+            if (fileSizeCheckBox.Checked)
+            {
+                mode = CompareMode.SizeAndHash;
+            }
+
+            if (fileExtNameCheckBox.Checked)
+            {
+                mode = CompareMode.ExtAndSize;
+            }
+
+            if (fileNameCheckBox.Checked)
+            {
+                mode = CompareMode.NameAndSize;
+            }
+
+            return mode;
+        }
         private async void StartAnalyze(bool delete = false)
         {
             if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
@@ -208,7 +266,10 @@ namespace DailyWallpaper
             
             var _task = Task.Run(() =>
             {
+                var timer = new Stopwatch();
+                timer.Start();
                 // Get all files from folder1/2
+                
                 RecurseScanDir(targetFolder1TextBox.Text, ref filesList1, token);
                 if(!targetFolder1TextBox.Text.Equals(targetFolder2TextBox.Text))
                     RecurseScanDir(targetFolder2TextBox.Text, ref filesList2, token);
@@ -216,14 +277,21 @@ namespace DailyWallpaper
                 // get files info exclude HASH.(FASTER) 
                 FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
                 FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
-                
-                // compare folders and themselves, return duplicated files list.
-                sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
-                    geminiFileStructList2, token);
-                
-                // group by size
-                GeminiList2Group(sameListNoDup, token);
 
+                // compare folders and themselves, return duplicated files list.
+                _console.WriteLine(">>> Start comparing...");
+                CompareMode mode = SetCompareMode();
+                var limit = SetMinimumFileLimit();
+                sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
+                    geminiFileStructList2, mode, limit, token).Result;
+                _console.WriteLine(">>> Compare finished...");
+                // group by size
+
+                _console.WriteLine(">>> Show to ListView...");
+                GeminiList2Group(sameListNoDup, token);
+                timer.Stop();
+                string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
+                _console.WriteLine($">>> Cost time: {hashCostTime}");
 
             }, _source.Token);
             try
@@ -232,6 +300,7 @@ namespace DailyWallpaper
                 await _task;
                 // No Error, filesList is usable
                 scanRes = true;
+                geminiProgressBar.Visible = false;
             }
             catch (OperationCanceledException e)
             {
@@ -253,47 +322,69 @@ namespace DailyWallpaper
 
         }
 
-        private List<GeminiFileStruct> ComparerTwoFolderGetList(List<GeminiFileStruct> l1,
-            List<GeminiFileStruct> l2, CancellationToken token)
+        private async Task<List<GeminiFileStruct>> ComparerTwoFolderGetList(List<GeminiFileStruct> l1,
+            List<GeminiFileStruct> l2, CompareMode mode, long limit = 0, CancellationToken token = default)
         {
-            var sameList = new List<GeminiFileStruct>();
-
-            var sameListFolder1 = ComparerTwoList(l1,
-                l1, sameList, token);
-            var sameListFolder2 = ComparerTwoList(l2,
-                l2, sameList, token);
-            var sameList12 = ComparerTwoList(l1,
-                l2, sameList, token);
-
-            if (sameList12.Count > 0)
-            {
-                sameList.AddRange(sameList12);
-            }
-            if (sameListFolder1.Count > 0)
-            {
-                sameList.AddRange(sameListFolder1);
-            }
-            if (sameListFolder2.Count > 0)
-            {
-                sameList.AddRange(sameListFolder2);
-            }
-            var nodup = sameList.Distinct().ToList();
+            
             if (ignoreFileCheckBox.Checked)
             {
                 var limited =
-                    from i in nodup
-                    where i.size > minimumFileLimit
+                    from i in l1
+                    where i.size > limit
                     select i;
-                nodup = limited.ToList();
+                l1 = limited.ToList();
             }
-            return nodup;
+
+            if (ignoreFileCheckBox.Checked)
+            {
+                var limited =
+                    from i in l2
+                    where i.size > limit
+                    select i;
+                l2 = limited.ToList();
+            }
+
+            var sameList = new List<GeminiFileStruct>();
+            void retAction(bool res, List<GeminiFileStruct> ret)
+            {
+                _mutex.WaitOne();
+                if (res && ret.Count > 1)
+                {
+                    sameList.AddRange(ret);
+                }
+                _mutex.ReleaseMutex();
+            }
+            await Task.Run(() => ComparerTwoList(l1,
+                l1, mode, token, retAction));
+            await Task.Run(() => ComparerTwoList(l2,
+                l2, mode, token, retAction));
+            await Task.Run(() => ComparerTwoList(l1,
+                l2, mode, token, retAction));
+
+            return sameList.Distinct().ToList();
+        }
+
+        private void AddItemToListView(GeminiFileStruct gf)
+        {
+            var item = new System.Windows.Forms.ListViewItem(gf.name);
+            item.SubItems.Add(gf.lastMtime.ToString());
+            item.SubItems.Add(gf.extName);
+            item.SubItems.Add(gf.sizeStr);
+            // item.SubItems.Add(gf.sizeStr + "(" + gf.size.ToString() + ")");
+            item.SubItems.Add(gf.fullPath);
+            resultListView.Items.Add(item);
+        }
+
+        private void AddGroupTitleToListView()
+        {
+
         }
         private void GeminiList2Group(List<GeminiFileStruct> listNoDup, 
-            CancellationToken token)
+            CancellationToken token, bool printToCons = false)
         {
             if (listNoDup.Count > 0)
             {
-                summaryTextBox.Text = $"Summay: Found {listNoDup.Count} duplicate files.";
+                summaryTextBox.Text = $"Summay: Found {listNoDup.Count:N0} duplicate files.";
                 // same size to one group
                 // check HASH before.
                 var duplicateGrp =
@@ -303,34 +394,53 @@ namespace DailyWallpaper
                     where grp.Count() > 1
                     select grp;
                 int index = 0;
+                int j = 0;
+                resultListView.Items.Clear();
                 foreach (var item in duplicateGrp)
                 {
                     index++;
-                    _console.WriteLine($">>>>> Group[{index}] {item.Key}");
+                    if (printToCons) _console.WriteLine($"\r\n>>>>> Group Size[{index}] {item.Key}");
                     // update Group name
 
                     /*var groupHash =
                         from i in item
                         select i;*/
-                    foreach (var it in item)
+                    var ext =
+                        from i in item
+                        group i by i.extName into grp
+                        select grp;
+                    foreach (var it in ext)
                     {
-                        _console.WriteLine("<file>\r\n" + it + "\r\n</file>\r\n");
+                        j++;
+                        if (printToCons) _console.WriteLine($">>> Group Ext[{j}] {it.Key}");
+                        foreach (var t in it)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                token.ThrowIfCancellationRequested();
+                            }
+                            if (printToCons) _console.WriteLine("<file>\r\n" + t + "\r\n</file>\r\n");
+                            AddItemToListView(t);
+                        }
+                        if (printToCons) _console.WriteLine($">>> Group Ext[{j}] {it.Key}");
                         // update list name
                     }
+                    if (printToCons) _console.WriteLine($">>> Group Size[{index}] {item.Key}\r\n");
                 }
                 
-                _console.WriteLine($"Summay: Found {listNoDup.Count} duplicate files.");
+                _console.WriteLine($">>> Summay: Found {listNoDup.Count:n0} duplicate files.");
             }
             else
             {
-                summaryTextBox.Text = $"Summay: Found No duplicate files.";
+                summaryTextBox.Text = $">>> Summay: Found No duplicate files.";
             }
 
         }
 
         private void btnAnalyze_Click(object sender, EventArgs e)
         {
-            SetMinimumFileLimit();
+            btnClear.PerformClick();
+            geminiProgressBar.Visible = true;
             StartAnalyze();
         }
 
@@ -347,8 +457,10 @@ namespace DailyWallpaper
         }
         private void btnClear_Click(object sender, EventArgs e)
         {
-
             tbConsole.Clear();
+            resultListView.Items.Clear();
+            summaryTextBox.Text = "";
+            geminiProgressBar.Value = 0;
             // Invoke(new Action(Program.RunClear));
         }
 
@@ -367,8 +479,6 @@ namespace DailyWallpaper
                 _console.WriteLine("Invalid directory path: {0}", path);
                 return;
             }
-
-            analyzePath = path;
 
             // _console.WriteLine($"\r\n#---- Started Analyze Operation ----#\r\n");
             if (scanRes && filesList.Count > 0)
@@ -391,7 +501,6 @@ namespace DailyWallpaper
             {
                 FindFilesWithProtectMode(path, filesList, token);
             }
-            // _console.WriteLine($"\r\n#---- Finished Analyze Operation ----#\r\n");
         }
 
         private bool FolderFilter(string path, FilterMode mode)
@@ -495,12 +604,13 @@ namespace DailyWallpaper
         //calcSHA1: fileSHA1CheckBox.Checked,
         // calcMD5: fileMD5CheckBox.Checked
 
-        void FileList2GeminiFileStructList(List<string> filesList, ref List<GeminiFileStruct> gList, CancellationToken token)
+        void FileList2GeminiFileStructList(List<string> filesList, 
+            ref List<GeminiFileStruct> gList, CancellationToken token)
         {
             gList = new List<GeminiFileStruct>();
             if (filesList.Count > 0)
             {
-                _console.WriteLine(">>> Start to analyze files.");
+                _console.WriteLine(">>> Start collecting all files...");
                 foreach (var f in filesList)
                 {
                     if (token.IsCancellationRequested)
@@ -509,7 +619,7 @@ namespace DailyWallpaper
                     }
                     gList.Add(Gemini.FillGeminiFileStruct(f));
                 }
-                _console.WriteLine(">>> Analyse finished.");
+                _console.WriteLine(">>> All files collected.");
             }
         }
 
@@ -578,7 +688,7 @@ namespace DailyWallpaper
             return false;
         }
         
-        private bool UpdateTextAndIniFile(string keyInIni, string path, ref string targetFolder, 
+        private bool UpdateTextAndIniFile(string keyInIni, string path, 
             List<string> targetFolderHistory, System.Windows.Forms.TextBox tx = null,
             bool updateIni = true, bool print = true)
         {
@@ -602,7 +712,6 @@ namespace DailyWallpaper
                 targetFolderHistory.Add(path);
                 BindHistory(tx, targetFolderHistory);
             }
-            targetFolder = path;
             if (updateIni)
             {
                 gemini.ini.UpdateIniItem(keyInIni, path, "Gemini");
@@ -753,7 +862,7 @@ namespace DailyWallpaper
                 {
                     var path = box.Text;
                     path = path.Trim();
-                    if (!UpdateTextAndIniFile("TargetFolder1", path, ref targetFolder1, targetFolder1History))
+                    if (!UpdateTextAndIniFile("TargetFolder1", path, targetFolder1History))
                     {
                         return;
                     }
@@ -769,7 +878,7 @@ namespace DailyWallpaper
                 {
                     var path = box.Text;
                     path = path.Trim();
-                    if (!UpdateTextAndIniFile("TargetFolder2", path, ref targetFolder2, targetFolder2History))
+                    if (!UpdateTextAndIniFile("TargetFolder2", path, targetFolder2History))
                     {
                         return;
                     }
@@ -802,44 +911,57 @@ namespace DailyWallpaper
 
         private void saveList2File_Click(object sender, EventArgs e)
         {
-
-            if (listOrLog.Checked && (filesList1.Count < 1 || filesList2.Count < 1))
-            {
-                _console.WriteLine("You SHOULD scan one folder first.");
-                return;
-            }
-            if (listOrLog.Checked && !Directory.Exists(targetFolder1))
-            {
-                return;
-            }
             if (!listOrLog.Checked && tbConsole.Text.Length < 1)
             {
                 return;
             }
+
             using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
             {
-                saveFileDialog.InitialDirectory =
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                
+                var saveDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOG");
+                if (!Directory.Exists(saveDir))
+                {
+                    Directory.CreateDirectory(saveDir);
+                }
+                saveFileDialog.InitialDirectory = saveDir;
                 saveFileDialog.Filter = "Txt files (*.txt)|*.txt";
                 // saveFileDialog.FilterIndex = 2;
                 saveFileDialog.RestoreDirectory = true;
-                var name = new DirectoryInfo(targetFolder1).Name + "-" +
-                    new DirectoryInfo(targetFolder2).Name;
+                string t1;
+                string t2;
+                var f1 = targetFolder1TextBox.Text;
+                var f2 = targetFolder2TextBox.Text;
+                if (string.IsNullOrEmpty(f1) || !Directory.Exists(f1))
+                {
+                    t1 = "NONE";
+                }
+                else
+                {
+                    t1 = new DirectoryInfo(f1).Name;
+                }
+                if (string.IsNullOrEmpty(f2) || !Directory.Exists(f2))
+                {
+                    t2 = "NONE";
+                }
+                else
+                {
+                    t2 = new DirectoryInfo(f2).Name;
+                }
                 
+                var name = t1 + "-" +  t2;
                 // E:, D: -> D-Disk
                 // need TEST here
-                if (name.Contains(":"))
-                {
-                    name = name.Split(':')[0] + "-Disk";
-                }
+                name = name.Replace(":", "_");
                 if (listOrLog.Checked)
                 {
                     saveFileDialog.FileName = "Gemini-List_" + name + "_" +
-                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
+                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm"); //+ ".txt"
                 } else
                 {
                     saveFileDialog.FileName = "Gemini-Log_" + name + "_" +
-                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"); //+ ".txt"
+                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm"); //+ ".txt"
                 }
                 
 
@@ -866,36 +988,18 @@ namespace DailyWallpaper
 
         }
 
-        private void listOrLog_CheckedChanged(object sender, EventArgs e)
-        {
-            if (listOrLog.Checked)
-            {
-                saveList2File.Text = "Save list to File";
-            }
-            else
-            {
-                saveList2File.Text = "Save log to File";
-            }
-        }
-
-        private void filterExample_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private bool SetFolderFilter(string text, bool print = false)
         {
             _console.WriteLine($">>> Using: {filterMode}");
             string filter = text;
+            folderFilter = new List<string>();
             if (string.IsNullOrEmpty(filter))
             {
-                folderFilter = new List<string>();
                 regexFilter = "";
                 regex = null;
                 _console.WriteLine(">>> But there is no valid filter value.");
                 return true;
             }
-            folderFilter = new List<string>();
             regexFilter = "";
             if (regexCheckBox.Checked)
             {
@@ -1012,17 +1116,17 @@ namespace DailyWallpaper
 
         private void targetFolder1_DragDrop(object sender, DragEventArgs e)
         {
-            targetFolder_DragDrop(sender, e, "TargetFolder1", ref targetFolder1, targetFolder1History,
+            targetFolder_DragDrop(sender, e, "TargetFolder1", targetFolder1History,
                 targetFolder1TextBox);
         }
         private void targetFolder2_DragDrop(object sender, DragEventArgs e)
         {
-            targetFolder_DragDrop(sender, e, "TargetFolder2", ref targetFolder2, targetFolder2History,
+            targetFolder_DragDrop(sender, e, "TargetFolder2", targetFolder2History,
                 targetFolder2TextBox);
         }
 
         private void targetFolder_DragDrop(object sender, DragEventArgs e, string keyInIni,
-            ref string targetFolder, List<string> targetFolderHistory, System.Windows.Forms.TextBox tx)
+            List<string> targetFolderHistory, System.Windows.Forms.TextBox tx)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -1035,7 +1139,7 @@ namespace DailyWallpaper
                     {
                         if (Directory.Exists(path))
                         {
-                            UpdateTextAndIniFile(keyInIni, path, ref targetFolder,
+                            UpdateTextAndIniFile(keyInIni, path, 
                                 targetFolderHistory, tx);
                         }
                     }
@@ -1166,7 +1270,7 @@ namespace DailyWallpaper
             SetMinimumFileLimit();
         }
 
-        private void SetMinimumFileLimit()
+        private long SetMinimumFileLimit()
         {
             minimumFileLimit = 0;
             if (ignoreFileCheckBox.Checked)
@@ -1201,6 +1305,7 @@ namespace DailyWallpaper
             gemini.ini.UpdateIniItem("ignoreFileEnabled", ignoreFileCheckBox.Checked.ToString(), "Gemini");
             gemini.ini.UpdateIniItem("ignoreFileIndex", ignoreFileSizecomboBox.SelectedIndex.ToString(), "Gemini");
             gemini.ini.UpdateIniItem("ignoreFileTextBox", ignoreFileSizeTextBox.Text, "Gemini");
+            return minimumFileLimit;
         }
 
         private void ignoreFileCheckBox_Click(object sender, EventArgs e)
@@ -1242,5 +1347,42 @@ namespace DailyWallpaper
             }
         }
 
+        private void resultListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        // https://stackoverflow.com/questions/17746013/how-to-change-order-of-columns-of-listview
+        // https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/sort-listview-by-column
+        private void resultListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            // Determine if clicked column is already the column that is being sorted.
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                if (lvwColumnSorter.Order == SortOrder.Ascending)
+                {
+                    lvwColumnSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    lvwColumnSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
+            }
+
+            // Perform the sort with these new sort options.
+            resultListView.Sort();
+        }
+
+        private void geminiProgressBar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

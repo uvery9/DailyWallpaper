@@ -30,19 +30,18 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBoxTarget = new System.Windows.Forms.GroupBox();
+            this.filterExample = new System.Windows.Forms.TextBox();
             this.btnSelectTargetFolder2 = new System.Windows.Forms.Button();
+            this.modeCheckBox = new System.Windows.Forms.CheckBox();
+            this.regexCheckBox = new System.Windows.Forms.CheckBox();
             this.labelTargetFolder1 = new System.Windows.Forms.Label();
             this.labelTargetFolder2 = new System.Windows.Forms.Label();
+            this.folderFilterTextBox = new System.Windows.Forms.TextBox();
+            this.fldFilterText = new System.Windows.Forms.TextBox();
             this.targetFolder2TextBox = new System.Windows.Forms.TextBox();
             this.btnSelectTargetFolder1 = new System.Windows.Forms.Button();
             this.targetFolder1TextBox = new System.Windows.Forms.TextBox();
-            this.modeCheckBox = new System.Windows.Forms.CheckBox();
-            this.regexCheckBox = new System.Windows.Forms.CheckBox();
-            this.filterExample = new System.Windows.Forms.TextBox();
-            this.folderFilterTextBox = new System.Windows.Forms.TextBox();
-            this.fldFilterText = new System.Windows.Forms.TextBox();
             this.btnAnalyze = new System.Windows.Forms.Button();
-            this.tbConsole = new System.Windows.Forms.TextBox();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
@@ -50,12 +49,15 @@
             this.saveList2File = new System.Windows.Forms.Button();
             this.listOrLog = new System.Windows.Forms.CheckBox();
             this.resultListView = new System.Windows.Forms.ListView();
+            this.nameColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.modifiedTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.extNameColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.sizeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fullPathColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.geminiProgressBar = new System.Windows.Forms.ProgressBar();
             this.summaryTextBox = new System.Windows.Forms.TextBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.resultGroupBox = new System.Windows.Forms.GroupBox();
-            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.fileModeGroupBox = new System.Windows.Forms.GroupBox();
             this.fileExtNameCheckBox = new System.Windows.Forms.CheckBox();
             this.fileNameCheckBox = new System.Windows.Forms.CheckBox();
@@ -66,41 +68,62 @@
             this.fileSHA1CheckBox = new System.Windows.Forms.CheckBox();
             this.fileSizeCheckBox = new System.Windows.Forms.CheckBox();
             this.fileMD5CheckBox = new System.Windows.Forms.CheckBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.tbConsole = new System.Windows.Forms.TextBox();
+            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
+            this.resultGroupBox = new System.Windows.Forms.GroupBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.updateButton = new System.Windows.Forms.Button();
             this.groupBoxTarget.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.resultGroupBox.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.SuspendLayout();
+            this.resultGroupBox.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxTarget
             // 
             this.groupBoxTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxTarget.Controls.Add(this.updateButton);
+            this.groupBoxTarget.Controls.Add(this.filterExample);
             this.groupBoxTarget.Controls.Add(this.btnSelectTargetFolder2);
+            this.groupBoxTarget.Controls.Add(this.modeCheckBox);
+            this.groupBoxTarget.Controls.Add(this.regexCheckBox);
             this.groupBoxTarget.Controls.Add(this.labelTargetFolder1);
             this.groupBoxTarget.Controls.Add(this.labelTargetFolder2);
+            this.groupBoxTarget.Controls.Add(this.folderFilterTextBox);
+            this.groupBoxTarget.Controls.Add(this.fldFilterText);
             this.groupBoxTarget.Controls.Add(this.targetFolder2TextBox);
             this.groupBoxTarget.Controls.Add(this.btnSelectTargetFolder1);
             this.groupBoxTarget.Controls.Add(this.targetFolder1TextBox);
-            this.groupBoxTarget.Location = new System.Drawing.Point(13, 13);
+            this.groupBoxTarget.Location = new System.Drawing.Point(5, 12);
             this.groupBoxTarget.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxTarget.Name = "groupBoxTarget";
             this.groupBoxTarget.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxTarget.Size = new System.Drawing.Size(967, 100);
+            this.groupBoxTarget.Size = new System.Drawing.Size(904, 131);
             this.groupBoxTarget.TabIndex = 1;
             this.groupBoxTarget.TabStop = false;
             this.groupBoxTarget.Text = "Paths (Allow Drop)";
             // 
+            // filterExample
+            // 
+            this.filterExample.BackColor = System.Drawing.SystemColors.Control;
+            this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.filterExample.Location = new System.Drawing.Point(558, 102);
+            this.filterExample.Name = "filterExample";
+            this.filterExample.ReadOnly = true;
+            this.filterExample.Size = new System.Drawing.Size(234, 21);
+            this.filterExample.TabIndex = 8;
+            this.filterExample.Text = "SSSSSS";
+            // 
             // btnSelectTargetFolder2
             // 
             this.btnSelectTargetFolder2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(885, 54);
+            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(810, 59);
             this.btnSelectTargetFolder2.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder2.Name = "btnSelectTargetFolder2";
             this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 35);
@@ -109,35 +132,74 @@
             this.btnSelectTargetFolder2.UseVisualStyleBackColor = true;
             this.btnSelectTargetFolder2.Click += new System.EventHandler(this.btnSelectTargetFolder2_Click);
             // 
+            // modeCheckBox
+            // 
+            this.modeCheckBox.AutoSize = true;
+            this.modeCheckBox.Location = new System.Drawing.Point(486, 102);
+            this.modeCheckBox.Name = "modeCheckBox";
+            this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
+            this.modeCheckBox.TabIndex = 10;
+            this.modeCheckBox.Text = "Find";
+            this.modeCheckBox.UseVisualStyleBackColor = true;
+            this.modeCheckBox.CheckedChanged += new System.EventHandler(this.modeCheckBox_CheckedChanged);
+            // 
+            // regexCheckBox
+            // 
+            this.regexCheckBox.AutoSize = true;
+            this.regexCheckBox.Location = new System.Drawing.Point(428, 102);
+            this.regexCheckBox.Name = "regexCheckBox";
+            this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
+            this.regexCheckBox.TabIndex = 9;
+            this.regexCheckBox.Text = "RE";
+            this.regexCheckBox.UseVisualStyleBackColor = true;
+            // 
             // labelTargetFolder1
             // 
             this.labelTargetFolder1.AutoSize = true;
             this.labelTargetFolder1.Location = new System.Drawing.Point(0, 25);
             this.labelTargetFolder1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTargetFolder1.Name = "labelTargetFolder1";
-            this.labelTargetFolder1.Size = new System.Drawing.Size(152, 18);
+            this.labelTargetFolder1.Size = new System.Drawing.Size(89, 18);
             this.labelTargetFolder1.TabIndex = 1;
-            this.labelTargetFolder1.Text = "Target Folder 1:";
+            this.labelTargetFolder1.Text = "Folder 1:";
             // 
             // labelTargetFolder2
             // 
             this.labelTargetFolder2.AutoSize = true;
-            this.labelTargetFolder2.Location = new System.Drawing.Point(0, 62);
+            this.labelTargetFolder2.Location = new System.Drawing.Point(0, 67);
             this.labelTargetFolder2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTargetFolder2.Name = "labelTargetFolder2";
-            this.labelTargetFolder2.Size = new System.Drawing.Size(152, 18);
+            this.labelTargetFolder2.Size = new System.Drawing.Size(89, 18);
             this.labelTargetFolder2.TabIndex = 1;
-            this.labelTargetFolder2.Text = "Target Folder 2:";
+            this.labelTargetFolder2.Text = "Folder 2:";
+            // 
+            // folderFilterTextBox
+            // 
+            this.folderFilterTextBox.Location = new System.Drawing.Point(141, 100);
+            this.folderFilterTextBox.Name = "folderFilterTextBox";
+            this.folderFilterTextBox.Size = new System.Drawing.Size(265, 28);
+            this.folderFilterTextBox.TabIndex = 7;
+            // 
+            // fldFilterText
+            // 
+            this.fldFilterText.BackColor = System.Drawing.SystemColors.Control;
+            this.fldFilterText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fldFilterText.Location = new System.Drawing.Point(3, 103);
+            this.fldFilterText.Name = "fldFilterText";
+            this.fldFilterText.ReadOnly = true;
+            this.fldFilterText.Size = new System.Drawing.Size(177, 21);
+            this.fldFilterText.TabIndex = 6;
+            this.fldFilterText.Text = "Folder Filter:";
             // 
             // targetFolder2TextBox
             // 
             this.targetFolder2TextBox.AllowDrop = true;
             this.targetFolder2TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFolder2TextBox.Location = new System.Drawing.Point(157, 59);
+            this.targetFolder2TextBox.Location = new System.Drawing.Point(97, 64);
             this.targetFolder2TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder2TextBox.Name = "targetFolder2TextBox";
-            this.targetFolder2TextBox.Size = new System.Drawing.Size(720, 28);
+            this.targetFolder2TextBox.Size = new System.Drawing.Size(695, 28);
             this.targetFolder2TextBox.TabIndex = 3;
             this.targetFolder2TextBox.TabStop = false;
             this.targetFolder2TextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
@@ -146,7 +208,7 @@
             // btnSelectTargetFolder1
             // 
             this.btnSelectTargetFolder1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(885, 17);
+            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(810, 17);
             this.btnSelectTargetFolder1.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder1.Name = "btnSelectTargetFolder1";
             this.btnSelectTargetFolder1.Size = new System.Drawing.Size(77, 35);
@@ -160,65 +222,14 @@
             this.targetFolder1TextBox.AllowDrop = true;
             this.targetFolder1TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFolder1TextBox.Location = new System.Drawing.Point(157, 22);
+            this.targetFolder1TextBox.Location = new System.Drawing.Point(97, 22);
             this.targetFolder1TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder1TextBox.Name = "targetFolder1TextBox";
-            this.targetFolder1TextBox.Size = new System.Drawing.Size(722, 28);
+            this.targetFolder1TextBox.Size = new System.Drawing.Size(695, 28);
             this.targetFolder1TextBox.TabIndex = 3;
             this.targetFolder1TextBox.TabStop = false;
             this.targetFolder1TextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder1_DragDrop);
             this.targetFolder1TextBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
-            // 
-            // modeCheckBox
-            // 
-            this.modeCheckBox.AutoSize = true;
-            this.modeCheckBox.Location = new System.Drawing.Point(203, 7);
-            this.modeCheckBox.Name = "modeCheckBox";
-            this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
-            this.modeCheckBox.TabIndex = 10;
-            this.modeCheckBox.Text = "Find";
-            this.modeCheckBox.UseVisualStyleBackColor = true;
-            this.modeCheckBox.CheckedChanged += new System.EventHandler(this.modeCheckBox_CheckedChanged);
-            // 
-            // regexCheckBox
-            // 
-            this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(135, 7);
-            this.regexCheckBox.Name = "regexCheckBox";
-            this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
-            this.regexCheckBox.TabIndex = 9;
-            this.regexCheckBox.Text = "RE";
-            this.regexCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // filterExample
-            // 
-            this.filterExample.BackColor = System.Drawing.SystemColors.Control;
-            this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(39, 69);
-            this.filterExample.Name = "filterExample";
-            this.filterExample.ReadOnly = true;
-            this.filterExample.Size = new System.Drawing.Size(234, 21);
-            this.filterExample.TabIndex = 8;
-            this.filterExample.Text = "SSSSSS";
-            this.filterExample.TextChanged += new System.EventHandler(this.filterExample_TextChanged);
-            // 
-            // folderFilterTextBox
-            // 
-            this.folderFilterTextBox.Location = new System.Drawing.Point(8, 35);
-            this.folderFilterTextBox.Name = "folderFilterTextBox";
-            this.folderFilterTextBox.Size = new System.Drawing.Size(265, 28);
-            this.folderFilterTextBox.TabIndex = 7;
-            // 
-            // fldFilterText
-            // 
-            this.fldFilterText.BackColor = System.Drawing.SystemColors.Control;
-            this.fldFilterText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.fldFilterText.Location = new System.Drawing.Point(3, 8);
-            this.fldFilterText.Name = "fldFilterText";
-            this.fldFilterText.ReadOnly = true;
-            this.fldFilterText.Size = new System.Drawing.Size(177, 21);
-            this.fldFilterText.TabIndex = 6;
-            this.fldFilterText.Text = "Folder Filter:";
             // 
             // btnAnalyze
             // 
@@ -231,22 +242,6 @@
             this.btnAnalyze.Text = "Analyze";
             this.btnAnalyze.UseVisualStyleBackColor = true;
             this.btnAnalyze.Click += new System.EventHandler(this.btnAnalyze_Click);
-            // 
-            // tbConsole
-            // 
-            this.tbConsole.AllowDrop = true;
-            this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbConsole.Location = new System.Drawing.Point(0, 546);
-            this.tbConsole.Margin = new System.Windows.Forms.Padding(4);
-            this.tbConsole.Multiline = true;
-            this.tbConsole.Name = "tbConsole";
-            this.tbConsole.ReadOnly = true;
-            this.tbConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbConsole.Size = new System.Drawing.Size(882, 242);
-            this.tbConsole.TabIndex = 0;
-            this.tbConsole.WordWrap = false;
             // 
             // btnDelete
             // 
@@ -302,7 +297,6 @@
             this.saveList2File.TabIndex = 7;
             this.saveList2File.Text = "Save list to File";
             this.saveList2File.UseVisualStyleBackColor = true;
-            this.saveList2File.Click += new System.EventHandler(this.saveList2File_Click);
             // 
             // listOrLog
             // 
@@ -312,20 +306,54 @@
             this.listOrLog.Size = new System.Drawing.Size(22, 21);
             this.listOrLog.TabIndex = 8;
             this.listOrLog.UseVisualStyleBackColor = true;
-            this.listOrLog.CheckedChanged += new System.EventHandler(this.listOrLog_CheckedChanged);
             // 
             // resultListView
             // 
+            this.resultListView.CheckBoxes = true;
+            this.resultListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.nameColumnHeader,
+            this.modifiedTimeColumnHeader,
+            this.extNameColumnHeader,
+            this.sizeColumnHeader,
+            this.fullPathColumnHeader});
             this.resultListView.HideSelection = false;
-            this.resultListView.Location = new System.Drawing.Point(0, 27);
+            this.resultListView.Location = new System.Drawing.Point(1, 25);
             this.resultListView.Name = "resultListView";
-            this.resultListView.Size = new System.Drawing.Size(880, 586);
+            this.resultListView.Size = new System.Drawing.Size(1282, 540);
             this.resultListView.TabIndex = 2;
+            this.resultListView.TabStop = false;
             this.resultListView.UseCompatibleStateImageBehavior = false;
+            this.resultListView.View = System.Windows.Forms.View.Details;
+            this.resultListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.resultListView_ColumnClick);
+            this.resultListView.SelectedIndexChanged += new System.EventHandler(this.resultListView_SelectedIndexChanged);
+            // 
+            // nameColumnHeader
+            // 
+            this.nameColumnHeader.Text = "Name";
+            this.nameColumnHeader.Width = 319;
+            // 
+            // modifiedTimeColumnHeader
+            // 
+            this.modifiedTimeColumnHeader.Text = "Modified Time";
+            this.modifiedTimeColumnHeader.Width = 156;
+            // 
+            // extNameColumnHeader
+            // 
+            this.extNameColumnHeader.Text = "EXT";
+            this.extNameColumnHeader.Width = 66;
+            // 
+            // sizeColumnHeader
+            // 
+            this.sizeColumnHeader.Text = "Size";
+            this.sizeColumnHeader.Width = 63;
+            // 
+            // fullPathColumnHeader
+            // 
+            this.fullPathColumnHeader.Text = "Full Path";
+            this.fullPathColumnHeader.Width = 501;
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.summaryTextBox);
             this.panel2.Controls.Add(this.listOrLog);
             this.panel2.Controls.Add(this.btnAnalyze);
             this.panel2.Controls.Add(this.saveList2File);
@@ -333,62 +361,37 @@
             this.panel2.Controls.Add(this.deleteOrRecycleBin);
             this.panel2.Controls.Add(this.btnDelete);
             this.panel2.Controls.Add(this.btnStop);
-            this.panel2.Location = new System.Drawing.Point(898, 740);
+            this.panel2.Controls.Add(this.geminiProgressBar);
+            this.panel2.Controls.Add(this.summaryTextBox);
+            this.panel2.Location = new System.Drawing.Point(922, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(363, 168);
             this.panel2.TabIndex = 10;
             // 
+            // geminiProgressBar
+            // 
+            this.geminiProgressBar.Location = new System.Drawing.Point(4, 45);
+            this.geminiProgressBar.Name = "geminiProgressBar";
+            this.geminiProgressBar.Size = new System.Drawing.Size(355, 29);
+            this.geminiProgressBar.TabIndex = 10;
+            this.geminiProgressBar.Click += new System.EventHandler(this.geminiProgressBar_Click);
+            // 
             // summaryTextBox
             // 
-            this.summaryTextBox.Location = new System.Drawing.Point(4, 45);
-            this.summaryTextBox.Multiline = true;
+            this.summaryTextBox.Location = new System.Drawing.Point(5, 46);
             this.summaryTextBox.Name = "summaryTextBox";
             this.summaryTextBox.ReadOnly = true;
-            this.summaryTextBox.Size = new System.Drawing.Size(355, 56);
+            this.summaryTextBox.Size = new System.Drawing.Size(354, 28);
             this.summaryTextBox.TabIndex = 9;
             this.summaryTextBox.Text = "Summay: Found 1,500 duplicate files.";
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.filterExample);
-            this.panel4.Controls.Add(this.regexCheckBox);
-            this.panel4.Controls.Add(this.modeCheckBox);
-            this.panel4.Controls.Add(this.fldFilterText);
-            this.panel4.Controls.Add(this.folderFilterTextBox);
-            this.panel4.Location = new System.Drawing.Point(984, 15);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(277, 98);
-            this.panel4.TabIndex = 12;
-            // 
-            // resultGroupBox
-            // 
-            this.resultGroupBox.Controls.Add(this.alwaysOnTopCheckBox);
-            this.resultGroupBox.Controls.Add(this.tbConsole);
-            this.resultGroupBox.Controls.Add(this.resultListView);
-            this.resultGroupBox.Location = new System.Drawing.Point(8, 120);
-            this.resultGroupBox.Name = "resultGroupBox";
-            this.resultGroupBox.Size = new System.Drawing.Size(882, 788);
-            this.resultGroupBox.TabIndex = 13;
-            this.resultGroupBox.TabStop = false;
-            this.resultGroupBox.Text = "Result";
-            // 
-            // alwaysOnTopCheckBox
-            // 
-            this.alwaysOnTopCheckBox.AutoSize = true;
-            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(88, 0);
-            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
-            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(151, 22);
-            this.alwaysOnTopCheckBox.TabIndex = 3;
-            this.alwaysOnTopCheckBox.Text = "Always On Top";
-            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
-            this.alwaysOnTopCheckBox.Click += new System.EventHandler(this.alwaysOnTopCheckBox_Click);
+            this.summaryTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // fileModeGroupBox
             // 
             this.fileModeGroupBox.Controls.Add(this.fileExtNameCheckBox);
             this.fileModeGroupBox.Controls.Add(this.fileNameCheckBox);
             this.fileModeGroupBox.Controls.Add(this.panel1);
-            this.fileModeGroupBox.Location = new System.Drawing.Point(894, 129);
+            this.fileModeGroupBox.Location = new System.Drawing.Point(916, 6);
             this.fileModeGroupBox.Name = "fileModeGroupBox";
             this.fileModeGroupBox.Size = new System.Drawing.Size(367, 151);
             this.fileModeGroupBox.TabIndex = 14;
@@ -494,26 +497,79 @@
             this.fileMD5CheckBox.Text = "Same MD5";
             this.fileMD5CheckBox.UseVisualStyleBackColor = true;
             // 
-            // splitContainer1
+            // tbConsole
             // 
-            this.splitContainer1.Location = new System.Drawing.Point(898, 280);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.splitContainer1.Size = new System.Drawing.Size(363, 453);
-            this.splitContainer1.SplitterDistance = 224;
-            this.splitContainer1.TabIndex = 3;
+            this.tbConsole.AllowDrop = true;
+            this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbConsole.Location = new System.Drawing.Point(4, 4);
+            this.tbConsole.Margin = new System.Windows.Forms.Padding(4);
+            this.tbConsole.Multiline = true;
+            this.tbConsole.Name = "tbConsole";
+            this.tbConsole.ReadOnly = true;
+            this.tbConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbConsole.Size = new System.Drawing.Size(911, 170);
+            this.tbConsole.TabIndex = 0;
+            this.tbConsole.WordWrap = false;
+            // 
+            // alwaysOnTopCheckBox
+            // 
+            this.alwaysOnTopCheckBox.AutoSize = true;
+            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(358, -18);
+            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
+            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(151, 22);
+            this.alwaysOnTopCheckBox.TabIndex = 3;
+            this.alwaysOnTopCheckBox.Text = "Always On Top";
+            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
+            this.alwaysOnTopCheckBox.Click += new System.EventHandler(this.alwaysOnTopCheckBox_Click);
+            // 
+            // resultGroupBox
+            // 
+            this.resultGroupBox.Controls.Add(this.alwaysOnTopCheckBox);
+            this.resultGroupBox.Controls.Add(this.resultListView);
+            this.resultGroupBox.Location = new System.Drawing.Point(12, 164);
+            this.resultGroupBox.Name = "resultGroupBox";
+            this.resultGroupBox.Size = new System.Drawing.Size(1286, 570);
+            this.resultGroupBox.TabIndex = 13;
+            this.resultGroupBox.TabStop = false;
+            this.resultGroupBox.Text = "Result";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.tbConsole);
+            this.panel3.Controls.Add(this.panel2);
+            this.panel3.Location = new System.Drawing.Point(12, 735);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1286, 178);
+            this.panel3.TabIndex = 15;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.groupBoxTarget);
+            this.panel4.Controls.Add(this.fileModeGroupBox);
+            this.panel4.Location = new System.Drawing.Point(12, 1);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(1286, 157);
+            this.panel4.TabIndex = 16;
+            // 
+            // updateButton
+            // 
+            this.updateButton.Location = new System.Drawing.Point(810, 96);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(77, 28);
+            this.updateButton.TabIndex = 11;
+            this.updateButton.Text = "Update";
+            this.updateButton.UseVisualStyleBackColor = true;
             // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1270, 915);
-            this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.fileModeGroupBox);
-            this.Controls.Add(this.resultGroupBox);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.groupBoxTarget);
+            this.ClientSize = new System.Drawing.Size(1310, 915);
             this.Controls.Add(this.panel4);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.resultGroupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(754, 536);
@@ -525,16 +581,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.resultGroupBox.ResumeLayout(false);
-            this.resultGroupBox.PerformLayout();
             this.fileModeGroupBox.ResumeLayout(false);
             this.fileModeGroupBox.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.resultGroupBox.ResumeLayout(false);
+            this.resultGroupBox.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -548,7 +603,6 @@
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnStop;
-        public System.Windows.Forms.TextBox tbConsole;
         private System.Windows.Forms.CheckBox deleteOrRecycleBin;
         private System.Windows.Forms.Button saveList2File;
         private System.Windows.Forms.CheckBox listOrLog;
@@ -563,9 +617,7 @@
         private System.Windows.Forms.ListView resultListView;
         private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.TextBox summaryTextBox;
-        private System.Windows.Forms.GroupBox resultGroupBox;
         private System.Windows.Forms.GroupBox fileModeGroupBox;
         private System.Windows.Forms.CheckBox fileNameCheckBox;
         private System.Windows.Forms.CheckBox fileSizeCheckBox;
@@ -573,10 +625,20 @@
         private System.Windows.Forms.CheckBox fileMD5CheckBox;
         private System.Windows.Forms.CheckBox fileExtNameCheckBox;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.CheckBox ignoreFileCheckBox;
         private System.Windows.Forms.ComboBox ignoreFileSizecomboBox;
         private System.Windows.Forms.TextBox ignoreFileSizeTextBox;
+        private System.Windows.Forms.ColumnHeader nameColumnHeader;
+        private System.Windows.Forms.ColumnHeader modifiedTimeColumnHeader;
+        private System.Windows.Forms.ColumnHeader sizeColumnHeader;
+        private System.Windows.Forms.ColumnHeader extNameColumnHeader;
+        private System.Windows.Forms.ColumnHeader fullPathColumnHeader;
+        public System.Windows.Forms.TextBox tbConsole;
         private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
+        private System.Windows.Forms.GroupBox resultGroupBox;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.ProgressBar geminiProgressBar;
+        private System.Windows.Forms.Button updateButton;
     }
 }
