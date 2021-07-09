@@ -51,6 +51,8 @@
             this.modifiedTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.extNameColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.sizeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dirColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.hashColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
             this.cleanUpButton = new System.Windows.Forms.Button();
@@ -82,7 +84,6 @@
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dirColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -292,12 +293,13 @@
             this.modifiedTimeColumnHeader,
             this.extNameColumnHeader,
             this.sizeColumnHeader,
-            this.dirColumnHeader});
+            this.dirColumnHeader,
+            this.hashColumnHeader});
             this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
             this.resultListView.Location = new System.Drawing.Point(0, 3);
             this.resultListView.Name = "resultListView";
-            this.resultListView.Size = new System.Drawing.Size(1285, 562);
+            this.resultListView.Size = new System.Drawing.Size(1285, 533);
             this.resultListView.TabIndex = 2;
             this.resultListView.TabStop = false;
             this.resultListView.UseCompatibleStateImageBehavior = false;
@@ -310,7 +312,7 @@
             // nameColumnHeader
             // 
             this.nameColumnHeader.Text = "Name";
-            this.nameColumnHeader.Width = 319;
+            this.nameColumnHeader.Width = 339;
             // 
             // modifiedTimeColumnHeader
             // 
@@ -326,6 +328,16 @@
             // 
             this.sizeColumnHeader.Text = "Size";
             this.sizeColumnHeader.Width = 63;
+            // 
+            // dirColumnHeader
+            // 
+            this.dirColumnHeader.Text = "Directory";
+            this.dirColumnHeader.Width = 359;
+            // 
+            // hashColumnHeader
+            // 
+            this.hashColumnHeader.Text = "HASH";
+            this.hashColumnHeader.Width = 282;
             // 
             // panel2
             // 
@@ -549,6 +561,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -636,11 +649,6 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
-            // 
-            // dirColumnHeader
-            // 
-            this.dirColumnHeader.Text = "Directory";
-            this.dirColumnHeader.Width = 357;
             // 
             // GeminiForm
             // 
@@ -733,5 +741,6 @@
         private System.Windows.Forms.ToolStripMenuItem cleanNonExistentItemsToolStripMenuItem;
         private System.Windows.Forms.Button cleanUpButton;
         private System.Windows.Forms.ColumnHeader dirColumnHeader;
+        private System.Windows.Forms.ColumnHeader hashColumnHeader;
     }
 }

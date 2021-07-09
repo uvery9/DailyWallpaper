@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Collections;
 using static DailyWallpaper.Tools.Gemini;
 using System.Drawing;
+using System.Security.Cryptography;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -40,7 +41,6 @@ namespace DailyWallpaper
 
         private List<GeminiFileStruct> geminiFileStructList1;
         private List<GeminiFileStruct> geminiFileStructList2;
-        private List<GeminiFileStruct> sameListNoDup;
         private long minimumFileLimit = 0;
         private List<Task> _tasks = new List<Task>();
         private Mutex _mutex;
@@ -256,30 +256,22 @@ namespace DailyWallpaper
             }
             return hashCostTime;
         }
-        private CompareMode SetCompareMode()
+        private GeminiCompareMode SetCompareMode()
         {
-            CompareMode mode = CompareMode.NameAndSize;
+            GeminiCompareMode mode = GeminiCompareMode.NameAndSize;
 
-            if (fileSHA1CheckBox.Checked)
+            if (fileSHA1CheckBox.Checked || fileMD5CheckBox.Checked)
             {
-                mode = CompareMode.SHA1;
-            }
-
-            if (fileMD5CheckBox.Checked)
+                mode = GeminiCompareMode.HASH;
+            } 
+            else if (fileNameCheckBox.Checked)
             {
-                mode = CompareMode.MD5;
+                mode = GeminiCompareMode.NameAndSize;
             }
-
-            if (fileExtNameCheckBox.Checked)
+            else if (fileExtNameCheckBox.Checked)
             {
-                mode = CompareMode.ExtAndSize;
+                mode = GeminiCompareMode.ExtAndSize;
             }
-
-            if (fileNameCheckBox.Checked)
-            {
-                mode = CompareMode.NameAndSize;
-            }
-
             return mode;
         }
         private async void StartAnalyze(bool delete = false)
@@ -331,20 +323,29 @@ namespace DailyWallpaper
                     FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
 
                         // compare folders and themselves, return duplicated files list.
-                        _console.WriteLine(">>> Start comparing...");
-                    CompareMode mode = SetCompareMode();
-                    sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
+                        _console.WriteLine(">>> Start fast comparing...");
+                    GeminiCompareMode mode = SetCompareMode();
+                    var sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
                             geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
-                    _console.WriteLine(">>> Compare finished...");
+                    _console.WriteLine(">>> Fast Compare finished...");
                     // group by size
 
-                    geminiFileStructListForLV = new List<GeminiFileStruct>();
-                    _console.WriteLine(">>> Update to List...");
-                    GeminiList2Group(sameListNoDup, geminiFileStructListForLV, token);
+                    if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
+                    {
+                        _console.WriteLine(">>> Update HASH...");
+                        sameListNoDup = 
+                            UpdateHashInGeminiFileStructList(sameListNoDup, 
+                                mode, geminiProgressBar).Result;
+                        _console.WriteLine(">>> Update HASH finished.");
+                    }
+
+                    // Regroup List.
+                    _console.WriteLine(">>> Group List...");
+                    geminiFileStructListForLV = ListReGrpAndReColor(sameListNoDup, mode, token);
                     
-                    _console.WriteLine(">>> Show to ListView...");
-                    UpdateListView(geminiFileStructListForLV);
-                    
+                    _console.WriteLine(">>> Update to ListView...");
+                    UpdateListView(geminiFileStructListForLV, token);
+
                     timer.Stop();
                     string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
                     _console.WriteLine($">>> Cost time: {hashCostTime}");
@@ -382,7 +383,7 @@ namespace DailyWallpaper
         }
 
         private async Task<List<GeminiFileStruct>> ComparerTwoFolderGetList(List<GeminiFileStruct> l1,
-            List<GeminiFileStruct> l2, CompareMode mode, long limit = 0, CancellationToken token = default,
+            List<GeminiFileStruct> l2, GeminiCompareMode mode, long limit = 0, CancellationToken token = default,
             System.Windows.Forms.ProgressBar pb = null)
         {
 
@@ -456,13 +457,16 @@ namespace DailyWallpaper
             gfL.Add(gf);
         }
 
-        private delegate void GeminiFileStructToListViewDelegate(List<GeminiFileStruct> gfL);
-        private void UpdateListView(List<GeminiFileStruct> gfL)
+        private delegate void GeminiFileStructToListViewDelegate(
+            List<GeminiFileStruct> gfL, CancellationToken token);
+        
+        private void UpdateListView(List<GeminiFileStruct> gfL, 
+            CancellationToken token)
         {
             if (InvokeRequired)
             {
                 var f = new GeminiFileStructToListViewDelegate(UpdateListView);
-                Invoke(f, new object[] { gfL });
+                Invoke(f, new object[] { gfL, token});
             }
             else
             {
@@ -471,12 +475,17 @@ namespace DailyWallpaper
                 {
                     foreach (var gf in gfL)
                     {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
                         var item = new System.Windows.Forms.ListViewItem(gf.name);
                         item.BackColor = gf.color;
                         AddSubItem(item, "lastMtime", gf.lastMtime);
                         AddSubItem(item, "extName", gf.extName);
                         AddSubItem(item, "sizeStr", gf.sizeStr);
                         AddSubItem(item, "dir", gf.dir);
+                        AddSubItem(item, "HASH", gf.hash ?? "");
                         AddSubItem(item, "fullPath", gf.fullPath);
                         resultListView.Items.Add(item);
                     }
@@ -488,6 +497,112 @@ namespace DailyWallpaper
                 }
             }
         }
+
+        private async Task UpdateHash(List<GeminiFileStruct> gfL, 
+            GeminiFileStruct gf, IProgress<double> progress)
+        {
+            if (fileMD5CheckBox.Checked)
+            {
+                void getRes(bool res, string who, string md5, string costTimeOrMsg)
+                {
+                    if (res)
+                    {
+                        gf.hash = md5;
+                    }
+                }
+                await HashCalc.HashCalculator.ComputeHashAsync(
+                    MD5.Create(), gf.fullPath, _source.Token, "MD5", getRes, progress);
+            }
+            else if (fileSHA1CheckBox.Checked)
+            {
+                void getRes(bool res, string who, string sha1, string costTimeOrMsg)
+                {
+                    if (res)
+                    {
+                        gf.hash = sha1;
+                    }
+                }
+                await HashCalc.HashCalculator.ComputeHashAsync(
+                    SHA1.Create(), gf.fullPath, _source.Token, "SHA1", getRes, progress);
+            }
+            gfL.Add(gf);
+        }
+        private List<GeminiFileStruct> ListReGrpAndReColor(List<GeminiFileStruct> gfl, GeminiCompareMode mode, 
+            CancellationToken token)
+        {
+            IEnumerable<List<GeminiFileStruct>> duplicateGrp = null;
+            if (mode == GeminiCompareMode.HASH)
+            {
+                duplicateGrp =
+                from i in gfl
+                where File.Exists((i.fullPath))
+                group i by i.hash into grp
+                where grp.Count() > 1
+                select grp.ToList();
+            }
+            else if (mode == GeminiCompareMode.ExtAndSize)
+            {
+                duplicateGrp =
+                   from i in gfl
+                   where File.Exists((i.fullPath))
+                   group i by new { i.size, i.extName } into grp
+                   where grp.Count() > 1
+                   select grp.ToList();
+            }
+            else
+            {
+                duplicateGrp =
+                   from i in gfl
+                   where File.Exists((i.fullPath))
+                   group i by i.size into grp
+                   where grp.Count() > 1
+                   select grp.ToList();
+            }
+            var tmpHash = new List<GeminiFileStruct>();
+            int j = 0;
+            foreach (var item in duplicateGrp)
+            {
+                j++;
+                var color = Color.White;
+                if (j % 2 == 1)
+                {
+                    color = Color.FromArgb(250, 234, 192);
+                }
+                foreach (var it in item)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                    UpdateGeminiFileStructListForLV(tmpHash, it, color);
+                }
+            }
+            return tmpHash;
+        }
+        private async Task<List<GeminiFileStruct>> UpdateHashInGeminiFileStructList(
+            List<GeminiFileStruct> gfL, GeminiCompareMode mode, System.Windows.Forms.ProgressBar pb)
+        {
+            
+            double percent = 0.0;
+            void ProgressActionD(double i) // percent in file.
+            {
+                _mutexPb.WaitOne();
+                percent += i * 100;
+                var percentInt = (int)percent;
+                if (percentInt > 95)
+                    percentInt = 100;
+                SetProgressMessage(percentInt, pb);
+                percent = 0.0; // for next time.
+                _mutexPb.ReleaseMutex();
+            }
+            var totalProgessDouble = new Progress<double>(ProgressActionD);
+            var tmp = new List<GeminiFileStruct>();
+            foreach (var it in gfL)
+            {
+                await UpdateHash(tmp, it, totalProgessDouble);
+            }
+            return tmp;
+        }
         public static void AddSubItem(System.Windows.Forms.ListViewItem i, string name, string text)
         {
             i.SubItems.Add(new System.Windows.Forms.ListViewItem.ListViewSubItem() 
@@ -497,59 +612,6 @@ namespace DailyWallpaper
         private void AddGroupTitleToListView()
         {
 
-        }
-        private void GeminiList2Group(List<GeminiFileStruct> listNoDup, List<GeminiFileStruct> gfL,
-            CancellationToken token, bool printToCons = false)
-        {
-            if (listNoDup.Count > 0)
-            {
-                // same size to one group
-                // check HASH before.
-                var duplicateGrp =
-                    from i in listNoDup
-                    orderby i.fullPath // descending
-                    group i by i.size into grp
-                    where grp.Count() > 1
-                    select grp;
-                int index = 0;
-                int j = 0;
-                foreach (var item in duplicateGrp)
-                {
-                    index++;
-                    if (printToCons) _console.WriteLine($"\r\n>>>>> Group Size[{index}] {item.Key}");
-                    // update Group name
-
-                    /*var groupHash =
-                        from i in item
-                        select i;*/
-                    var ext =
-                        from i in item
-                        group i by i.extName into grp
-                        select grp;
-                    foreach (var it in ext)
-                    {
-                        j++;
-                        if (printToCons) _console.WriteLine($">>> Group Ext[{j}] {it.Key}");
-                        var color = Color.White;
-                        if (j % 2 == 1)
-                        {
-                            color = Color.FromArgb(250, 234, 192);
-                        }
-                        foreach (var t in it)
-                        {
-                            if (token.IsCancellationRequested)
-                            {
-                                token.ThrowIfCancellationRequested();
-                            }
-                            if (printToCons) _console.WriteLine("<file>\r\n" + t + "\r\n</file>\r\n");
-                            UpdateGeminiFileStructListForLV(gfL, t, color);
-                        }
-                        if (printToCons) _console.WriteLine($">>> Group Ext[{j}] {it.Key}");
-                        // update list name
-                    }
-                    if (printToCons) _console.WriteLine($">>> Group Size[{index}] {item.Key}\r\n");
-                }
-            }
         }
 
         delegate void SetTextCallBack(string text, System.Windows.Forms.TextBox tb);
@@ -1586,42 +1648,20 @@ namespace DailyWallpaper
                 _console.WriteLine("!!! ANALYZE First.");
                 return;
             }
-            var existListIE =
-                from it in geminiFileStructListForLV
-                where File.Exists((it.fullPath))
-                group it by new { it.size, it.extName} into grp
-                where grp.Count() > 1
-                select grp.ToList();  // .ToList() NOT FUCKING WORK. STILL HAVE TO USE FOREACH???
-
-            var existList = new List<GeminiFileStruct>();
-            int j = 0;
-            // Action<GeminiFileStruct, Color> updateColor;
-            var updateColor = new Action<GeminiFileStruct, Color>(
-                        (fku, c) => { fku.color = c; Debug.WriteLine("FKU..."); });
-            foreach (var it in existListIE)
-            {
-                j++;
-                var color = Color.White;
-                if (j % 2 == 1)
-                {
-                    color = Color.FromArgb(250, 234, 192);
-                }
-                foreach (var item in it)
-                {
-                    UpdateGeminiFileStructListForLV(existList, item, color);
-                }
-            }
+            GeminiCompareMode mode = SetCompareMode();
+            var existList = ListReGrpAndReColor(geminiFileStructListForLV, mode, _source.Token);
             if (existList.Count < geminiFileStructListForLV.Count)
             {
                 _console.WriteLine(
                     $"delete {geminiFileStructListForLV.Count - existList.Count} " +
                     "non-existent items for ListView.");
                 geminiFileStructListForLV = existList;
-                RecoverChecked(UpdateListView, geminiFileStructListForLV);   
+                RecoverChecked(UpdateListView, geminiFileStructListForLV, mode, _source.Token);
             }
             _console.WriteLine(">>> Clean-UP Finished.");
         }
-        private void RecoverChecked(GeminiFileStructToListViewDelegate f, List<GeminiFileStruct> gfL)
+        private void RecoverChecked(GeminiFileStructToListViewDelegate func, 
+            List<GeminiFileStruct> gfL, GeminiCompareMode mode, CancellationToken token)
         {
             // foreach (var item in resultListView.CheckedItems) NOT WORK
             var bkp = new List<string>();
@@ -1632,7 +1672,7 @@ namespace DailyWallpaper
                     bkp.Add(item);
                 }
             }
-            f(gfL);
+            func(gfL, token);
             if (bkp.Count > 1)
             {
                 foreach (var item in bkp)
@@ -1654,7 +1694,7 @@ namespace DailyWallpaper
         {
             if (deleteOrRecycleBin.Checked)
             {
-                btnDelete.Text = "Delete Permanently";
+                btnDelete.Text = "Delete";
             }
             else
             {

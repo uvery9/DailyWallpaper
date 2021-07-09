@@ -32,13 +32,11 @@ namespace DailyWallpaper.Tools
         public ConfigIni ini;
         public List<string> controlledFolder1st;
         public List<string> controlledFolderAll;
-        public enum CompareMode
+        public enum GeminiCompareMode
         {
             NameAndSize,
             ExtAndSize,
-            HASH,
-            MD5,
-            SHA1
+            HASH
         }
 
         public Gemini()
@@ -76,62 +74,33 @@ namespace DailyWallpaper.Tools
             public string dir;
             public string sha1;
             public string md5;
+            public string hash;
             public string lastMtime;
             public string crtTime;
             public Color color;
-
-            public bool EqualsHash(object obj)
-            {
-                return obj is GeminiFileStruct @struct &&
-                       fullPath != @struct.fullPath &&
-                       size == @struct.size &&
-                       name == @struct.name &&
-                       extName == @struct.extName &&
-                       sha1 == @struct.sha1 &&
-                       md5 == @struct.md5;
-            }
 
             public bool EqualsMD5(object obj)
             {
                 return obj is GeminiFileStruct @struct &&
                         fullPath != @struct.fullPath &&
                         size == @struct.size &&
-                        extName == @struct.extName &&
                         md5 == @struct.md5;
             }
 
-            public async Task<bool> EqualsSHA1(object obj, CancellationToken token)
+            public bool EqualsHash(object obj)
             {
-                if (sha1 == null)
-                {
-                    var tmp = this;
-                    void getRes(bool res, string who, string sha1, string costTimeOrMsg)
-                    {
-                        if (res)
-                        {
-                            tmp.sha1 = sha1;
-                        }
-                    }
-                    await HashCalc.HashCalculator.ComputeHashAsync(SHA1.Create(), tmp.fullPath, token, "SHA1", getRes);
-                    sha1 = tmp.sha1;
-                }
-                if (((GeminiFileStruct)obj).sha1 == null)
-                {
-                    var tmp = (GeminiFileStruct)obj;
-                    void getRes(bool res, string who, string sha1, string costTimeOrMsg)
-                    {
-                        if (res)
-                        {
-                            tmp.sha1 = sha1;
-                        }
-                    }
-                    await HashCalc.HashCalculator.ComputeHashAsync(SHA1.Create(), tmp.fullPath, token, "SHA1", getRes);
-                    obj = tmp;
-                }
                 return obj is GeminiFileStruct @struct &&
-                       size == @struct.size &&
-                       extName == @struct.extName &&
-                       sha1 == @struct.sha1;
+                        fullPath != @struct.fullPath &&
+                        size == @struct.size &&
+                        hash == @struct.hash;
+            }
+
+            public bool EqualsSHA1(object obj)
+            {
+                return obj is GeminiFileStruct @struct &&
+                        fullPath != @struct.fullPath &&
+                        size == @struct.size &&
+                        sha1 == @struct.sha1;
             }
 
             public bool EqualSize(object obj)
@@ -139,6 +108,11 @@ namespace DailyWallpaper.Tools
                 return obj is GeminiFileStruct @struct &&
                        fullPath != @struct.fullPath &&
                        size == @struct.size;
+            }
+
+            public void UpdateHash(string hash)
+            {
+                this.hash = hash;
             }
 
             public bool EqualExtSize(object obj)
@@ -167,8 +141,9 @@ namespace DailyWallpaper.Tools
                 tmp += "\r\nextName:      " + extName ?? "";
                 tmp += "\r\nsize:         " + size.ToString();
                 tmp += "\r\nsizeStr:      " + sizeStr;
-                tmp += "\r\nmd5:          " + md5 ?? "";
-                tmp += "\r\nsha1:         " + sha1 ?? "";
+                //tmp += "\r\nmd5:          " + md5 ?? "";
+                //tmp += "\r\nsha1:         " + sha1 ?? "";
+                tmp += "\r\nhash:         " + hash ?? "";
                 tmp += "\r\ncreateTime:   " + crtTime.ToString() ?? "";
                 tmp += "\r\nlastMtime:    " + lastMtime.ToString() ?? "";
                 tmp += "\r\navailable:    " + available.ToString() ?? "";
@@ -230,6 +205,7 @@ namespace DailyWallpaper.Tools
                 size = 0,
                 sha1 = null,
                 md5 = null,
+                hash = null,
             };
             try
             {
@@ -261,7 +237,7 @@ namespace DailyWallpaper.Tools
 
         public static async Task<List<GeminiFileStruct>> ComparerTwoList(
             List<GeminiFileStruct> li1, List<GeminiFileStruct> li2,
-            CompareMode mode,
+            GeminiCompareMode mode,
             CancellationToken token = default, Action<bool,
             List<GeminiFileStruct>> action = default,
             IProgress<long> progress = null)
@@ -293,7 +269,7 @@ namespace DailyWallpaper.Tools
                             cnt = 0;
                         }
                     }
-                    if (mode == CompareMode.ExtAndSize)
+                    if (mode == GeminiCompareMode.ExtAndSize)
                     {
                         if (l1.EqualExtSize(l2))
                         {
@@ -301,7 +277,7 @@ namespace DailyWallpaper.Tools
                             tmp.Add(l2);
                         }
                     }
-                    else if (mode == CompareMode.NameAndSize) // Fastest.
+                    else if (mode == GeminiCompareMode.NameAndSize) // Fastest.
                     {
                         if (l1.EqualNameSize(l2))
                         {
@@ -309,7 +285,7 @@ namespace DailyWallpaper.Tools
                             tmp.Add(l2);
                         }
                     }
-                    else if (mode == CompareMode.HASH)
+                    else if (mode == GeminiCompareMode.HASH)
                     {
                         if (l1.EqualSize(l2))
                         {
@@ -323,12 +299,6 @@ namespace DailyWallpaper.Tools
             });
             action(true, tmp);
             return tmp;
-        }
-
-        private static void UpdateHash(GeminiFileStruct g, string md5 = null, string sha1 = null)
-        {
-            g.md5 = md5 ?? "";
-            g.sha1 = sha1 ?? "";
         }
 
         public static async Task<List<GeminiFileStruct>> ForceGetHashGeminiFileStructList(

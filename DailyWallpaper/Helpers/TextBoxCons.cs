@@ -120,6 +120,10 @@ namespace DailyWallpaper
             }
             else
             {
+                if (string.IsNullOrEmpty(text))
+                {
+                    return;
+                }
                 textbox.AppendText(text + NewLine);
                 textbox.Update();
             }
