@@ -90,7 +90,6 @@ namespace DailyWallpaper
             btnStop.Enabled = false;
             // default: send to RecycleBin
             deleteOrRecycleBin.Checked = false;
-            DeleteOrRecycleBin(deletePermanently: false);
 
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -199,7 +198,7 @@ namespace DailyWallpaper
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if(deleteList == null)
+            if (deleteList == null)
             {
                 _console.WriteLine($"\r\n!!! You should ANALYZE first.");
                 return;
@@ -210,11 +209,25 @@ namespace DailyWallpaper
             {
                 return;
             }
-            /*foreach (var item in deleteList)
+            try
             {
-                _console.WriteLine("FKU:" + item);
-            }*/
-
+                foreach (var item in deleteList)
+                {
+                    _console.WriteLine($"... Delete file: {item}");
+                    FileSystem.DeleteFile(item, UIOption.OnlyErrorDialogs,
+                                    deleteOrRecycleBin.Checked ?
+                                    RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                                    UICancelOption.DoNothing);
+                }
+                _console.WriteLine($">>> Delete Finished.");
+                cleanUpButton.PerformClick();
+            }
+            catch (UnauthorizedAccessException) { }
+            catch (FileNotFoundException) { }
+            catch (Exception ex)
+            {
+                _console.WriteLine($"!!! Error occur when deleting files: {ex.Message}");
+            }
         }
 
         private void ShowShellContextMenu()
@@ -463,6 +476,7 @@ namespace DailyWallpaper
                         AddSubItem(item, "lastMtime", gf.lastMtime);
                         AddSubItem(item, "extName", gf.extName);
                         AddSubItem(item, "sizeStr", gf.sizeStr);
+                        AddSubItem(item, "dir", gf.dir);
                         AddSubItem(item, "fullPath", gf.fullPath);
                         resultListView.Items.Add(item);
                     }
@@ -1001,30 +1015,6 @@ namespace DailyWallpaper
                         return;
                     }
                 }
-            }
-        }
-
-        private void DeleteOrRecycleBin(bool deletePermanently = false)
-        {
-            if (!deletePermanently)
-            {
-                btnDelete.Text = "RecycleBin";
-            }
-            else
-            {
-                btnDelete.Text = "Delete Permanently";
-            }
-
-        }
-        private void deleteOrRecycleBin_CheckedChanged(object sender, EventArgs e)
-        {
-            if (deleteOrRecycleBin.Checked == true)
-            {
-                DeleteOrRecycleBin(deletePermanently: true);
-            }
-            else
-            {
-                DeleteOrRecycleBin(deletePermanently: false);
             }
         }
 
@@ -1588,11 +1578,12 @@ namespace DailyWallpaper
              _console.WriteLine(gemini.helpString);
         }
 
-        private void cleanNonExistentItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cleanUpButton_Click(object sender, EventArgs e)
         {
             // custQuery is an IEnumerable<IGrouping<string, Customer>>
             if (geminiFileStructListForLV.Count < 1)
             {
+                _console.WriteLine("!!! ANALYZE First.");
                 return;
             }
             var existListIE =
@@ -1628,6 +1619,7 @@ namespace DailyWallpaper
                 geminiFileStructListForLV = existList;
                 RecoverChecked(UpdateListView, geminiFileStructListForLV);   
             }
+            _console.WriteLine(">>> Clean-UP Finished.");
         }
         private void RecoverChecked(GeminiFileStructToListViewDelegate f, List<GeminiFileStruct> gfL)
         {
@@ -1656,6 +1648,18 @@ namespace DailyWallpaper
                 }
             }
             
+        }
+
+        private void deleteOrRecycleBin_Click(object sender, EventArgs e)
+        {
+            if (deleteOrRecycleBin.Checked)
+            {
+                btnDelete.Text = "Delete Permanently";
+            }
+            else
+            {
+                btnDelete.Text = "RecycleBin";
+            }
         }
     }
 }

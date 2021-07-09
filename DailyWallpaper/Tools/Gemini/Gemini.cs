@@ -73,6 +73,7 @@ namespace DailyWallpaper.Tools
             public string name;
             public string extName;
             public string fullPath;
+            public string dir;
             public string sha1;
             public string md5;
             public string lastMtime;
@@ -162,12 +163,13 @@ namespace DailyWallpaper.Tools
                 string tmp = "" +
                        "fullPath:         " + fullPath ?? "";
                 tmp += "\r\nname:         " + name ?? "";
+                tmp += "\r\ndir:         "  + dir ?? "";
                 tmp += "\r\nextName:      " + extName ?? "";
                 tmp += "\r\nsize:         " + size.ToString();
                 tmp += "\r\nsizeStr:      " + sizeStr;
                 tmp += "\r\nmd5:          " + md5 ?? "";
                 tmp += "\r\nsha1:         " + sha1 ?? "";
-                tmp += "\r\nCreateTime:   " + crtTime.ToString() ?? "";
+                tmp += "\r\ncreateTime:   " + crtTime.ToString() ?? "";
                 tmp += "\r\nlastMtime:    " + lastMtime.ToString() ?? "";
                 tmp += "\r\navailable:    " + available.ToString() ?? "";
                 tmp += "\r\nwillDelete:   " + willDelete.ToString() ?? "";
@@ -236,6 +238,7 @@ namespace DailyWallpaper.Tools
                     return tmp;
                 }
                 tmp.name = Path.GetFileName(fullPath);
+                tmp.dir = Path.GetDirectoryName(fullPath);
                 tmp.size = new FileInfo(fullPath).Length;
                 tmp.sizeStr = Len2Str(tmp.size);
                 tmp.lastMtime = new FileInfo(fullPath).LastWriteTime.ToString("yyyy/M/d H:mm");

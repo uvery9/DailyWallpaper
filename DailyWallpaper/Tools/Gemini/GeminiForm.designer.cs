@@ -51,9 +51,9 @@
             this.modifiedTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.extNameColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.sizeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.fullPathColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.cleanUpButton = new System.Windows.Forms.Button();
             this.geminiProgressBar = new System.Windows.Forms.ProgressBar();
             this.summaryTextBox = new System.Windows.Forms.TextBox();
             this.fileModeGroupBox = new System.Windows.Forms.GroupBox();
@@ -82,6 +82,7 @@
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dirColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -280,7 +281,7 @@
             this.deleteOrRecycleBin.Size = new System.Drawing.Size(22, 21);
             this.deleteOrRecycleBin.TabIndex = 6;
             this.deleteOrRecycleBin.UseVisualStyleBackColor = true;
-            this.deleteOrRecycleBin.CheckedChanged += new System.EventHandler(this.deleteOrRecycleBin_CheckedChanged);
+            this.deleteOrRecycleBin.Click += new System.EventHandler(this.deleteOrRecycleBin_Click);
             // 
             // resultListView
             // 
@@ -291,7 +292,7 @@
             this.modifiedTimeColumnHeader,
             this.extNameColumnHeader,
             this.sizeColumnHeader,
-            this.fullPathColumnHeader});
+            this.dirColumnHeader});
             this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
             this.resultListView.Location = new System.Drawing.Point(0, 3);
@@ -326,14 +327,10 @@
             this.sizeColumnHeader.Text = "Size";
             this.sizeColumnHeader.Width = 63;
             // 
-            // fullPathColumnHeader
-            // 
-            this.fullPathColumnHeader.Text = "Full Path";
-            this.fullPathColumnHeader.Width = 501;
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.btnAnalyze);
+            this.panel2.Controls.Add(this.cleanUpButton);
             this.panel2.Controls.Add(this.btnClear);
             this.panel2.Controls.Add(this.deleteOrRecycleBin);
             this.panel2.Controls.Add(this.btnDelete);
@@ -344,6 +341,18 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(363, 168);
             this.panel2.TabIndex = 10;
+            // 
+            // cleanUpButton
+            // 
+            this.cleanUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cleanUpButton.Location = new System.Drawing.Point(269, 48);
+            this.cleanUpButton.Margin = new System.Windows.Forms.Padding(4);
+            this.cleanUpButton.Name = "cleanUpButton";
+            this.cleanUpButton.Size = new System.Drawing.Size(91, 32);
+            this.cleanUpButton.TabIndex = 4;
+            this.cleanUpButton.Text = "Clean-UP";
+            this.cleanUpButton.UseVisualStyleBackColor = true;
+            this.cleanUpButton.Click += new System.EventHandler(this.cleanUpButton_Click);
             // 
             // geminiProgressBar
             // 
@@ -540,7 +549,6 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -612,7 +620,7 @@
             this.cleanNonExistentItemsToolStripMenuItem.Name = "cleanNonExistentItemsToolStripMenuItem";
             this.cleanNonExistentItemsToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
             this.cleanNonExistentItemsToolStripMenuItem.Text = "Clean non-existent items";
-            this.cleanNonExistentItemsToolStripMenuItem.Click += new System.EventHandler(this.cleanNonExistentItemsToolStripMenuItem_Click);
+            this.cleanNonExistentItemsToolStripMenuItem.Click += new System.EventHandler(this.cleanUpButton_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -628,6 +636,11 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
+            // 
+            // dirColumnHeader
+            // 
+            this.dirColumnHeader.Text = "Directory";
+            this.dirColumnHeader.Width = 357;
             // 
             // GeminiForm
             // 
@@ -700,7 +713,6 @@
         private System.Windows.Forms.ColumnHeader modifiedTimeColumnHeader;
         private System.Windows.Forms.ColumnHeader sizeColumnHeader;
         private System.Windows.Forms.ColumnHeader extNameColumnHeader;
-        private System.Windows.Forms.ColumnHeader fullPathColumnHeader;
         public System.Windows.Forms.TextBox tbConsole;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
@@ -719,5 +731,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveResultToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cleanNonExistentItemsToolStripMenuItem;
+        private System.Windows.Forms.Button cleanUpButton;
+        private System.Windows.Forms.ColumnHeader dirColumnHeader;
     }
 }
