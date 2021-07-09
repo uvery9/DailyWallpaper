@@ -236,6 +236,18 @@ namespace DailyWallpaper
 
         }
 
+        private void ShowShellContextMenu()
+        {
+/*            ShellContextMenu ctxMnu = new ShellContextMenu();
+            FileInfo[] arrFI = new FileInfo[1];
+            arrFI[0] = new FileInfo(this.treeMain.SelectedNode.Tag.ToString());
+            ctxMnu.ShowContextMenu(arrFI, this.PointToScreen(new Point(e.X, e.Y)));*/
+
+            ShellContextMenu scm = new ShellContextMenu();
+            FileInfo[] files = new FileInfo[1];
+            files[0] = new FileInfo(@"c:\windows\notepad.exe");
+            scm.ShowContextMenu(files, Cursor.Position);
+        }
 
         private static string GetTimeStringMsOrS(TimeSpan t)
         {

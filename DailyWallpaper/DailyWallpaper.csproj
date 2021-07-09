@@ -97,6 +97,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ShellContextMenu.cs" />
     <Compile Include="Tools\CleanEmptyFolders\CleanEmptyFolders.cs" />
     <Compile Include="Tools\CleanEmptyFolders\CleanEmptyFoldersForm.cs">
       <SubType>Form</SubType>
