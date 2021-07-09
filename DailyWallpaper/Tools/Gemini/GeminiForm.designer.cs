@@ -47,12 +47,16 @@
             this.btnStop = new System.Windows.Forms.Button();
             this.deleteOrRecycleBin = new System.Windows.Forms.CheckBox();
             this.resultListView = new System.Windows.Forms.ListView();
+            this.CBcolumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.nameColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.modifiedTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.extNameColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.sizeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dirColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hashColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.listViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyFullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.cleanUpButton = new System.Windows.Forms.Button();
             this.geminiProgressBar = new System.Windows.Forms.ProgressBar();
@@ -86,9 +90,7 @@
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyFullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -97,7 +99,6 @@
             this.panel6.SuspendLayout();
             this.panel5.SuspendLayout();
             this.fileOptionsmenuStrip.SuspendLayout();
-            this.listViewContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // updateButton
@@ -295,12 +296,15 @@
             this.resultListView.AllowDrop = true;
             this.resultListView.CheckBoxes = true;
             this.resultListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.CBcolumnHeader,
             this.nameColumnHeader,
             this.modifiedTimeColumnHeader,
             this.extNameColumnHeader,
             this.sizeColumnHeader,
             this.dirColumnHeader,
             this.hashColumnHeader});
+            this.resultListView.ContextMenuStrip = this.listViewContextMenuStrip;
+            this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
             this.resultListView.Location = new System.Drawing.Point(0, 3);
             this.resultListView.Name = "resultListView";
@@ -315,6 +319,11 @@
             this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
             this.resultListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resultListView_MouseClick);
             this.resultListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.resultListView_MouseDoubleClick);
+            // 
+            // CBcolumnHeader
+            // 
+            this.CBcolumnHeader.Text = "CB";
+            this.CBcolumnHeader.Width = 28;
             // 
             // nameColumnHeader
             // 
@@ -345,6 +354,29 @@
             // 
             this.hashColumnHeader.Text = "HASH";
             this.hashColumnHeader.Width = 282;
+            // 
+            // listViewContextMenuStrip
+            // 
+            this.listViewContextMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.listViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openDirectoryToolStripMenuItem,
+            this.copyFullPathToolStripMenuItem});
+            this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(241, 97);
+            // 
+            // openDirectoryToolStripMenuItem
+            // 
+            this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
+            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.openDirectoryToolStripMenuItem.Text = "Open Directory";
+            this.openDirectoryToolStripMenuItem.Click += new System.EventHandler(this.openDirectoryToolStripMenuItem_Click);
+            // 
+            // copyFullPathToolStripMenuItem
+            // 
+            this.copyFullPathToolStripMenuItem.Name = "copyFullPathToolStripMenuItem";
+            this.copyFullPathToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.copyFullPathToolStripMenuItem.Text = "Copy FullPath";
+            this.copyFullPathToolStripMenuItem.Click += new System.EventHandler(this.copyFullPathToolStripMenuItem_Click);
             // 
             // panel2
             // 
@@ -681,27 +713,6 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // listViewContextMenuStrip
-            // 
-            this.listViewContextMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.listViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openDirectoryToolStripMenuItem,
-            this.copyFullPathToolStripMenuItem});
-            this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
-            this.listViewContextMenuStrip.Size = new System.Drawing.Size(241, 97);
-            // 
-            // copyFullPathToolStripMenuItem
-            // 
-            this.copyFullPathToolStripMenuItem.Name = "copyFullPathToolStripMenuItem";
-            this.copyFullPathToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
-            this.copyFullPathToolStripMenuItem.Text = "Copy FullPath";
-            // 
-            // openDirectoryToolStripMenuItem
-            // 
-            this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
-            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
-            this.openDirectoryToolStripMenuItem.Text = "Open Directory";
-            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -718,6 +729,7 @@
             this.Name = "GeminiForm";
             this.Text = "Gemini: find duplicate files and delete.";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GeminiForm_FormClosing);
+            this.listViewContextMenuStrip.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.fileModeGroupBox.ResumeLayout(false);
@@ -732,7 +744,6 @@
             this.panel5.ResumeLayout(false);
             this.fileOptionsmenuStrip.ResumeLayout(false);
             this.fileOptionsmenuStrip.PerformLayout();
-            this.listViewContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -799,5 +810,6 @@
         private System.Windows.Forms.ContextMenuStrip listViewContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem copyFullPathToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDirectoryToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader CBcolumnHeader;
     }
 }

@@ -1822,5 +1822,15 @@ namespace DailyWallpaper
         {
 
         }
+
+        private void openDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
