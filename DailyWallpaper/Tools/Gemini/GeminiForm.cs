@@ -330,7 +330,7 @@ namespace DailyWallpaper
                     GeminiList2Group(sameListNoDup, geminiFileStructListForLV, token);
                     
                     _console.WriteLine(">>> Show to ListView...");
-                    GeminiFileStructToListView(geminiFileStructListForLV);
+                    UpdateListView(geminiFileStructListForLV);
                     
                     timer.Stop();
                     string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
@@ -444,24 +444,33 @@ namespace DailyWallpaper
         }
 
         private delegate void GeminiFileStructToListViewDelegate(List<GeminiFileStruct> gfL);
-        private void GeminiFileStructToListView(List<GeminiFileStruct> gfL)
+        private void UpdateListView(List<GeminiFileStruct> gfL)
         {
             if (InvokeRequired)
             {
-                var f = new GeminiFileStructToListViewDelegate(GeminiFileStructToListView);
+                var f = new GeminiFileStructToListViewDelegate(UpdateListView);
                 Invoke(f, new object[] { gfL });
             }
             else
             {
-                foreach (var gf in gfL)
+                resultListView.Items.Clear();
+                if (gfL.Count > 0)
                 {
-                    var item = new System.Windows.Forms.ListViewItem(gf.name);
-                    item.BackColor = gf.color;
-                    AddSubItem(item, "lastMtime", gf.lastMtime);
-                    AddSubItem(item, "extName", gf.extName);
-                    AddSubItem(item, "sizeStr", gf.sizeStr);
-                    AddSubItem(item, "fullPath", gf.fullPath);
-                    resultListView.Items.Add(item);
+                    foreach (var gf in gfL)
+                    {
+                        var item = new System.Windows.Forms.ListViewItem(gf.name);
+                        item.BackColor = gf.color;
+                        AddSubItem(item, "lastMtime", gf.lastMtime);
+                        AddSubItem(item, "extName", gf.extName);
+                        AddSubItem(item, "sizeStr", gf.sizeStr);
+                        AddSubItem(item, "fullPath", gf.fullPath);
+                        resultListView.Items.Add(item);
+                    }
+                    SetText($"Summay: Found {gfL.Count:N0} duplicate files.", summaryTextBox);
+                }
+                else
+                {
+                    SetText($">>> Summay: Found No duplicate files.", summaryTextBox);
                 }
             }
         }
@@ -480,7 +489,6 @@ namespace DailyWallpaper
         {
             if (listNoDup.Count > 0)
             {
-                SetText($"Summay: Found {listNoDup.Count:N0} duplicate files.", summaryTextBox);
                 // same size to one group
                 // check HASH before.
                 var duplicateGrp =
@@ -491,7 +499,6 @@ namespace DailyWallpaper
                     select grp;
                 int index = 0;
                 int j = 0;
-                resultListView.Items.Clear();
                 foreach (var item in duplicateGrp)
                 {
                     index++;
@@ -528,15 +535,7 @@ namespace DailyWallpaper
                     }
                     if (printToCons) _console.WriteLine($">>> Group Size[{index}] {item.Key}\r\n");
                 }
-
-                _console.WriteLine($">>> Summay: Found {listNoDup.Count:n0} duplicate files.");
             }
-            else
-            {
-                // summaryTextBox.Text = ;
-                SetText($">>> Summay: Found No duplicate files.", summaryTextBox);
-            }
-
         }
 
         delegate void SetTextCallBack(string text, System.Windows.Forms.TextBox tb);
@@ -1587,6 +1586,76 @@ namespace DailyWallpaper
         private void usageToolStripMenuItem_Click(object sender, EventArgs e)
         {
              _console.WriteLine(gemini.helpString);
+        }
+
+        private void delNonExistentItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // custQuery is an IEnumerable<IGrouping<string, Customer>>
+            if (geminiFileStructListForLV.Count < 1)
+            {
+                return;
+            }
+            var existListIE =
+                from it in geminiFileStructListForLV
+                where File.Exists((it.fullPath))
+                group it by new { it.size, it.extName} into grp
+                where grp.Count() > 1
+                select grp.ToList();  // .ToList() NOT FUCKING WORK. STILL HAVE TO USE FOREACH???
+
+            var existList = new List<GeminiFileStruct>();
+            int j = 0;
+            // Action<GeminiFileStruct, Color> updateColor;
+            var updateColor = new Action<GeminiFileStruct, Color>(
+                        (fku, c) => { fku.color = c; Debug.WriteLine("FKU..."); });
+            foreach (var it in existListIE)
+            {
+                j++;
+                var color = Color.White;
+                if (j % 2 == 1)
+                {
+                    color = Color.FromArgb(250, 234, 192);
+                }
+                foreach (var item in it)
+                {
+                    UpdateGeminiFileStructListForLV(existList, item, color);
+                }
+            }
+            if (existList.Count < geminiFileStructListForLV.Count)
+            {
+                _console.WriteLine(
+                    $"delete {geminiFileStructListForLV.Count - existList.Count} " +
+                    "non-existent items for ListView.");
+                geminiFileStructListForLV = existList;
+                RecoverChecked(UpdateListView, geminiFileStructListForLV);   
+            }
+        }
+        private void RecoverChecked(GeminiFileStructToListViewDelegate f, List<GeminiFileStruct> gfL)
+        {
+            // foreach (var item in resultListView.CheckedItems) NOT WORK
+            var bkp = new List<string>();
+            if (deleteList.Count > 1)
+            {
+                foreach (var item in deleteList)
+                {
+                    bkp.Add(item);
+                }
+            }
+            f(gfL);
+            if (bkp.Count > 1)
+            {
+                foreach (var item in bkp)
+                {
+                    foreach (var it in resultListView.Items)
+                    {
+                        var fullPathFromLV = ((System.Windows.Forms.ListViewItem)it).SubItems["fullPath"].Text;
+                        if (item.Equals(fullPathFromLV))
+                        {
+                            ((System.Windows.Forms.ListViewItem)it).Checked = true;
+                        }
+                    }
+                }
+            }
+            
         }
     }
 }
