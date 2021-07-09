@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -76,6 +77,7 @@ namespace DailyWallpaper.Tools
             public string md5;
             public string lastMtime;
             public string crtTime;
+            public Color color;
 
             public bool EqualsHash(object obj)
             {

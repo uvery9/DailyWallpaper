@@ -47,6 +47,7 @@ namespace DailyWallpaper
         private Mutex _mutexPb;
         private ListViewColumnSorter lvwColumnSorter;
         private List<string> deleteList;
+        private List<GeminiFileStruct> geminiFileStructListForLV = new List<GeminiFileStruct>();
 
         private enum FilterMode : int
         {
@@ -322,10 +323,15 @@ namespace DailyWallpaper
                     sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
                             geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
                     _console.WriteLine(">>> Compare finished...");
-                        // group by size
+                    // group by size
 
-                        _console.WriteLine(">>> Show to ListView...");
-                    GeminiList2Group(sameListNoDup, token);
+                    geminiFileStructListForLV = new List<GeminiFileStruct>();
+                    _console.WriteLine(">>> update to List...");
+                    GeminiList2Group(sameListNoDup, geminiFileStructListForLV, token);
+                    
+                    _console.WriteLine(">>> Show to ListView...");
+                    GeminiFileStructToListView(geminiFileStructListForLV);
+                    
                     timer.Stop();
                     string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
                     _console.WriteLine($">>> Cost time: {hashCostTime}");
@@ -431,24 +437,32 @@ namespace DailyWallpaper
             return sameList.Distinct().ToList();
         }
 
+        private void UpdateGeminiFileStructListForLV(List<GeminiFileStruct> gfL, GeminiFileStruct gf, Color c)
+        {
+            gf.color = c;
+            gfL.Add(gf);
+        }
 
-        private delegate void AddItemToListViewCallback(GeminiFileStruct gf, Color c);
-        private void AddItemToListView(GeminiFileStruct gf, Color c)
+        private delegate void GeminiFileStructToListViewDelegate(List<GeminiFileStruct> gfL);
+        private void GeminiFileStructToListView(List<GeminiFileStruct> gfL)
         {
             if (InvokeRequired)
             {
-                var f = new AddItemToListViewCallback(AddItemToListView);
-                Invoke(f, new object[] { gf, c });
+                var f = new GeminiFileStructToListViewDelegate(GeminiFileStructToListView);
+                Invoke(f, new object[] { gfL });
             }
             else
             {
-                var item = new System.Windows.Forms.ListViewItem(gf.name);
-                item.BackColor = c;
-                AddSubItem(item, "lastMtime", gf.lastMtime);
-                AddSubItem(item, "extName", gf.extName);
-                AddSubItem(item, "sizeStr", gf.sizeStr);
-                AddSubItem(item, "fullPath", gf.fullPath);
-                resultListView.Items.Add(item);
+                foreach (var gf in gfL)
+                {
+                    var item = new System.Windows.Forms.ListViewItem(gf.name);
+                    item.BackColor = gf.color;
+                    AddSubItem(item, "lastMtime", gf.lastMtime);
+                    AddSubItem(item, "extName", gf.extName);
+                    AddSubItem(item, "sizeStr", gf.sizeStr);
+                    AddSubItem(item, "fullPath", gf.fullPath);
+                    resultListView.Items.Add(item);
+                }
             }
         }
         public static void AddSubItem(System.Windows.Forms.ListViewItem i, string name, string text)
@@ -461,7 +475,7 @@ namespace DailyWallpaper
         {
 
         }
-        private void GeminiList2Group(List<GeminiFileStruct> listNoDup,
+        private void GeminiList2Group(List<GeminiFileStruct> listNoDup, List<GeminiFileStruct> gfL,
             CancellationToken token, bool printToCons = false)
         {
             if (listNoDup.Count > 0)
@@ -507,7 +521,7 @@ namespace DailyWallpaper
                                 token.ThrowIfCancellationRequested();
                             }
                             if (printToCons) _console.WriteLine("<file>\r\n" + t + "\r\n</file>\r\n");
-                            AddItemToListView(t, color);
+                            UpdateGeminiFileStructListForLV(gfL, t, color);
                         }
                         if (printToCons) _console.WriteLine($">>> Group Ext[{j}] {it.Key}");
                         // update list name
