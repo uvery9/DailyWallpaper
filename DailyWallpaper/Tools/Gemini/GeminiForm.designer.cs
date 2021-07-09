@@ -79,7 +79,7 @@
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.delNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
@@ -588,7 +588,7 @@
             this.selectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectAllToolStripMenuItem,
             this.unselectAllToolStripMenuItem,
-            this.delNonExistentItemsToolStripMenuItem});
+            this.cleanNonExistentItemsToolStripMenuItem});
             this.selectToolStripMenuItem.Name = "selectToolStripMenuItem";
             this.selectToolStripMenuItem.Size = new System.Drawing.Size(77, 28);
             this.selectToolStripMenuItem.Text = "Select";
@@ -596,23 +596,23 @@
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(331, 34);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // unselectAllToolStripMenuItem
             // 
             this.unselectAllToolStripMenuItem.Name = "unselectAllToolStripMenuItem";
-            this.unselectAllToolStripMenuItem.Size = new System.Drawing.Size(331, 34);
+            this.unselectAllToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
             this.unselectAllToolStripMenuItem.Text = "Unselect All";
             this.unselectAllToolStripMenuItem.Click += new System.EventHandler(this.unselectAllToolStripMenuItem_Click);
             // 
-            // delNonExistentItemsToolStripMenuItem
+            // cleanNonExistentItemsToolStripMenuItem
             // 
-            this.delNonExistentItemsToolStripMenuItem.Name = "delNonExistentItemsToolStripMenuItem";
-            this.delNonExistentItemsToolStripMenuItem.Size = new System.Drawing.Size(331, 34);
-            this.delNonExistentItemsToolStripMenuItem.Text = "Delete non-existent items";
-            this.delNonExistentItemsToolStripMenuItem.Click += new System.EventHandler(this.delNonExistentItemsToolStripMenuItem_Click);
+            this.cleanNonExistentItemsToolStripMenuItem.Name = "cleanNonExistentItemsToolStripMenuItem";
+            this.cleanNonExistentItemsToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.cleanNonExistentItemsToolStripMenuItem.Text = "Clean non-existent items";
+            this.cleanNonExistentItemsToolStripMenuItem.Click += new System.EventHandler(this.cleanNonExistentItemsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -718,6 +718,6 @@
         private System.Windows.Forms.ToolStripMenuItem saveLogToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveResultToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem delNonExistentItemsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cleanNonExistentItemsToolStripMenuItem;
     }
 }

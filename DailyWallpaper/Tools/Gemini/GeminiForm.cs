@@ -1588,7 +1588,7 @@ namespace DailyWallpaper
              _console.WriteLine(gemini.helpString);
         }
 
-        private void delNonExistentItemsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cleanNonExistentItemsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // custQuery is an IEnumerable<IGrouping<string, Customer>>
             if (geminiFileStructListForLV.Count < 1)
