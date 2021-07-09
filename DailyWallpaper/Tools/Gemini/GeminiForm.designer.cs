@@ -96,7 +96,7 @@
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(821, 116);
+            this.updateButton.Location = new System.Drawing.Point(821, 104);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(77, 28);
             this.updateButton.TabIndex = 11;
@@ -107,7 +107,7 @@
             // 
             this.filterExample.BackColor = System.Drawing.SystemColors.Control;
             this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(573, 121);
+            this.filterExample.Location = new System.Drawing.Point(573, 109);
             this.filterExample.Name = "filterExample";
             this.filterExample.ReadOnly = true;
             this.filterExample.Size = new System.Drawing.Size(234, 21);
@@ -117,7 +117,7 @@
             // btnSelectTargetFolder2
             // 
             this.btnSelectTargetFolder2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(821, 58);
+            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(821, 51);
             this.btnSelectTargetFolder2.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder2.Name = "btnSelectTargetFolder2";
             this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 35);
@@ -129,7 +129,7 @@
             // modeCheckBox
             // 
             this.modeCheckBox.AutoSize = true;
-            this.modeCheckBox.Location = new System.Drawing.Point(497, 120);
+            this.modeCheckBox.Location = new System.Drawing.Point(497, 108);
             this.modeCheckBox.Name = "modeCheckBox";
             this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
             this.modeCheckBox.TabIndex = 10;
@@ -140,7 +140,7 @@
             // regexCheckBox
             // 
             this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(439, 120);
+            this.regexCheckBox.Location = new System.Drawing.Point(439, 108);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
             this.regexCheckBox.TabIndex = 9;
@@ -160,7 +160,7 @@
             // labelTargetFolder2
             // 
             this.labelTargetFolder2.AutoSize = true;
-            this.labelTargetFolder2.Location = new System.Drawing.Point(11, 66);
+            this.labelTargetFolder2.Location = new System.Drawing.Point(11, 59);
             this.labelTargetFolder2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTargetFolder2.Name = "labelTargetFolder2";
             this.labelTargetFolder2.Size = new System.Drawing.Size(89, 18);
@@ -169,7 +169,7 @@
             // 
             // folderFilterTextBox
             // 
-            this.folderFilterTextBox.Location = new System.Drawing.Point(155, 119);
+            this.folderFilterTextBox.Location = new System.Drawing.Point(156, 106);
             this.folderFilterTextBox.Name = "folderFilterTextBox";
             this.folderFilterTextBox.Size = new System.Drawing.Size(265, 28);
             this.folderFilterTextBox.TabIndex = 7;
@@ -178,10 +178,10 @@
             // 
             this.fldFilterText.BackColor = System.Drawing.SystemColors.Control;
             this.fldFilterText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.fldFilterText.Location = new System.Drawing.Point(14, 121);
+            this.fldFilterText.Location = new System.Drawing.Point(14, 109);
             this.fldFilterText.Name = "fldFilterText";
             this.fldFilterText.ReadOnly = true;
-            this.fldFilterText.Size = new System.Drawing.Size(177, 21);
+            this.fldFilterText.Size = new System.Drawing.Size(136, 21);
             this.fldFilterText.TabIndex = 6;
             this.fldFilterText.Text = "Folder Filter:";
             // 
@@ -190,7 +190,7 @@
             this.targetFolder2TextBox.AllowDrop = true;
             this.targetFolder2TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 63);
+            this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 56);
             this.targetFolder2TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder2TextBox.Name = "targetFolder2TextBox";
             this.targetFolder2TextBox.Size = new System.Drawing.Size(695, 28);
@@ -252,7 +252,7 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(139, 60);
+            this.btnClear.Location = new System.Drawing.Point(5, 57);
             this.btnClear.Margin = new System.Windows.Forms.Padding(4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(61, 32);
@@ -634,6 +634,7 @@
             this.usageToolStripMenuItem.Name = "usageToolStripMenuItem";
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.usageToolStripMenuItem.Text = "Usage";
+            this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 

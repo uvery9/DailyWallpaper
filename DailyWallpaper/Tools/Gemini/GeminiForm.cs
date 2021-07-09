@@ -68,8 +68,6 @@ namespace DailyWallpaper
             _console = new TextBoxCons(new ConsWriter(tbConsole));
 
             // System.Windows.Forms.TextBox.CheckForIllegalCrossThreadCalls = false;
-            // _console.WriteLine(gemini.helpString);
-
 
             // init targetfolder 1&2
             targetFolder1TextBox.Text = desktopPath;
@@ -145,7 +143,7 @@ namespace DailyWallpaper
                     filterMode = FilterMode.GEN_PROTECT;
                 }
             }
-            _console.WriteLine($"\r\n Start with FilterMode: {filterMode}");
+            // _console.WriteLine($"\r\n Start with FilterMode: {filterMode}");
             UpdateFilterExampleText(filterMode);
         }
         private void BindHistory(System.Windows.Forms.TextBox tb, List<string> list)
@@ -1569,6 +1567,11 @@ namespace DailyWallpaper
         private void saveResultToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveListOrLog2File(log: false);
+        }
+
+        private void usageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+             _console.WriteLine(gemini.helpString);
         }
     }
 }
