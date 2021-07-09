@@ -81,10 +81,12 @@
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -110,10 +112,10 @@
             // 
             this.filterExample.BackColor = System.Drawing.SystemColors.Control;
             this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(573, 109);
+            this.filterExample.Location = new System.Drawing.Point(569, 109);
             this.filterExample.Name = "filterExample";
             this.filterExample.ReadOnly = true;
-            this.filterExample.Size = new System.Drawing.Size(234, 21);
+            this.filterExample.Size = new System.Drawing.Size(246, 21);
             this.filterExample.TabIndex = 8;
             this.filterExample.Text = "SSSSSS";
             // 
@@ -172,9 +174,9 @@
             // 
             // folderFilterTextBox
             // 
-            this.folderFilterTextBox.Location = new System.Drawing.Point(156, 106);
+            this.folderFilterTextBox.Location = new System.Drawing.Point(125, 106);
             this.folderFilterTextBox.Name = "folderFilterTextBox";
-            this.folderFilterTextBox.Size = new System.Drawing.Size(265, 28);
+            this.folderFilterTextBox.Size = new System.Drawing.Size(294, 28);
             this.folderFilterTextBox.TabIndex = 7;
             // 
             // fldFilterText
@@ -184,9 +186,9 @@
             this.fldFilterText.Location = new System.Drawing.Point(14, 109);
             this.fldFilterText.Name = "fldFilterText";
             this.fldFilterText.ReadOnly = true;
-            this.fldFilterText.Size = new System.Drawing.Size(136, 21);
+            this.fldFilterText.Size = new System.Drawing.Size(117, 21);
             this.fldFilterText.TabIndex = 6;
-            this.fldFilterText.Text = "Folder Filter:";
+            this.fldFilterText.Text = "Path Filter:";
             // 
             // targetFolder2TextBox
             // 
@@ -297,7 +299,6 @@
             this.sizeColumnHeader,
             this.dirColumnHeader,
             this.hashColumnHeader});
-            this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
             this.resultListView.Location = new System.Drawing.Point(0, 3);
             this.resultListView.Name = "resultListView";
@@ -310,6 +311,8 @@
             this.resultListView.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.resultListView_ItemCheck);
             this.resultListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
             this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
+            this.resultListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resultListView_MouseClick);
+            this.resultListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.resultListView_MouseDoubleClick);
             // 
             // nameColumnHeader
             // 
@@ -609,6 +612,8 @@
             // selectToolStripMenuItem
             // 
             this.selectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.undoToolStripMenuItem,
+            this.redoToolStripMenuItem,
             this.selectAllToolStripMenuItem,
             this.unselectAllToolStripMenuItem,
             this.reverseElectionToolStripMenuItem,
@@ -630,6 +635,13 @@
             this.unselectAllToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
             this.unselectAllToolStripMenuItem.Text = "Unselect All";
             this.unselectAllToolStripMenuItem.Click += new System.EventHandler(this.unselectAllToolStripMenuItem_Click);
+            // 
+            // reverseElectionToolStripMenuItem
+            // 
+            this.reverseElectionToolStripMenuItem.Name = "reverseElectionToolStripMenuItem";
+            this.reverseElectionToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.reverseElectionToolStripMenuItem.Text = "Reverse Election";
+            this.reverseElectionToolStripMenuItem.Click += new System.EventHandler(this.reverseElectionToolStripMenuItem_Click);
             // 
             // cleanNonExistentItemsToolStripMenuItem
             // 
@@ -653,12 +665,19 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // reverseElectionToolStripMenuItem
+            // undoToolStripMenuItem
             // 
-            this.reverseElectionToolStripMenuItem.Name = "reverseElectionToolStripMenuItem";
-            this.reverseElectionToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
-            this.reverseElectionToolStripMenuItem.Text = "Reverse Election";
-            this.reverseElectionToolStripMenuItem.Click += new System.EventHandler(this.reverseElectionToolStripMenuItem_Click);
+            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 
@@ -753,5 +772,7 @@
         private System.Windows.Forms.ColumnHeader dirColumnHeader;
         private System.Windows.Forms.ColumnHeader hashColumnHeader;
         private System.Windows.Forms.ToolStripMenuItem reverseElectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
     }
 }

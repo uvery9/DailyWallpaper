@@ -48,7 +48,7 @@ namespace DailyWallpaper
         private ListViewColumnSorter lvwColumnSorter;
         private List<string> deleteList;
         private List<GeminiFileStruct> geminiFileStructListForLV = new List<GeminiFileStruct>();
-
+        private Color themeColor = Color.FromArgb(250, 234, 192);
         private enum FilterMode : int
         {
             REGEX_FIND,
@@ -73,14 +73,14 @@ namespace DailyWallpaper
             // init targetfolder 1&2
             targetFolder1TextBox.Text = desktopPath;
             targetFolder2TextBox.Text = "";
-            /*var init = gemini.ini.Read("TargetFolder1", "Gemini");
+            var init = gemini.ini.Read("TargetFolder1", "Gemini");
             if (Directory.Exists(init))
             {
                 UpdateTextAndIniFile("TargetFolder1", init,
                     targetFolder1History, targetFolder1TextBox, updateIni: false);
             }
 
-            init = gemini.ini.Read("TargetFolder2", "Gemini");
+            /*init = gemini.ini.Read("TargetFolder2", "Gemini");
             if (Directory.Exists(init))
             {
                 UpdateTextAndIniFile("TargetFolder2", init,
@@ -229,19 +229,6 @@ namespace DailyWallpaper
             {
                 _console.WriteLine($"!!! Error occur when deleting files: {ex.Message}");
             }
-        }
-
-        private void ShowShellContextMenu()
-        {
-/*            ShellContextMenu ctxMnu = new ShellContextMenu();
-            FileInfo[] arrFI = new FileInfo[1];
-            arrFI[0] = new FileInfo(this.treeMain.SelectedNode.Tag.ToString());
-            ctxMnu.ShowContextMenu(arrFI, this.PointToScreen(new Point(e.X, e.Y)));*/
-
-            ShellContextMenu scm = new ShellContextMenu();
-            FileInfo[] files = new FileInfo[1];
-            files[0] = new FileInfo(@"c:\windows\notepad.exe");
-            scm.ShowContextMenu(files, Cursor.Position);
         }
 
         private static string GetTimeStringMsOrS(TimeSpan t)
@@ -486,18 +473,29 @@ namespace DailyWallpaper
                         AddSubItem(item, "fullPath", gf.fullPath);
                         resultListView.Items.Add(item);
                     }
-                    SetText($"Summay: Found {gfL.Count:N0} duplicate files.", summaryTextBox);
+                    SetText(summaryTextBox, $"Summay: Found {gfL.Count:N0} duplicate files.", themeColor);
                 }
                 else
                 {
-                    SetText($">>> Summay: Found No duplicate files.", summaryTextBox);
+                    SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
                 }
             }
         }
 
         private async Task UpdateHash(List<GeminiFileStruct> gfL, 
-            GeminiFileStruct gf, IProgress<double> progress)
+            GeminiFileStruct gf, System.Windows.Forms.ProgressBar pb)
         {
+            void ProgressActionD(double i) // percent in file.
+            {
+                _mutexPb.WaitOne();
+                var percentInt = (int)i;
+                if (percentInt > 100)
+                    percentInt = 100;
+                SetProgressMessage(percentInt, pb);
+                _mutexPb.ReleaseMutex();
+            }
+            var totalProgessDouble = new Progress<double>(ProgressActionD);
+
             if (fileMD5CheckBox.Checked)
             {
                 void getRes(bool res, string who, string md5, string costTimeOrMsg)
@@ -507,8 +505,8 @@ namespace DailyWallpaper
                         gf.hash = md5;
                     }
                 }
-                await HashCalc.HashCalculator.ComputeHashAsync(
-                    MD5.Create(), gf.fullPath, _source.Token, "MD5", getRes, progress);
+                await ComputeHashAsync(
+                    MD5.Create(), gf.fullPath, _source.Token, "MD5", getRes, totalProgessDouble);
             }
             else if (fileSHA1CheckBox.Checked)
             {
@@ -519,8 +517,8 @@ namespace DailyWallpaper
                         gf.hash = sha1;
                     }
                 }
-                await HashCalc.HashCalculator.ComputeHashAsync(
-                    SHA1.Create(), gf.fullPath, _source.Token, "SHA1", getRes, progress);
+                await ComputeHashAsync(
+                    SHA1.Create(), gf.fullPath, _source.Token, "SHA1", getRes, totalProgessDouble);
             }
             gfL.Add(gf);
         }
@@ -563,7 +561,7 @@ namespace DailyWallpaper
                 var color = Color.White;
                 if (j % 2 == 1)
                 {
-                    color = Color.FromArgb(250, 234, 192);
+                    color = themeColor;
                 }
                 foreach (var it in item)
                 {
@@ -579,24 +577,10 @@ namespace DailyWallpaper
         private async Task<List<GeminiFileStruct>> UpdateHashInGeminiFileStructList(
             List<GeminiFileStruct> gfL, GeminiCompareMode mode, System.Windows.Forms.ProgressBar pb)
         {
-            
-            double percent = 0.0;
-            void ProgressActionD(double i) // percent in file.
-            {
-                _mutexPb.WaitOne();
-                percent += i * 100;
-                var percentInt = (int)percent;
-                if (percentInt > 95)
-                    percentInt = 100;
-                SetProgressMessage(percentInt, pb);
-                percent = 0.0; // for next time.
-                _mutexPb.ReleaseMutex();
-            }
-            var totalProgessDouble = new Progress<double>(ProgressActionD);
             var tmp = new List<GeminiFileStruct>();
             foreach (var it in gfL)
             {
-                await UpdateHash(tmp, it, totalProgessDouble);
+                await UpdateHash(tmp, it, pb);
             }
             return tmp;
         }
@@ -611,17 +595,18 @@ namespace DailyWallpaper
 
         }
 
-        delegate void SetTextCallBack(string text, System.Windows.Forms.TextBox tb);
-        private void SetText(string text, System.Windows.Forms.TextBox tb)
+        delegate void SetTextCallBack(System.Windows.Forms.TextBox tb, string text, Color c);
+        private void SetText(System.Windows.Forms.TextBox tb, string text, Color c)
         {
             if (summaryTextBox.InvokeRequired)
             {
                 SetTextCallBack stcb = new SetTextCallBack(SetText);
-                Invoke(stcb, new object[] { text, tb });
+                Invoke(stcb, new object[] { tb, text, c});
             }
             else
             {
                 tb.Text = text;
+                tb.BackColor = c;
             }
         }
 
@@ -649,6 +634,7 @@ namespace DailyWallpaper
         private void btnClear_Click(object sender, EventArgs e)
         {
             tbConsole.Clear();
+            SetText(summaryTextBox, "", SystemColors.Control);
             summaryTextBox.Text = "";
             geminiProgressBar.Value = 0;
         }
@@ -1726,6 +1712,54 @@ namespace DailyWallpaper
         private void updateButton_Click(object sender, EventArgs e)
         {
             SetFolderFilter(folderFilterTextBox.Text, print: true);
+        }
+
+        private void resultListView_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var focusedItem = resultListView.FocusedItem;
+                if (focusedItem != null && focusedItem.Bounds.Contains(e.Location))
+                {
+                    var filePath = focusedItem.SubItems["fullPath"].Text;
+                    if (File.Exists(filePath))
+                    {
+                        ShellContextMenu scm = new ShellContextMenu();
+                        FileInfo[] files = new FileInfo[1];
+                        files[0] = new FileInfo(filePath);
+                        scm.ShowContextMenu(files, Cursor.Position);
+                    }
+                }
+            }
+        }
+
+        private void resultListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var focusedItem = resultListView.FocusedItem;
+                if (focusedItem != null && focusedItem.Bounds.Contains(e.Location))
+                {
+                    var filePath = focusedItem.SubItems["fullPath"].Text;
+                    if (File.Exists(filePath))
+                    {
+                        // combine the arguments together
+                        // it doesn't matter if there is a space after ','
+                        string argument = "/select, \"" + filePath + "\"";
+                        Process.Start("explorer.exe", argument);
+                    }
+                }
+            }
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

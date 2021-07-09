@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -321,7 +322,7 @@ namespace DailyWallpaper.Tools
                             tmp.sha1 = sha1;
                         }
                     }
-                    await HashCalc.HashCalculator.ComputeHashAsync(SHA1.Create(), one.fullPath, token, "SHA1", getRes);
+                    await ComputeHashAsync(SHA1.Create(), one.fullPath, token, "SHA1", getRes);
                 }
                 if (calcMD5)
                 {
@@ -332,7 +333,7 @@ namespace DailyWallpaper.Tools
                             tmp.md5 = md5;
                         }
                     }
-                    await HashCalc.HashCalculator.ComputeHashAsync(MD5.Create(), one.fullPath, token, "MD5", getRes);
+                    await ComputeHashAsync(MD5.Create(), one.fullPath, token, "MD5", getRes);
                 }
                 ret.Add(tmp);
             }
@@ -385,6 +386,107 @@ namespace DailyWallpaper.Tools
                 }
             }
             return false;
+        }
+        private static string GetTimeStringMsOrS(TimeSpan t)
+        {
+            string hashCostTime;
+            if (t.TotalSeconds > 1)
+            {
+                hashCostTime = t.TotalSeconds.ToString() + "s";
+            }
+            else
+            {
+                hashCostTime = t.TotalMilliseconds.ToString() + "ms";
+            }
+            return hashCostTime;
+        }
+        // encoding = Encoding.UTF8
+        public static string GetHash(HashAlgorithm hashAlgorithm = null, byte[] data = null,
+            string input = null, Encoding encoding = default)
+        {
+            // Convert the input string to a byte array and compute the hash.
+            if (data == null && !string.IsNullOrEmpty(input))
+            {
+                data = hashAlgorithm.ComputeHash(encoding.GetBytes(input));
+            }
+
+            var sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("X2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
+        }
+        
+        public static async Task ComputeHashAsync(HashAlgorithm hashAlgorithm, string path,
+            CancellationToken cancelToken = default, string who = null,
+            Action<bool, string, string, string> action = null,
+            IProgress<double> progress = null, int bufferSize = 1024 * 1024 * 10)
+        {
+            try
+            {
+                using (var stream = new FileInfo(path).OpenRead())
+                {
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    stream.Position = 0;
+                    byte[] readAheadBuffer, buffer;
+                    int readAheadBytesRead, bytesRead;
+                    long totalBytesRead = 0;
+                    var size = stream.Length;
+                    readAheadBuffer = new byte[bufferSize];
+                    readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
+                        readAheadBuffer.Length, cancelToken);
+                    totalBytesRead += readAheadBytesRead;
+                    do
+                    {
+                        bytesRead = readAheadBytesRead;
+                        buffer = readAheadBuffer;
+                        readAheadBuffer = new byte[bufferSize];
+                        readAheadBytesRead = await stream.ReadAsync(readAheadBuffer, 0,
+                            readAheadBuffer.Length, cancelToken);
+                        totalBytesRead += readAheadBytesRead;
+
+                        if (readAheadBytesRead == 0)
+                            hashAlgorithm.TransformFinalBlock(buffer, 0, bytesRead);
+                        else
+                            hashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0);
+                        if (progress != null)
+                        {
+                            progress.Report((double)totalBytesRead / size * 100);
+                        }
+
+                        if (cancelToken.IsCancellationRequested)
+                            cancelToken.ThrowIfCancellationRequested();
+                    } while (readAheadBytesRead != 0);
+                    timer.Stop();
+                    var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
+                    if (action != null)
+                    {
+                        action(true, $"{who}", GetHash(data: hashAlgorithm.Hash), hashCostTime);
+                    }
+
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                if (action != null)
+                {
+                    action(false, $"Info {who}", null, e.Message);
+                }
+            }
+            catch (Exception e)
+            {
+                if (action != null)
+                {
+                    action(false, $"ERROR {who}", null, e.Message);
+                }
+            }
         }
     }
 }
