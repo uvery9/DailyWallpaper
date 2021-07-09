@@ -82,6 +82,7 @@
             this.unselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -622,9 +623,17 @@
             // 
             // helpToolStripMenuItem
             // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.usageToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(67, 28);
             this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // usageToolStripMenuItem
+            // 
+            this.usageToolStripMenuItem.Name = "usageToolStripMenuItem";
+            this.usageToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.usageToolStripMenuItem.Text = "Usage";
             // 
             // GeminiForm
             // 
@@ -716,5 +725,6 @@
         private System.Windows.Forms.ToolStripMenuItem alwaysOnTopToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveLogToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveResultToFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
     }
 }
