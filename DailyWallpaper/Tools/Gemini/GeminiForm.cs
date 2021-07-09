@@ -1741,7 +1741,7 @@ namespace DailyWallpaper
                     }
                 } else if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
                 {
-
+                    listViewContextMenuStrip.Show(Cursor.Position);
                 }
             }
         }

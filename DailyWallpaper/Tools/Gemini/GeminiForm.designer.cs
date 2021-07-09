@@ -53,7 +53,6 @@
             this.sizeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.dirColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hashColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
             this.cleanUpButton = new System.Windows.Forms.Button();
             this.geminiProgressBar = new System.Windows.Forms.ProgressBar();
@@ -73,21 +72,23 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileOptionsmenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveLogToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveResultToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
+            this.listViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyFullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -95,7 +96,8 @@
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel5.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.fileOptionsmenuStrip.SuspendLayout();
+            this.listViewContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // updateButton
@@ -564,19 +566,19 @@
             this.panel5.Size = new System.Drawing.Size(1286, 539);
             this.panel5.TabIndex = 17;
             // 
-            // menuStrip1
+            // fileOptionsmenuStrip
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileOptionsmenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
+            this.fileOptionsmenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.fileOptionsmenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.selectToolStripMenuItem,
             this.helpToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1310, 32);
-            this.menuStrip1.TabIndex = 18;
-            this.menuStrip1.Text = "menuStrip1";
+            this.fileOptionsmenuStrip.Location = new System.Drawing.Point(0, 0);
+            this.fileOptionsmenuStrip.Name = "fileOptionsmenuStrip";
+            this.fileOptionsmenuStrip.Size = new System.Drawing.Size(1310, 32);
+            this.fileOptionsmenuStrip.TabIndex = 18;
+            this.fileOptionsmenuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -622,6 +624,20 @@
             this.selectToolStripMenuItem.Size = new System.Drawing.Size(77, 28);
             this.selectToolStripMenuItem.Text = "Select";
             // 
+            // undoToolStripMenuItem
+            // 
+            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            // 
+            // redoToolStripMenuItem
+            // 
+            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.redoToolStripMenuItem.Text = "Redo";
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+            // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
@@ -665,19 +681,26 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // undoToolStripMenuItem
+            // listViewContextMenuStrip
             // 
-            this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
-            this.undoToolStripMenuItem.Text = "Undo";
-            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            this.listViewContextMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.listViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openDirectoryToolStripMenuItem,
+            this.copyFullPathToolStripMenuItem});
+            this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(241, 97);
             // 
-            // redoToolStripMenuItem
+            // copyFullPathToolStripMenuItem
             // 
-            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
-            this.redoToolStripMenuItem.Text = "Redo";
-            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+            this.copyFullPathToolStripMenuItem.Name = "copyFullPathToolStripMenuItem";
+            this.copyFullPathToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.copyFullPathToolStripMenuItem.Text = "Copy FullPath";
+            // 
+            // openDirectoryToolStripMenuItem
+            // 
+            this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
+            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.openDirectoryToolStripMenuItem.Text = "Open Directory";
             // 
             // GeminiForm
             // 
@@ -687,15 +710,14 @@
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel5);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.fileOptionsmenuStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.fileOptionsmenuStrip;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(754, 536);
             this.Name = "GeminiForm";
             this.Text = "Gemini: find duplicate files and delete.";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GeminiForm_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.fileModeGroupBox.ResumeLayout(false);
@@ -708,8 +730,9 @@
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.panel5.ResumeLayout(false);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.fileOptionsmenuStrip.ResumeLayout(false);
+            this.fileOptionsmenuStrip.PerformLayout();
+            this.listViewContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -733,7 +756,6 @@
         private System.Windows.Forms.TextBox targetFolder2TextBox;
         private System.Windows.Forms.Label labelTargetFolder2;
         private System.Windows.Forms.ListView resultListView;
-        private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TextBox summaryTextBox;
         private System.Windows.Forms.GroupBox fileModeGroupBox;
@@ -756,7 +778,7 @@
         private System.Windows.Forms.ProgressBar geminiProgressBar;
         private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip fileOptionsmenuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
@@ -774,5 +796,8 @@
         private System.Windows.Forms.ToolStripMenuItem reverseElectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip listViewContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem copyFullPathToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openDirectoryToolStripMenuItem;
     }
 }
