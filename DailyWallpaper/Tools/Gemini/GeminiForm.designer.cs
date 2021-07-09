@@ -29,13 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.groupBoxTarget = new System.Windows.Forms.GroupBox();
             this.updateButton = new System.Windows.Forms.Button();
             this.filterExample = new System.Windows.Forms.TextBox();
             this.btnSelectTargetFolder2 = new System.Windows.Forms.Button();
             this.modeCheckBox = new System.Windows.Forms.CheckBox();
             this.regexCheckBox = new System.Windows.Forms.CheckBox();
-            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
             this.labelTargetFolder1 = new System.Windows.Forms.Label();
             this.labelTargetFolder2 = new System.Windows.Forms.Label();
             this.folderFilterTextBox = new System.Windows.Forms.TextBox();
@@ -48,8 +46,6 @@
             this.btnClear = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.deleteOrRecycleBin = new System.Windows.Forms.CheckBox();
-            this.saveList2File = new System.Windows.Forms.Button();
-            this.listOrLog = new System.Windows.Forms.CheckBox();
             this.resultListView = new System.Windows.Forms.ListView();
             this.nameColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.modifiedTimeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -71,49 +67,35 @@
             this.fileSizeCheckBox = new System.Windows.Forms.CheckBox();
             this.fileMD5CheckBox = new System.Windows.Forms.CheckBox();
             this.tbConsole = new System.Windows.Forms.TextBox();
-            this.resultGroupBox = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.groupBoxTarget.SuspendLayout();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveLogToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveResultToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.resultGroupBox.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // groupBoxTarget
-            // 
-            this.groupBoxTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxTarget.Controls.Add(this.updateButton);
-            this.groupBoxTarget.Controls.Add(this.filterExample);
-            this.groupBoxTarget.Controls.Add(this.btnSelectTargetFolder2);
-            this.groupBoxTarget.Controls.Add(this.modeCheckBox);
-            this.groupBoxTarget.Controls.Add(this.regexCheckBox);
-            this.groupBoxTarget.Controls.Add(this.alwaysOnTopCheckBox);
-            this.groupBoxTarget.Controls.Add(this.labelTargetFolder1);
-            this.groupBoxTarget.Controls.Add(this.labelTargetFolder2);
-            this.groupBoxTarget.Controls.Add(this.folderFilterTextBox);
-            this.groupBoxTarget.Controls.Add(this.fldFilterText);
-            this.groupBoxTarget.Controls.Add(this.targetFolder2TextBox);
-            this.groupBoxTarget.Controls.Add(this.btnSelectTargetFolder1);
-            this.groupBoxTarget.Controls.Add(this.targetFolder1TextBox);
-            this.groupBoxTarget.Location = new System.Drawing.Point(5, 12);
-            this.groupBoxTarget.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBoxTarget.Name = "groupBoxTarget";
-            this.groupBoxTarget.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBoxTarget.Size = new System.Drawing.Size(904, 131);
-            this.groupBoxTarget.TabIndex = 1;
-            this.groupBoxTarget.TabStop = false;
-            this.groupBoxTarget.Text = "Paths (Allow Drop)";
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(810, 96);
+            this.updateButton.Location = new System.Drawing.Point(821, 116);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(77, 28);
             this.updateButton.TabIndex = 11;
@@ -124,7 +106,7 @@
             // 
             this.filterExample.BackColor = System.Drawing.SystemColors.Control;
             this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(558, 102);
+            this.filterExample.Location = new System.Drawing.Point(573, 121);
             this.filterExample.Name = "filterExample";
             this.filterExample.ReadOnly = true;
             this.filterExample.Size = new System.Drawing.Size(234, 21);
@@ -134,7 +116,7 @@
             // btnSelectTargetFolder2
             // 
             this.btnSelectTargetFolder2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(810, 59);
+            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(821, 58);
             this.btnSelectTargetFolder2.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder2.Name = "btnSelectTargetFolder2";
             this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 35);
@@ -146,7 +128,7 @@
             // modeCheckBox
             // 
             this.modeCheckBox.AutoSize = true;
-            this.modeCheckBox.Location = new System.Drawing.Point(486, 102);
+            this.modeCheckBox.Location = new System.Drawing.Point(497, 120);
             this.modeCheckBox.Name = "modeCheckBox";
             this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
             this.modeCheckBox.TabIndex = 10;
@@ -157,28 +139,17 @@
             // regexCheckBox
             // 
             this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(428, 102);
+            this.regexCheckBox.Location = new System.Drawing.Point(439, 120);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
             this.regexCheckBox.TabIndex = 9;
             this.regexCheckBox.Text = "RE";
             this.regexCheckBox.UseVisualStyleBackColor = true;
             // 
-            // alwaysOnTopCheckBox
-            // 
-            this.alwaysOnTopCheckBox.AutoSize = true;
-            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(177, 0);
-            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
-            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(151, 22);
-            this.alwaysOnTopCheckBox.TabIndex = 0;
-            this.alwaysOnTopCheckBox.Text = "Always On Top";
-            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
-            this.alwaysOnTopCheckBox.Click += new System.EventHandler(this.alwaysOnTopCheckBox_Click);
-            // 
             // labelTargetFolder1
             // 
             this.labelTargetFolder1.AutoSize = true;
-            this.labelTargetFolder1.Location = new System.Drawing.Point(0, 25);
+            this.labelTargetFolder1.Location = new System.Drawing.Point(11, 13);
             this.labelTargetFolder1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTargetFolder1.Name = "labelTargetFolder1";
             this.labelTargetFolder1.Size = new System.Drawing.Size(89, 18);
@@ -188,7 +159,7 @@
             // labelTargetFolder2
             // 
             this.labelTargetFolder2.AutoSize = true;
-            this.labelTargetFolder2.Location = new System.Drawing.Point(0, 67);
+            this.labelTargetFolder2.Location = new System.Drawing.Point(11, 66);
             this.labelTargetFolder2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTargetFolder2.Name = "labelTargetFolder2";
             this.labelTargetFolder2.Size = new System.Drawing.Size(89, 18);
@@ -197,7 +168,7 @@
             // 
             // folderFilterTextBox
             // 
-            this.folderFilterTextBox.Location = new System.Drawing.Point(141, 100);
+            this.folderFilterTextBox.Location = new System.Drawing.Point(155, 119);
             this.folderFilterTextBox.Name = "folderFilterTextBox";
             this.folderFilterTextBox.Size = new System.Drawing.Size(265, 28);
             this.folderFilterTextBox.TabIndex = 7;
@@ -206,7 +177,7 @@
             // 
             this.fldFilterText.BackColor = System.Drawing.SystemColors.Control;
             this.fldFilterText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.fldFilterText.Location = new System.Drawing.Point(3, 103);
+            this.fldFilterText.Location = new System.Drawing.Point(14, 121);
             this.fldFilterText.Name = "fldFilterText";
             this.fldFilterText.ReadOnly = true;
             this.fldFilterText.Size = new System.Drawing.Size(177, 21);
@@ -218,7 +189,7 @@
             this.targetFolder2TextBox.AllowDrop = true;
             this.targetFolder2TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFolder2TextBox.Location = new System.Drawing.Point(97, 64);
+            this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 63);
             this.targetFolder2TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder2TextBox.Name = "targetFolder2TextBox";
             this.targetFolder2TextBox.Size = new System.Drawing.Size(695, 28);
@@ -230,7 +201,7 @@
             // btnSelectTargetFolder1
             // 
             this.btnSelectTargetFolder1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(810, 17);
+            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(821, 5);
             this.btnSelectTargetFolder1.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder1.Name = "btnSelectTargetFolder1";
             this.btnSelectTargetFolder1.Size = new System.Drawing.Size(77, 35);
@@ -244,7 +215,7 @@
             this.targetFolder1TextBox.AllowDrop = true;
             this.targetFolder1TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFolder1TextBox.Location = new System.Drawing.Point(97, 22);
+            this.targetFolder1TextBox.Location = new System.Drawing.Point(108, 10);
             this.targetFolder1TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder1TextBox.Name = "targetFolder1TextBox";
             this.targetFolder1TextBox.Size = new System.Drawing.Size(695, 28);
@@ -256,10 +227,10 @@
             // btnAnalyze
             // 
             this.btnAnalyze.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAnalyze.Location = new System.Drawing.Point(5, 108);
+            this.btnAnalyze.Location = new System.Drawing.Point(5, 116);
             this.btnAnalyze.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnalyze.Name = "btnAnalyze";
-            this.btnAnalyze.Size = new System.Drawing.Size(93, 54);
+            this.btnAnalyze.Size = new System.Drawing.Size(93, 43);
             this.btnAnalyze.TabIndex = 5;
             this.btnAnalyze.Text = "Analyze";
             this.btnAnalyze.UseVisualStyleBackColor = true;
@@ -268,7 +239,7 @@
             // btnDelete
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDelete.Location = new System.Drawing.Point(250, 115);
+            this.btnDelete.Location = new System.Drawing.Point(251, 117);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(4);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(109, 40);
@@ -280,7 +251,7 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(5, 37);
+            this.btnClear.Location = new System.Drawing.Point(139, 60);
             this.btnClear.Margin = new System.Windows.Forms.Padding(4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(61, 32);
@@ -292,10 +263,10 @@
             // btnStop
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStop.Location = new System.Drawing.Point(132, 120);
+            this.btnStop.Location = new System.Drawing.Point(139, 121);
             this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(57, 32);
+            this.btnStop.Size = new System.Drawing.Size(61, 32);
             this.btnStop.TabIndex = 4;
             this.btnStop.Text = "STOP";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -304,30 +275,12 @@
             // deleteOrRecycleBin
             // 
             this.deleteOrRecycleBin.AutoSize = true;
-            this.deleteOrRecycleBin.Location = new System.Drawing.Point(221, 127);
+            this.deleteOrRecycleBin.Location = new System.Drawing.Point(219, 128);
             this.deleteOrRecycleBin.Name = "deleteOrRecycleBin";
             this.deleteOrRecycleBin.Size = new System.Drawing.Size(22, 21);
             this.deleteOrRecycleBin.TabIndex = 6;
             this.deleteOrRecycleBin.UseVisualStyleBackColor = true;
             this.deleteOrRecycleBin.CheckedChanged += new System.EventHandler(this.deleteOrRecycleBin_CheckedChanged);
-            // 
-            // saveList2File
-            // 
-            this.saveList2File.Location = new System.Drawing.Point(190, 5);
-            this.saveList2File.Name = "saveList2File";
-            this.saveList2File.Size = new System.Drawing.Size(169, 29);
-            this.saveList2File.TabIndex = 7;
-            this.saveList2File.Text = "Save list to File";
-            this.saveList2File.UseVisualStyleBackColor = true;
-            // 
-            // listOrLog
-            // 
-            this.listOrLog.AutoSize = true;
-            this.listOrLog.Location = new System.Drawing.Point(167, 10);
-            this.listOrLog.Name = "listOrLog";
-            this.listOrLog.Size = new System.Drawing.Size(22, 21);
-            this.listOrLog.TabIndex = 8;
-            this.listOrLog.UseVisualStyleBackColor = true;
             // 
             // resultListView
             // 
@@ -341,9 +294,9 @@
             this.fullPathColumnHeader});
             this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
-            this.resultListView.Location = new System.Drawing.Point(1, 25);
+            this.resultListView.Location = new System.Drawing.Point(0, 3);
             this.resultListView.Name = "resultListView";
-            this.resultListView.Size = new System.Drawing.Size(1282, 540);
+            this.resultListView.Size = new System.Drawing.Size(1285, 562);
             this.resultListView.TabIndex = 2;
             this.resultListView.TabStop = false;
             this.resultListView.UseCompatibleStateImageBehavior = false;
@@ -380,10 +333,7 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.listOrLog);
-            this.panel2.Controls.Add(this.saveList2File);
             this.panel2.Controls.Add(this.btnAnalyze);
-            this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.btnClear);
             this.panel2.Controls.Add(this.deleteOrRecycleBin);
             this.panel2.Controls.Add(this.btnDelete);
@@ -397,7 +347,7 @@
             // 
             // geminiProgressBar
             // 
-            this.geminiProgressBar.Location = new System.Drawing.Point(4, 73);
+            this.geminiProgressBar.Location = new System.Drawing.Point(5, 13);
             this.geminiProgressBar.Name = "geminiProgressBar";
             this.geminiProgressBar.Size = new System.Drawing.Size(356, 28);
             this.geminiProgressBar.TabIndex = 10;
@@ -405,7 +355,7 @@
             // 
             // summaryTextBox
             // 
-            this.summaryTextBox.Location = new System.Drawing.Point(5, 73);
+            this.summaryTextBox.Location = new System.Drawing.Point(5, 13);
             this.summaryTextBox.Name = "summaryTextBox";
             this.summaryTextBox.ReadOnly = true;
             this.summaryTextBox.Size = new System.Drawing.Size(350, 28);
@@ -543,16 +493,6 @@
             this.tbConsole.TabIndex = 0;
             this.tbConsole.WordWrap = false;
             // 
-            // resultGroupBox
-            // 
-            this.resultGroupBox.Controls.Add(this.resultListView);
-            this.resultGroupBox.Location = new System.Drawing.Point(12, 164);
-            this.resultGroupBox.Name = "resultGroupBox";
-            this.resultGroupBox.Size = new System.Drawing.Size(1286, 570);
-            this.resultGroupBox.TabIndex = 13;
-            this.resultGroupBox.TabStop = false;
-            this.resultGroupBox.Text = "Result";
-            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.tbConsole);
@@ -564,24 +504,127 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.groupBoxTarget);
             this.panel4.Controls.Add(this.fileModeGroupBox);
-            this.panel4.Location = new System.Drawing.Point(12, 1);
+            this.panel4.Controls.Add(this.panel6);
+            this.panel4.Location = new System.Drawing.Point(11, 35);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1286, 157);
+            this.panel4.Size = new System.Drawing.Size(1287, 155);
             this.panel4.TabIndex = 16;
             // 
-            // button1
+            // panel6
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(4, 6);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(144, 26);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "(Un)Select All";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.btnSelectAllOrNot_Click);
+            this.panel6.Controls.Add(this.folderFilterTextBox);
+            this.panel6.Controls.Add(this.updateButton);
+            this.panel6.Controls.Add(this.labelTargetFolder1);
+            this.panel6.Controls.Add(this.filterExample);
+            this.panel6.Controls.Add(this.targetFolder1TextBox);
+            this.panel6.Controls.Add(this.btnSelectTargetFolder2);
+            this.panel6.Controls.Add(this.btnSelectTargetFolder1);
+            this.panel6.Controls.Add(this.modeCheckBox);
+            this.panel6.Controls.Add(this.targetFolder2TextBox);
+            this.panel6.Controls.Add(this.regexCheckBox);
+            this.panel6.Controls.Add(this.fldFilterText);
+            this.panel6.Controls.Add(this.labelTargetFolder2);
+            this.panel6.Location = new System.Drawing.Point(3, 3);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(916, 157);
+            this.panel6.TabIndex = 3;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.resultListView);
+            this.panel5.Location = new System.Drawing.Point(12, 193);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1286, 539);
+            this.panel5.TabIndex = 17;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem,
+            this.selectToolStripMenuItem,
+            this.runToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1310, 32);
+            this.menuStrip1.TabIndex = 18;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.alwaysOnTopToolStripMenuItem,
+            this.saveLogToFileToolStripMenuItem,
+            this.saveResultToFileToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(56, 28);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // alwaysOnTopToolStripMenuItem
+            // 
+            this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
+            this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
+            this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopMenu_Click);
+            // 
+            // saveLogToFileToolStripMenuItem
+            // 
+            this.saveLogToFileToolStripMenuItem.Name = "saveLogToFileToolStripMenuItem";
+            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
+            this.saveLogToFileToolStripMenuItem.Text = "Save log to file";
+            this.saveLogToFileToolStripMenuItem.Click += new System.EventHandler(this.saveLogToFileToolStripMenuItem_Click);
+            // 
+            // saveResultToFileToolStripMenuItem
+            // 
+            this.saveResultToFileToolStripMenuItem.Name = "saveResultToFileToolStripMenuItem";
+            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
+            this.saveResultToFileToolStripMenuItem.Text = "Save result to file";
+            this.saveResultToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultToFileToolStripMenuItem_Click);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(60, 28);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // selectToolStripMenuItem
+            // 
+            this.selectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectAllToolStripMenuItem,
+            this.unselectAllToolStripMenuItem});
+            this.selectToolStripMenuItem.Name = "selectToolStripMenuItem";
+            this.selectToolStripMenuItem.Size = new System.Drawing.Size(77, 28);
+            this.selectToolStripMenuItem.Text = "Select";
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(211, 34);
+            this.selectAllToolStripMenuItem.Text = "Select All";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
+            // unselectAllToolStripMenuItem
+            // 
+            this.unselectAllToolStripMenuItem.Name = "unselectAllToolStripMenuItem";
+            this.unselectAllToolStripMenuItem.Size = new System.Drawing.Size(211, 34);
+            this.unselectAllToolStripMenuItem.Text = "Unselect All";
+            this.unselectAllToolStripMenuItem.Click += new System.EventHandler(this.unselectAllToolStripMenuItem_Click);
+            // 
+            // runToolStripMenuItem
+            // 
+            this.runToolStripMenuItem.Name = "runToolStripMenuItem";
+            this.runToolStripMenuItem.Size = new System.Drawing.Size(60, 28);
+            this.runToolStripMenuItem.Text = "Run";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(67, 28);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
             // GeminiForm
             // 
@@ -590,15 +633,15 @@
             this.ClientSize = new System.Drawing.Size(1310, 915);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.resultGroupBox);
+            this.Controls.Add(this.panel5);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(754, 536);
             this.Name = "GeminiForm";
             this.Text = "Gemini: find duplicate files and delete.";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GeminiForm_FormClosing);
-            this.groupBoxTarget.ResumeLayout(false);
-            this.groupBoxTarget.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -606,16 +649,20 @@
             this.fileModeGroupBox.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.resultGroupBox.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.GroupBox groupBoxTarget;
         private System.Windows.Forms.TextBox targetFolder1TextBox;
         private System.Windows.Forms.Label labelTargetFolder1;
         private System.Windows.Forms.Button btnSelectTargetFolder1;
@@ -624,8 +671,6 @@
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.CheckBox deleteOrRecycleBin;
-        private System.Windows.Forms.Button saveList2File;
-        private System.Windows.Forms.CheckBox listOrLog;
         private System.Windows.Forms.TextBox fldFilterText;
         private System.Windows.Forms.TextBox folderFilterTextBox;
         private System.Windows.Forms.TextBox filterExample;
@@ -654,12 +699,22 @@
         private System.Windows.Forms.ColumnHeader extNameColumnHeader;
         private System.Windows.Forms.ColumnHeader fullPathColumnHeader;
         public System.Windows.Forms.TextBox tbConsole;
-        private System.Windows.Forms.GroupBox resultGroupBox;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.ProgressBar geminiProgressBar;
         private System.Windows.Forms.Button updateButton;
-        private System.Windows.Forms.CheckBox alwaysOnTopCheckBox;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem runToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unselectAllToolStripMenuItem;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.ToolStripMenuItem alwaysOnTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveLogToFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveResultToFileToolStripMenuItem;
     }
 }

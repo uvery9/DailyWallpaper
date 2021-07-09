@@ -103,7 +103,6 @@ namespace DailyWallpaper
             filesList2 = new List<string>();
             geminiFileStructList1 = new List<GeminiFileStruct>();
             geminiFileStructList2 = new List<GeminiFileStruct>();
-            InitSaveLogOrListToFile();
             _mutex = new Mutex();
             _mutexPb = new Mutex();
 
@@ -113,23 +112,6 @@ namespace DailyWallpaper
             resultListView.ListViewItemSorter = lvwColumnSorter;
         }
 
-        private void InitSaveLogOrListToFile()
-        {
-            listOrLog.Checked = false;
-            saveList2File.Text = "Save log to File";
-            listOrLog.Click += (e, s) =>
-            {
-                if (listOrLog.Checked)
-                {
-                    saveList2File.Text = "Save list to File";
-                }
-                else
-                {
-                    saveList2File.Text = "Save log to File";
-                }
-            };
-            saveList2File.Click += new EventHandler(saveList2File_Click);
-        }
         /// <summary>
         /// bind to tbTargetFolderHistory
         /// </summary>
@@ -586,29 +568,6 @@ namespace DailyWallpaper
             geminiProgressBar.Value = 0;
         }
 
-        private static bool allChecked = false;
-        private void btnSelectAllOrNot_Click(object sender, EventArgs e)
-        {
-            if (resultListView.Items.Count > 1)
-            {
-                if (allChecked)
-                {
-                    foreach (var item in resultListView.Items)
-                    {
-                        ((System.Windows.Forms.ListViewItem)item).Checked = false;
-                    }
-                    allChecked = false;
-                }
-                else
-                {
-                    foreach (var item in resultListView.Items)
-                    {
-                        ((System.Windows.Forms.ListViewItem)item).Checked = true;
-                    }
-                    allChecked = true;
-                }
-            }
-        }
 
         // Thanks to João Angelo
         // https://stackoverflow.com/questions/2811509/c-sharp-remove-all-empty-subdirectories
@@ -1058,13 +1017,16 @@ namespace DailyWallpaper
             }
         }
 
-        private void saveList2File_Click(object sender, EventArgs e)
+        private void saveListOrLog2File(bool log = true)
         {
-            if (!listOrLog.Checked && tbConsole.Text.Length < 1)
+            if (log && tbConsole.Text.Length < 1)
             {
                 return;
             }
-
+            if (!log && deleteList.Count < 1)
+            {
+                return;
+            }
             using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
             {
 
@@ -1100,18 +1062,16 @@ namespace DailyWallpaper
                 }
 
                 var name = t1 + "-" + t2;
-                // E:, D: -> D-Disk
-                // need TEST here
                 name = name.Replace(":", "_");
-                if (listOrLog.Checked)
+                if (!log)
                 {
-                    saveFileDialog.FileName = "Gemini-List_" + name + "_" +
-                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm"); //+ ".txt"
+                    saveFileDialog.FileName = "Gemini-list_" + name + "_" +
+                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm") + ".txt";
                 }
                 else
                 {
-                    saveFileDialog.FileName = "Gemini-Log_" + name + "_" +
-                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm"); //+ ".txt"
+                    saveFileDialog.FileName = "Gemini-log_" + name + "_" +
+                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm") + ".txt";
                 }
 
 
@@ -1122,7 +1082,7 @@ namespace DailyWallpaper
                         // Code to write the stream goes here.
                         byte[] dataAsBytes = null;
 
-                        if (listOrLog.Checked)
+                        if (!log)
                         {
                             dataAsBytes = filesList1.SelectMany(s =>
                             System.Text.Encoding.Default.GetBytes(s + Environment.NewLine)).ToArray();
@@ -1137,6 +1097,7 @@ namespace DailyWallpaper
             }
 
         }
+
 
         private bool SetFolderFilter(string text, bool print = false)
         {
@@ -1485,15 +1446,18 @@ namespace DailyWallpaper
             );
         }
 
-        private void alwaysOnTopCheckBox_Click(object sender, EventArgs e)
+        private void alwaysOnTopMenu_Click(object sender, EventArgs e)
         {
             //if (alwaysOnTopCheckBox.Checked)
-            if (alwaysOnTopCheckBox.Checked)
+            var it = alwaysOnTopToolStripMenuItem;
+            if (!it.Checked)
             {
+                it.Checked = true;
                 TopMost = true;
             }
             else
             {
+                it.Checked = false;
                 TopMost = false;
             }
         }
@@ -1576,6 +1540,35 @@ namespace DailyWallpaper
                 }
                 // _console.WriteLine($"Remove {txet}");
             }
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (resultListView.Items.Count > 1)
+            {
+                foreach (var item in resultListView.Items)
+                {
+                    ((System.Windows.Forms.ListViewItem)item).Checked = true;
+                }
+            }
+        }
+
+        private void unselectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var item in resultListView.Items)
+            {
+                ((System.Windows.Forms.ListViewItem)item).Checked = false;
+            }
+        }
+
+        private void saveLogToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveListOrLog2File(log: true);
+        }
+
+        private void saveResultToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveListOrLog2File(log: false);
         }
     }
 }
