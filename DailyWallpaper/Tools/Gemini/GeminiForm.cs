@@ -631,6 +631,7 @@ namespace DailyWallpaper
             resultListView.Items.Clear();
             geminiProgressBar.Visible = true;
             deleteList = new List<string>();
+            SetFolderFilter(folderFilterTextBox.Text, print: true);
             StartAnalyze();
         }
 
@@ -678,7 +679,18 @@ namespace DailyWallpaper
                 }
                 return;
             }
-            FindFilesWithProtectMode(path, filesList, token);
+            if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
+            {
+                FindFilesWithFindMode(path, filesList, token, re: false);
+            }
+            else if (filterMode == FilterMode.REGEX_FIND && regex != null)
+            {
+                FindFilesWithFindMode(path, filesList, token, re: true);
+            }
+            else
+            {
+                FindFilesWithProtectMode(path, filesList, token);
+            }
         }
 
         private bool FolderFilter(string path, FilterMode mode)
