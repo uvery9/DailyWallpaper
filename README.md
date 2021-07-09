@@ -18,6 +18,8 @@
 
 <img src="https://user-images.githubusercontent.com/42594123/124537354-516e5c80-de4c-11eb-8c59-35a3e8878c44.png" alt="main-interface" style="zoom: 30%;" />
 
+### Gemini interface
+<img src="https://user-images.githubusercontent.com/42594123/125038373-eb8e0900-e0c7-11eb-8da4-1847ececd730.png" alt="Gemini-interface" style="zoom: 20%;" />
 
 
 ## Language support list: 
