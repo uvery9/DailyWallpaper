@@ -307,7 +307,8 @@ namespace DailyWallpaper
                     FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
 
                         // compare folders and themselves, return duplicated files list.
-                        _console.WriteLine(">>> Start fast comparing...");
+                    _console.WriteLine(">>> Start fast comparing...");
+                   
                     GeminiCompareMode mode = SetCompareMode();
                     var sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
                             geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
@@ -402,7 +403,10 @@ namespace DailyWallpaper
             var cnt1 = l1.Count;
             var cnt2 = l2.Count;
             long totalCmpCnt = cnt1 * cnt1 + cnt1 * cnt2 + cnt2 * cnt2;
-
+            _console.WriteLine($">>> folder1: {cnt1:N0}");
+            _console.WriteLine($">>> folder2: {cnt2:N0}");
+            _console.WriteLine($">>> about {totalCmpCnt:N0} times (x1*x1+x2*x2+x1*x2)...");
+            
             double percent = 0.0;
             void ProgressAction(long i) // percent in file.
             {
@@ -463,8 +467,10 @@ namespace DailyWallpaper
                         {
                             token.ThrowIfCancellationRequested();
                         }
-                        var item = new System.Windows.Forms.ListViewItem(gf.name);
+                        var item = new System.Windows.Forms.ListViewItem();
+                        // var item = new System.Windows.Forms.ListViewItem(" ");
                         item.BackColor = gf.color;
+                        AddSubItem(item, "name", gf.name);
                         AddSubItem(item, "lastMtime", gf.lastMtime);
                         AddSubItem(item, "extName", gf.extName);
                         AddSubItem(item, "sizeStr", gf.sizeStr);
@@ -1719,7 +1725,11 @@ namespace DailyWallpaper
             if (e.Button == MouseButtons.Right)
             {
                 var focusedItem = resultListView.FocusedItem;
-                if (focusedItem != null && focusedItem.Bounds.Contains(e.Location))
+                if (focusedItem == null)
+                {
+                    return;
+                }
+                if (focusedItem.SubItems["name"].Bounds.Contains(e.Location))
                 {
                     var filePath = focusedItem.SubItems["fullPath"].Text;
                     if (File.Exists(filePath))
@@ -1729,16 +1739,34 @@ namespace DailyWallpaper
                         files[0] = new FileInfo(filePath);
                         scm.ShowContextMenu(files, Cursor.Position);
                     }
+                } else if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
+                {
+
                 }
             }
         }
 
+        /// <summary>
+        /// https://stackoverflow.com/questions/17916183/handle-click-on-a-sub-item-of-listview
+        /// </summary>
+        /*
+         private void listView_Click(object sender, EventArgs e)
+        {
+            Point mousePos = listView.PointToClient(Control.MousePosition);
+            ListViewHitTestInfo hitTest = listView.HitTest(mousePos);
+            int columnIndex = hitTest.Item.SubItems.IndexOf(hitTest.SubItem);
+        }
+         */
         private void resultListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 var focusedItem = resultListView.FocusedItem;
-                if (focusedItem != null && focusedItem.Bounds.Contains(e.Location))
+                if (focusedItem == null)
+                {
+                    return;
+                }
+                if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
                 {
                     var filePath = focusedItem.SubItems["fullPath"].Text;
                     if (File.Exists(filePath))
@@ -1749,8 +1777,41 @@ namespace DailyWallpaper
                         Process.Start("explorer.exe", argument);
                     }
                 }
+                // THE FIRST ANONYMOUS ITEM MUST USE INDEX, I PERFET SUBITEMS["NAME"]
+                else if (focusedItem.SubItems["name"].Bounds.Contains(e.Location))
+                {
+                    var filePath = focusedItem.SubItems["fullPath"].Text;
+                    if (File.Exists(filePath))
+                    {
+                        // open file.
+                        Process.Start(filePath);
+                    }
+                }
+                else
+                {
+                    // DONOTHING.
+                }
+
+                // DOESN'T WORK, HIT.SUBITEM AND HIT.ITEM IS NULL.
+                /*Point mousePosition = resultListView.PointToClient(System.Windows.Forms.Control.MousePosition);
+                ListViewHitTestInfo hit = resultListView.HitTest(mousePosition);
+                // hit.Item.SubItems["fullPath"].Text
+                int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
+                if (resultListView.Columns[columnindex].Name == "dirColumnHeader")
+                {
+                    var filePath = hit.Item.SubItems["fullPath"].Text;
+                    if (File.Exists(filePath))
+                    {
+                        // combine the arguments together
+                        // it doesn't matter if there is a space after ','
+                        string argument = "/select, \"" + filePath + "\"";
+                        Process.Start("explorer.exe", argument);
+                    }
+                }*/
             }
         }
+
+        
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
