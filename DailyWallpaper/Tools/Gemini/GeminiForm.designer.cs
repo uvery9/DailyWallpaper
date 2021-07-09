@@ -84,6 +84,7 @@
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -103,6 +104,7 @@
             this.updateButton.TabIndex = 11;
             this.updateButton.Text = "Update";
             this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
             // filterExample
             // 
@@ -609,6 +611,7 @@
             this.selectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.selectAllToolStripMenuItem,
             this.unselectAllToolStripMenuItem,
+            this.reverseElectionToolStripMenuItem,
             this.cleanNonExistentItemsToolStripMenuItem});
             this.selectToolStripMenuItem.Name = "selectToolStripMenuItem";
             this.selectToolStripMenuItem.Size = new System.Drawing.Size(77, 28);
@@ -649,6 +652,13 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
+            // 
+            // reverseElectionToolStripMenuItem
+            // 
+            this.reverseElectionToolStripMenuItem.Name = "reverseElectionToolStripMenuItem";
+            this.reverseElectionToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.reverseElectionToolStripMenuItem.Text = "Reverse Election";
+            this.reverseElectionToolStripMenuItem.Click += new System.EventHandler(this.reverseElectionToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 
@@ -742,5 +752,6 @@
         private System.Windows.Forms.Button cleanUpButton;
         private System.Windows.Forms.ColumnHeader dirColumnHeader;
         private System.Windows.Forms.ColumnHeader hashColumnHeader;
+        private System.Windows.Forms.ToolStripMenuItem reverseElectionToolStripMenuItem;
     }
 }

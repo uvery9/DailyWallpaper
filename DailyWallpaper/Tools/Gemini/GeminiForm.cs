@@ -220,6 +220,7 @@ namespace DailyWallpaper
                                     UICancelOption.DoNothing);
                 }
                 _console.WriteLine($">>> Delete Finished.");
+                deleteList.Clear();
                 cleanUpButton.PerformClick();
             }
             catch (UnauthorizedAccessException) { }
@@ -276,10 +277,6 @@ namespace DailyWallpaper
         }
         private async void StartAnalyze(bool delete = false)
         {
-            if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
-            {
-                return;
-            }
             _source = new CancellationTokenSource();
             var token = _source.Token;
             btnStop.Enabled = true;
@@ -681,18 +678,7 @@ namespace DailyWallpaper
                 }
                 return;
             }
-            if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
-            {
-                FindFilesWithFindMode(path, filesList, token, re: false);
-            }
-            else if (filterMode == FilterMode.REGEX_FIND && regex != null)
-            {
-                FindFilesWithFindMode(path, filesList, token, re: true);
-            }
-            else
-            {
-                FindFilesWithProtectMode(path, filesList, token);
-            }
+            FindFilesWithProtectMode(path, filesList, token);
         }
 
         private bool FolderFilter(string path, FilterMode mode)
@@ -1161,10 +1147,14 @@ namespace DailyWallpaper
 
         }
 
-
+        /// <summary>
+        ///             if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="print"></param>
+        /// <returns></returns>
         private bool SetFolderFilter(string text, bool print = false)
         {
-            
             string filter = text;
             folderFilter = new List<string>();
             if (string.IsNullOrEmpty(filter))
@@ -1700,6 +1690,30 @@ namespace DailyWallpaper
             {
                 btnDelete.Text = "RecycleBin";
             }
+        }
+
+        private void reverseElectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (resultListView.Items.Count > 1)
+            {
+                foreach (var item in resultListView.Items)
+                {
+                    var it = (System.Windows.Forms.ListViewItem)item;
+                    if (it.Checked)
+                    {
+                        it.Checked = false;
+                    }
+                    else
+                    {
+                        it.Checked = true;
+                    }
+                }
+            }
+        }
+
+        private void updateButton_Click(object sender, EventArgs e)
+        {
+            SetFolderFilter(folderFilterTextBox.Text, print: true);
         }
     }
 }
