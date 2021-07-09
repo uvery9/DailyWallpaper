@@ -1099,16 +1099,17 @@ namespace DailyWallpaper
 
         private bool SetFolderFilter(string text, bool print = false)
         {
-            _console.WriteLine($">>> Using: {filterMode}");
+            
             string filter = text;
             folderFilter = new List<string>();
             if (string.IsNullOrEmpty(filter))
             {
                 regexFilter = "";
                 regex = null;
-                _console.WriteLine(">>> But there is no valid filter value.");
+                _console.WriteLine($">>> Using: {filterMode}, but there is no valid filter value.");
                 return true;
             }
+            _console.WriteLine($">>> Using: {filterMode}");
             regexFilter = "";
             if (regexCheckBox.Checked)
             {

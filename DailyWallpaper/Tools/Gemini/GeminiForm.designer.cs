@@ -228,7 +228,7 @@
             // btnAnalyze
             // 
             this.btnAnalyze.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAnalyze.Location = new System.Drawing.Point(5, 116);
+            this.btnAnalyze.Location = new System.Drawing.Point(4, 106);
             this.btnAnalyze.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnalyze.Name = "btnAnalyze";
             this.btnAnalyze.Size = new System.Drawing.Size(93, 43);
@@ -240,7 +240,7 @@
             // btnDelete
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDelete.Location = new System.Drawing.Point(251, 117);
+            this.btnDelete.Location = new System.Drawing.Point(252, 107);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(4);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(109, 40);
@@ -252,7 +252,7 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(5, 57);
+            this.btnClear.Location = new System.Drawing.Point(4, 48);
             this.btnClear.Margin = new System.Windows.Forms.Padding(4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(61, 32);
@@ -264,7 +264,7 @@
             // btnStop
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStop.Location = new System.Drawing.Point(139, 121);
+            this.btnStop.Location = new System.Drawing.Point(139, 111);
             this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(61, 32);
@@ -276,7 +276,7 @@
             // deleteOrRecycleBin
             // 
             this.deleteOrRecycleBin.AutoSize = true;
-            this.deleteOrRecycleBin.Location = new System.Drawing.Point(219, 128);
+            this.deleteOrRecycleBin.Location = new System.Drawing.Point(223, 118);
             this.deleteOrRecycleBin.Name = "deleteOrRecycleBin";
             this.deleteOrRecycleBin.Size = new System.Drawing.Size(22, 21);
             this.deleteOrRecycleBin.TabIndex = 6;
