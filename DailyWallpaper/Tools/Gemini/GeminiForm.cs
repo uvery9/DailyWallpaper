@@ -326,7 +326,7 @@ namespace DailyWallpaper
                     // group by size
 
                     geminiFileStructListForLV = new List<GeminiFileStruct>();
-                    _console.WriteLine(">>> update to List...");
+                    _console.WriteLine(">>> Update to List...");
                     GeminiList2Group(sameListNoDup, geminiFileStructListForLV, token);
                     
                     _console.WriteLine(">>> Show to ListView...");
