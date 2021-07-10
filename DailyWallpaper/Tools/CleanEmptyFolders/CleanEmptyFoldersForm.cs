@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace DailyWallpaper
 {
+    // TODO: Thumbs.db MAY CHEAT THE CEF.
     public partial class CleanEmptyFoldersForm : Form, IDisposable
     {
         private CleanEmptyFolders _cef;
