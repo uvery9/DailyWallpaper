@@ -221,59 +221,73 @@ namespace DailyWallpaper
                 _console.WriteLine($"\r\n!!! You should ANALYZE first.");
                 return;
             }
-            if (deleteList.Count < 1)
-            {
-                return;
-            }
-            _console.WriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
             try
             {
-                // from deleteList update geminiFileStructListForLV'bp -- delGflChecked
-                var delGflChecked = new List<GeminiFileStruct>();
-                foreach (var item in geminiFileStructListForLV)
-                {
-                    UpdateCheckedInDelGFL(delGflChecked, deleteList, item);
-                }
-                
-                /*
-                 * HOW COULD I PASS Anonymous Types ???
-                 * Func<TSource, TKey> keySelector;
-                 * var v2 = new { hash = "10086", size = 10086};
-                 */
-                var delGflGrp = GeminiFileStructList2IEnumerableGroup(delGflChecked, m_comparemode);
-                int k = 0;
-                foreach (var item in delGflGrp)
-                {
-                    // Prevent all files in the group from being deleted
-                    if (!deleteAllSelectedToolStripMenuItem.Checked)
+                var taskDel = Task.Run(() => {
+                    // from deleteList update geminiFileStructListForLV'bp -- delGflChecked
+                    var deleteListEx = new List<string>();
+                    foreach (var item in deleteList)
                     {
-                        if ((from i in item
-                             where i.Checked == true
-                             select i).Count().Equals(item.Count))
+                        if (File.Exists(item))
                         {
-                            k++;
-                            _console.WriteLine($"![{k}] Prevent all files in the group from being deleted.");
-                            continue;
+                            deleteListEx.Add(item);
                         }
                     }
-
-                    foreach (var it in item)
+                    deleteList = deleteListEx;
+                    _console.WriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
+                    if (deleteList.Count < 1)
                     {
-                        if (it.Checked)
-                        {
-                            _console.WriteLine($"...... Delete file: {it.fullPath}");
-                            FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
-                                            deleteOrRecycleBin.Checked ?
-                                            RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                                            UICancelOption.DoNothing);
-                        }
-                    }                    
-                }
-                _console.WriteLine($">>> Delete Finished.");
+                        return;
+                    }
+                    var delGflChecked = new List<GeminiFileStruct>();
+                    foreach (var item in geminiFileStructListForLV)
+                    {
+                        UpdateCheckedInDelGFL(delGflChecked, deleteList, item);
+                    }
                 
-                // clean non-existent file in geminiFileStructListForLV
-                // cleanUpButton do UpdateLVCheckedAndDelList(geminiFileStructListForLV);
-                cleanUpButton.PerformClick(); 
+                    /*
+                        * HOW COULD I PASS Anonymous Types ???
+                        * Func<TSource, TKey> keySelector;
+                        * var v2 = new { hash = "10086", size = 10086};
+                        */
+                    var delGflGrp = GeminiFileStructList2IEnumerableGroup(delGflChecked, m_comparemode);
+                    int k = 0;
+                    foreach (var item in delGflGrp)
+                    {
+                        // Prevent all files in the group from being deleted
+                        if (!deleteAllSelectedToolStripMenuItem.Checked)
+                        {
+                            if ((from i in item
+                                    where i.Checked == true
+                                    select i).Count().Equals(item.Count))
+                            {
+                                k++;
+                                _console.WriteLine($"![{k}] Prevent all files in the group from being deleted.");
+                                continue;
+                            }
+                        }
+
+                        foreach (var it in item)
+                        {
+                            if (it.Checked)
+                            {
+                                _console.WriteLine($"...... Delete file: {it.fullPath}");
+                                FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
+                                                deleteOrRecycleBin.Checked ?
+                                                RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                                                UICancelOption.DoNothing);
+                            }
+                        }                    
+                    }
+                    _console.WriteLine($">>> Delete Finished.");
+                
+                    // clean non-existent file in geminiFileStructListForLV
+                    // cleanUpButton do UpdateLVCheckedAndDelList(geminiFileStructListForLV);
+                    cleanUpButton.PerformClick();
+                    }, _source.Token);
+                _tasks.Add(taskDel);
+                // taskDel.Wait();
+                // await taskDel;
             }
             catch (UnauthorizedAccessException) { }
             catch (FileNotFoundException) { }
@@ -369,10 +383,9 @@ namespace DailyWallpaper
 
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
-                        _console.WriteLine(">>> Update HASH...");
+                        _console.WriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
                         sameListNoDup = 
-                            UpdateHashInGeminiFileStructList(sameListNoDup,
-                                m_comparemode, geminiProgressBar).Result;
+                            UpdateHashInGeminiFileStructList(sameListNoDup).Result;
                         _console.WriteLine(">>> Update HASH finished.");
                     }
 
@@ -535,9 +548,9 @@ namespace DailyWallpaper
         }
 
         private async Task UpdateHash(List<GeminiFileStruct> gfL, 
-            GeminiFileStruct gf, System.Windows.Forms.ProgressBar pb)
+            GeminiFileStruct gf)
         {
-            void ProgressActionD(double i) // percent in file.
+            /*void ProgressActionD(double i) // percent in file.
             {
                 _mutexPb.WaitOne();
                 var percentInt = (int)i;
@@ -546,7 +559,8 @@ namespace DailyWallpaper
                 SetProgressMessage(percentInt, pb);
                 _mutexPb.ReleaseMutex();
             }
-            var totalProgessDouble = new Progress<double>(ProgressActionD);
+            var totalProgessDouble = new Progress<double>(ProgressActionD);*/
+            // DONT REPORT HERE.
 
             if (fileMD5CheckBox.Checked)
             {
@@ -558,7 +572,7 @@ namespace DailyWallpaper
                     }
                 }
                 await ComputeHashAsync(
-                    MD5.Create(), gf.fullPath, _source.Token, "MD5", getRes, totalProgessDouble);
+                    MD5.Create(), gf.fullPath, _source.Token, "MD5", getRes);
             }
             else if (fileSHA1CheckBox.Checked)
             {
@@ -570,7 +584,7 @@ namespace DailyWallpaper
                     }
                 }
                 await ComputeHashAsync(
-                    SHA1.Create(), gf.fullPath, _source.Token, "SHA1", getRes, totalProgessDouble);
+                    SHA1.Create(), gf.fullPath, _source.Token, "SHA1", getRes);
             }
             gfL.Add(gf);
         }
@@ -640,12 +654,15 @@ namespace DailyWallpaper
             return tmpHash;
         }
         private async Task<List<GeminiFileStruct>> UpdateHashInGeminiFileStructList(
-            List<GeminiFileStruct> gfL, GeminiCompareMode mode, System.Windows.Forms.ProgressBar pb)
+            List<GeminiFileStruct> gfL)
         {
             var tmp = new List<GeminiFileStruct>();
+            int i = 0;
             foreach (var it in gfL)
             {
-                await UpdateHash(tmp, it, pb);
+                i++;
+                await UpdateHash(tmp, it);
+                SetProgressMessage((int)((double)i / gfL.Count * 100), geminiProgressBar);
             }
             return tmp;
         }
@@ -1695,25 +1712,28 @@ namespace DailyWallpaper
 
         private void cleanUpButton_Click(object sender, EventArgs e)
         {
-            // custQuery is an IEnumerable<IGrouping<string, Customer>>
-            if (geminiFileStructListForLV.Count < 1)
-            {
-                _console.WriteLine("!!! ANALYZE First.");
-                return;
-            }
-            GeminiCompareMode mode = SetCompareMode();
-            var existList = ListReGrpAndReColor(geminiFileStructListForLV, mode, _source.Token);
-            if (existList.Count < geminiFileStructListForLV.Count)
-            {
-                _console.WriteLine(
-                    $">>> Remove {geminiFileStructListForLV.Count - existList.Count} " +
-                    "items from ListView [ nonexistent + non-repeating ].");
-                geminiFileStructListForLV = existList;
-                // RecoverChecked(UpdateListView, geminiFileStructListForLV, mode, _source.Token);
-                UpdateLVCheckedAndDelList(geminiFileStructListForLV);
-                UpdateListView(geminiFileStructListForLV, _source.Token);
-            }
-            _console.WriteLine(">>> Clean-UP Finished.");
+            var taskCleanUp = Task.Run(() => {
+                // custQuery is an IEnumerable<IGrouping<string, Customer>>
+                if (geminiFileStructListForLV.Count < 1)
+                {
+                    _console.WriteLine("!!! ANALYZE First.");
+                    return;
+                }
+                GeminiCompareMode mode = SetCompareMode();
+                var existList = ListReGrpAndReColor(geminiFileStructListForLV, mode, _source.Token);
+                if (existList.Count < geminiFileStructListForLV.Count)
+                {
+                    _console.WriteLine(
+                        $">>> Remove {geminiFileStructListForLV.Count - existList.Count} " +
+                        "items from ListView [ nonexistent + non-repeating ].");
+                    geminiFileStructListForLV = existList;
+                    // RecoverChecked(UpdateListView, geminiFileStructListForLV, mode, _source.Token);
+                    UpdateLVCheckedAndDelList(geminiFileStructListForLV);
+                    UpdateListView(geminiFileStructListForLV, _source.Token);
+                }
+                _console.WriteLine(">>> Clean-UP Finished.");
+            });
+            _tasks.Add(taskCleanUp);
         }
         private void RecoverChecked(GeminiFileStructToListViewDelegate func, 
             List<GeminiFileStruct> gfL, GeminiCompareMode mode, CancellationToken token)
@@ -1833,38 +1853,36 @@ namespace DailyWallpaper
 
         private void updateButton_Click(object sender, EventArgs e)
         {
-            SetFolderFilter(folderFilterTextBox.Text, print: true);
-            var updatedList = new List<GeminiFileStruct>();
-            if (folderFilter.Count > 0)
-            {
-                foreach (var item in geminiFileStructListForLV)
+            Task.Run(() => {
+                _console.WriteLine($">>> Update start with {filterMode}...");
+                SetFolderFilter(folderFilterTextBox.Text, print: true);
+                var updatedList = new List<GeminiFileStruct>();
+                if (folderFilter.Count > 0)
                 {
-                    GeminiFileStructListGeneral(updatedList, item, folderFilter, 
-                        find: filterMode == FilterMode.GEN_FIND); // FilterMode.GEN_PROTECT
+                    foreach (var item in geminiFileStructListForLV)
+                    {
+                        GeminiFileStructListGeneral(updatedList, item, folderFilter,
+                            find: filterMode == FilterMode.GEN_FIND); // FilterMode.GEN_PROTECT
+                    }
                 }
-            }
-            else if (regex != null)
-            {
-                foreach (var item in geminiFileStructListForLV)
+                else if (regex != null)
                 {
-                    GeminiFileStructListRE(updatedList, item, regex, 
-                        find: filterMode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
+                    foreach (var item in geminiFileStructListForLV)
+                    {
+                        GeminiFileStructListRE(updatedList, item, regex,
+                            find: filterMode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
+                    }
                 }
-            }
-            geminiFileStructListForLV = ListReGrpAndReColor(updatedList, m_comparemode, _source.Token);
-            UpdateListView(geminiFileStructListForLV, _source.Token);
-            UpdateLVCheckedAndDelList(geminiFileStructListForLV);
+                geminiFileStructListForLV = ListReGrpAndReColor(updatedList, m_comparemode, _source.Token);
+                UpdateListView(geminiFileStructListForLV, _source.Token);
+                UpdateLVCheckedAndDelList(geminiFileStructListForLV);
 
-            var cnt = 
-                (from i in geminiFileStructListForLV
-                where i.Checked == true
-                select i).Count();
-            _console.WriteLine($">>> {filterMode} selectd {cnt:N0} file(s).");
-            /*foreach (var item in deleteList)
-            {
-                _console.WriteLine($"del: {item}");
-            }*/
-
+                var cnt =
+                    (from i in geminiFileStructListForLV
+                     where i.Checked == true
+                     select i).Count();
+                _console.WriteLine($">>> {filterMode} selectd {cnt:N0} file(s).");
+            });
         }
 
         private void resultListView_MouseClick(object sender, MouseEventArgs e)
