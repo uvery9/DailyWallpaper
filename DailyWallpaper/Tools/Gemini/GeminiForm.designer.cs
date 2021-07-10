@@ -84,6 +84,7 @@
             this.deleteAllSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanEmptyFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanEmptyFolderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +94,6 @@
             this.godsChoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -317,6 +317,7 @@
             this.resultListView.UseCompatibleStateImageBehavior = false;
             this.resultListView.View = System.Windows.Forms.View.Details;
             this.resultListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.resultListView_ColumnClick);
+            this.resultListView.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.resultListView_ItemMouseHover);
             this.resultListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
             this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
             this.resultListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resultListView_MouseClick);
@@ -671,6 +672,13 @@
             this.cleanEmptyFolderModeToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
             this.cleanEmptyFolderModeToolStripMenuItem.Text = "Clean Empty Folder Mode";
             // 
+            // alwaysCalculateHashToolStripMenuItem
+            // 
+            this.alwaysCalculateHashToolStripMenuItem.Name = "alwaysCalculateHashToolStripMenuItem";
+            this.alwaysCalculateHashToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.alwaysCalculateHashToolStripMenuItem.Text = "Always calculate Hash";
+            this.alwaysCalculateHashToolStripMenuItem.Click += new System.EventHandler(this.alwaysCalculateHashToolStripMenuItem_Click);
+            // 
             // selectToolStripMenuItem
             // 
             this.selectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -740,13 +748,6 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
-            // 
-            // alwaysCalculateHashToolStripMenuItem
-            // 
-            this.alwaysCalculateHashToolStripMenuItem.Name = "alwaysCalculateHashToolStripMenuItem";
-            this.alwaysCalculateHashToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
-            this.alwaysCalculateHashToolStripMenuItem.Text = "Always calculate Hash";
-            this.alwaysCalculateHashToolStripMenuItem.Click += new System.EventHandler(this.alwaysCalculateHashToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 

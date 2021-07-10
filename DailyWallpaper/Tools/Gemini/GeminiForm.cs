@@ -1995,6 +1995,20 @@ namespace DailyWallpaper
                     listViewContextMenuStrip.Show(Cursor.Position);
                 }
             }
+            if (e.Button == MouseButtons.Left)
+            {
+                /*var focusedItem = resultListView.FocusedItem;
+                if (focusedItem == null)
+                {
+                    return;
+                }
+                if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
+                {
+                    string itemInfo = focusedItem.SubItems["dir"].Text;
+                    // new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfor);
+                    new System.Windows.Forms.ToolTip().SetToolTip(focusedItem.ListView, itemInfo);
+                }*/
+            }
         }
 
         /// <summary>
@@ -2209,5 +2223,29 @@ namespace DailyWallpaper
                 it.Checked = true;
             }
         }
+
+        // TODO: ONLY SHOW WHEN HOVER OVER THE DIRECTORY.
+        private void resultListView_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
+        {
+            string itemInfo =  e.Item.SubItems["dir"].Text;
+            // new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfor);
+            new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfo);
+
+            /* var item = e.Item;
+            var element = this.radListView1.ListViewElement;
+            if (element != null)
+            {
+                for (int i = 0; i < element.Items.Count; i++)
+                {
+                    if (element.Items[i].Equals(item))
+                    {
+                        Console.WriteLine(i); //the row
+                    }
+                }
+            }*/
+
+             
+        }
+
     }
 }
