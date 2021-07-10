@@ -46,7 +46,7 @@ namespace DailyWallpaper
         private Mutex _mutex;
         private Mutex _mutexPb;
         private ListViewColumnSorter lvwColumnSorter;
-        private List<string> deleteList;
+        private List<string> deleteList =  new List<string>();
         private List<GeminiFileStruct> geminiFileStructListForLV = new List<GeminiFileStruct>();
         private Color themeColor = Color.FromArgb(250, 234, 192);
         GeminiCompareMode m_comparemode = GeminiCompareMode.NameAndSize;
@@ -58,6 +58,8 @@ namespace DailyWallpaper
             GEN_PROTECT,
         }
         private FilterMode filterMode;
+
+        // TODO, F2 rename
         public GeminiForm()
         {
             InitializeComponent();
@@ -219,42 +221,48 @@ namespace DailyWallpaper
         }
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (deleteList == null)
-            {
-                _console.WriteLine($"\r\n!!! You should ANALYZE first.");
-                return;
-            }
             try
             {
                 var taskDel = Task.Run(() => {
-                    // from deleteList update geminiFileStructListForLV'bp -- delGflChecked
-                    var deleteListEx = new List<string>();
-                    foreach (var item in deleteList)
+                    deleteList.Clear();
+                    if (resultListView.Items.Count > 1)
                     {
-                        if (File.Exists(item))
+                        foreach (var item in resultListView.Items)
                         {
-                            deleteListEx.Add(item);
+                            var it = (System.Windows.Forms.ListViewItem)item;
+                            var fullPathLV = it.SubItems["fullPath"].Text;
+                            if (it.Checked && File.Exists(fullPathLV))
+                            {
+                                deleteList.Add(fullPathLV);
+                            }
                         }
                     }
-                    deleteList = deleteListEx;
                     _console.WriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
                     if (deleteList.Count < 1)
                     {
                         return;
                     }
+
+                    // update Checked in GeminiFileStruct;
                     var delGflChecked = new List<GeminiFileStruct>();
                     foreach (var item in geminiFileStructListForLV)
                     {
                         UpdateCheckedInDelGFL(delGflChecked, deleteList, item);
                     }
-                
+
                     /*
-                        * HOW COULD I PASS Anonymous Types ???
-                        * Func<TSource, TKey> keySelector;
-                        * var v2 = new { hash = "10086", size = 10086};
-                        */
+                    * TODO: 
+                    *   HOW COULD I PASS Anonymous Types ???
+                    *   Func<TSource, TKey> keySelector;
+                    *   var v2 = new { hash = "10086", size = 10086};
+                    */
+
+                    // group GeminiFileStructList
                     var delGflGrp = GeminiFileStructList2IEnumerableGroup(delGflChecked, m_comparemode);
+
+                    // begin delete files, and prevent all files in the group from being deleted
                     int k = 0;
+                    var emptyFolderList = new List<string>();
                     foreach (var item in delGflGrp)
                     {
                         // Prevent all files in the group from being deleted
@@ -272,9 +280,10 @@ namespace DailyWallpaper
 
                         foreach (var it in item)
                         {
-                            if (it.Checked)
+                            if (it.Checked && File.Exists(it.fullPath))
                             {
                                 _console.WriteLine($"...... Delete file: {it.fullPath}");
+                                emptyFolderList.Add(Path.GetDirectoryName(it.fullPath));
                                 FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
                                                 deleteOrRecycleBin.Checked ?
                                                 RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
@@ -282,10 +291,19 @@ namespace DailyWallpaper
                             }
                         }                    
                     }
+
+                    // Clean Empty folders
+                    if (cleanEmptyFoldersToolStripMenuItem.Checked && emptyFolderList.Count > 0)
+                    {
+                        foreach (var dir in emptyFolderList)
+                        {
+                            EmptyJudge(dir);
+                        }
+                    }
                     _console.WriteLine($">>> Delete Finished.");
                 
                     // clean non-existent file in geminiFileStructListForLV
-                    // cleanUpButton do UpdateLVCheckedAndDelList(geminiFileStructListForLV);
+                    //   update ListView and the checked in LV.
                     cleanUpButton.PerformClick();
                     }, _source.Token);
                 _tasks.Add(taskDel);
@@ -297,6 +315,28 @@ namespace DailyWallpaper
             catch (Exception ex)
             {
                 _console.WriteLine($"!!! Error occur when deleting files: {ex.Message}");
+            }
+        }
+
+        private void EmptyJudge(string dir)
+        {
+            if (!Directory.Exists(dir))
+            {
+                return;
+            }
+            var entries = Directory.EnumerateFileSystemEntries(dir);
+            if (!entries.Any())
+            {
+                try
+                {
+                    FileSystem.DeleteDirectory(dir, UIOption.OnlyErrorDialogs,
+                        deletePermanently ?
+                        RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                        UICancelOption.DoNothing);
+                    _console.WriteLine($"...... Delete empty folder:  {dir}");
+                }
+                catch (UnauthorizedAccessException) { }
+                catch (DirectoryNotFoundException) { }
             }
         }
 
@@ -1656,28 +1696,7 @@ namespace DailyWallpaper
 
         private void resultListView_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            // Handles the ItemCheck event. The method uses the CurrentValue
-            // property of the ItemCheckEventArgs to retrieve and tally the  
-            // price of the menu items selected.  
-
-            var txet = resultListView.Items[e.Index].SubItems["fullPath"].Text;
-            if (e.CurrentValue == CheckState.Unchecked)
-            {
-                deleteList.Add(txet);
-                // _console.WriteLine($"Add {txet}");
-            }
-            else if ((e.CurrentValue == CheckState.Checked))
-            {
-                try
-                {
-                    deleteList.Remove(txet);
-                }
-                catch
-                {
-                    _console.WriteLine("NO EXIT");
-                }
-                // _console.WriteLine($"Remove {txet}");
-            }
+           
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
