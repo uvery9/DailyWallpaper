@@ -81,6 +81,7 @@
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveLogToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveResultToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAllSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,7 +91,6 @@
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteAllSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -104,7 +104,7 @@
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(821, 104);
+            this.updateButton.Location = new System.Drawing.Point(821, 105);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(77, 28);
             this.updateButton.TabIndex = 11;
@@ -116,7 +116,7 @@
             // 
             this.filterExample.BackColor = System.Drawing.SystemColors.Control;
             this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(569, 109);
+            this.filterExample.Location = new System.Drawing.Point(569, 110);
             this.filterExample.Name = "filterExample";
             this.filterExample.ReadOnly = true;
             this.filterExample.Size = new System.Drawing.Size(246, 21);
@@ -126,10 +126,10 @@
             // btnSelectTargetFolder2
             // 
             this.btnSelectTargetFolder2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(821, 51);
+            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(821, 54);
             this.btnSelectTargetFolder2.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder2.Name = "btnSelectTargetFolder2";
-            this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 35);
+            this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 33);
             this.btnSelectTargetFolder2.TabIndex = 5;
             this.btnSelectTargetFolder2.Text = "Browse";
             this.btnSelectTargetFolder2.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@
             // modeCheckBox
             // 
             this.modeCheckBox.AutoSize = true;
-            this.modeCheckBox.Location = new System.Drawing.Point(497, 108);
+            this.modeCheckBox.Location = new System.Drawing.Point(497, 109);
             this.modeCheckBox.Name = "modeCheckBox";
             this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
             this.modeCheckBox.TabIndex = 10;
@@ -148,7 +148,7 @@
             // regexCheckBox
             // 
             this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(439, 108);
+            this.regexCheckBox.Location = new System.Drawing.Point(439, 109);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
             this.regexCheckBox.TabIndex = 9;
@@ -168,7 +168,7 @@
             // labelTargetFolder2
             // 
             this.labelTargetFolder2.AutoSize = true;
-            this.labelTargetFolder2.Location = new System.Drawing.Point(11, 59);
+            this.labelTargetFolder2.Location = new System.Drawing.Point(11, 61);
             this.labelTargetFolder2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTargetFolder2.Name = "labelTargetFolder2";
             this.labelTargetFolder2.Size = new System.Drawing.Size(89, 18);
@@ -177,7 +177,7 @@
             // 
             // folderFilterTextBox
             // 
-            this.folderFilterTextBox.Location = new System.Drawing.Point(125, 106);
+            this.folderFilterTextBox.Location = new System.Drawing.Point(125, 107);
             this.folderFilterTextBox.Name = "folderFilterTextBox";
             this.folderFilterTextBox.Size = new System.Drawing.Size(294, 28);
             this.folderFilterTextBox.TabIndex = 7;
@@ -186,7 +186,7 @@
             // 
             this.fldFilterText.BackColor = System.Drawing.SystemColors.Control;
             this.fldFilterText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.fldFilterText.Location = new System.Drawing.Point(14, 109);
+            this.fldFilterText.Location = new System.Drawing.Point(14, 110);
             this.fldFilterText.Name = "fldFilterText";
             this.fldFilterText.ReadOnly = true;
             this.fldFilterText.Size = new System.Drawing.Size(117, 21);
@@ -198,7 +198,7 @@
             this.targetFolder2TextBox.AllowDrop = true;
             this.targetFolder2TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 56);
+            this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 58);
             this.targetFolder2TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder2TextBox.Name = "targetFolder2TextBox";
             this.targetFolder2TextBox.Size = new System.Drawing.Size(695, 28);
@@ -210,10 +210,10 @@
             // btnSelectTargetFolder1
             // 
             this.btnSelectTargetFolder1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(821, 5);
+            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(821, 7);
             this.btnSelectTargetFolder1.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder1.Name = "btnSelectTargetFolder1";
-            this.btnSelectTargetFolder1.Size = new System.Drawing.Size(77, 35);
+            this.btnSelectTargetFolder1.Size = new System.Drawing.Size(77, 30);
             this.btnSelectTargetFolder1.TabIndex = 5;
             this.btnSelectTargetFolder1.Text = "Browse";
             this.btnSelectTargetFolder1.UseVisualStyleBackColor = true;
@@ -476,6 +476,8 @@
             this.ignoreFileSizeTextBox.TabIndex = 2;
             this.ignoreFileSizeTextBox.Text = "1024";
             this.ignoreFileSizeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ignoreFileSizeTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ignoreFileSizeTextBox_KeyDown);
+            this.ignoreFileSizeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ignoreFileSizeTextBox_KeyPress);
             // 
             // ignoreFileSizecomboBox
             // 
@@ -600,7 +602,6 @@
             // 
             // fileOptionsmenuStrip
             // 
-            this.fileOptionsmenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.fileOptionsmenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.fileOptionsmenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -626,23 +627,30 @@
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopMenu_Click);
             // 
             // saveLogToFileToolStripMenuItem
             // 
             this.saveLogToFileToolStripMenuItem.Name = "saveLogToFileToolStripMenuItem";
-            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
             this.saveLogToFileToolStripMenuItem.Text = "Save log to file";
             this.saveLogToFileToolStripMenuItem.Click += new System.EventHandler(this.saveLogToFileToolStripMenuItem_Click);
             // 
             // saveResultToFileToolStripMenuItem
             // 
             this.saveResultToFileToolStripMenuItem.Name = "saveResultToFileToolStripMenuItem";
-            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
             this.saveResultToFileToolStripMenuItem.Text = "Save result to file";
             this.saveResultToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultToFileToolStripMenuItem_Click);
+            // 
+            // deleteAllSelectedToolStripMenuItem
+            // 
+            this.deleteAllSelectedToolStripMenuItem.Name = "deleteAllSelectedToolStripMenuItem";
+            this.deleteAllSelectedToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
+            this.deleteAllSelectedToolStripMenuItem.Text = "Delete all selected";
+            this.deleteAllSelectedToolStripMenuItem.Click += new System.EventHandler(this.deleteAllSelectedToolStripMenuItem_Click);
             // 
             // selectToolStripMenuItem
             // 
@@ -713,13 +721,6 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
-            // 
-            // deleteAllSelectedToolStripMenuItem
-            // 
-            this.deleteAllSelectedToolStripMenuItem.Name = "deleteAllSelectedToolStripMenuItem";
-            this.deleteAllSelectedToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.deleteAllSelectedToolStripMenuItem.Text = "Delete all selected";
-            this.deleteAllSelectedToolStripMenuItem.Click += new System.EventHandler(this.deleteAllSelectedToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 

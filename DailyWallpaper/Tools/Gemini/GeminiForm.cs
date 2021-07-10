@@ -261,7 +261,7 @@ namespace DailyWallpaper
                     {
                         if (it.Checked)
                         {
-                            _console.WriteLine($"... Delete file: {it.fullPath}");
+                            _console.WriteLine($"...... Delete file: {it.fullPath}");
                             FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
                                             deleteOrRecycleBin.Checked ?
                                             RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
@@ -1706,8 +1706,8 @@ namespace DailyWallpaper
             if (existList.Count < geminiFileStructListForLV.Count)
             {
                 _console.WriteLine(
-                    $"delete {geminiFileStructListForLV.Count - existList.Count} " +
-                    "non-existent items for ListView.");
+                    $">>> Remove {geminiFileStructListForLV.Count - existList.Count} " +
+                    "items from ListView [ nonexistent + non-repeating ].");
                 geminiFileStructListForLV = existList;
                 // RecoverChecked(UpdateListView, geminiFileStructListForLV, mode, _source.Token);
                 UpdateLVCheckedAndDelList(geminiFileStructListForLV);
@@ -1990,6 +1990,23 @@ namespace DailyWallpaper
             else
             {
                 it.Checked = true;
+            }
+        }
+
+        private void ignoreFileSizeTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SetMinimumFileLimit();
+            }
+        }
+
+        private void ignoreFileSizeTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // !char.IsControl(e.KeyChar) allow Enter.
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) // && (e.KeyChar != '.')
+            {
+                e.Handled = true;
             }
         }
     }
