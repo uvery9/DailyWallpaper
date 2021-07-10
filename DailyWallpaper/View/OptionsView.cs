@@ -654,7 +654,7 @@ namespace DailyWallpaper.View
                 dialog.EnsurePathExists = true;
                 dialog.Multiselect = false;
                 dialog.Title = TranslationHelper.Get("Icon_LocalPathSetting");
-                // maybe add some log TODO
+
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
                     // MessageBox.Show("You selected: " + dialog.FileName);

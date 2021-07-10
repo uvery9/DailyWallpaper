@@ -172,7 +172,6 @@ namespace DailyWallpaper
         private void btnPrint_Click(object sender, EventArgs e)
         {
             PrintDir();
-
         }
         private void btnStop_Click(object sender, EventArgs e)
         {
@@ -195,14 +194,11 @@ namespace DailyWallpaper
 
         // Thanks to João Angelo
         // https://stackoverflow.com/questions/2811509/c-sharp-remove-all-empty-subdirectories
-        /// <summary>
-        /// TODO: When folder To much, try to not use Recurse
-        /// </summary>
         private async void RecurseScanDir(string path, CancellationToken token, bool delete = false)
         {
             //token.ThrowIfCancellationRequested();
             // DO NOT KNOW WHY D: DOESNOT WORK WHILE D:\ WORK.
-            if (!Directory.Exists(path))
+            if (!UpdateTextAndIniFile(tbTargetFolder.Text))
             {
                 _console.WriteLine("Invalid directory path: {0}", path);
                 return;
@@ -674,7 +670,7 @@ namespace DailyWallpaper
                 btnClean.Text = "RecycleBin";
             } else
             {
-                btnClean.Text = "Delete Permanently";
+                btnClean.Text = "Delete";
             }
             
         }

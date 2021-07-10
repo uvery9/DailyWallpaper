@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 /// <summary>
@@ -46,15 +47,31 @@ namespace DailyWallpaper.Tools
         /// <returns>The result of the comparison. "0" if equal, negative if 'x' is less than 'y' and positive if 'x' is greater than 'y'</returns>
         public int Compare(object x, object y)
         {
-            int compareResult;
+            int compareResult = 0;
             ListViewItem listviewX, listviewY;
 
             // Cast the objects to be compared to ListViewItem objects
             listviewX = (ListViewItem)x;
             listviewY = (ListViewItem)y;
 
-            // Compare the two items
-            compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
+            if (ColumnToSort == listviewX.SubItems.IndexOf(listviewX.SubItems["sizeStr"]))
+            {
+                
+                if (int.TryParse(listviewX.SubItems["size"].Text, out int size1))
+                {
+                    if (int.TryParse(listviewY.SubItems["size"].Text, out int size2))
+                    {
+                        compareResult = ObjectCompare.Compare(size1,
+                            size2);
+                    }
+                }
+            }
+            else
+            {
+                // Compare the two items
+                compareResult = ObjectCompare.Compare(listviewX.SubItems[ColumnToSort].Text, listviewY.SubItems[ColumnToSort].Text);
+            }
+            
 
             // Calculate correct return value based on object comparison
             if (OrderOfSort == SortOrder.Ascending)

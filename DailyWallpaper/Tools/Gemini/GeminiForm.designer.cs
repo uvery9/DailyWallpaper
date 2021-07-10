@@ -91,6 +91,7 @@
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanEmptyFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -602,6 +603,7 @@
             // 
             // fileOptionsmenuStrip
             // 
+            this.fileOptionsmenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.fileOptionsmenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.fileOptionsmenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -619,7 +621,8 @@
             this.alwaysOnTopToolStripMenuItem,
             this.saveLogToFileToolStripMenuItem,
             this.saveResultToFileToolStripMenuItem,
-            this.deleteAllSelectedToolStripMenuItem});
+            this.deleteAllSelectedToolStripMenuItem,
+            this.cleanEmptyFoldersToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(56, 28);
             this.fileToolStripMenuItem.Text = "File";
@@ -627,28 +630,28 @@
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(287, 34);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopMenu_Click);
             // 
             // saveLogToFileToolStripMenuItem
             // 
             this.saveLogToFileToolStripMenuItem.Name = "saveLogToFileToolStripMenuItem";
-            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
+            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(287, 34);
             this.saveLogToFileToolStripMenuItem.Text = "Save log to file";
             this.saveLogToFileToolStripMenuItem.Click += new System.EventHandler(this.saveLogToFileToolStripMenuItem_Click);
             // 
             // saveResultToFileToolStripMenuItem
             // 
             this.saveResultToFileToolStripMenuItem.Name = "saveResultToFileToolStripMenuItem";
-            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
+            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(287, 34);
             this.saveResultToFileToolStripMenuItem.Text = "Save result to file";
             this.saveResultToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultToFileToolStripMenuItem_Click);
             // 
             // deleteAllSelectedToolStripMenuItem
             // 
             this.deleteAllSelectedToolStripMenuItem.Name = "deleteAllSelectedToolStripMenuItem";
-            this.deleteAllSelectedToolStripMenuItem.Size = new System.Drawing.Size(267, 34);
+            this.deleteAllSelectedToolStripMenuItem.Size = new System.Drawing.Size(287, 34);
             this.deleteAllSelectedToolStripMenuItem.Text = "Delete all selected";
             this.deleteAllSelectedToolStripMenuItem.Click += new System.EventHandler(this.deleteAllSelectedToolStripMenuItem_Click);
             // 
@@ -721,6 +724,13 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
+            // 
+            // cleanEmptyFoldersToolStripMenuItem
+            // 
+            this.cleanEmptyFoldersToolStripMenuItem.Name = "cleanEmptyFoldersToolStripMenuItem";
+            this.cleanEmptyFoldersToolStripMenuItem.Size = new System.Drawing.Size(287, 34);
+            this.cleanEmptyFoldersToolStripMenuItem.Text = "Clean Empty Folders";
+            this.cleanEmptyFoldersToolStripMenuItem.Click += new System.EventHandler(this.cleanEmptyFoldersToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 
@@ -821,5 +831,6 @@
         private System.Windows.Forms.ToolStripMenuItem openDirectoryToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader CBcolumnHeader;
         private System.Windows.Forms.ToolStripMenuItem deleteAllSelectedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cleanEmptyFoldersToolStripMenuItem;
     }
 }

@@ -91,6 +91,9 @@ namespace DailyWallpaper
             // default: send to RecycleBin
             deleteOrRecycleBin.Checked = false;
 
+            // auto delete empty folder after remove.
+            cleanEmptyFoldersToolStripMenuItem.Checked = true;
+
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             SetUpFilterModeAndRegClick();
@@ -373,7 +376,7 @@ namespace DailyWallpaper
                     FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
 
                         // compare folders and themselves, return duplicated files list.
-                    _console.WriteLine(">>> Start fast comparing...");
+                    _console.WriteLine(">>> Start Fast Compare...");
                    
                     m_comparemode = SetCompareMode();
                     var sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
@@ -536,6 +539,7 @@ namespace DailyWallpaper
                         AddSubItem(item, "dir", gf.dir);
                         AddSubItem(item, "HASH", gf.hash ?? "");
                         AddSubItem(item, "fullPath", gf.fullPath);
+                        AddSubItem(item, "size", gf.size.ToString());
                         resultListView.Items.Add(item);
                     }
                     SetText(summaryTextBox, $"Summay: Found {gfL.Count:N0} duplicate files.", themeColor);
@@ -1628,14 +1632,14 @@ namespace DailyWallpaper
             resultListView.Sort();
         }
 
-        private delegate void DelSetPro(int pro, System.Windows.Forms.ProgressBar proBar);
+        private delegate void SetProgressMessageDelegate(int pro, System.Windows.Forms.ProgressBar proBar);
         private void SetProgressMessage(int pro, System.Windows.Forms.ProgressBar proBar)
         {
             if (InvokeRequired)
             {
                 if (proBar.IsHandleCreated)
                 {
-                    DelSetPro setPro = new DelSetPro(SetProgressMessage);
+                    SetProgressMessageDelegate setPro = new SetProgressMessageDelegate(SetProgressMessage);
                     Invoke(setPro, new object[] { pro, proBar });
                 }
             }
@@ -2025,6 +2029,19 @@ namespace DailyWallpaper
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) // && (e.KeyChar != '.')
             {
                 e.Handled = true;
+            }
+        }
+
+        private void cleanEmptyFoldersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var it = cleanEmptyFoldersToolStripMenuItem;
+            if (it.Checked)
+            {
+                it.Checked = false;
+            }
+            else
+            {
+                it.Checked = true;
             }
         }
     }

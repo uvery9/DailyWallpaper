@@ -125,7 +125,7 @@
             // btnSelectTargetFolder
             // 
             this.btnSelectTargetFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder.Location = new System.Drawing.Point(861, 19);
+            this.btnSelectTargetFolder.Location = new System.Drawing.Point(863, 15);
             this.btnSelectTargetFolder.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder.Name = "btnSelectTargetFolder";
             this.btnSelectTargetFolder.Size = new System.Drawing.Size(139, 35);
@@ -149,7 +149,7 @@
             // labelTarget
             // 
             this.labelTarget.AutoSize = true;
-            this.labelTarget.Location = new System.Drawing.Point(9, 25);
+            this.labelTarget.Location = new System.Drawing.Point(9, 19);
             this.labelTarget.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTarget.Name = "labelTarget";
             this.labelTarget.Size = new System.Drawing.Size(134, 18);
@@ -204,12 +204,12 @@
             // btnClean
             // 
             this.btnClean.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClean.Location = new System.Drawing.Point(867, 638);
+            this.btnClean.Location = new System.Drawing.Point(902, 637);
             this.btnClean.Margin = new System.Windows.Forms.Padding(4);
             this.btnClean.Name = "btnClean";
-            this.btnClean.Size = new System.Drawing.Size(148, 56);
+            this.btnClean.Size = new System.Drawing.Size(113, 56);
             this.btnClean.TabIndex = 4;
-            this.btnClean.Text = "Delete";
+            this.btnClean.Text = "RecycleBin";
             this.btnClean.UseVisualStyleBackColor = true;
             this.btnClean.Click += new System.EventHandler(this.btnClean_Click);
             // 
@@ -240,7 +240,7 @@
             // deleteOrRecycleBin
             // 
             this.deleteOrRecycleBin.AutoSize = true;
-            this.deleteOrRecycleBin.Location = new System.Drawing.Point(817, 656);
+            this.deleteOrRecycleBin.Location = new System.Drawing.Point(872, 656);
             this.deleteOrRecycleBin.Name = "deleteOrRecycleBin";
             this.deleteOrRecycleBin.Size = new System.Drawing.Size(22, 21);
             this.deleteOrRecycleBin.TabIndex = 6;
