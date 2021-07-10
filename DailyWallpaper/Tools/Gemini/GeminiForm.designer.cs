@@ -90,6 +90,7 @@
             this.cleanNonExistentItemsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAllSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -143,7 +144,6 @@
             this.modeCheckBox.TabIndex = 10;
             this.modeCheckBox.Text = "Find";
             this.modeCheckBox.UseVisualStyleBackColor = true;
-            this.modeCheckBox.CheckedChanged += new System.EventHandler(this.modeCheckBox_CheckedChanged);
             // 
             // regexCheckBox
             // 
@@ -362,19 +362,19 @@
             this.openDirectoryToolStripMenuItem,
             this.copyFullPathToolStripMenuItem});
             this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
-            this.listViewContextMenuStrip.Size = new System.Drawing.Size(241, 97);
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(214, 64);
             // 
             // openDirectoryToolStripMenuItem
             // 
             this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
-            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
             this.openDirectoryToolStripMenuItem.Text = "Open Directory";
             this.openDirectoryToolStripMenuItem.Click += new System.EventHandler(this.openDirectoryToolStripMenuItem_Click);
             // 
             // copyFullPathToolStripMenuItem
             // 
             this.copyFullPathToolStripMenuItem.Name = "copyFullPathToolStripMenuItem";
-            this.copyFullPathToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.copyFullPathToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
             this.copyFullPathToolStripMenuItem.Text = "Copy FullPath";
             this.copyFullPathToolStripMenuItem.Click += new System.EventHandler(this.copyFullPathToolStripMenuItem_Click);
             // 
@@ -617,7 +617,8 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.alwaysOnTopToolStripMenuItem,
             this.saveLogToFileToolStripMenuItem,
-            this.saveResultToFileToolStripMenuItem});
+            this.saveResultToFileToolStripMenuItem,
+            this.deleteAllSelectedToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(56, 28);
             this.fileToolStripMenuItem.Text = "File";
@@ -625,21 +626,21 @@
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopMenu_Click);
             // 
             // saveLogToFileToolStripMenuItem
             // 
             this.saveLogToFileToolStripMenuItem.Name = "saveLogToFileToolStripMenuItem";
-            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
+            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.saveLogToFileToolStripMenuItem.Text = "Save log to file";
             this.saveLogToFileToolStripMenuItem.Click += new System.EventHandler(this.saveLogToFileToolStripMenuItem_Click);
             // 
             // saveResultToFileToolStripMenuItem
             // 
             this.saveResultToFileToolStripMenuItem.Name = "saveResultToFileToolStripMenuItem";
-            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
+            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.saveResultToFileToolStripMenuItem.Text = "Save result to file";
             this.saveResultToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultToFileToolStripMenuItem_Click);
             // 
@@ -712,6 +713,13 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
+            // 
+            // deleteAllSelectedToolStripMenuItem
+            // 
+            this.deleteAllSelectedToolStripMenuItem.Name = "deleteAllSelectedToolStripMenuItem";
+            this.deleteAllSelectedToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.deleteAllSelectedToolStripMenuItem.Text = "Delete all selected";
+            this.deleteAllSelectedToolStripMenuItem.Click += new System.EventHandler(this.deleteAllSelectedToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 
@@ -811,5 +819,6 @@
         private System.Windows.Forms.ToolStripMenuItem copyFullPathToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDirectoryToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader CBcolumnHeader;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllSelectedToolStripMenuItem;
     }
 }

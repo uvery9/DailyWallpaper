@@ -65,7 +65,7 @@ namespace DailyWallpaper.Tools
         public struct GeminiFileStruct
         {
             public bool available;
-            public bool willDelete;
+            private bool @checked;
             public bool selected;
             public long size;
             public string sizeStr;
@@ -79,6 +79,8 @@ namespace DailyWallpaper.Tools
             public string lastMtime;
             public string crtTime;
             public Color color;
+
+            public bool Checked { get => @checked; set => @checked = value; }
 
             public bool EqualsMD5(object obj)
             {
@@ -148,7 +150,7 @@ namespace DailyWallpaper.Tools
                 tmp += "\r\ncreateTime:   " + crtTime.ToString() ?? "";
                 tmp += "\r\nlastMtime:    " + lastMtime.ToString() ?? "";
                 tmp += "\r\navailable:    " + available.ToString() ?? "";
-                tmp += "\r\nwillDelete:   " + willDelete.ToString() ?? "";
+                tmp += "\r\nwillDelete:   " + Checked.ToString() ?? "";
                 return tmp;
             }
             public string ToStringSimple()
@@ -197,7 +199,7 @@ namespace DailyWallpaper.Tools
             var tmp = new GeminiFileStruct
             {
                 fullPath = fullPath,
-                willDelete = false,
+                Checked = false,
                 available = false,
                 selected = false,
 
