@@ -2063,5 +2063,14 @@ namespace DailyWallpaper
                 it.Checked = true;
             }
         }
+
+        // Keep only one for each group
+        private void godsChoiceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (resultListView.Items.Count > 1)
+            {
+                
+            }
+        }
     }
 }

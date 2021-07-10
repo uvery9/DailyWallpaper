@@ -92,6 +92,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanEmptyFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.godsChoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -663,7 +664,8 @@
             this.selectAllToolStripMenuItem,
             this.unselectAllToolStripMenuItem,
             this.reverseElectionToolStripMenuItem,
-            this.cleanNonExistentItemsToolStripMenuItem});
+            this.cleanNonExistentItemsToolStripMenuItem,
+            this.godsChoiceToolStripMenuItem});
             this.selectToolStripMenuItem.Name = "selectToolStripMenuItem";
             this.selectToolStripMenuItem.Size = new System.Drawing.Size(77, 28);
             this.selectToolStripMenuItem.Text = "Select";
@@ -731,6 +733,13 @@
             this.cleanEmptyFoldersToolStripMenuItem.Size = new System.Drawing.Size(287, 34);
             this.cleanEmptyFoldersToolStripMenuItem.Text = "Clean Empty Folders";
             this.cleanEmptyFoldersToolStripMenuItem.Click += new System.EventHandler(this.cleanEmptyFoldersToolStripMenuItem_Click);
+            // 
+            // godsChoiceToolStripMenuItem
+            // 
+            this.godsChoiceToolStripMenuItem.Name = "godsChoiceToolStripMenuItem";
+            this.godsChoiceToolStripMenuItem.Size = new System.Drawing.Size(323, 34);
+            this.godsChoiceToolStripMenuItem.Text = "God\'s choice";
+            this.godsChoiceToolStripMenuItem.Click += new System.EventHandler(this.godsChoiceToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 
@@ -832,5 +841,6 @@
         private System.Windows.Forms.ColumnHeader CBcolumnHeader;
         private System.Windows.Forms.ToolStripMenuItem deleteAllSelectedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cleanEmptyFoldersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem godsChoiceToolStripMenuItem;
     }
 }
