@@ -52,7 +52,6 @@ namespace DailyWallpaper
         private bool needFlush = false;
         private List<GeminiFileStruct> geminiFileStructListForLVRedo = new List<GeminiFileStruct>();
         private Color themeColor = Color.FromArgb(250, 234, 192);
-        GeminiCompareMode m_comparemode = GeminiCompareMode.NameAndSize;
         private enum FilterMode : int
         {
             REGEX_FIND,
@@ -96,7 +95,10 @@ namespace DailyWallpaper
             btnStop.Enabled = false;
             // default: send to RecycleBin
             deleteOrRecycleBin.Checked = false;
-
+            if (gemini.ini.EqualsIgnoreCase("RecycleBin", "true", "Gemini"))
+            {
+                deleteOrRecycleBin.Checked = true;
+            }
             // auto delete empty folder after remove.
             cleanEmptyFoldersToolStripMenuItem.Checked = true;
 
@@ -267,7 +269,7 @@ namespace DailyWallpaper
                     */
 
                     // group GeminiFileStructList
-                    var delGflGrp = GeminiFileStructList2IEnumerableGroup(delGflChecked, m_comparemode);
+                    var delGflGrp = GeminiFileStructList2IEnumerableGroup(delGflChecked, SetCompareMode());
 
                     // begin delete files, and prevent all files in the group from being deleted
                     int k = 0;
@@ -399,7 +401,7 @@ namespace DailyWallpaper
                     bool fld2 = false;
                     var t1 = targetFolder1TextBox.Text;
                     var t2 = targetFolder2TextBox.Text;
-
+                    _console.WriteLine(">>> Please waiting...");
                     if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
                     {
                         fld2 = true;
@@ -427,9 +429,9 @@ namespace DailyWallpaper
                     // compare folders and themselves, return duplicated files list.
                     _console.WriteLine(">>> Start Fast Compare...");
 
-                    m_comparemode = SetCompareMode();
+                    var mode = SetCompareMode();
                     var sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
-                            geminiFileStructList2, m_comparemode, limit, token, geminiProgressBar).Result;
+                            geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
                     _console.WriteLine(">>> Fast Compare finished...");
                     // group by size
 
@@ -443,7 +445,7 @@ namespace DailyWallpaper
 
                     // Color by Group.
                     _console.WriteLine(">>> ListView Color...");
-                    geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, m_comparemode, token);
+                    geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
 
                     _console.WriteLine(">>> Update to ListView...");
                     UpdateListView(geminiFileStructListForLV, token);
@@ -1770,14 +1772,23 @@ namespace DailyWallpaper
                     _console.WriteLine("!!! ANALYZE First.");
                     return;
                 }
-                GeminiCompareMode mode = SetCompareMode();
-                var existList = ListReColorByGroup(geminiFileStructListForLV, mode, _source.Token);
-                if (existList.Count < geminiFileStructListForLV.Count)
+                var duplicateGrp = GeminiFileStructList2IEnumerableGroup(geminiFileStructListForLV, 
+                    SetCompareMode());
+                int cnt = 0;
+                foreach (var item in duplicateGrp)
+                {
+                    foreach (var it in item)
+                    {
+                        cnt++;
+                    }
+                }
+                if (cnt < geminiFileStructListForLV.Count)
                 {
                     _console.WriteLine(
-                        $">>> Remove {geminiFileStructListForLV.Count - existList.Count} " +
+                        $">>> Remove {geminiFileStructListForLV.Count - cnt} " +
                         "items from ListView [ nonexistent + non-repeating ].");
-                    geminiFileStructListForLV = existList;
+                    geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
+                        SetCompareMode(), _source.Token);
                     UpdateLVAndRestoreChoice(geminiFileStructListForLV);
                 }
                 _console.WriteLine(">>> Clean-UP Finished.");
@@ -1795,6 +1806,7 @@ namespace DailyWallpaper
             {
                 btnDelete.Text = "RecycleBin";
             }
+            gemini.ini.UpdateIniItem("RecycleBin", deleteOrRecycleBin.Checked.ToString(), "Gemini");
         }
 
         private enum MultipleSelectOperations
@@ -1934,7 +1946,7 @@ namespace DailyWallpaper
                     }
                 }
                 geminiFileStructListForLVUndo = geminiFileStructListForLV;
-                geminiFileStructListForLV = ListReColorByGroup(updatedList, m_comparemode, _source.Token);
+                geminiFileStructListForLV = ListReColorByGroup(updatedList, SetCompareMode(), _source.Token);
                 UpdateLVAndRestoreChoice(geminiFileStructListForLV);
 
                 var cnt =
@@ -2125,7 +2137,8 @@ namespace DailyWallpaper
             {
                 var taskDel = Task.Run(() => {
                     // group GeminiFileStructList
-                    var delGflGrp = GeminiFileStructList2IEnumerableGroup(geminiFileStructListForLV, m_comparemode);
+                    var delGflGrp = GeminiFileStructList2IEnumerableGroup(geminiFileStructListForLV, 
+                        SetCompareMode());
 
                     // do not need to recolor.
                     var godsChoiceList = new List<GeminiFileStruct>();
