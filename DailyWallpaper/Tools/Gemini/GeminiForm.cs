@@ -709,6 +709,7 @@ namespace DailyWallpaper
             }
             return tmpHash;
         }
+
         private async Task<List<GeminiFileStruct>> UpdateHashInGeminiFileStructList(
             List<GeminiFileStruct> gfL)
         {
@@ -717,11 +718,21 @@ namespace DailyWallpaper
             foreach (var it in gfL)
             {
                 i++;
-                await UpdateHash(tmp, it);
+                if (it.size < 500 * 1024 * 1024 || alwaysCalculateHashToolStripMenuItem.Checked)
+                {
+                    await UpdateHash(tmp, it);
+                }
+                else
+                {
+                    var bp = it;
+                    bp.hash = ">500MB,NotCounting.YouCouldEnableAlwaysCalculateHash";
+                    tmp.Add(bp);
+                }
                 SetProgressMessage((int)((double)i / gfL.Count * 100), geminiProgressBar);
             }
             return tmp;
         }
+
         public static void AddSubItem(System.Windows.Forms.ListViewItem i, string name, string text)
         {
             i.SubItems.Add(new System.Windows.Forms.ListViewItem.ListViewSubItem()
@@ -2184,6 +2195,19 @@ namespace DailyWallpaper
                 _console.WriteLine($"!!! Error occur when deleting files: {ex.Message}");
             }
             
+        }
+
+        private void alwaysCalculateHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var it = alwaysCalculateHashToolStripMenuItem;
+            if (it.Checked)
+            {
+                it.Checked = false;
+            }
+            else
+            {
+                it.Checked = true;
+            }
         }
     }
 }

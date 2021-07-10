@@ -83,6 +83,7 @@
             this.saveResultToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAllSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanEmptyFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanEmptyFolderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,7 +93,7 @@
             this.godsChoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cleanEmptyFolderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -623,7 +624,8 @@
             this.saveResultToFileToolStripMenuItem,
             this.deleteAllSelectedToolStripMenuItem,
             this.cleanEmptyFoldersToolStripMenuItem,
-            this.cleanEmptyFolderModeToolStripMenuItem});
+            this.cleanEmptyFolderModeToolStripMenuItem,
+            this.alwaysCalculateHashToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(56, 28);
             this.fileToolStripMenuItem.Text = "File";
@@ -662,6 +664,12 @@
             this.cleanEmptyFoldersToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
             this.cleanEmptyFoldersToolStripMenuItem.Text = "Auto Clean Empty Folders";
             this.cleanEmptyFoldersToolStripMenuItem.Click += new System.EventHandler(this.cleanEmptyFoldersToolStripMenuItem_Click);
+            // 
+            // cleanEmptyFolderModeToolStripMenuItem
+            // 
+            this.cleanEmptyFolderModeToolStripMenuItem.Name = "cleanEmptyFolderModeToolStripMenuItem";
+            this.cleanEmptyFolderModeToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.cleanEmptyFolderModeToolStripMenuItem.Text = "Clean Empty Folder Mode";
             // 
             // selectToolStripMenuItem
             // 
@@ -733,11 +741,12 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // cleanEmptyFolderModeToolStripMenuItem
+            // alwaysCalculateHashToolStripMenuItem
             // 
-            this.cleanEmptyFolderModeToolStripMenuItem.Name = "cleanEmptyFolderModeToolStripMenuItem";
-            this.cleanEmptyFolderModeToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
-            this.cleanEmptyFolderModeToolStripMenuItem.Text = "Clean Empty Folder Mode";
+            this.alwaysCalculateHashToolStripMenuItem.Name = "alwaysCalculateHashToolStripMenuItem";
+            this.alwaysCalculateHashToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.alwaysCalculateHashToolStripMenuItem.Text = "Always calculate Hash";
+            this.alwaysCalculateHashToolStripMenuItem.Click += new System.EventHandler(this.alwaysCalculateHashToolStripMenuItem_Click);
             // 
             // GeminiForm
             // 
@@ -840,5 +849,6 @@
         private System.Windows.Forms.ToolStripMenuItem cleanEmptyFoldersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem godsChoiceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cleanEmptyFolderModeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem alwaysCalculateHashToolStripMenuItem;
     }
 }
