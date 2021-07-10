@@ -653,7 +653,8 @@ namespace DailyWallpaper
                 duplicateGrp =
                 from i in gfl
                 where File.Exists((i.fullPath))
-                group i by i.hash into grp
+                orderby i.name
+                group i by new { i.hash } into grp
                 where grp.Count() > 1
                 select grp.ToList();
             }
@@ -662,6 +663,7 @@ namespace DailyWallpaper
                 duplicateGrp =
                    from i in gfl
                    where File.Exists((i.fullPath))
+                   orderby i.name
                    group i by new { i.size, i.extName } into grp
                    where grp.Count() > 1
                    select grp.ToList();
@@ -671,6 +673,7 @@ namespace DailyWallpaper
                 duplicateGrp =
                    from i in gfl
                    where File.Exists((i.fullPath))
+                   orderby i.name
                    group i by i.size into grp
                    where grp.Count() > 1
                    select grp.ToList();
