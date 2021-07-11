@@ -2140,13 +2140,57 @@ namespace DailyWallpaper
 
         private void saveResultListToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Write the list of salesman objects to file.
-            WriteToXmlFile<List<GeminiFileStruct>>(@"GeminiFileStruct.xml", geminiFileStructListForLV);
-            // WriteToJsonFile<List<GeminiFileStruct>>(@"GeminiFileStruct.json", geminiFileStructListForLV);
+            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
+            {
+                var saveDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOG");
+                if (!Directory.Exists(saveDir))
+                {
+                    Directory.CreateDirectory(saveDir);
+                }
+                saveFileDialog.InitialDirectory = saveDir;
+                saveFileDialog.Filter = "XML files (*.xml)|*.xml";
+                // saveFileDialog.FilterIndex = 2;
+                saveFileDialog.RestoreDirectory = true;
+                string t1;
+                string t2;
+                var f1 = targetFolder1TextBox.Text;
+                var f2 = targetFolder2TextBox.Text;
+                if (string.IsNullOrEmpty(f1) || !Directory.Exists(f1))
+                {
+                    t1 = "NONE";
+                }
+                else
+                {
+                    t1 = new DirectoryInfo(f1).Name;
+                }
+                if (string.IsNullOrEmpty(f2) || !Directory.Exists(f2))
+                {
+                    t2 = "NONE";
+                }
+                else
+                {
+                    t2 = new DirectoryInfo(f2).Name;
+                }
 
-            /*// Read the list of salesman objects from the file back into a variable.
-            List<GeminiFileStruct> geminiFileStructListForLVFromFile = 
-                ReadFromXmlFile<List<GeminiFileStruct>>("GeminiFileStruct.xml");*/
+                var name = t1 + "-" + t2;
+                name = string.Join("_", name.Split(Path.GetInvalidFileNameChars()));
+                saveFileDialog.FileName = "GeminiList-" + name + "-" +
+                                        DateTime.Now.ToString("yyyy-MM-dd_HH-mm") + ".xml";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Write the list of salesman objects to file.
+                    WriteToXmlFile<List<GeminiFileStruct>>(saveFileDialog.FileName, 
+                        geminiFileStructListForLV);
+                    
+                    // WriteToJsonFile<List<GeminiFileStruct>>(@"GeminiFileStruct.json", geminiFileStructListForLV);
+
+                    /*// Read the list of salesman objects from the file back into a variable.
+                    List<GeminiFileStruct> geminiFileStructListForLVFromFile = 
+                        ReadFromXmlFile<List<GeminiFileStruct>>("GeminiFileStruct.xml");*/
+                }
+            }
         }
 
         private void usageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2829,5 +2873,54 @@ namespace DailyWallpaper
         {
             cleanEmptyFolderModeToolStripMenuItem.PerformClick();
         }
+
+        private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            using (var dialog = new CommonOpenFileDialog())
+            {
+                var saveDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOG");
+                if (!Directory.Exists(saveDir))
+                {
+                    saveDir = desktopPath;
+                }
+                dialog.InitialDirectory = saveDir;
+                dialog.IsFolderPicker = false;
+                dialog.EnsureFileExists = true;
+                dialog.Multiselect = false;
+                dialog.Title = "Select xml file"; // "XML files (*.xml)|*.xml";
+                // maybe add some log
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
+                {
+                    try
+                    {
+                        geminiFileStructListForLVUndo = geminiFileStructListForLV;
+                        geminiFileStructListForLV =
+                                ReadFromXmlFile<List<GeminiFileStruct>>(dialog.FileName);
+
+                        if (_source == null)
+                        {
+                            _source = new CancellationTokenSource();
+                        }
+                        geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
+                            SetCompareMode(), _source.Token);
+                        UpdateLVAndRestoreChoice(geminiFileStructListForLV);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        _console.WriteLine("\r\n!!! DO NOT modify the xml file by yourself: " +
+                            $"\r\n   {dialog.FileName}\r\n   {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        // _console.WriteLine($"xml -> Struct failed: {ex.Message}");
+                        _console.WriteLine($"xml -> Struct failed: {ex}");
+                    }
+                }
+            }    
+        }
+ 
+    
     }
 }

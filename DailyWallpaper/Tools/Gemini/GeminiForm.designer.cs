@@ -98,6 +98,7 @@
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -636,6 +637,7 @@
             this.alwaysOnTopToolStripMenuItem,
             this.saveLogToFileToolStripMenuItem,
             this.saveResultListToFileToolStripMenuItem,
+            this.loadListViewFromFileToolStripMenuItem,
             this.toolStripMenuItem2,
             this.alwaysCalculateHashToolStripMenuItem,
             this.protectFilesInGrpToolStripMenuItem,
@@ -667,7 +669,7 @@
             // 
             this.saveLogToFileToolStripMenuItem.Name = "saveLogToFileToolStripMenuItem";
             this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
-            this.saveLogToFileToolStripMenuItem.Text = "Save log to file";
+            this.saveLogToFileToolStripMenuItem.Text = "Save Log to file";
             this.saveLogToFileToolStripMenuItem.Click += new System.EventHandler(this.saveLogToFileToolStripMenuItem_Click);
             // 
             // saveResultListToFileToolStripMenuItem
@@ -779,6 +781,13 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
+            // loadListViewFromFileToolStripMenuItem
+            // 
+            this.loadListViewFromFileToolStripMenuItem.Name = "loadListViewFromFileToolStripMenuItem";
+            this.loadListViewFromFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.loadListViewFromFileToolStripMenuItem.Text = "Load ListView From File";
+            this.loadListViewFromFileToolStripMenuItem.Click += new System.EventHandler(this.loadListViewFromFileToolStripMenuItem_Click);
+            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -885,5 +894,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.Button modeSelectButton;
+        private System.Windows.Forms.ToolStripMenuItem loadListViewFromFileToolStripMenuItem;
     }
 }
