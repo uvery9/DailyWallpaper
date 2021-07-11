@@ -56,14 +56,13 @@ namespace DailyWallpaper.View
             this.Icon_OpenConsole = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_About = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Toolbox = new System.Windows.Forms.ToolStripMenuItem();
-            this.Icon_CleanEmptyFolders = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_HashCalc = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Notepad = new System.Windows.Forms.ToolStripMenuItem();
+            this.geminiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.geminiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -241,18 +240,11 @@ namespace DailyWallpaper.View
             // Icon_Toolbox
             // 
             this.Icon_Toolbox.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Icon_CleanEmptyFolders,
+            this.geminiToolStripMenuItem,
             this.Icon_HashCalc,
-            this.Icon_Notepad,
-            this.geminiToolStripMenuItem});
+            this.Icon_Notepad});
             this.Icon_Toolbox.Name = "Icon_Toolbox";
             resources.ApplyResources(this.Icon_Toolbox, "Icon_Toolbox");
-            // 
-            // Icon_CleanEmptyFolders
-            // 
-            this.Icon_CleanEmptyFolders.Name = "Icon_CleanEmptyFolders";
-            resources.ApplyResources(this.Icon_CleanEmptyFolders, "Icon_CleanEmptyFolders");
-            this.Icon_CleanEmptyFolders.Click += new System.EventHandler(this.Icon_CleanEmptyFolders_Click);
             // 
             // Icon_HashCalc
             // 
@@ -265,6 +257,12 @@ namespace DailyWallpaper.View
             this.Icon_Notepad.Name = "Icon_Notepad";
             resources.ApplyResources(this.Icon_Notepad, "Icon_Notepad");
             this.Icon_Notepad.Click += new System.EventHandler(this.Icon_Notepad_Click);
+            // 
+            // geminiToolStripMenuItem
+            // 
+            this.geminiToolStripMenuItem.Name = "geminiToolStripMenuItem";
+            resources.ApplyResources(this.geminiToolStripMenuItem, "geminiToolStripMenuItem");
+            this.geminiToolStripMenuItem.Click += new System.EventHandler(this.geminiToolStripMenuItem_Click);
             // 
             // toolStripMenuItem4
             // 
@@ -289,12 +287,6 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this._notifyIcon, "_notifyIcon");
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
-            // 
-            // geminiToolStripMenuItem
-            // 
-            this.geminiToolStripMenuItem.Name = "geminiToolStripMenuItem";
-            resources.ApplyResources(this.geminiToolStripMenuItem, "geminiToolStripMenuItem");
-            this.geminiToolStripMenuItem.Click += new System.EventHandler(this.geminiToolStripMenuItem_Click);
             // 
             // OptionsView
             // 
@@ -328,7 +320,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem Icon_DonateAndSupport;
         private System.Windows.Forms.ToolStripMenuItem Icon_Quit;
         private System.Windows.Forms.ToolStripMenuItem Icon_dailyWallpaperTitleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem Icon_CleanEmptyFolders;
         private System.Windows.Forms.ToolStripMenuItem Icon_HashCalc;
         private System.Windows.Forms.ToolStripMenuItem Icon_Notepad;
         private System.Windows.Forms.ToolStripMenuItem Icon_NextTime;

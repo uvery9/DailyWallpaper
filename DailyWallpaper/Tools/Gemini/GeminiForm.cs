@@ -34,7 +34,6 @@ namespace DailyWallpaper
         private string regexFilter;
         private Regex regex;
         private List<string> emptyFolderList = new List<string>();
-        private List<string> emptyFolderListCEF = new List<string>();
         private int nameColumnHeaderWidth = 0;
         private int modifiedTimeColumnHeaderWidth = 0;
         private List<GeminiCEFStruct> geminiCEFStructList = new List<GeminiCEFStruct>();
@@ -252,33 +251,46 @@ namespace DailyWallpaper
         }
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
-            {
-                if (!cefScanRes)
-                {
-                    btnAnalyze.PerformClick();
-                }
-                if (cefScanRes && emptyFolderListCEF.Count > 0)
-                {
-                    foreach (var folder in emptyFolderListCEF)
-                    {
-                        _console.WriteLine($"delete ###  {folder}");
-                        FileSystem.DeleteDirectory(folder, UIOption.OnlyErrorDialogs,
-                        deleteOrRecycleBin.Checked ?
-                        RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                        UICancelOption.DoNothing);
-                    }
-                }
-                return;
-            }
-            
             try
             {
-                redoToolStripMenuItem.Enabled = false;
-                undoToolStripMenuItem.Enabled = false;
                 var taskDel = Task.Run(() => {
+                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+                    {
+                        if (!cefScanRes)
+                        {
+                            btnAnalyze.PerformClick();
+                        }
+                        foreach (var item in resultListView.Items)
+                        {
+                            var it = (System.Windows.Forms.ListViewItem)item;
+                            var fullPathLV = it.SubItems["name"].Text;
+                            if (it.Checked && Directory.Exists(fullPathLV))
+                            {
+                                _console.WriteLine($"delete ###  {fullPathLV}");
+                                FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
+                                deleteOrRecycleBin.Checked ?
+                                RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                                UICancelOption.DoNothing);
+                            }
+                        }
+                        var tmpL = new List<GeminiCEFStruct>();
+                        foreach (var item in geminiCEFStructList)
+                        {
+                            if (Directory.Exists(item.fullPath))
+                            {
+                                tmpL.Add(item);
+                            }
+                        }
+                        geminiCEFStructList = tmpL;
+                        UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
+                        UpdateCEFChecked(geminiCEFStructList);
+                        return;
+                    }
+                    // ********************************************** //
+                    redoToolStripMenuItem.Enabled = false;
+                    undoToolStripMenuItem.Enabled = false;
                     deleteList.Clear();
-                    if (resultListView.Items.Count > 1)
+                    if (resultListView.Items.Count > 0)
                     {
                         foreach (var item in resultListView.Items)
                         {
@@ -367,7 +379,7 @@ namespace DailyWallpaper
             catch (FileNotFoundException) { }
             catch (Exception ex)
             {
-                _console.WriteLine($"!!! Error occur when deleting files: {ex.Message}");
+                _console.WriteLine($"!!! Error occur when deleting files/empty folders: {ex.Message}");
             }
         }
 
@@ -400,7 +412,21 @@ namespace DailyWallpaper
             {
                 try
                 {
-                    emptyFolderListCEF.Add(dir);
+                    string lastMtime = "";
+                    try
+                    {
+                        lastMtime = new FileInfo(dir).LastWriteTime.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        lastMtime = ex.Message;
+                    }
+                    var geminiCEF = new GeminiCEFStruct();
+                    geminiCEF.name = dir;
+                    geminiCEF.fullPath = dir;
+                    geminiCEF.Checked = false;
+                    geminiCEF.lastMtime = lastMtime;
+                    geminiCEFStructList.Add(geminiCEF);
                     _console.WriteLine($"... Found empty folder: {dir}");
                 }
                 catch (UnauthorizedAccessException) { }
@@ -904,43 +930,26 @@ namespace DailyWallpaper
             }
         }
 
-        private void UpdateEmptyFoldersToLV(List<string> cefL, CancellationToken token)
+        private void UpdateEmptyFoldersToLV(List<GeminiCEFStruct> gcefl, CancellationToken token)
         {
             resultListView.Items.Clear();
-            if (cefL.Count < 1)
+            if (gcefl.Count < 1)
             {
                 SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
                 _console.WriteLine(">>> The folder is CLEAN.");
                 return;
             }
-            geminiCEFStructList.Clear();
-            foreach (var cef in cefL)
+            foreach (var gcef in gcefl)
             {
 
                 if (token.IsCancellationRequested)
                 {
                     token.ThrowIfCancellationRequested();
                 }
-                string lastMtime = "";
-                try
-                {
-                    lastMtime = new FileInfo(cef).LastWriteTime.ToString();
-                }
-                catch (Exception ex)
-                {
-                    lastMtime = ex.Message;
-                }
-                var geminiCEF = new GeminiCEFStruct();
-                geminiCEF.name = cef;
-                geminiCEF.fullPath = cef;
-                geminiCEF.Checked = false;
-                geminiCEF.lastMtime = lastMtime;
-
                 var item = new System.Windows.Forms.ListViewItem();
-                AddSubItem(item, "name", geminiCEF.fullPath);
-                AddSubItem(item, "lastMtime", geminiCEF.lastMtime);
-                resultListView.Items.Add(item);
-                geminiCEFStructList.Add(geminiCEF);                
+                AddSubItem(item, "name", gcef.fullPath);
+                AddSubItem(item, "lastMtime", gcef.lastMtime);
+                resultListView.Items.Add(item);     
             }
             _console.WriteLine($">>> Found {geminiCEFStructList.Count:N0} empty folder(s).");
             SetText(summaryTextBox, $"Summay: Found {geminiCEFStructList.Count:N0} duplicate files.", themeColor);
@@ -959,8 +968,11 @@ namespace DailyWallpaper
                     // Were we already canceled?
                     // token.ThrowIfCancellationRequested();
                     cefScanRes = false;
-                    emptyFolderListCEF = new List<string>();
-                    _console.WriteLine($">>> Started Analyze Operation");
+                    _console.WriteLine($">>> Start Analyze Operation...");
+                    _console.WriteLine($">>> Because it is a recursive search, \r\n" + 
+                        "  Program don't know the progress, please wait patiently...");
+
+                    SetText(summaryTextBox, "Please wait patiently...", themeColor);
                     // Set a variable to the My Documents path.
                     // string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); 
 
@@ -981,7 +993,7 @@ namespace DailyWallpaper
                 _tasks.Add(taskCef);
                 await taskCef;
                 cefScanRes = true;
-                UpdateEmptyFoldersToLV(emptyFolderListCEF, token);
+                UpdateEmptyFoldersToLV(geminiCEFStructList, token);
                 _console.WriteLine($">>> Finished Analyze Operation");
             }
             catch (OperationCanceledException e)
@@ -1979,7 +1991,7 @@ namespace DailyWallpaper
         
         private List<GeminiCEFStruct> UpdateCEFChecked(List<GeminiCEFStruct> gcefl)
         {
-            if (resultListView.Items.Count > 1)
+            if (resultListView.Items.Count > 0 && gcefl.Count > 0)
             {
                 var tmpL = new List<GeminiCEFStruct>();
                 foreach (var item in resultListView.Items)
@@ -2004,7 +2016,7 @@ namespace DailyWallpaper
 
         private List<GeminiFileStruct> UpdateGFLChecked(List<GeminiFileStruct> gfl)
         {
-            if (resultListView.Items.Count > 1)
+            if (resultListView.Items.Count > 0)
             {
                 /*var timer = new Stopwatch();
                 timer.Start();*/
@@ -2203,6 +2215,10 @@ namespace DailyWallpaper
                         ?? geminiCEFStructList;
                 }
                 var tmpGfl = new List<GeminiCEFStruct>();
+                if (geminiCEFStructList.Count < 1)
+                {
+                    return;
+                }
                 foreach (var item in geminiCEFStructList)
                 {
                     var tmp = item;
@@ -2271,7 +2287,7 @@ namespace DailyWallpaper
 
         private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
         {
-            if (resultListView.Items.Count > 1)
+            if (resultListView.Items.Count > 0)
             {
                 foreach (var item in resultListView.Items)
                 {
@@ -2294,7 +2310,7 @@ namespace DailyWallpaper
 
         private void RestoreListViewChoice(List<GeminiFileStruct> gfl, CancellationToken token)
         {
-            if (resultListView.Items.Count > 1)
+            if (resultListView.Items.Count > 0)
             {
                 foreach (var item in resultListView.Items)
                 {

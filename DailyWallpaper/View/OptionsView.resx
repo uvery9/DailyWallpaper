@@ -257,11 +257,11 @@
   <data name="Icon_Help.Text" xml:space="preserve">
     <value>帮助</value>
   </data>
-  <data name="Icon_CleanEmptyFolders.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="geminiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>274, 34</value>
   </data>
-  <data name="Icon_CleanEmptyFolders.Text" xml:space="preserve">
-    <value>空文件夹清理</value>
+  <data name="geminiToolStripMenuItem.Text" xml:space="preserve">
+    <value>Gemini</value>
   </data>
   <data name="Icon_HashCalc.Size" type="System.Drawing.Size, System.Drawing">
     <value>274, 34</value>
@@ -274,12 +274,6 @@
   </data>
   <data name="Icon_Notepad.Text" xml:space="preserve">
     <value>NotePad++/记事本</value>
-  </data>
-  <data name="geminiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 34</value>
-  </data>
-  <data name="geminiToolStripMenuItem.Text" xml:space="preserve">
-    <value>Gemini</value>
   </data>
   <data name="Icon_Toolbox.Size" type="System.Drawing.Size, System.Drawing">
     <value>317, 30</value>
@@ -483,12 +477,6 @@
   <data name="&gt;&gt;Icon_Toolbox.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_CleanEmptyFolders.Name" xml:space="preserve">
-    <value>Icon_CleanEmptyFolders</value>
-  </data>
-  <data name="&gt;&gt;Icon_CleanEmptyFolders.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;Icon_HashCalc.Name" xml:space="preserve">
     <value>Icon_HashCalc</value>
   </data>
@@ -499,6 +487,12 @@
     <value>Icon_Notepad</value>
   </data>
   <data name="&gt;&gt;Icon_Notepad.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;geminiToolStripMenuItem.Name" xml:space="preserve">
+    <value>geminiToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;geminiToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem4.Name" xml:space="preserve">
@@ -524,12 +518,6 @@
   </data>
   <data name="&gt;&gt;_notifyIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;geminiToolStripMenuItem.Name" xml:space="preserve">
-    <value>geminiToolStripMenuItem</value>
-  </data>
-  <data name="&gt;&gt;geminiToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OptionsView</value>

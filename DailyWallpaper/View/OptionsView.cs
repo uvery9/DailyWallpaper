@@ -95,14 +95,13 @@ namespace DailyWallpaper.View
         {
             Icon_dailyWallpaperTitleToolStripMenuItem.Text = ProjectInfo.exeName
                 + " v" + ProjectInfo.GetVerSion() + " by " + ProjectInfo.author;
-            Icon_CleanEmptyFolders.Text = TranslationHelper.Get("Icon_CleanEmptyFolders");
             Icon_HashCalc.Text = TranslationHelper.Get("Icon_HashCalc");
             Icon_IssueAndFeedback.Text = TranslationHelper.Get("Icon_IssueAndFeedback");
 
             Icon_ChangeWallpaper.Text = TranslationHelper.Get("Icon_ChangeWallpaper");
             Icon_ChangeWallpaper.ToolTipText = TranslationHelper.Get("Icon_ChangeWallpaperTit");
             
-            var defFont = Icon_CleanEmptyFolders.Font; // default font so little.
+            var defFont = Icon_HashCalc.Font; // default font so little.
             Icon_ChangeWallpaper.Font = new Font(defFont.Name, defFont.Size + 1, FontStyle.Bold);
             Icon_ChangeWallpaper.ShowShortcutKeys = true;
             Icon_ChangeWallpaper.ShortcutKeyDisplayString =
