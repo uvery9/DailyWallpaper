@@ -29,7 +29,6 @@ namespace DailyWallpaper.View
         private bool useTextBoxWriter = false;
         private bool setWallpaperSucceed = false;
         private ConsWindow _consWindow;
-        private CleanEmptyFoldersForm _cefWindow;
         private NotifyIcon _notifyIcon;
         private bool iStextFromFileNew = true;
         private HashCalc.HashCalcForm _hashWin;
@@ -65,9 +64,6 @@ namespace DailyWallpaper.View
             // _consWindow.Load += new System.EventHandler(_viewWindow_Load);
             _consWindow.clearButton.Click += new EventHandler(clearButton_Click);
             _consWindow.saveToFileButton.Click += new EventHandler(saveToFileButton_Click);
-
-            _cefWindow = new CleanEmptyFoldersForm();
-            _cefWindow.FormClosing += _cefWindow_FormClosing;
 
             _hashWin = new HashCalc.HashCalcForm();
             _hashWin.selfFromClosing = false;
@@ -119,9 +115,8 @@ namespace DailyWallpaper.View
 
             // ooo
             Icon_AutoChangeWallpaper.DropDownItems.AddRange(new ToolStripItem[] {
-            CustomHoursTextboxWithButtonAndUnit(
-                TranslationHelper.Get("Icon_Custom"),
-                TranslationHelper.Get("Icon_Unit")) });
+            CustomHoursTextboxWithButtonAndUnit() 
+            });
 
             Icon_Bing.Text =
                     TranslationHelper.Get("Icon_Bing");
@@ -489,15 +484,6 @@ namespace DailyWallpaper.View
             }
         }
 
- 
-        private void _cefWindow_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                e.Cancel = true;
-                _cefWindow.Hide();
-            }
-        }
 
         private void _hashWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -830,10 +816,10 @@ namespace DailyWallpaper.View
             panel.Controls.Add(radioButton);
             panel.Controls.Add(unitLabel);
         }
-        private ToolStripControlHost CustomHoursTextboxWithButtonAndUnit(string buttonStr, string unitText, bool custom = false)
+        private ToolStripControlHost CustomHoursTextboxWithButtonAndUnit()
         {
             var backColor = SystemColors.Window;
-            hoursTextBox = new System.Windows.Forms.TextBox();
+            hoursTextBox = new TextBox();
 
             h12RadioButton = new RadioButton();
             h24RadioButton = new RadioButton();
@@ -844,7 +830,7 @@ namespace DailyWallpaper.View
             h24RadioButton.CheckedChanged += h24RadioButton_CheckedChanged;
             customRadioButton.CheckedChanged += customRadioButton_CheckedChanged;
 
-            var panel = new System.Windows.Forms.Panel();
+            var panel = new Panel();
             panel.SuspendLayout(); // IS NOT DIFF ?
             var unit = TranslationHelper.Get("Icon_Unit");
             AddDivIntoPanel(panel, h6RadioButton, 5, unit, 6);
@@ -1049,11 +1035,6 @@ namespace DailyWallpaper.View
         private void Icon_DonateAndSupport_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void Icon_CleanEmptyFolders_Click(object sender, EventArgs e)
-        {
-            _cefWindow.Show();
         }
 
         private void Icon_OpenOfficialWebsite_Click(object sender, EventArgs e)

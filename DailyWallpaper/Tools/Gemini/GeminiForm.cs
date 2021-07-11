@@ -250,45 +250,50 @@ namespace DailyWallpaper
             }
             gfl.Add(item);
         }
+
+        private void DeleteCEF()
+        {
+            if (!cefScanRes)
+            {
+                btnAnalyze.PerformClick();
+            }
+            foreach (var item in resultListView.Items)
+            {
+                var it = (System.Windows.Forms.ListViewItem)item;
+                var fullPathLV = it.SubItems["name"].Text;
+                if (it.Checked && Directory.Exists(fullPathLV))
+                {
+                    _console.WriteLine($"delete ###  {fullPathLV}");
+                    FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
+                    deleteOrRecycleBin.Checked ?
+                    RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                    UICancelOption.DoNothing);
+                }
+            }
+            var tmpL = new List<GeminiCEFStruct>();
+            foreach (var item in geminiCEFStructList)
+            {
+                if (Directory.Exists(item.fullPath))
+                {
+                    tmpL.Add(item);
+                }
+            }
+            geminiCEFStructList = tmpL;
+            UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
+            UpdateCEFChecked(geminiCEFStructList);
+            cefScanRes = false;
+        }
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                DeleteCEF();
+                return;
+            }
             try
             {
-                var taskDel = Task.Run(() => {
-                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
-                    {
-                        if (!cefScanRes)
-                        {
-                            btnAnalyze.PerformClick();
-                        }
-                        foreach (var item in resultListView.Items)
-                        {
-                            var it = (System.Windows.Forms.ListViewItem)item;
-                            var fullPathLV = it.SubItems["name"].Text;
-                            if (it.Checked && Directory.Exists(fullPathLV))
-                            {
-                                _console.WriteLine($"delete ###  {fullPathLV}");
-                                FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
-                                deleteOrRecycleBin.Checked ?
-                                RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                                UICancelOption.DoNothing);
-                            }
-                        }
-                        var tmpL = new List<GeminiCEFStruct>();
-                        foreach (var item in geminiCEFStructList)
-                        {
-                            if (Directory.Exists(item.fullPath))
-                            {
-                                tmpL.Add(item);
-                            }
-                        }
-                        geminiCEFStructList = tmpL;
-                        UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
-                        UpdateCEFChecked(geminiCEFStructList);
-                        cefScanRes = false;
-                        return;
-                    }
-                    // ********************************************** //
+                var taskDel = Task.Run(() => 
+                {
                     redoToolStripMenuItem.Enabled = false;
                     undoToolStripMenuItem.Enabled = false;
                     deleteList.Clear();
@@ -636,7 +641,7 @@ namespace DailyWallpaper
                                     pb.Invoke(new Action(() =>
                                     {*/
                 // pb.Value = percentInt;
-                SetProgressMessage(percentInt, pb);
+                SetProgressMessage(pb, percentInt);
 
                 /*                    }));
                                 }*/
@@ -868,7 +873,7 @@ namespace DailyWallpaper
                     bp.hash = ">500MB,NotCounting.YouCouldEnableAlwaysCalculateHash";
                     tmp.Add(bp);
                 }
-                SetProgressMessage((int)((double)i / gfL.Count * 100), geminiProgressBar);
+                SetProgressMessage(geminiProgressBar, (int)((double)i / gfL.Count * 100));
             }
             return tmp;
         }
@@ -999,7 +1004,6 @@ namespace DailyWallpaper
             }
             foreach (var gcef in gcefl)
             {
-
                 if (token.IsCancellationRequested)
                 {
                     token.ThrowIfCancellationRequested();
@@ -1052,6 +1056,7 @@ namespace DailyWallpaper
                 await taskCef;
                 cefScanRes = true;
                 UpdateEmptyFoldersToLV(geminiCEFStructList, token);
+                selectAllToolStripMenuItem.PerformClick();
                 _console.WriteLine($">>> Finished Analyze Operation");
             }
             catch (OperationCanceledException e)
@@ -1078,18 +1083,17 @@ namespace DailyWallpaper
             btnStop.Enabled = true;
             btnDelete.Enabled = false;
             btnAnalyze.Enabled = false;
-            Task.Run(() => {
-                if (!UpdateTextAndIniFile("TargetFolder1", path, targetFolder1History))
-                {
-                    _console.WriteLine("Invalid directory path: {0}", path);
-                    return;
-                }
-                if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
-                {
-                    return;
-                }
-                RecurseScanDirCEF(path, _source.Token);
-            });
+            if (!UpdateTextAndIniFile("TargetFolder1", path, targetFolder1History))
+            {
+                _console.WriteLine("Invalid directory path: {0}", path);
+                return;
+            }
+            if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
+            {
+                return;
+            }
+            geminiCEFStructList.Clear();
+            RecurseScanDirCEF(path, _source.Token);
         }
 
         private void btnAnalyze_Click(object sender, EventArgs e)
@@ -1265,7 +1269,7 @@ namespace DailyWallpaper
             gList = new List<GeminiFileStruct>();
             if (filesList.Count > 0)
             {
-                SetProgressMessage(0, geminiProgressBar);
+                SetProgressMessage(geminiProgressBar, 0);
                 _console.WriteLine(">>> Start collecting all files...");
                 int i = 0;
                 foreach (var f in filesList)
@@ -1279,7 +1283,7 @@ namespace DailyWallpaper
                     if (i % 100 == 0)
                     {
                         _mutex.WaitOne();
-                        SetProgressMessage((int)((double)i / filesList.Count * 100), geminiProgressBar);
+                        SetProgressMessage(geminiProgressBar, (int)((double)i / filesList.Count * 100));
                         _mutex.ReleaseMutex();
                     }
                 }
@@ -2034,20 +2038,21 @@ namespace DailyWallpaper
             resultListView.Sort();
         }
 
-        private delegate void SetProgressMessageDelegate(int pro, System.Windows.Forms.ProgressBar proBar);
-        private void SetProgressMessage(int pro, System.Windows.Forms.ProgressBar proBar)
+        private delegate void SetProgressMessageDelegate(
+            System.Windows.Forms.ProgressBar proBar, int value);
+        private void SetProgressMessage(System.Windows.Forms.ProgressBar proBar, int value)
         {
             if (InvokeRequired)
             {
                 if (proBar.IsHandleCreated)
                 {
                     SetProgressMessageDelegate setPro = new SetProgressMessageDelegate(SetProgressMessage);
-                    Invoke(setPro, new object[] { pro, proBar });
+                    Invoke(setPro, new object[] { proBar, value });
                 }
             }
             else
             {
-                proBar.Value = Convert.ToInt32(pro);
+                proBar.Value = Convert.ToInt32(value);
             }
         }
 
@@ -2174,6 +2179,8 @@ namespace DailyWallpaper
 
         private void saveResultListToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+                return;
             if (geminiFileStructListForLV.Count < 1)
             {
                 _console.WriteLine("--- No file, do not need to save to file.");
@@ -2668,7 +2675,15 @@ namespace DailyWallpaper
 
         private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            var fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+            if (File.Exists(fullPath))
+            {
+                Clipboard.SetText(fullPath);
+            }
         }
 
         private void protectFilesInGrpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3011,7 +3026,64 @@ namespace DailyWallpaper
 
         private void calcHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine(sender.GetType());
+            // var item = (ToolStripItem)sender;
+            /*var hitest = resultListView.HitTest(Cursor.Position)*/;
+            var fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+            if (File.Exists(fullPath))
+            {
+                string hash = null;
+                void getRes(bool res, string who, string _hash, string costTimeOrMsg)
+                {
+                    if (res)
+                    {
+                        hash = _hash;
+                        resultListView.FocusedItem.SubItems["HASH"].Text = hash;
+                        geminiProgressBar.Visible = false;
+                        _console.WriteLine($"... Update [{_hash}] -> {fullPath}");
+                        SetText(summaryTextBox, "Updated hash", Color.ForestGreen);
+                    }
+                }
+                geminiProgressBar.Visible = true;
+                void ProgressActionD(double i)
+                {
+                     SetProgressMessage(geminiProgressBar, (int)i);
+                }
+                var progessDouble = new Progress<double>(ProgressActionD);
+                
+                if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
+                {
+                    progessDouble = null;
+                }
+
+                Task.Run(async() =>
+                { 
+                    if (fileMD5CheckBox.Checked)
+                    {
+                        await ComputeHashAsync(
+                            MD5.Create(), fullPath, _source.Token, "MD5", getRes, progessDouble);
+                    }
+                    else if (fileSHA1CheckBox.Checked)
+                    {
+                        await ComputeHashAsync(
+                            SHA1.Create(), fullPath, _source.Token, "SHA1", getRes, progessDouble);
+                    }
+                    var tmpL = new List<GeminiFileStruct>();
+                    foreach (var item in geminiFileStructListForLV)
+                    {
+                        var tmp = item;
+                        if (tmp.fullPath.Equals(fullPath))
+                        {
+                            tmp.hash = hash;
+                        }
+                        tmpL.Add(tmp);
+                    }
+                    geminiFileStructListForLV = tmpL;
+               });
+            }
         }
     }
 }

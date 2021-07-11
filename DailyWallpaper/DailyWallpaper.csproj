@@ -98,13 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ShellContextMenu.cs" />
-    <Compile Include="Tools\CleanEmptyFolders\CleanEmptyFolders.cs" />
-    <Compile Include="Tools\CleanEmptyFolders\CleanEmptyFoldersForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tools\CleanEmptyFolders\CleanEmptyFoldersForm.designer.cs">
-      <DependentUpon>CleanEmptyFoldersForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Cons\AutoStartupHelper.cs" />
     <Compile Include="Cons\BingImageProvider.cs" />
     <Compile Include="Cons\DailyWallpaperCons.cs" />
@@ -156,9 +149,6 @@
     <Compile Include="View\OptionsView.Designer.cs">
       <DependentUpon>OptionsView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Tools\CleanEmptyFolders\CleanEmptyFoldersForm.resx">
-      <DependentUpon>CleanEmptyFoldersForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tools\Gemini\GeminiForm.resx">
       <DependentUpon>GeminiForm.cs</DependentUpon>
     </EmbeddedResource>

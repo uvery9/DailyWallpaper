@@ -126,11 +126,6 @@ namespace DailyWallpaper.Tools
                        size == @struct.size;
             }
 
-            public void UpdateHash(string hash)
-            {
-                this.hash = hash;
-            }
-
             public bool EqualExtSize(object obj)
             {
                 return obj is GeminiFileStruct @struct &&
