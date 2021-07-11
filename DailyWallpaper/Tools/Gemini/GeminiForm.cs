@@ -759,7 +759,7 @@ namespace DailyWallpaper
             return duplicateGrp;
         }
 
-        private IEnumerable<List<GeminiFileStruct>> GeminiFileStructList2IEnumerableGroupBP(
+        /*private IEnumerable<List<GeminiFileStruct>> GeminiFileStructList2IEnumerableGroupBP(
             List<GeminiFileStruct> gfl, GeminiCompareMode mode)
         {
             IEnumerable<List<GeminiFileStruct>> duplicateGrp = null;
@@ -794,7 +794,7 @@ namespace DailyWallpaper
                    select grp.ToList();
             }
             return duplicateGrp;
-        }
+        }*/
 
         private List<GeminiFileStruct> ListReColorByGroup(List<GeminiFileStruct> gfl, GeminiCompareMode mode,
             CancellationToken token)
