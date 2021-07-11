@@ -2751,5 +2751,10 @@ namespace DailyWallpaper
             ConvertToCEFMode(it.Checked);
             gemini.ini.UpdateIniItem("GeminiMode", it.Checked ? "CEF" : "Duplicate", "Gemini");
         }
+
+        private void modeSelectButton_Click(object sender, EventArgs e)
+        {
+            cleanEmptyFolderModeToolStripMenuItem.PerformClick();
+        }
     }
 }

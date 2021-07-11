@@ -97,6 +97,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.modeSelectButton = new System.Windows.Forms.Button();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -385,6 +386,7 @@
             this.panel2.Controls.Add(this.btnClear);
             this.panel2.Controls.Add(this.deleteOrRecycleBin);
             this.panel2.Controls.Add(this.btnDelete);
+            this.panel2.Controls.Add(this.modeSelectButton);
             this.panel2.Controls.Add(this.btnStop);
             this.panel2.Controls.Add(this.geminiProgressBar);
             this.panel2.Controls.Add(this.summaryTextBox);
@@ -420,7 +422,7 @@
             this.summaryTextBox.ReadOnly = true;
             this.summaryTextBox.Size = new System.Drawing.Size(350, 28);
             this.summaryTextBox.TabIndex = 9;
-            this.summaryTextBox.Text = "Summay: Found 1,500 duplicate files.";
+            this.summaryTextBox.Text = "Summary will be displayed here.";
             this.summaryTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // fileModeGroupBox
@@ -765,6 +767,18 @@
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.Size = new System.Drawing.Size(267, 6);
             // 
+            // modeSelectButton
+            // 
+            this.modeSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.modeSelectButton.Location = new System.Drawing.Point(139, 48);
+            this.modeSelectButton.Margin = new System.Windows.Forms.Padding(4);
+            this.modeSelectButton.Name = "modeSelectButton";
+            this.modeSelectButton.Size = new System.Drawing.Size(61, 32);
+            this.modeSelectButton.TabIndex = 4;
+            this.modeSelectButton.Text = "Mode";
+            this.modeSelectButton.UseVisualStyleBackColor = true;
+            this.modeSelectButton.Click += new System.EventHandler(this.modeSelectButton_Click);
+            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -870,5 +884,6 @@
         private System.Windows.Forms.ToolStripMenuItem protectFilesInGrpToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.Button modeSelectButton;
     }
 }
