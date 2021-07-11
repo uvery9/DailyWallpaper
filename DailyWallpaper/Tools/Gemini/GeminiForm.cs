@@ -2525,7 +2525,7 @@ namespace DailyWallpaper
                 {
                     return;
                 }
-                if (focusedItem.SubItems["name"].Bounds.Contains(e.Location))
+                /*if (focusedItem.SubItems["name"].Bounds.Contains(e.Location))
                 {
                     var filePath = focusedItem.SubItems["fullPath"].Text;
                     if (File.Exists(filePath))
@@ -2535,14 +2535,15 @@ namespace DailyWallpaper
                         files[0] = new FileInfo(filePath);
                         scm.ShowContextMenu(files, Cursor.Position);
                     }
-                } else if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
+                }
+                else if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
                 {
                     listViewContextMenuStrip.Show(Cursor.Position);
                 }
                 else
                 {
 
-                }
+                }*/
             }
             if (e.Button == MouseButtons.Left)
             {
@@ -2668,14 +2669,18 @@ namespace DailyWallpaper
             }
         }
 
-        private void openDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            string fullPath;
+            try
+            {
+                fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            }
+            catch
+            {
+                fullPath = null;
+            }
             if (string.IsNullOrEmpty(fullPath))
             {
                 return;
@@ -2683,6 +2688,7 @@ namespace DailyWallpaper
             if (File.Exists(fullPath))
             {
                 Clipboard.SetText(fullPath);
+                _console.WriteLine("... Copied to Clipboard.");
             }
         }
 
@@ -3023,12 +3029,30 @@ namespace DailyWallpaper
                 }               
             }
         }
+       
+        private void md5ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CalcHashMenuClick();
+        }
 
-        private void calcHashToolStripMenuItem_Click(object sender, EventArgs e)
+        private void sHA1ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CalcHashMenuClick(false);
+        }
+        
+        private void CalcHashMenuClick(bool md5 = true)
         {
             // var item = (ToolStripItem)sender;
-            /*var hitest = resultListView.HitTest(Cursor.Position)*/;
-            var fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            /*var hitest = resultListView.HitTest(Cursor.Position)*/
+            string fullPath = null;
+            try
+            {
+                fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            }
+            catch
+            {
+                fullPath = null;
+            }
             if (string.IsNullOrEmpty(fullPath))
             {
                 return;
@@ -3044,29 +3068,30 @@ namespace DailyWallpaper
                         resultListView.FocusedItem.SubItems["HASH"].Text = hash;
                         geminiProgressBar.Visible = false;
                         _console.WriteLine($"... Update [{_hash}] -> {fullPath}");
-                        SetText(summaryTextBox, "Updated hash", Color.ForestGreen);
+                        var s = md5 ? "MD5" : "SHA1";
+                        SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
                     }
                 }
                 geminiProgressBar.Visible = true;
                 void ProgressActionD(double i)
                 {
-                     SetProgressMessage(geminiProgressBar, (int)i);
+                    SetProgressMessage(geminiProgressBar, (int)i);
                 }
                 var progessDouble = new Progress<double>(ProgressActionD);
-                
+
                 if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
                 {
                     progessDouble = null;
                 }
 
-                Task.Run(async() =>
-                { 
-                    if (fileMD5CheckBox.Checked)
+                Task.Run(async () =>
+                {
+                    if (md5)
                     {
                         await ComputeHashAsync(
                             MD5.Create(), fullPath, _source.Token, "MD5", getRes, progessDouble);
                     }
-                    else if (fileSHA1CheckBox.Checked)
+                    else
                     {
                         await ComputeHashAsync(
                             SHA1.Create(), fullPath, _source.Token, "SHA1", getRes, progessDouble);
@@ -3082,8 +3107,98 @@ namespace DailyWallpaper
                         tmpL.Add(tmp);
                     }
                     geminiFileStructListForLV = tmpL;
-               });
+                });
             }
+        }
+
+        private enum FileOP
+        {
+            CUT,
+            COPY,
+            RENAME,
+            DELETE,
+            OPEN,
+            OPENDIR,
+            PROPERTIES
+        }
+
+        private void openDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileOrDirectory(FileOP.OPENDIR);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileOrDirectory(FileOP.OPEN);
+        }
+        
+        private void OpenFileOrDirectory(FileOP op)
+        {
+            string fullPath;
+            try
+            {
+                fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            }
+            catch
+            {
+                fullPath = null;
+            }
+            if (string.IsNullOrEmpty(fullPath))
+            {
+                return;
+            }
+            if (File.Exists(fullPath))
+            {
+                try
+                {
+                    if (op == FileOP.OPEN)
+                    {
+                        Process.Start(fullPath);
+                    }
+                    else if (op == FileOP.OPENDIR)
+                    {
+                        string argument = "/select, \"" + fullPath + "\"";
+                        Process.Start("explorer.exe", argument);
+                    } 
+                    else if(op == FileOP.DELETE)
+                    {
+                        FileSystem.DeleteFile(fullPath, UIOption.OnlyErrorDialogs,
+                            RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
+                        _console.WriteLine($"... Send {fullPath} to RecycleBin");
+                        cleanUpButton.PerformClick();
+                    }else if (op == FileOP.PROPERTIES)
+                    {
+                        // Thanks to
+                        // https://stackoverflow.com/questions/1936682/how-do-i-display-a-files-properties-dialog-from-c
+                        ShowProperties.ShowFileProperties(fullPath);
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    _console.WriteLine($"!!! {ex.Message}");
+                }
+                            
+            }
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileOrDirectory(FileOP.DELETE);
+        }
+
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            /*Based off of the services.msc, the page comes from filemgmt.dll and is called ServicePageGeneral. 
+             * While the COM components are registered, I cannot find any documentation for the CLSID in question, 
+             * nor for any of the other strings present in filemgmt.dll.
+              This does not rule out the possibility that there exists an established API, 
+            or a command line option to show the dialog, but I certainly can't find one.
+              Further substantiating the case that the dialog is not reusable, Process Explorer and SQL 
+            Server Configuration Manager both re-implement the dialog, rather than showing the services.msc version.
+              Related: How do I open properties box for individual services from command line or link?*/
+            OpenFileOrDirectory(FileOP.PROPERTIES);
         }
     }
 }
