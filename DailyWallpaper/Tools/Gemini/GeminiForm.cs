@@ -726,7 +726,36 @@ namespace DailyWallpaper
             gfL.Add(gf);
         }
 
+        private IEnumerable<List<GeminiFileStruct>>
+            GFL2IEnumGrpAnonymous<T>(List<GeminiFileStruct> gfl, 
+            Func<GeminiFileStruct, T> keySelector)
+            => from i in gfl
+               where File.Exists(i.fullPath)
+               orderby i.name
+               group i by keySelector(i) into grp
+               where grp.Count() > 1
+               select grp.ToList();
+
         private IEnumerable<List<GeminiFileStruct>> GeminiFileStructList2IEnumerableGroup(
+            List<GeminiFileStruct> gfl, GeminiCompareMode mode)
+        {
+            IEnumerable<List<GeminiFileStruct>> duplicateGrp = null;
+            if (mode == GeminiCompareMode.HASH)
+            {
+                duplicateGrp = GFL2IEnumGrpAnonymous(gfl, i => i.hash);
+            }
+            else if (mode == GeminiCompareMode.ExtAndSize)
+            {
+                duplicateGrp = GFL2IEnumGrpAnonymous(gfl, i => new { i.size, i.extName });
+            }
+            else
+            {
+                duplicateGrp = GFL2IEnumGrpAnonymous(gfl, i => new { i.size });
+            }
+            return duplicateGrp;
+        }
+
+        private IEnumerable<List<GeminiFileStruct>> GeminiFileStructList2IEnumerableGroupBP(
             List<GeminiFileStruct> gfl, GeminiCompareMode mode)
         {
             IEnumerable<List<GeminiFileStruct>> duplicateGrp = null;
