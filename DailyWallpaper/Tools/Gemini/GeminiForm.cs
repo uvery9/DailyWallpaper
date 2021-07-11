@@ -101,8 +101,8 @@ namespace DailyWallpaper
                 deleteOrRecycleBin.Checked = true;
             }
             // auto delete empty folder after remove.
-            cleanEmptyFoldersToolStripMenuItem.Checked = true;
-
+            autocleanEmptyFoldersToolStripMenuItem.Checked = true;
+            protectFilesInGrpToolStripMenuItem.Checked = true;
             undoToolStripMenuItem.Enabled = false;
             redoToolStripMenuItem.Enabled = false;
 
@@ -278,7 +278,7 @@ namespace DailyWallpaper
                     foreach (var item in delGflGrp)
                     {
                         // Prevent all files in the group from being deleted
-                        if (!deleteAllSelectedToolStripMenuItem.Checked)
+                        if (protectFilesInGrpToolStripMenuItem.Checked)
                         {
                             if ((from i in item
                                  where i.Checked == true
@@ -305,7 +305,7 @@ namespace DailyWallpaper
                     }
 
                     // Clean Empty folders
-                    if (cleanEmptyFoldersToolStripMenuItem.Checked && emptyFolderList.Count > 0)
+                    if (autocleanEmptyFoldersToolStripMenuItem.Checked && emptyFolderList.Count > 0)
                     {
                         foreach (var dir in emptyFolderList)
                         {
@@ -2120,9 +2120,9 @@ namespace DailyWallpaper
 
         }
 
-        private void deleteAllSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        private void protectFilesInGrpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var it = deleteAllSelectedToolStripMenuItem;
+            var it = protectFilesInGrpToolStripMenuItem;
             if (it.Checked)
             {
                 it.Checked = false;
@@ -2150,9 +2150,9 @@ namespace DailyWallpaper
             }
         }
 
-        private void cleanEmptyFoldersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void autocleanEmptyFoldersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var it = cleanEmptyFoldersToolStripMenuItem;
+            var it = autocleanEmptyFoldersToolStripMenuItem;
             if (it.Checked)
             {
                 it.Checked = false;
@@ -2265,5 +2265,70 @@ namespace DailyWallpaper
 
         }
 
+        private void ConvertToCEFMode(bool cef = false)
+        {
+            if (cef)
+            {
+                targetFolder2TextBox.Text = "Now in Clean Empty Folders mode";
+                targetFolder2TextBox.Enabled = false;
+                targetFolder2TextBox.TextAlign = HorizontalAlignment.Center;
+                btnSelectTargetFolder2.Enabled = false;
+                
+                fileMD5CheckBox.Enabled = false;
+                fileNameCheckBox.Enabled = false;
+                fileExtNameCheckBox.Enabled = false;
+                fileSHA1CheckBox.Enabled = false;
+                updateButton.Enabled = false;
+                ignoreFileCheckBox.Enabled = false;
+                ignoreFileSizecomboBox.Enabled = false;
+                ignoreFileSizeTextBox.Enabled = false;
+                cleanUpButton.Enabled = false;
+
+                selectToolStripMenuItem.Enabled = false;
+
+                alwaysCalculateHashToolStripMenuItem.Enabled = false;
+                protectFilesInGrpToolStripMenuItem.Enabled = false;
+                autocleanEmptyFoldersToolStripMenuItem.Enabled = false;
+
+            }
+            else
+            {
+                targetFolder2TextBox.Text = "";
+                targetFolder2TextBox.Enabled = true;
+                targetFolder2TextBox.TextAlign = default;
+                btnSelectTargetFolder2.Enabled = true;
+                
+                fileMD5CheckBox.Enabled = true;
+                fileNameCheckBox.Enabled = true;
+                fileExtNameCheckBox.Enabled = true;
+                fileSHA1CheckBox.Enabled = true;
+                updateButton.Enabled = true;
+                ignoreFileCheckBox.Enabled = true;
+                ignoreFileSizecomboBox.Enabled = true;
+                ignoreFileSizeTextBox.Enabled = true;
+                cleanUpButton.Enabled = true;
+
+                selectToolStripMenuItem.Enabled = true;
+
+                alwaysCalculateHashToolStripMenuItem.Enabled = true;
+                protectFilesInGrpToolStripMenuItem.Enabled = true;
+                autocleanEmptyFoldersToolStripMenuItem.Enabled = true;
+            }
+        }
+
+        private void cleanEmptyFolderModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var it = cleanEmptyFolderModeToolStripMenuItem;
+            if (it.Checked)
+            {
+                it.Checked = false;
+
+            }
+            else
+            {
+                it.Checked = true;
+            }
+            ConvertToCEFMode(it.Checked);
+        }
     }
 }
