@@ -240,9 +240,9 @@ namespace DailyWallpaper.View
             // Icon_Toolbox
             // 
             this.Icon_Toolbox.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.geminiToolStripMenuItem,
+            this.Icon_Notepad,
             this.Icon_HashCalc,
-            this.Icon_Notepad});
+            this.geminiToolStripMenuItem});
             this.Icon_Toolbox.Name = "Icon_Toolbox";
             resources.ApplyResources(this.Icon_Toolbox, "Icon_Toolbox");
             // 

@@ -484,7 +484,11 @@ namespace DailyWallpaper
                     bool fld2 = false;
                     var t1 = targetFolder1TextBox.Text;
                     var t2 = targetFolder2TextBox.Text;
-                    _console.WriteLine(">>> Please waiting...");
+                    _console.WriteLine($">>> Start Analyze Operation...");
+                    _console.WriteLine($">>> Because it is a recursive search, \r\n" +
+                        "  Program don't know the progress, please wait patiently...");
+                    SetText(summaryTextBox, "Please wait patiently...", themeColor);
+                    geminiProgressBar.Visible = false;
                     if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
                     {
                         fld2 = true;
@@ -504,7 +508,7 @@ namespace DailyWallpaper
                         _console.WriteLine("!!! Two folder invalid.");
                         return;
                     }
-
+                    geminiProgressBar.Visible = true;
                     // get files info exclude HASH.(FASTER) 
                     FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
                     FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
@@ -1236,7 +1240,9 @@ namespace DailyWallpaper
             gList = new List<GeminiFileStruct>();
             if (filesList.Count > 0)
             {
+                SetProgressMessage(0, geminiProgressBar);
                 _console.WriteLine(">>> Start collecting all files...");
+                int i = 0;
                 foreach (var f in filesList)
                 {
                     if (token.IsCancellationRequested)
@@ -1244,6 +1250,13 @@ namespace DailyWallpaper
                         token.ThrowIfCancellationRequested();
                     }
                     gList.Add(Gemini.FillGeminiFileStruct(f));
+                    i++;
+                    if (i % 100 == 0)
+                    {
+                        _mutex.WaitOne();
+                        SetProgressMessage((int)((double)i / filesList.Count * 100), geminiProgressBar);
+                        _mutex.ReleaseMutex();
+                    }                    
                 }
                 _console.WriteLine(">>> All files collected.");
             }
