@@ -62,6 +62,16 @@ namespace DailyWallpaper.Tools
             };
         }
 
+        public struct GeminiCEFStruct
+        {
+            private bool @checked;
+            public string name;
+            public string fullPath;
+            public string lastMtime;
+            public Color color;
+
+            public bool Checked { get => @checked; set => @checked = value; }
+        }
         public struct GeminiFileStruct
         {
             public bool available;

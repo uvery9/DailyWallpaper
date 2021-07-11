@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Security.Permissions;
+using System.Threading;
 
 namespace DailyWallpaper.Helpers
 {
@@ -1509,7 +1510,8 @@ namespace DailyWallpaper.Helpers
                 m_hookType,
                 m_filterFunc,
                 IntPtr.Zero,
-                (int)AppDomain.GetCurrentThreadId());
+                (int)Thread.CurrentThread.ManagedThreadId);
+                
         }
         // ************************************************************************
 

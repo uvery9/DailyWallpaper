@@ -27,12 +27,17 @@ namespace DailyWallpaper
         private TextBoxCons _console;
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private CancellationTokenSource _source = null;
-        private bool deletePermanently = false;
 
         private bool scanRes = false;
+        private bool cefScanRes = false;
         private List<string> folderFilter;
         private string regexFilter;
         private Regex regex;
+        private List<string> emptyFolderList = new List<string>();
+        private List<string> emptyFolderListCEF = new List<string>();
+        private int nameColumnHeaderWidth = 0;
+        private int modifiedTimeColumnHeaderWidth = 0;
+        private List<GeminiCEFStruct> geminiCEFStructList = new List<GeminiCEFStruct>();
 
         private List<string> targetFolder1History = new List<string>();
         private List<string> targetFolder2History = new List<string>();
@@ -49,8 +54,8 @@ namespace DailyWallpaper
         private List<string> deleteList = new List<string>();
         private List<GeminiFileStruct> geminiFileStructListForLV = new List<GeminiFileStruct>();
         private List<GeminiFileStruct> geminiFileStructListForLVUndo = new List<GeminiFileStruct>();
-        private bool needFlush = false;
         private List<GeminiFileStruct> geminiFileStructListForLVRedo = new List<GeminiFileStruct>();
+        private bool needFlush = false;
         private Color themeColor = Color.FromArgb(250, 234, 192);
         private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
         private enum FilterMode : int
@@ -117,11 +122,27 @@ namespace DailyWallpaper
             geminiFileStructList2 = new List<GeminiFileStruct>();
             _mutex = new Mutex();
             _mutexPb = new Mutex();
-            m_lvToolTip.SetToolTip(resultListView, "Gemini");
+            
             // Create an instance of a ListView column sorter and assign it
             // to the ListView control.
             lvwColumnSorter = new ListViewColumnSorter();
             resultListView.ListViewItemSorter = lvwColumnSorter;
+
+            InitCEFOrDuplicateMode();
+        }
+
+        private void InitCEFOrDuplicateMode()
+        {
+            cleanEmptyFolderModeToolStripMenuItem.Checked = false;
+            if (gemini.ini.EqualsIgnoreCase("GeminiMode", "CEF", "Gemini"))
+            {
+                cleanEmptyFolderModeToolStripMenuItem.Checked = true;
+            }
+            nameColumnHeaderWidth = nameColumnHeader.Width;
+            modifiedTimeColumnHeaderWidth = modifiedTimeColumnHeader.Width;
+            ConvertToCEFMode(cleanEmptyFolderModeToolStripMenuItem.Checked);
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
+                m_lvToolTip.SetToolTip(resultListView, "Gemini");
         }
 
         /// <summary>
@@ -231,6 +252,26 @@ namespace DailyWallpaper
         }
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                if (!cefScanRes)
+                {
+                    btnAnalyze.PerformClick();
+                }
+                if (cefScanRes && emptyFolderListCEF.Count > 0)
+                {
+                    foreach (var folder in emptyFolderListCEF)
+                    {
+                        _console.WriteLine($"delete ###  {folder}");
+                        FileSystem.DeleteDirectory(folder, UIOption.OnlyErrorDialogs,
+                        deleteOrRecycleBin.Checked ?
+                        RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                        UICancelOption.DoNothing);
+                    }
+                }
+                return;
+            }
+            
             try
             {
                 redoToolStripMenuItem.Enabled = false;
@@ -342,10 +383,25 @@ namespace DailyWallpaper
                 try
                 {
                     FileSystem.DeleteDirectory(dir, UIOption.OnlyErrorDialogs,
-                        deletePermanently ?
+                        deleteOrRecycleBin.Checked ?
                         RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
                         UICancelOption.DoNothing);
                     _console.WriteLine($"...... Delete empty folder:  {dir}");
+                }
+                catch (UnauthorizedAccessException) { }
+                catch (DirectoryNotFoundException) { }
+            }
+        }
+
+        private void EmptyJudgeCEF(string dir)
+        {
+            var entries = Directory.EnumerateFileSystemEntries(dir);
+            if (!entries.Any())
+            {
+                try
+                {
+                    emptyFolderListCEF.Add(dir);
+                    _console.WriteLine($"... Found empty folder: {dir}");
                 }
                 catch (UnauthorizedAccessException) { }
                 catch (DirectoryNotFoundException) { }
@@ -474,7 +530,6 @@ namespace DailyWallpaper
             catch (Exception e)
             {
                 scanRes = false;
-                // _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e.Message}");
                 _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e}");
                 _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
             }
@@ -760,16 +815,229 @@ namespace DailyWallpaper
             }
         }
 
+        private void ScanEmptyDirsProtectMode(string dir, CancellationToken token)
+        {
+            if (String.IsNullOrEmpty(dir))
+            {
+                throw new ArgumentException("Starting directory is a null reference or an empty string: dir");
+            }
+            try
+            {
+                foreach (var d in Directory.EnumerateDirectories(dir))
+                {
+                    // FUCK THE $RECYCLE.BIN
+                    if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
+                    {
+                        continue;
+                    }
+                    if (FolderFilter(d, filterMode))
+                    {
+                        continue;
+                    }
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                    ScanEmptyDirsProtectMode(d, token);
+                }
+                EmptyJudgeCEF(dir);
+            }
+            catch (UnauthorizedAccessException) { }
+        }
+
+        /// <summary>
+        /// TEST CASE: 
+        /// 1)games 2)D:\games 3)games,Steam\logs 4)D:\games,Steam\logs
+        /// </summary>
+
+        private void ScanEmptyDirsFindMode(string path, CancellationToken token, bool re = false)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Starting directory is a null reference or an empty string: path");
+            }
+            try
+            {
+
+                foreach (var d in Directory.EnumerateDirectories(path))
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                    // FUCK THE $RECYCLE.BIN
+                    if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
+                    {
+                        continue;
+                    }
+                    ScanEmptyDirsFindMode(d, token, re);
+                }
+                if (re)
+                {
+                    if (regex.IsMatch(path))
+                    {
+                        EmptyJudgeCEF(path);
+                        return;
+                    }
+                }
+                else
+                {
+                    foreach (var filter in folderFilter)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        if (path.Contains(filter))
+                        {
+                            EmptyJudgeCEF(path);
+                            continue;
+                        }
+                    }
+                    return;
+                }
+            }
+            catch (UnauthorizedAccessException) { }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private void UpdateEmptyFoldersToLV(List<string> cefL, CancellationToken token)
+        {
+            resultListView.Items.Clear();
+            if (cefL.Count < 1)
+            {
+                SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
+                _console.WriteLine(">>> The folder is CLEAN.");
+                return;
+            }
+            geminiCEFStructList.Clear();
+            foreach (var cef in cefL)
+            {
+
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+                string lastMtime = "";
+                try
+                {
+                    lastMtime = new FileInfo(cef).LastWriteTime.ToString();
+                }
+                catch (Exception ex)
+                {
+                    lastMtime = ex.Message;
+                }
+                var geminiCEF = new GeminiCEFStruct();
+                geminiCEF.name = cef;
+                geminiCEF.fullPath = cef;
+                geminiCEF.Checked = false;
+                geminiCEF.lastMtime = lastMtime;
+
+                var item = new System.Windows.Forms.ListViewItem();
+                AddSubItem(item, "name", geminiCEF.fullPath);
+                AddSubItem(item, "lastMtime", geminiCEF.lastMtime);
+                resultListView.Items.Add(item);
+                geminiCEFStructList.Add(geminiCEF);                
+            }
+            _console.WriteLine($">>> Found {geminiCEFStructList.Count:N0} empty folder(s).");
+            SetText(summaryTextBox, $"Summay: Found {geminiCEFStructList.Count:N0} duplicate files.", themeColor);
+        }
+
+        // Thanks to João Angelo
+        // https://stackoverflow.com/questions/2811509/c-sharp-remove-all-empty-subdirectories
+        private async void RecurseScanDirCEF(string path, CancellationToken token)
+        {
+            //token.ThrowIfCancellationRequested();
+            // DO NOT KNOW WHY D: DOESNOT WORK WHILE D:\ WORK.
+            try
+            {
+                var taskCef = Task.Run(() =>
+                {
+                    // Were we already canceled?
+                    // token.ThrowIfCancellationRequested();
+                    cefScanRes = false;
+                    emptyFolderListCEF = new List<string>();
+                    _console.WriteLine($">>> Started Analyze Operation");
+                    // Set a variable to the My Documents path.
+                    // string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); 
+
+                    if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
+                    {
+                        ScanEmptyDirsFindMode(path, token, re: false);
+                    }
+                    else if (filterMode == FilterMode.REGEX_FIND && regex != null)
+                    {
+                        ScanEmptyDirsFindMode(path, token, re: true);
+                    }
+                    else
+                    {
+                        ScanEmptyDirsProtectMode(path, token);
+                    }
+
+                }, token);
+                _tasks.Add(taskCef);
+                await taskCef;
+                cefScanRes = true;
+                UpdateEmptyFoldersToLV(emptyFolderListCEF, token);
+                _console.WriteLine($">>> Finished Analyze Operation");
+            }
+            catch (OperationCanceledException e)
+            {
+                cefScanRes = false;
+                _console.WriteLine($"\r\n>>> RecurseScanDir throw exception message: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                cefScanRes = false;
+                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e.Message}");
+                _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
+            }
+            finally
+            {
+                btnDelete.Enabled = true;
+                btnAnalyze.Enabled = true;
+                btnStop.Enabled = false;
+            }
+        }
+        private void AnalyzeEmptyFolder(string path)
+        {
+            _source = new CancellationTokenSource();
+            btnStop.Enabled = true;
+            btnDelete.Enabled = false;
+            btnAnalyze.Enabled = false;
+            Task.Run(() => {
+                if (!UpdateTextAndIniFile("TargetFolder1", path, targetFolder1History))
+                {
+                    _console.WriteLine("Invalid directory path: {0}", path);
+                    return;
+                }
+                if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
+                {
+                    return;
+                }
+                RecurseScanDirCEF(path, _source.Token);
+            });
+        }
+
         private void btnAnalyze_Click(object sender, EventArgs e)
         {
-            btnClear.PerformClick();
             resultListView.Items.Clear();
-            geminiProgressBar.Visible = true;
-            deleteList = new List<string>();
-            SetFolderFilter(folderFilterTextBox.Text, print: true);
-            StartAnalyze();
-            redoToolStripMenuItem.Enabled = false;
-            undoToolStripMenuItem.Enabled = false;
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                AnalyzeEmptyFolder(targetFolder1TextBox.Text);
+            }
+            else
+            {
+                btnClear.PerformClick();
+                geminiProgressBar.Visible = true;
+                deleteList = new List<string>();
+                StartAnalyze();
+                redoToolStripMenuItem.Enabled = false;
+                undoToolStripMenuItem.Enabled = false;
+            }
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -809,7 +1077,7 @@ namespace DailyWallpaper
             }
 
             // _console.WriteLine($"\r\n#---- Started Analyze Operation ----#\r\n");
-            if (scanRes && filesList.Count > 0)
+            if (cefScanRes && filesList.Count > 0)
             {
                 foreach (var folder in filesList)
                 {
@@ -817,7 +1085,7 @@ namespace DailyWallpaper
                 }
                 return;
             }
-            if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
+            /*if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
             {
                 FindFilesWithFindMode(path, filesList, token, re: false);
             }
@@ -826,9 +1094,9 @@ namespace DailyWallpaper
                 FindFilesWithFindMode(path, filesList, token, re: true);
             }
             else
-            {
-                FindFilesWithProtectMode(path, filesList, token);
-            }
+            {*/
+             FindFilesWithProtectMode(path, filesList, token);
+            /*}*/
         }
 
         private bool FolderFilter(string path, FilterMode mode)
@@ -857,17 +1125,6 @@ namespace DailyWallpaper
                     return true;
                 }
             }
-            if (mode == FilterMode.REGEX_FIND)
-            {
-                if (regex == null)
-                {
-                    return false;
-                }
-                if (!regex.IsMatch(path))
-                {
-                    return true;
-                }
-            }
             return false;
         }
 
@@ -876,7 +1133,7 @@ namespace DailyWallpaper
         /// 1)games 2)D:\games 3)games,Steam\logs 4)D:\games,Steam\logs
         /// </summary>
 
-        private void FindFilesWithFindMode(string path, List<string> filesList, CancellationToken token, bool re = false)
+        /*private void FindFilesWithFindMode(string path, List<string> filesList, CancellationToken token, bool re = false)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -928,7 +1185,7 @@ namespace DailyWallpaper
             {
                 throw;
             }
-        }
+        }*/
         //calcSHA1: fileSHA1CheckBox.Checked,
         // calcMD5: fileMD5CheckBox.Checked
 
@@ -1048,7 +1305,7 @@ namespace DailyWallpaper
             }
             if (print)
             {
-                _console.WriteLine($"\r\nYou have selected {keyInIni} folder:\r\n  {path}");
+                _console.WriteLine($">>> You have selected {keyInIni} folder:\r\n  {path}");
             }
             return true;
         }
@@ -1719,13 +1976,38 @@ namespace DailyWallpaper
         {
 
         }
+        
+        private List<GeminiCEFStruct> UpdateCEFChecked(List<GeminiCEFStruct> gcefl)
+        {
+            if (resultListView.Items.Count > 1)
+            {
+                var tmpL = new List<GeminiCEFStruct>();
+                foreach (var item in resultListView.Items)
+                {
+                    var it = ((System.Windows.Forms.ListViewItem)item);
+                    var fullPathLV = it.SubItems["name"].Text;
+                    foreach (var gcef in gcefl)
+                    {
+                        var tmp = gcef;
+                        if (gcef.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                        {
+                            tmp.Checked = it.Checked;
+                            tmpL.Add(tmp);
+                            break;
+                        }
+                    }
+                }
+                return tmpL;
+            }
+            return null;
+        }
 
         private List<GeminiFileStruct> UpdateGFLChecked(List<GeminiFileStruct> gfl)
         {
             if (resultListView.Items.Count > 1)
             {
-                var timer = new Stopwatch();
-                timer.Start();
+                /*var timer = new Stopwatch();
+                timer.Start();*/
                 var tmpL = new List<GeminiFileStruct>();
                 foreach (var item in resultListView.Items)
                 {
@@ -1742,9 +2024,9 @@ namespace DailyWallpaper
                         }
                     }
                 }
-                timer.Stop();
+                /*timer.Stop();
                 var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
-                _console.WriteLine($"click cost time: {hashCostTime}");
+                _console.WriteLine($"click cost time: {hashCostTime}");*/
                 return tmpL;
             }
             return null;
@@ -1753,12 +2035,39 @@ namespace DailyWallpaper
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MultipleSelectOperationsAction(MultipleSelectOperations.SELECT_ALL);
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                MultipleSelectOperationsActionCEF(MultipleSelectOperations.SELECT_ALL);
+            }
+            else
+            {
+                MultipleSelectOperationsAction(MultipleSelectOperations.SELECT_ALL);
+            }  
         }
 
         private void unselectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MultipleSelectOperationsAction(MultipleSelectOperations.UNSELECT_ALL);
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                MultipleSelectOperationsActionCEF(MultipleSelectOperations.UNSELECT_ALL);
+            }
+            else
+            {
+                MultipleSelectOperationsAction(MultipleSelectOperations.UNSELECT_ALL);
+            }
+        }
+
+        private void reverseElectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                MultipleSelectOperationsActionCEF(MultipleSelectOperations.REVERSE_ELECTION);
+            }
+            else
+            {
+                MultipleSelectOperationsAction(MultipleSelectOperations.REVERSE_ELECTION);
+            }
         }
 
         private void saveLogToFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1878,9 +2187,54 @@ namespace DailyWallpaper
             });
             _tasks.Add(mpTask);
         }
-        private void reverseElectionToolStripMenuItem_Click(object sender, EventArgs e)
+
+        private void MultipleSelectOperationsActionCEF(MultipleSelectOperations op)
         {
-            MultipleSelectOperationsAction(MultipleSelectOperations.REVERSE_ELECTION);
+            var mpCEFTask = Task.Run(() => {
+                if (resultListView.Items.Count < 1)
+                {
+                    return;
+                }
+                undoToolStripMenuItem.Enabled = true;
+                // geminiCEFStructListRedo
+                if (op == MultipleSelectOperations.REVERSE_ELECTION)
+                {
+                    geminiCEFStructList = UpdateCEFChecked(geminiCEFStructList)
+                        ?? geminiCEFStructList;
+                }
+                var tmpGfl = new List<GeminiCEFStruct>();
+                foreach (var item in geminiCEFStructList)
+                {
+                    var tmp = item;
+                    if (op == MultipleSelectOperations.REVERSE_ELECTION)
+                    {
+                        if (item.Checked)
+                        {
+                            tmp.Checked = false;
+                        }
+                        else
+                        {
+                            tmp.Checked = true;
+                        }
+                    }
+                    else if (op == MultipleSelectOperations.SELECT_ALL)
+                    {
+                        tmp.Checked = true;
+                    }
+                    else if (op == MultipleSelectOperations.UNSELECT_ALL)
+                    {
+                        tmp.Checked = false;
+                    }
+                    tmpGfl.Add(tmp);
+                }
+                if (tmpGfl.Count < 1)
+                {
+                    return;
+                }
+                geminiCEFStructList = tmpGfl;
+                RestoreCEFListViewChoice(geminiCEFStructList, _source.Token);
+            });
+            _tasks.Add(mpCEFTask);
         }
 
         private void GeminiFileStructListRE(List<GeminiFileStruct> gfL,
@@ -1913,6 +2267,29 @@ namespace DailyWallpaper
         {
             UpdateListView(gfl, _source.Token);
             RestoreListViewChoice(gfl, _source.Token);
+        }
+
+        private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
+        {
+            if (resultListView.Items.Count > 1)
+            {
+                foreach (var item in resultListView.Items)
+                {
+                    var it = (System.Windows.Forms.ListViewItem)item;
+                    var fullPathLV = it.SubItems["name"].Text;
+                    foreach (var gcef in gcefl)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        if (Directory.Exists(gcef.fullPath) && fullPathLV.Equals(gcef.fullPath))
+                        {
+                            it.Checked = gcef.Checked;
+                        }
+                    }
+                }
+            }
         }
 
         private void RestoreListViewChoice(List<GeminiFileStruct> gfl, CancellationToken token)
@@ -2083,30 +2460,44 @@ namespace DailyWallpaper
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // geminiFileStructListForLVUndo
-            if (geminiFileStructListForLVUndo.Count > 0)
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
-                geminiFileStructListForLVRedo = geminiFileStructListForLV;
-                geminiFileStructListForLV = geminiFileStructListForLVUndo;
-                if (needFlush) 
-                    UpdateListView(geminiFileStructListForLV, _source.Token);
-                RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
-                redoToolStripMenuItem.Enabled = true;
-                undoToolStripMenuItem.Enabled = false;
+
             }
+            else
+            {
+                if (geminiFileStructListForLVUndo.Count > 0)
+                {
+                    geminiFileStructListForLVRedo = geminiFileStructListForLV;
+                    geminiFileStructListForLV = geminiFileStructListForLVUndo;
+                    if (needFlush)
+                        UpdateListView(geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
+                    redoToolStripMenuItem.Enabled = true;
+                    undoToolStripMenuItem.Enabled = false;
+                }
+            }
+            
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (geminiFileStructListForLVRedo.Count > 0)
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
-                geminiFileStructListForLVUndo = geminiFileStructListForLV;
-                geminiFileStructListForLV = geminiFileStructListForLVRedo;
-                if (needFlush)
-                    UpdateListView(geminiFileStructListForLV, _source.Token);
-                RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
-                redoToolStripMenuItem.Enabled = false;
-                undoToolStripMenuItem.Enabled = false;
+
+            }
+            else
+            {
+                if (geminiFileStructListForLVRedo.Count > 0)
+                {
+                    geminiFileStructListForLVUndo = geminiFileStructListForLV;
+                    geminiFileStructListForLV = geminiFileStructListForLVRedo;
+                    if (needFlush)
+                        UpdateListView(geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
+                    redoToolStripMenuItem.Enabled = false;
+                    undoToolStripMenuItem.Enabled = false;
+                }
             }
         }
 
@@ -2261,14 +2652,21 @@ namespace DailyWallpaper
                 // don't know where it's. HIDE, may cover by subitem.
                 m_lvToolTip.Show("", e.Item.ListView);
             }
-
-
         }
 
         private void ConvertToCEFMode(bool cef = false)
         {
+            resultListView.Items.Clear();
+            cefScanRes = false;
             if (cef)
             {
+                resultListView.ItemMouseHover -= new ListViewItemMouseHoverEventHandler(resultListView_ItemMouseHover);
+                resultListView.ColumnClick -= new ColumnClickEventHandler(resultListView_ColumnClick);
+                resultListView.DragDrop -= new DragEventHandler(targetFolder2_DragDrop);
+                resultListView.DragEnter -= new DragEventHandler(targetFolder1_2_DragEnter);
+                resultListView.MouseClick -= new MouseEventHandler(resultListView_MouseClick);
+                resultListView.MouseDoubleClick -= new MouseEventHandler(resultListView_MouseDoubleClick);
+
                 targetFolder2TextBox.Text = "Now in Clean Empty Folders mode";
                 targetFolder2TextBox.Enabled = false;
                 targetFolder2TextBox.TextAlign = HorizontalAlignment.Center;
@@ -2284,15 +2682,29 @@ namespace DailyWallpaper
                 ignoreFileSizeTextBox.Enabled = false;
                 cleanUpButton.Enabled = false;
 
-                selectToolStripMenuItem.Enabled = false;
-
                 alwaysCalculateHashToolStripMenuItem.Enabled = false;
                 protectFilesInGrpToolStripMenuItem.Enabled = false;
                 autocleanEmptyFoldersToolStripMenuItem.Enabled = false;
 
+                godsChoiceToolStripMenuItem.Enabled = false;
+
+                geminiProgressBar.Visible = false;
+                nameColumnHeader.Width = (int)(1.5 * nameColumnHeaderWidth);
+                modifiedTimeColumnHeader.Width =  (int)(1.5 * modifiedTimeColumnHeaderWidth);
+
+                redoToolStripMenuItem.Enabled = false;
+                undoToolStripMenuItem.Enabled = false;
+
             }
             else
             {
+                resultListView.ItemMouseHover += new ListViewItemMouseHoverEventHandler(resultListView_ItemMouseHover);
+                resultListView.ColumnClick += new ColumnClickEventHandler(resultListView_ColumnClick);
+                resultListView.DragDrop += new DragEventHandler(targetFolder2_DragDrop);
+                resultListView.DragEnter += new DragEventHandler(targetFolder1_2_DragEnter);
+                resultListView.MouseClick += new MouseEventHandler(resultListView_MouseClick);
+                resultListView.MouseDoubleClick += new MouseEventHandler(resultListView_MouseDoubleClick);
+
                 targetFolder2TextBox.Text = "";
                 targetFolder2TextBox.Enabled = true;
                 targetFolder2TextBox.TextAlign = default;
@@ -2308,11 +2720,19 @@ namespace DailyWallpaper
                 ignoreFileSizeTextBox.Enabled = true;
                 cleanUpButton.Enabled = true;
 
-                selectToolStripMenuItem.Enabled = true;
-
                 alwaysCalculateHashToolStripMenuItem.Enabled = true;
                 protectFilesInGrpToolStripMenuItem.Enabled = true;
                 autocleanEmptyFoldersToolStripMenuItem.Enabled = true;
+
+                godsChoiceToolStripMenuItem.Enabled = true;
+
+                geminiProgressBar.Visible = true;
+
+                nameColumnHeader.Width = nameColumnHeaderWidth;
+                modifiedTimeColumnHeader.Width = modifiedTimeColumnHeaderWidth;
+
+                redoToolStripMenuItem.Enabled = true;
+                undoToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -2329,6 +2749,7 @@ namespace DailyWallpaper
                 it.Checked = true;
             }
             ConvertToCEFMode(it.Checked);
+            gemini.ini.UpdateIniItem("GeminiMode", it.Checked ? "CEF" : "Duplicate", "Gemini");
         }
     }
 }
