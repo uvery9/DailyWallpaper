@@ -99,6 +99,8 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.calcHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -362,9 +364,11 @@
             this.listViewContextMenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.listViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openDirectoryToolStripMenuItem,
-            this.copyFullPathToolStripMenuItem});
+            this.copyFullPathToolStripMenuItem,
+            this.renameFileToolStripMenuItem,
+            this.calcHashToolStripMenuItem});
             this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
-            this.listViewContextMenuStrip.Size = new System.Drawing.Size(214, 64);
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(241, 157);
             // 
             // openDirectoryToolStripMenuItem
             // 
@@ -788,6 +792,19 @@
             this.loadListViewFromFileToolStripMenuItem.Text = "Load ListView From File";
             this.loadListViewFromFileToolStripMenuItem.Click += new System.EventHandler(this.loadListViewFromFileToolStripMenuItem_Click);
             // 
+            // renameFileToolStripMenuItem
+            // 
+            this.renameFileToolStripMenuItem.Name = "renameFileToolStripMenuItem";
+            this.renameFileToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.renameFileToolStripMenuItem.Text = "Rename File";
+            // 
+            // calcHashToolStripMenuItem
+            // 
+            this.calcHashToolStripMenuItem.Name = "calcHashToolStripMenuItem";
+            this.calcHashToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.calcHashToolStripMenuItem.Text = "Calc Hash";
+            this.calcHashToolStripMenuItem.Click += new System.EventHandler(this.calcHashToolStripMenuItem_Click);
+            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -895,5 +912,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.Button modeSelectButton;
         private System.Windows.Forms.ToolStripMenuItem loadListViewFromFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem calcHashToolStripMenuItem;
     }
 }
