@@ -103,6 +103,7 @@ namespace DailyWallpaper
             if (gemini.ini.EqualsIgnoreCase("RecycleBin", "true", "Gemini"))
             {
                 deleteOrRecycleBin.Checked = true;
+                btnDelete.Text = "Delete";
             }
             // auto delete empty folder after remove.
             autocleanEmptyFoldersToolStripMenuItem.Checked = true;
@@ -605,11 +606,17 @@ namespace DailyWallpaper
                 }
                 _mutex.ReleaseMutex();
             }
-            var cnt1 = l1.Count;
-            var cnt2 = l2.Count;
+            long cnt1 = l1.Count;
+            long cnt2 = l2.Count;
             long totalCmpCnt = cnt1 * cnt1 + cnt1 * cnt2 + cnt2 * cnt2;
-            _console.WriteLine($">>> folder1: {cnt1:N0}");
-            _console.WriteLine($">>> folder2: {cnt2:N0}");
+
+            string tip = "";
+            if (ignoreFileCheckBox.Checked)
+            {
+                tip = $" larger than {Len2Str(limit)}";
+            }
+            _console.WriteLine($">>> folder1{tip}: {cnt1:N0}");
+            _console.WriteLine($">>> folder2{tip}: {cnt2:N0}");
             _console.WriteLine($">>> about {totalCmpCnt:N0} times (x1*x1+x2*x2+x1*x2)...");
 
             double percent = 0.0;

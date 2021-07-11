@@ -183,7 +183,7 @@ namespace DailyWallpaper.Tools
                 return -1906184077 + EqualityComparer<string>.Default.GetHashCode(fullPath);
             }
         }
-        private static string Len2Str(long len)
+        public static string Len2Str(long len)
         {
             var str = "";
             if (len > 1024 * 1024 * 1024)
@@ -267,21 +267,21 @@ namespace DailyWallpaper.Tools
             long cnt = 0;
             foreach (var l1 in li1)
             {
+                if (progress != null)
+                {
+                    cnt++;
+                    if (cnt % 100 == 0)
+                    {
+                        progress.Report((long)100 * li2.Count);
+                    }
+                }
                 foreach(var l2 in li2)
                 {
                     if (token.IsCancellationRequested)
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    if (progress != null)
-                    {
-                        cnt++;
-                        if (cnt >= 1000)
-                        {
-                            progress.Report(1000);
-                            cnt = 0;
-                        }
-                    }
+                    
                     if (mode == GeminiCompareMode.ExtAndSize)
                     {
                         if (l1.EqualExtSize(l2))
