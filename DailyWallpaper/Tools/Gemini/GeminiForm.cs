@@ -285,6 +285,7 @@ namespace DailyWallpaper
                         geminiCEFStructList = tmpL;
                         UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
                         UpdateCEFChecked(geminiCEFStructList);
+                        cefScanRes = false;
                         return;
                     }
                     // ********************************************** //
@@ -548,6 +549,7 @@ namespace DailyWallpaper
                 await _task;
                 // No Error, filesList is usable
                 scanRes = true;
+                               
             }
             catch (OperationCanceledException e)
             {
@@ -2136,9 +2138,15 @@ namespace DailyWallpaper
             saveListOrLog2File(log: true);
         }
 
-        private void saveResultToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveResultListToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveListOrLog2File(log: false);
+            // Write the list of salesman objects to file.
+            WriteToXmlFile<List<GeminiFileStruct>>(@"GeminiFileStruct.xml", geminiFileStructListForLV);
+            // WriteToJsonFile<List<GeminiFileStruct>>(@"GeminiFileStruct.json", geminiFileStructListForLV);
+
+            /*// Read the list of salesman objects from the file back into a variable.
+            List<GeminiFileStruct> geminiFileStructListForLVFromFile = 
+                ReadFromXmlFile<List<GeminiFileStruct>>("GeminiFileStruct.xml");*/
         }
 
         private void usageToolStripMenuItem_Click(object sender, EventArgs e)

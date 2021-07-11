@@ -59,6 +59,7 @@
             this.copyFullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.cleanUpButton = new System.Windows.Forms.Button();
+            this.modeSelectButton = new System.Windows.Forms.Button();
             this.geminiProgressBar = new System.Windows.Forms.ProgressBar();
             this.summaryTextBox = new System.Windows.Forms.TextBox();
             this.fileModeGroupBox = new System.Windows.Forms.GroupBox();
@@ -82,22 +83,21 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveLogToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveResultToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveResultListToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protectFilesInGrpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autocleanEmptyFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.godsChoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.godsChoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.modeSelectButton = new System.Windows.Forms.Button();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -407,6 +407,18 @@
             this.cleanUpButton.UseVisualStyleBackColor = true;
             this.cleanUpButton.Click += new System.EventHandler(this.cleanUpButton_Click);
             // 
+            // modeSelectButton
+            // 
+            this.modeSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.modeSelectButton.Location = new System.Drawing.Point(139, 48);
+            this.modeSelectButton.Margin = new System.Windows.Forms.Padding(4);
+            this.modeSelectButton.Name = "modeSelectButton";
+            this.modeSelectButton.Size = new System.Drawing.Size(61, 32);
+            this.modeSelectButton.TabIndex = 4;
+            this.modeSelectButton.Text = "Mode";
+            this.modeSelectButton.UseVisualStyleBackColor = true;
+            this.modeSelectButton.Click += new System.EventHandler(this.modeSelectButton_Click);
+            // 
             // geminiProgressBar
             // 
             this.geminiProgressBar.Location = new System.Drawing.Point(5, 13);
@@ -623,7 +635,7 @@
             this.toolStripMenuItem1,
             this.alwaysOnTopToolStripMenuItem,
             this.saveLogToFileToolStripMenuItem,
-            this.saveResultToFileToolStripMenuItem,
+            this.saveResultListToFileToolStripMenuItem,
             this.toolStripMenuItem2,
             this.alwaysCalculateHashToolStripMenuItem,
             this.protectFilesInGrpToolStripMenuItem,
@@ -658,12 +670,12 @@
             this.saveLogToFileToolStripMenuItem.Text = "Save log to file";
             this.saveLogToFileToolStripMenuItem.Click += new System.EventHandler(this.saveLogToFileToolStripMenuItem_Click);
             // 
-            // saveResultToFileToolStripMenuItem
+            // saveResultListToFileToolStripMenuItem
             // 
-            this.saveResultToFileToolStripMenuItem.Name = "saveResultToFileToolStripMenuItem";
-            this.saveResultToFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
-            this.saveResultToFileToolStripMenuItem.Text = "Save result to file";
-            this.saveResultToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultToFileToolStripMenuItem_Click);
+            this.saveResultListToFileToolStripMenuItem.Name = "saveResultListToFileToolStripMenuItem";
+            this.saveResultListToFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.saveResultListToFileToolStripMenuItem.Text = "Save List to file";
+            this.saveResultListToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultListToFileToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
@@ -705,47 +717,52 @@
             this.selectToolStripMenuItem.Size = new System.Drawing.Size(77, 28);
             this.selectToolStripMenuItem.Text = "Select";
             // 
+            // godsChoiceToolStripMenuItem
+            // 
+            this.godsChoiceToolStripMenuItem.Name = "godsChoiceToolStripMenuItem";
+            this.godsChoiceToolStripMenuItem.Size = new System.Drawing.Size(249, 34);
+            this.godsChoiceToolStripMenuItem.Text = "God\'s choice";
+            this.godsChoiceToolStripMenuItem.Click += new System.EventHandler(this.godsChoiceToolStripMenuItem_Click);
+            // 
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(249, 34);
             this.undoToolStripMenuItem.Text = "Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // redoToolStripMenuItem
             // 
             this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.redoToolStripMenuItem.Size = new System.Drawing.Size(249, 34);
             this.redoToolStripMenuItem.Text = "Redo";
             this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(246, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(249, 34);
             this.selectAllToolStripMenuItem.Text = "Select All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // unselectAllToolStripMenuItem
             // 
             this.unselectAllToolStripMenuItem.Name = "unselectAllToolStripMenuItem";
-            this.unselectAllToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.unselectAllToolStripMenuItem.Size = new System.Drawing.Size(249, 34);
             this.unselectAllToolStripMenuItem.Text = "Unselect All";
             this.unselectAllToolStripMenuItem.Click += new System.EventHandler(this.unselectAllToolStripMenuItem_Click);
             // 
             // reverseElectionToolStripMenuItem
             // 
             this.reverseElectionToolStripMenuItem.Name = "reverseElectionToolStripMenuItem";
-            this.reverseElectionToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.reverseElectionToolStripMenuItem.Size = new System.Drawing.Size(249, 34);
             this.reverseElectionToolStripMenuItem.Text = "Reverse Election";
             this.reverseElectionToolStripMenuItem.Click += new System.EventHandler(this.reverseElectionToolStripMenuItem_Click);
-            // 
-            // godsChoiceToolStripMenuItem
-            // 
-            this.godsChoiceToolStripMenuItem.Name = "godsChoiceToolStripMenuItem";
-            this.godsChoiceToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.godsChoiceToolStripMenuItem.Text = "God\'s choice";
-            this.godsChoiceToolStripMenuItem.Click += new System.EventHandler(this.godsChoiceToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -761,23 +778,6 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(267, 6);
-            // 
-            // modeSelectButton
-            // 
-            this.modeSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.modeSelectButton.Location = new System.Drawing.Point(139, 48);
-            this.modeSelectButton.Margin = new System.Windows.Forms.Padding(4);
-            this.modeSelectButton.Name = "modeSelectButton";
-            this.modeSelectButton.Size = new System.Drawing.Size(61, 32);
-            this.modeSelectButton.TabIndex = 4;
-            this.modeSelectButton.Text = "Mode";
-            this.modeSelectButton.UseVisualStyleBackColor = true;
-            this.modeSelectButton.Click += new System.EventHandler(this.modeSelectButton_Click);
             // 
             // GeminiForm
             // 
@@ -864,7 +864,7 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.ToolStripMenuItem alwaysOnTopToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveLogToFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveResultToFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveResultListToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usageToolStripMenuItem;
         private System.Windows.Forms.Button cleanUpButton;
         private System.Windows.Forms.ColumnHeader dirColumnHeader;
