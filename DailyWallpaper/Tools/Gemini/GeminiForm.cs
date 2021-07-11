@@ -52,6 +52,7 @@ namespace DailyWallpaper
         private bool needFlush = false;
         private List<GeminiFileStruct> geminiFileStructListForLVRedo = new List<GeminiFileStruct>();
         private Color themeColor = Color.FromArgb(250, 234, 192);
+        private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
         private enum FilterMode : int
         {
             REGEX_FIND,
@@ -116,7 +117,7 @@ namespace DailyWallpaper
             geminiFileStructList2 = new List<GeminiFileStruct>();
             _mutex = new Mutex();
             _mutexPb = new Mutex();
-
+            m_lvToolTip.SetToolTip(resultListView, "Gemini");
             // Create an instance of a ListView column sorter and assign it
             // to the ListView control.
             lvwColumnSorter = new ListViewColumnSorter();
@@ -1994,6 +1995,10 @@ namespace DailyWallpaper
                 {
                     listViewContextMenuStrip.Show(Cursor.Position);
                 }
+                else
+                {
+                    
+                }
             }
             if (e.Button == MouseButtons.Left)
             {
@@ -2227,24 +2232,37 @@ namespace DailyWallpaper
         // TODO: ONLY SHOW WHEN HOVER OVER THE DIRECTORY.
         private void resultListView_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
         {
-            string itemInfo =  e.Item.SubItems["dir"].Text;
-            // new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfor);
-            new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfo);
-
-            /* var item = e.Item;
-            var element = this.radListView1.ListViewElement;
-            if (element != null)
+            var subI = e.Item.SubItems;
+            //use cursor points.
+            var p = resultListView.PointToClient(Cursor.Position);
+            // e.Item.ListView.Columns.IndexOf(e.Item.ListView.Items.);
+            var where = panel5;
+            var sp = new Point(p.X + 25, p.Y + 10);
+            var duration = 3000;
+            // when I move the cursor, will no cause disappear.
+            if (subI["dir"].Bounds.Contains(p))
             {
-                for (int i = 0; i < element.Items.Count; i++)
-                {
-                    if (element.Items[i].Equals(item))
-                    {
-                        Console.WriteLine(i); //the row
-                    }
-                }
+                string itemInfo = subI["dir"].Text;
+                // new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfor);
+                m_lvToolTip.Show(itemInfo, where, sp, duration);
+            }
+            /*else if (subI["HASH"].Bounds.Contains(p))
+            {
+                string itemInfo = subI["HASH"].Text;
+                m_lvToolTip.Show(itemInfo, where, sp, duration);
             }*/
+            else if (subI["name"].Bounds.Contains(p))
+            {
+                string itemInfo = subI["name"].Text;
+                m_lvToolTip.Show(itemInfo, where, sp, duration);
+            }
+            else
+            {
+                // don't know where it's. HIDE, may cover by subitem.
+                m_lvToolTip.Show("", e.Item.ListView);
+            }
 
-             
+
         }
 
     }
