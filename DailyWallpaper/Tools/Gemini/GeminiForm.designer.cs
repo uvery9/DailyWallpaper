@@ -114,6 +114,7 @@
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setByYourselfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -824,6 +825,8 @@
             // 
             // alwaysCalculateHashToolStripMenuItem
             // 
+            this.alwaysCalculateHashToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setByYourselfToolStripMenuItem});
             this.alwaysCalculateHashToolStripMenuItem.Name = "alwaysCalculateHashToolStripMenuItem";
             this.alwaysCalculateHashToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
             this.alwaysCalculateHashToolStripMenuItem.Text = "Always calculate Hash";
@@ -918,6 +921,12 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
+            // 
+            // setByYourselfToolStripMenuItem
+            // 
+            this.setByYourselfToolStripMenuItem.Name = "setByYourselfToolStripMenuItem";
+            this.setByYourselfToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.setByYourselfToolStripMenuItem.Text = "Set by yourself";
             // 
             // GeminiForm
             // 
@@ -1041,5 +1050,6 @@
         private System.Windows.Forms.ToolStripMenuItem copyFileNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
+        private System.Windows.Forms.ToolStripMenuItem setByYourselfToolStripMenuItem;
     }
 }

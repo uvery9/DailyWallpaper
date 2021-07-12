@@ -874,14 +874,15 @@ namespace DailyWallpaper
             foreach (var it in gfL)
             {
                 i++;
-                if (it.size < 500 * 1024 * 1024 || alwaysCalculateHashToolStripMenuItem.Checked)
+                int hashSizeLimit = 100;
+                if (it.size < hashSizeLimit * 1024 * 1024 || alwaysCalculateHashToolStripMenuItem.Checked)
                 {
                     await UpdateHash(tmp, it);
                 }
                 else
                 {
                     var bp = it;
-                    bp.hash = ">500MB,NotCounting.YouCouldEnableAlwaysCalculateHash";
+                    bp.hash = $">{hashSizeLimit}MB,NotCounting.YouCouldEnableAlwaysCalculateHash";
                     tmp.Add(bp);
                 }
                 SetProgressMessage(geminiProgressBar, (int)((double)i / gfL.Count * 100));
