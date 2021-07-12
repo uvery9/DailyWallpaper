@@ -17,6 +17,7 @@ using System.Collections;
 using static DailyWallpaper.Tools.Gemini;
 using System.Drawing;
 using System.Security.Cryptography;
+using System.Reflection;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -56,6 +57,7 @@ namespace DailyWallpaper
         private List<GeminiFileStruct> geminiFileStructListForLVRedo = new List<GeminiFileStruct>();
         private bool needFlush = false;
         private Color themeColor = Color.FromArgb(250, 234, 192);
+        private Color themeColorClean = Color.ForestGreen;
         private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
         private enum FilterMode : int
         {
@@ -499,7 +501,6 @@ namespace DailyWallpaper
                     _console.WriteLine($">>> Because it is a recursive search, \r\n" +
                         "  Program don't know the progress, please wait patiently...");
                     SetText(summaryTextBox, "Please wait patiently...", themeColor);
-                    SetProgressBarVisible(geminiProgressBar, false);
                     if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
                     {
                         fld2 = true;
@@ -1010,6 +1011,7 @@ namespace DailyWallpaper
             }
             else
             {
+                SetProgressBarVisible(geminiProgressBar, false);
                 tb.Text = text;
                 tb.BackColor = c;
             }
@@ -1679,9 +1681,8 @@ namespace DailyWallpaper
             }
             using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
             {
-
-                var saveDir = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOG");
+                var saveDir = Path.Combine(Path.GetDirectoryName(Assembly.
+                    GetExecutingAssembly().Location), "Gemini.UserOperation");
                 if (!Directory.Exists(saveDir))
                 {
                     Directory.CreateDirectory(saveDir);
@@ -2304,8 +2305,8 @@ namespace DailyWallpaper
             }
             using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
             {
-                var saveDir = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOG");
+                var saveDir = Path.Combine(Path.GetDirectoryName(Assembly.
+                    GetExecutingAssembly().Location), "Gemini.UserOperation");
                 if (!Directory.Exists(saveDir))
                 {
                     Directory.CreateDirectory(saveDir);
@@ -2620,7 +2621,7 @@ namespace DailyWallpaper
                 {
                     if (indexChange)
                     {
-                        throw new Exception("USE SLOW MODE.");
+                        throw new Exception(">>> Clean-UP Restore Mode.");
                     }
                     // _console.WriteLine("FAST..........");
                     foreach (var gf in gfl)
@@ -2645,7 +2646,6 @@ namespace DailyWallpaper
                 catch (Exception ex)
                 {
                     _console.WriteLine($"{ex.Message}");
-                    _console.WriteLine("SLOW..........");
                     if (liv.Items.Count < 1)
                     {
                         return;
@@ -2757,6 +2757,8 @@ namespace DailyWallpaper
                      where i.Checked == true
                      select i).Count();
                 _console.WriteLine($">>> {filterMode} selectd {cnt:N0} file(s).");
+                SetText(summaryTextBox, $"{filterMode} selectd {cnt:N0} file(s)", 
+                    cnt == 0 ? themeColorClean : themeColor);
             });
         }
 
@@ -2977,6 +2979,7 @@ namespace DailyWallpaper
 
                     // do not need to recolor.
                     var godsChoiceList = new List<GeminiFileStruct>();
+                    int cnt = 0;
                     foreach (var item in delGflGrp)
                     {
                         bool first = true;
@@ -2991,10 +2994,12 @@ namespace DailyWallpaper
                             else
                             {
                                 tmp.Checked = true;
+                                cnt++;
                             }
                             godsChoiceList.Add(tmp);
                         }
                     }
+                    _console.WriteLine($">>> God chose {cnt:N0} file(s).");
                     if (godsChoiceList.Count < 1)
                     {
                         return;
@@ -3002,8 +3007,7 @@ namespace DailyWallpaper
                     geminiFileStructListForLVUndo = geminiFileStructListForLV;
                     geminiFileStructListForLV = godsChoiceList;
                     UpdateLVAndRestoreChoice(geminiFileStructListForLV);
-                    _console.WriteLine($">>> God has made a choice.");
-
+                    SetText(summaryTextBox, $"God chose {cnt:N0} files", cnt > 0 ? themeColor : themeColorClean);
                 }, _source.Token);
                 _tasks.Add(taskDel);
                 // taskDel.Wait();
@@ -3105,9 +3109,6 @@ namespace DailyWallpaper
             }
             else
             {
-                resultListView.MouseClick += new MouseEventHandler(resultListView_MouseClick);
-                resultListView.MouseDoubleClick += new MouseEventHandler(resultListView_MouseDoubleClick);
-
                 targetFolder2TextBox.Text = "";
                 targetFolder2TextBox.Enabled = true;
                 targetFolder2TextBox.TextAlign = default;
@@ -3160,7 +3161,7 @@ namespace DailyWallpaper
             cleanEmptyFolderModeToolStripMenuItem.PerformClick();
         }
 
-        private void UpdateFileToListView(string path)
+        private void UpdateGeminiFileToListView(string path)
         {
             try
             {
@@ -3213,7 +3214,14 @@ namespace DailyWallpaper
 
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
-                   UpdateFileToListView(dialog.FileName);
+                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+                    {
+
+                    }
+                    else
+                    {
+                        UpdateGeminiFileToListView(dialog.FileName);
+                    }
                 }               
             }
         }
@@ -3481,7 +3489,7 @@ namespace DailyWallpaper
                     }
                     else if (File.Exists(path) && path.ToLower().EndsWith(".xml"))
                     {
-                        UpdateFileToListView(path);
+                        UpdateGeminiFileToListView(path);
                     }
                 }
                 else
