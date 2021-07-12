@@ -2881,24 +2881,7 @@ namespace DailyWallpaper
 
         private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string fullPath;
-            try
-            {
-                fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
-            }
-            catch
-            {
-                fullPath = null;
-            }
-            if (string.IsNullOrEmpty(fullPath))
-            {
-                return;
-            }
-            if (File.Exists(fullPath))
-            {
-                Clipboard.SetText(fullPath);
-                _console.WriteLine("... Copied to Clipboard.");
-            }
+            OpenFileOrDirectory(FileOP.COPY_FULLPATH);
         }
 
         private void protectFilesInGrpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3285,7 +3268,9 @@ namespace DailyWallpaper
             DELETE,
             OPEN,
             OPENDIR,
-            PROPERTIES
+            PROPERTIES,
+            COPY_FILENAME,
+            COPY_FULLPATH
         }
 
         private void openDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3301,13 +3286,16 @@ namespace DailyWallpaper
         private void OpenFileOrDirectory(FileOP op)
         {
             string fullPath;
+            string fileName;
             try
             {
                 fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+                fileName = resultListView.FocusedItem.SubItems["name"].Text;
             }
             catch
             {
                 fullPath = null;
+                fileName = null;
             }
             if (string.IsNullOrEmpty(fullPath))
             {
@@ -3332,11 +3320,25 @@ namespace DailyWallpaper
                             RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
                         _console.WriteLine($"... Send {fullPath} to RecycleBin");
                         cleanUpButton.PerformClick();
-                    }else if (op == FileOP.PROPERTIES)
+                    }
+                    else if (op == FileOP.PROPERTIES)
                     {
                         // Thanks to
                         // https://stackoverflow.com/questions/1936682/how-do-i-display-a-files-properties-dialog-from-c
                         ShowProperties.ShowFileProperties(fullPath);
+                    }
+                    else if (op == FileOP.COPY_FILENAME)
+                    {
+                        if (!string.IsNullOrEmpty(fileName))
+                        {
+                            Clipboard.SetText(fileName);
+                            _console.WriteLine("... Copied file name to Clipboard.");
+                        }
+                    }
+                    else if (op == FileOP.COPY_FULLPATH)
+                    {
+                        Clipboard.SetText(fullPath);
+                        _console.WriteLine("... Copied full path to Clipboard.");
                     }
 
 
@@ -3408,6 +3410,11 @@ namespace DailyWallpaper
                     geminiFileStructListForLV = tmpL;
                 }
             }
+        }
+
+        private void copyFileNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileOrDirectory(FileOP.COPY_FILENAME);
         }
     }
 }
