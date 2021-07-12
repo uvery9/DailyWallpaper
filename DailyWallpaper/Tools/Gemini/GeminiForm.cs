@@ -3162,6 +3162,7 @@ namespace DailyWallpaper
                     _console.WriteLine(">>> Load file, update to ListView...");
                     UpdateListView(resultListView, ref geminiFileStructListForLV, token);
                     RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
+                    _console.WriteLine(">>> Load xml file finished!");
                 }, _source.Token);
                 _tasks.Add(_updateFromFileTask);
             }
