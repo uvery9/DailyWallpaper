@@ -105,6 +105,9 @@
     <Compile Include="Cons\OnlineImage.cs" />
     <Compile Include="Cons\Wallpaper.cs" />
     <Compile Include="Helpers\ShowProperties.cs" />
+    <Compile Include="Tools\Gemini\GeminiFormMethod.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\Gemini\ListViewColumnSorter.cs" />
     <Compile Include="Tools\Gemini\Gemini.cs" />
     <Compile Include="Tools\Gemini\GeminiForm.cs">

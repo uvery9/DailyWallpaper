@@ -672,110 +672,7 @@ namespace DailyWallpaper
         }
 
         
-        private enum ListViewOP
-        {
-            ADD,
-            CLEAR,
-            UPDATE_CHECK,
-            UPDATE_CHECK_INTHELOOP,
-            UPDATE_CHECK_BY_INDEX,
-            CEF_INTHELOOP
-        }
-
-
-        private delegate void ListViewOperateLoopDelegate(System.Windows.Forms.ListView liv, 
-            ListViewOP op, List<GeminiFileStruct> gfl = null,
-            Action<bool, List<GeminiFileStruct>> actionLoop = null);
-
-        private void ListViewOperateLoop(System.Windows.Forms.ListView liv,
-            ListViewOP op, List<GeminiFileStruct> gfl = null,
-            Action<bool, List<GeminiFileStruct>> actionLoop = null)
-        {
-            if (liv.InvokeRequired)
-            {
-                var addDele = new ListViewOperateLoopDelegate(ListViewOperateLoop);
-                liv.Invoke(addDele, new object[] { liv, op, gfl, actionLoop });
-            }
-            else
-            {
-                if (op == ListViewOP.UPDATE_CHECK_INTHELOOP)
-                {
-                    var tmpL = new List<GeminiFileStruct>();
-                    foreach (var it in liv.Items)
-                    {
-                        var lvi = ((System.Windows.Forms.ListViewItem)it);
-                        var fullPathLV = lvi.SubItems["fullPath"].Text;
-                        foreach (var gf in gfl)
-                        {
-                            var tmp = gf;
-                            if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                            {
-                                tmp.Checked = lvi.Checked;
-                                tmpL.Add(tmp);
-                                break;
-                            }
-                        }
-                    }
-                    actionLoop(true, tmpL);
-
-                }
-                if (op == ListViewOP.UPDATE_CHECK_BY_INDEX)
-                {
-                    var tmpL = new List<GeminiFileStruct>();
-                    foreach (var gf in gfl)
-                    {
-                        var tmp = gf;
-                        var lvi = liv.Items[tmp.index];
-                        var fullPathLV = lvi.SubItems["fullPath"].Text;
-                        if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                        {
-                            tmp.Checked = lvi.Checked;
-                            tmpL.Add(tmp);
-                        }
-                        else
-                        {
-                            actionLoop(false, tmpL);
-                        }
-                    }
-                    actionLoop(true, tmpL);
-
-                }
-                if (op == ListViewOP.CEF_INTHELOOP)
-                {
-
-                }
-            }
-
-        }
-
-
-        private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
-            System.Windows.Forms.ListViewItem item = null, bool ischeck = false);
-        private void ListViewOperate(System.Windows.Forms.ListView liv, ListViewOP op,
-            System.Windows.Forms.ListViewItem item = null, bool ischeck = false
-           )
-        {
-            if (liv.InvokeRequired)
-            {
-                var addDele = new ListViewOperateDelegate(ListViewOperate);
-                liv.Invoke(addDele, new object[] { liv, op, item, ischeck});
-            }
-            else
-            {
-                if (op == ListViewOP.ADD)
-                {
-                    liv.Items.Add(item);
-                }
-                if (op == ListViewOP.CLEAR)
-                {
-                    liv.Items.Clear();
-                }
-                if (op == ListViewOP.UPDATE_CHECK)
-                {
-                    item.Checked = ischeck;
-                }
-            }
-        }
+        
 
         private void UpdateListView(System.Windows.Forms.ListView liv, 
             ref List<GeminiFileStruct> gfL,  CancellationToken token)
@@ -791,7 +688,7 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    var item = new System.Windows.Forms.ListViewItem();
+                    var item = new System.Windows.Forms.ListViewItem(index.ToString());
                     item.BackColor = gf.color;
                     AddSubItem(item, "name", gf.name);
                     AddSubItem(item, "lastMtime", gf.lastMtime);
@@ -2151,6 +2048,16 @@ namespace DailyWallpaper
 
                 // Perform the sort with these new sort options.
                 resultListView.Sort();
+                void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
+                {
+                    if (res)
+                    {
+                        geminiFileStructListForLV = gfl;
+                    }
+                }
+                // Update Index string in resultListView, index in GeminiFileStruct.
+                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED, 
+                    geminiFileStructListForLV, UpdateGFL);
             }           
         }
 
@@ -2841,14 +2748,23 @@ namespace DailyWallpaper
                         }
                     }
                     // THE FIRST ANONYMOUS ITEM MUST USE INDEX, I PERFET SUBITEMS["NAME"]
-                    else if (focusedItem.SubItems["lastMtime"].Bounds.Contains(e.Location))
+                    else if (focusedItem.SubItems["name"].Bounds.Contains(e.Location))
                     {
-                        var filePath = focusedItem.SubItems["fullPath"].Text;
-                        if (File.Exists(filePath))
+                        try
                         {
-                            // open file.
-                            Process.Start(filePath);
+                            var filePath = focusedItem.SubItems["fullPath"].Text;
+                            if (File.Exists(filePath))
+                            {
+                                // open file.
+                                Process.Start(filePath);
+                            }
+
                         }
+                        catch (Exception ex)
+                        {
+                            _console.WriteLine(ex.Message);
+                        }
+                        
                     }
                     else
                     {
@@ -3006,7 +2922,7 @@ namespace DailyWallpaper
                     }
                     geminiFileStructListForLVUndo = geminiFileStructListForLV;
                     geminiFileStructListForLV = godsChoiceList;
-                    UpdateLVAndRestoreChoice(geminiFileStructListForLV);
+                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                     SetText(summaryTextBox, $"God chose {cnt:N0} files", cnt > 0 ? themeColor : themeColorClean);
                 }, _source.Token);
                 _tasks.Add(taskDel);
@@ -3041,18 +2957,19 @@ namespace DailyWallpaper
             if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
                 var subI = e.Item.SubItems;
+                
                 //use cursor points.
-                var p = resultListView.PointToClient(Cursor.Position);
+                var p = e.Item.ListView.PointToClient(Cursor.Position);
                 // e.Item.ListView.Columns.IndexOf(e.Item.ListView.Items.);
-                var where = panel5;
+                var where = e.Item.ListView;
                 var sp = new Point(p.X + 25, p.Y + 10);
                 var duration = 3000;
                 // when I move the cursor, will no cause disappear.
                 if (subI["dir"].Bounds.Contains(p))
                 {
                     string itemInfo = subI["dir"].Text;
-                    // new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfor);
-                    m_lvToolTip.Show(itemInfo, where, sp, duration);
+                    new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfo);
+                    // m_lvToolTip.Show(itemInfo, where, sp, duration);
                 }
                 /*else if (subI["HASH"].Bounds.Contains(p))
                 {
@@ -3062,12 +2979,14 @@ namespace DailyWallpaper
                 else if (subI["name"].Bounds.Contains(p))
                 {
                     string itemInfo = subI["name"].Text;
-                    m_lvToolTip.Show(itemInfo, where, sp, duration);
+                    // m_lvToolTip.Show(itemInfo, where, sp, duration);
+                    new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfo);
                 }
                 else
                 {
                     // don't know where it's. HIDE, may cover by subitem.
-                    m_lvToolTip.Show("", e.Item.ListView);
+                    //m_lvToolTip.Show("", e.Item.ListView);
+                    new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, "");
                 }
             }
         }
@@ -3198,8 +3117,8 @@ namespace DailyWallpaper
         {
             using (var dialog = new CommonOpenFileDialog())
             {
-                var saveDir = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOG");
+                var saveDir = Path.Combine(Path.GetDirectoryName(Assembly.
+                    GetExecutingAssembly().Location), "Gemini.UserOperation");
                 if (!Directory.Exists(saveDir))
                 {
                     saveDir = desktopPath;
