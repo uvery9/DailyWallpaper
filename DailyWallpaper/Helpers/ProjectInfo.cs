@@ -19,8 +19,8 @@ namespace DailyWallpaper.Helpers
         public static bool connectToWorld = false;
         public static string author = "Jared DC";
         public static string email = "jared.dcx@gmail.com";
-        public static string exeName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-        public static string executingLocation = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        public static string exeName = Assembly.GetExecutingAssembly().GetName().Name;
+        public static string executingLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string logFile = new System.IO.FileInfo(exeName + ".log.txt").FullName;
         private static string officalWebSiteGlobal = "https://github.com/JaredDC/DailyWallpaper";
         private static string officalWebSiteCHN = "https://gitee.com/imtvip/DailyWallpaper";

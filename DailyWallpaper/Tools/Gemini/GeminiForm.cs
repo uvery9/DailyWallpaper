@@ -257,32 +257,36 @@ namespace DailyWallpaper
             {
                 btnAnalyze.PerformClick();
             }
-            foreach (var item in resultListView.Items)
-            {
-                var it = (System.Windows.Forms.ListViewItem)item;
-                var fullPathLV = it.SubItems["name"].Text;
-                if (it.Checked && Directory.Exists(fullPathLV))
+            var deleteCEF = Task.Run(() => { 
+                foreach (var item in resultListView.Items)
                 {
-                    _console.WriteLine($"delete ###  {fullPathLV}");
-                    FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
-                    deleteOrRecycleBin.Checked ?
-                    RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                    UICancelOption.DoNothing);
+                    var it = (System.Windows.Forms.ListViewItem)item;
+                    var fullPathLV = it.SubItems["name"].Text;
+                    if (it.Checked && Directory.Exists(fullPathLV))
+                    {
+                        _console.WriteLine($"delete ###  {fullPathLV}");
+                        FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
+                        deleteOrRecycleBin.Checked ?
+                        RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                        UICancelOption.DoNothing);
+                    }
                 }
-            }
-            var tmpL = new List<GeminiCEFStruct>();
-            foreach (var item in geminiCEFStructList)
-            {
-                if (Directory.Exists(item.fullPath))
+                var tmpL = new List<GeminiCEFStruct>();
+                foreach (var item in geminiCEFStructList)
                 {
-                    tmpL.Add(item);
+                    if (Directory.Exists(item.fullPath))
+                    {
+                        tmpL.Add(item);
+                    }
                 }
-            }
-            geminiCEFStructList = tmpL;
-            UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
-            UpdateCEFChecked(geminiCEFStructList);
-            cefScanRes = false;
+                geminiCEFStructList = tmpL;
+                UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
+                UpdateCEFChecked(geminiCEFStructList);
+                cefScanRes = false;
+            });
+            _tasks.Add(deleteCEF);
         }
+
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (cleanEmptyFolderModeToolStripMenuItem.Checked)
@@ -515,19 +519,24 @@ namespace DailyWallpaper
                         _console.WriteLine("!!! Two folder invalid.");
                         return;
                     }
+                    // step one
+                    SaveOperationHistory("step-1-allfiles_1.xml", filesList1);
+                    SaveOperationHistory("step-1_allfiles_2.xml", filesList2);
+
                     SetProgressBarVisible(geminiProgressBar, true);
                     // get files info exclude HASH.(FASTER) 
                     FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
                     FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
+                    SaveOperationHistory("step-2-filesToStruct_1.xml", geminiFileStructList1);
+                    SaveOperationHistory("step-2_filesToStruct_2.xml", geminiFileStructList2);
 
                     // compare folders and themselves, return duplicated files list.
                     _console.WriteLine(">>> Start Fast Compare...");
-
                     var mode = SetCompareMode();
                     var sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
                             geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
                     _console.WriteLine(">>> Fast Compare finished...");
-                    // group by size
+                    SaveOperationHistory("step-3-FastCompare.xml", sameListNoDup);
 
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
@@ -535,18 +544,19 @@ namespace DailyWallpaper
                         sameListNoDup =
                             UpdateHashInGeminiFileStructList(sameListNoDup).Result;
                         _console.WriteLine(">>> Update HASH finished.");
+                        SaveOperationHistory("step-4-CompareHash.xml", sameListNoDup);
                     }
 
                     // Color by Group.
                     _console.WriteLine(">>> ListView Color...");
                     geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
+                    SaveOperationHistory("step-5-RegrpAndColor.xml", sameListNoDup);
 
                     _console.WriteLine(">>> Update to ListView...");
                     UpdateListView(resultListView, ref geminiFileStructListForLV, token);
                   
                     timer.Stop();
-                    string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
-                    _console.WriteLine($">>> Cost time: {hashCostTime}");
+                    _console.WriteLine($">>> Cost time: {GetTimeStringMsOrS(timer.Elapsed)}");
 
                 }, _source.Token);
 
@@ -554,8 +564,9 @@ namespace DailyWallpaper
                 await _task;
                 // No Error, filesList is usable
                 scanRes = true;
-                WriteToXmlFile("GeminiListLatest.xml",
-                        geminiFileStructListForLV);
+                /*WriteToXmlFile("GeminiListLatest.xml",
+                        geminiFileStructListForLV);*/
+                SaveOperationHistory("step-6-GeminiListLatest.xml", geminiFileStructListForLV);
             }
             catch (OperationCanceledException e)
             {
@@ -671,12 +682,12 @@ namespace DailyWallpaper
 
 
         private delegate void ListViewOperateLoopDelegate(System.Windows.Forms.ListView liv, 
-            ListViewOP op, List<GeminiFileStruct> gfl,
-            Action<bool, List<GeminiFileStruct>> actionLoop);
+            ListViewOP op, List<GeminiFileStruct> gfl = null,
+            Action<bool, List<GeminiFileStruct>> actionLoop = null);
 
         private void ListViewOperateLoop(System.Windows.Forms.ListView liv,
-            ListViewOP op, List<GeminiFileStruct> gfl,
-            Action<bool, List<GeminiFileStruct>> actionLoop)
+            ListViewOP op, List<GeminiFileStruct> gfl = null,
+            Action<bool, List<GeminiFileStruct>> actionLoop = null)
         {
             if (liv.InvokeRequired)
             {
@@ -1864,6 +1875,7 @@ namespace DailyWallpaper
             UpdateIniAndTextBox();
         }
 
+
         private void targetFolder1_DragDrop(object sender, DragEventArgs e)
         {
             targetFolder_DragDrop(sender, e, "TargetFolder1", targetFolder1History,
@@ -1890,11 +1902,8 @@ namespace DailyWallpaper
                     var path = filePaths[0];
                     if (Directory.Exists(path))
                     {
-                        if (Directory.Exists(path))
-                        {
-                            UpdateTextAndIniFile(keyInIni, path,
-                                targetFolderHistory, tx);
-                        }
+                        UpdateTextAndIniFile(keyInIni, path,
+                            targetFolderHistory, tx);
                     }
                 }
                 else
@@ -2277,9 +2286,13 @@ namespace DailyWallpaper
 
         private void saveResultListToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked && geminiCEFStructList.Count < 1)
+            {
+                _console.WriteLine("--- No Empty folder, do not need to save to file.");
                 return;
-            if (geminiFileStructListForLV.Count < 1)
+            }
+                
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked && geminiFileStructListForLV.Count < 1)
             {
                 _console.WriteLine("--- No file, do not need to save to file.");
                 return;
@@ -2302,7 +2315,7 @@ namespace DailyWallpaper
                 var f2 = targetFolder2TextBox.Text;
                 if (string.IsNullOrEmpty(f1) || !Directory.Exists(f1))
                 {
-                    t1 = "NONE";
+                    t1 = "";
                 }
                 else
                 {
@@ -2310,26 +2323,46 @@ namespace DailyWallpaper
                 }
                 if (string.IsNullOrEmpty(f2) || !Directory.Exists(f2))
                 {
-                    t2 = "NONE";
+                    t2 = "";
                 }
                 else
                 {
-                    t2 = new DirectoryInfo(f2).Name;
+                    t2 = "-"+ new DirectoryInfo(f2).Name;
                 }
 
-                var name = t1 + "-" + t2;
+                var name = t1 + t2;
                 name = string.Join("_", name.Split(Path.GetInvalidFileNameChars()));
-                saveFileDialog.FileName = "GeminiList-" + name + "-" +
-                                        DateTime.Now.ToString("yyyy-MM-dd_HH-mm") + ".xml";
+                string header;
+                if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+                {
+                    header = "GeminiCEF-";
+                }
+                else
+                {
+                    header = "Gemini-";
+                }
+                saveFileDialog.FileName = header + DateTime.Now.ToString("yyyy-M-dd_HH-mm") + 
+                                        "-" + name + ".xml";
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     // Write the list of salesman objects to file.
                     /*var saveTask = Task.Run(() => {*/
-                    Task.Run(() => { 
-                        WriteToXmlFile(saveFileDialog.FileName,
-                        geminiFileStructListForLV);
-                    });
+
+                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+                    {
+                        Task.Run(() => {
+                            WriteToXmlFile(saveFileDialog.FileName,
+                            geminiCEFStructList);
+                        });
+                    }
+                    else
+                    {
+                        Task.Run(() => {
+                            WriteToXmlFile(saveFileDialog.FileName,
+                            geminiFileStructListForLV);
+                        });
+                    }                   
                     /*});
                     _tasks.Add(saveTask);*/
                     // WriteToJsonFile<List<GeminiFileStruct>>(@"GeminiFileStruct.json", geminiFileStructListForLV);
@@ -3415,6 +3448,42 @@ namespace DailyWallpaper
         private void copyFileNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileOrDirectory(FileOP.COPY_FILENAME);
+        }
+
+        private void resultListView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.F2 && resultListView.SelectedItems.Count > 0)
+            {
+                resultListView.LabelEdit = true;
+                resultListView.SelectedItems[0].BeginEdit();
+            }
+        }
+
+        private void resultListView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                // DirectoryInfo().
+                if (filePaths.Length == 1)
+                {
+                    var path = filePaths[0];
+                    if (Directory.Exists(path))
+                    {
+                        UpdateTextAndIniFile("TargetFolder1", path,
+                            targetFolder1History, targetFolder1TextBox);
+                    }
+                    else if (File.Exists(path) && path.ToLower().EndsWith(".xml"))
+                    {
+                        UpdateFileToListView(path);
+                    }
+                }
+                else
+                {
+                    _console.WriteLine("\r\nAttention: File or multiple folders are not allowed!");
+                }
+
+            }
         }
     }
 }
