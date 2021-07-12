@@ -717,6 +717,7 @@ namespace DailyWallpaper
                     AddSubItem(item, "HASH", gf.hash ?? "");
                     AddSubItem(item, "fullPath", gf.fullPath);
                     AddSubItem(item, "size", gf.size.ToString());
+                    AddSubItem(item, "index", index.ToString());
                     ListViewOperate(liv, ListViewOP.ADD, item);
                     var tmp = gf;
                     tmp.index = index;
@@ -1803,8 +1804,11 @@ namespace DailyWallpaper
         }
         private void targetFolder2_DragDrop(object sender, DragEventArgs e)
         {
-            targetFolder_DragDrop(sender, e, "TargetFolder2", targetFolder2History,
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                targetFolder_DragDrop(sender, e, "TargetFolder2", targetFolder2History,
                 targetFolder2TextBox);
+            }
         }
 
         private void targetFolder_DragDrop(object sender, DragEventArgs e, string keyInIni,
@@ -2041,28 +2045,31 @@ namespace DailyWallpaper
         // https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/sort-listview-by-column
         private void resultListView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            // Determine if clicked column is already the column that is being sorted.
-            if (e.Column == lvwColumnSorter.SortColumn)
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
-                // Reverse the current sort direction for this column.
-                if (lvwColumnSorter.Order == SortOrder.Ascending)
+                // Determine if clicked column is already the column that is being sorted.
+                if (e.Column == lvwColumnSorter.SortColumn)
                 {
-                    lvwColumnSorter.Order = SortOrder.Descending;
+                    // Reverse the current sort direction for this column.
+                    if (lvwColumnSorter.Order == SortOrder.Ascending)
+                    {
+                        lvwColumnSorter.Order = SortOrder.Descending;
+                    }
+                    else
+                    {
+                        lvwColumnSorter.Order = SortOrder.Ascending;
+                    }
                 }
                 else
                 {
+                    // Set the column number that is to be sorted; default to ascending.
+                    lvwColumnSorter.SortColumn = e.Column;
                     lvwColumnSorter.Order = SortOrder.Ascending;
                 }
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
-            }
 
-            // Perform the sort with these new sort options.
-            resultListView.Sort();
+                // Perform the sort with these new sort options.
+                resultListView.Sort();
+            }           
         }
 
         private delegate void SetProgressMessageDelegate(
@@ -2133,33 +2140,60 @@ namespace DailyWallpaper
 
         private List<GeminiFileStruct> UpdateGFLChecked(List<GeminiFileStruct> gfl)
         {
+            var tmpL = new List<GeminiFileStruct>();
             if (resultListView.Items.Count > 0)
             {
                 /*var timer = new Stopwatch();
                 timer.Start();*/
-                var tmpL = new List<GeminiFileStruct>();
-                foreach (var item in resultListView.Items)
+                try
                 {
-                    var it = ((System.Windows.Forms.ListViewItem)item);
-                    var fullPathLV = it.SubItems["fullPath"].Text;
+                    Debug.WriteLine("Fast start...");
                     foreach (var gf in gfl)
                     {
                         var tmp = gf;
+                        var item = resultListView.Items[tmp.index];
+                        var fullPathLV = item.SubItems["fullPath"].Text;
                         if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
                         {
-                            tmp.Checked = it.Checked;
+                            tmp.Checked = item.Checked;
                             tmpL.Add(tmp);
+                        }
+                        else
+                        {
                             break;
+                        }
+                    }
+                    if (tmpL.Count == gfl.Count)
+                    {
+                        return tmpL;
+                    }
+                    Debug.WriteLine("Fast succeed.");
+                }
+                catch
+                {
+                    Debug.WriteLine("Slow...");
+                    tmpL = new List<GeminiFileStruct>();
+                    foreach (var item in resultListView.Items)
+                    {
+                        var it = ((System.Windows.Forms.ListViewItem)item);
+                        var fullPathLV = it.SubItems["fullPath"].Text;
+                        foreach (var gf in gfl)
+                        {
+                            var tmp = gf;
+                            if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                            {
+                                tmp.Checked = it.Checked;
+                                tmpL.Add(tmp);
+                                break;
+                            }
                         }
                     }
                 }
                 /*timer.Stop();
                 var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
                 _console.WriteLine($"click cost time: {hashCostTime}");*/
-                return tmpL;
             }
-            return null;
-
+            return tmpL;
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2303,7 +2337,8 @@ namespace DailyWallpaper
                         "items from ListView [ nonexistent + non-repeating ].");
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
                         SetCompareMode(), _source.Token);
-                    UpdateLVAndRestoreChoice(geminiFileStructListForLV);
+                    UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token, true);
                 }
                 _console.WriteLine(">>> Clean-UP Finished.");
             });
@@ -2488,26 +2523,51 @@ namespace DailyWallpaper
 
         
         private void RestoreListViewChoice(System.Windows.Forms.ListView liv, 
-            List<GeminiFileStruct> gfl, CancellationToken token)
+            List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false)
         {
             if (resultListView.Items.Count > 0)
             {
-                foreach (var item in resultListView.Items)
+                try
                 {
-                    var it = (System.Windows.Forms.ListViewItem)item;
-                    var fullPathLV = it.SubItems["fullPath"].Text;
+                    if (indexChange)
+                    {
+                        throw new Exception("USE SLOW MODE.");
+                    }
+                    _console.WriteLine("FAST..........");
                     foreach (var gf in gfl)
                     {
                         if (token.IsCancellationRequested)
                         {
                             token.ThrowIfCancellationRequested();
                         }
+                        var it = resultListView.Items[gf.index];
+                        var fullPathLV = it.SubItems["fullPath"].Text;
                         if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
                         {
                             ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
                         }
                     }
                 }
+                catch
+                {
+                    _console.WriteLine("SLOW..........");
+                    foreach (var item in resultListView.Items)
+                    {
+                        var it = (System.Windows.Forms.ListViewItem)item;
+                        var fullPathLV = it.SubItems["fullPath"].Text;
+                        foreach (var gf in gfl)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                token.ThrowIfCancellationRequested();
+                            }
+                            if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
+                            {
+                                ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
+                            }
+                        }
+                    }
+                }         
             }
         }
 
@@ -2603,56 +2663,59 @@ namespace DailyWallpaper
          */
         private void resultListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
-                var focusedItem = resultListView.FocusedItem;
-                if (focusedItem == null)
+                if (e.Button == MouseButtons.Left)
                 {
-                    return;
-                }
-                if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
-                {
-                    var filePath = focusedItem.SubItems["fullPath"].Text;
-                    if (File.Exists(filePath))
+                    var focusedItem = resultListView.FocusedItem;
+                    if (focusedItem == null)
                     {
-                        // combine the arguments together
-                        // it doesn't matter if there is a space after ','
-                        string argument = "/select, \"" + filePath + "\"";
-                        Process.Start("explorer.exe", argument);
+                        return;
                     }
-                }
-                // THE FIRST ANONYMOUS ITEM MUST USE INDEX, I PERFET SUBITEMS["NAME"]
-                else if (focusedItem.SubItems["lastMtime"].Bounds.Contains(e.Location))
-                {
-                    var filePath = focusedItem.SubItems["fullPath"].Text;
-                    if (File.Exists(filePath))
+                    if (focusedItem.SubItems["dir"].Bounds.Contains(e.Location))
                     {
-                        // open file.
-                        Process.Start(filePath);
+                        var filePath = focusedItem.SubItems["fullPath"].Text;
+                        if (File.Exists(filePath))
+                        {
+                            // combine the arguments together
+                            // it doesn't matter if there is a space after ','
+                            string argument = "/select, \"" + filePath + "\"";
+                            Process.Start("explorer.exe", argument);
+                        }
                     }
-                }
-                else
-                {
-                    // DONOTHING.
-                }
+                    // THE FIRST ANONYMOUS ITEM MUST USE INDEX, I PERFET SUBITEMS["NAME"]
+                    else if (focusedItem.SubItems["lastMtime"].Bounds.Contains(e.Location))
+                    {
+                        var filePath = focusedItem.SubItems["fullPath"].Text;
+                        if (File.Exists(filePath))
+                        {
+                            // open file.
+                            Process.Start(filePath);
+                        }
+                    }
+                    else
+                    {
+                        // DONOTHING.
+                    }
 
-                // DOESN'T WORK, HIT.SUBITEM AND HIT.ITEM IS NULL.
-                /*Point mousePosition = resultListView.PointToClient(System.Windows.Forms.Control.MousePosition);
-                ListViewHitTestInfo hit = resultListView.HitTest(mousePosition);
-                // hit.Item.SubItems["fullPath"].Text
-                int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
-                if (resultListView.Columns[columnindex].Name == "dirColumnHeader")
-                {
-                    var filePath = hit.Item.SubItems["fullPath"].Text;
-                    if (File.Exists(filePath))
+                    // DOESN'T WORK, HIT.SUBITEM AND HIT.ITEM IS NULL.
+                    /*Point mousePosition = resultListView.PointToClient(System.Windows.Forms.Control.MousePosition);
+                    ListViewHitTestInfo hit = resultListView.HitTest(mousePosition);
+                    // hit.Item.SubItems["fullPath"].Text
+                    int columnindex = hit.Item.SubItems.IndexOf(hit.SubItem);
+                    if (resultListView.Columns[columnindex].Name == "dirColumnHeader")
                     {
-                        // combine the arguments together
-                        // it doesn't matter if there is a space after ','
-                        string argument = "/select, \"" + filePath + "\"";
-                        Process.Start("explorer.exe", argument);
-                    }
-                }*/
-            }
+                        var filePath = hit.Item.SubItems["fullPath"].Text;
+                        if (File.Exists(filePath))
+                        {
+                            // combine the arguments together
+                            // it doesn't matter if there is a space after ','
+                            string argument = "/select, \"" + filePath + "\"";
+                            Process.Start("explorer.exe", argument);
+                        }
+                    }*/
+                }
+            }            
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2833,34 +2896,37 @@ namespace DailyWallpaper
         // TODO: ONLY SHOW WHEN HOVER OVER THE DIRECTORY.
         private void resultListView_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
         {
-            var subI = e.Item.SubItems;
-            //use cursor points.
-            var p = resultListView.PointToClient(Cursor.Position);
-            // e.Item.ListView.Columns.IndexOf(e.Item.ListView.Items.);
-            var where = panel5;
-            var sp = new Point(p.X + 25, p.Y + 10);
-            var duration = 3000;
-            // when I move the cursor, will no cause disappear.
-            if (subI["dir"].Bounds.Contains(p))
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
-                string itemInfo = subI["dir"].Text;
-                // new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfor);
-                m_lvToolTip.Show(itemInfo, where, sp, duration);
-            }
-            /*else if (subI["HASH"].Bounds.Contains(p))
-            {
-                string itemInfo = subI["HASH"].Text;
-                m_lvToolTip.Show(itemInfo, where, sp, duration);
-            }*/
-            else if (subI["name"].Bounds.Contains(p))
-            {
-                string itemInfo = subI["name"].Text;
-                m_lvToolTip.Show(itemInfo, where, sp, duration);
-            }
-            else
-            {
-                // don't know where it's. HIDE, may cover by subitem.
-                m_lvToolTip.Show("", e.Item.ListView);
+                var subI = e.Item.SubItems;
+                //use cursor points.
+                var p = resultListView.PointToClient(Cursor.Position);
+                // e.Item.ListView.Columns.IndexOf(e.Item.ListView.Items.);
+                var where = panel5;
+                var sp = new Point(p.X + 25, p.Y + 10);
+                var duration = 3000;
+                // when I move the cursor, will no cause disappear.
+                if (subI["dir"].Bounds.Contains(p))
+                {
+                    string itemInfo = subI["dir"].Text;
+                    // new System.Windows.Forms.ToolTip().SetToolTip(e.Item.ListView, itemInfor);
+                    m_lvToolTip.Show(itemInfo, where, sp, duration);
+                }
+                /*else if (subI["HASH"].Bounds.Contains(p))
+                {
+                    string itemInfo = subI["HASH"].Text;
+                    m_lvToolTip.Show(itemInfo, where, sp, duration);
+                }*/
+                else if (subI["name"].Bounds.Contains(p))
+                {
+                    string itemInfo = subI["name"].Text;
+                    m_lvToolTip.Show(itemInfo, where, sp, duration);
+                }
+                else
+                {
+                    // don't know where it's. HIDE, may cover by subitem.
+                    m_lvToolTip.Show("", e.Item.ListView);
+                }
             }
         }
 
@@ -2870,13 +2936,6 @@ namespace DailyWallpaper
             cefScanRes = false;
             if (cef)
             {
-                resultListView.ItemMouseHover -= new ListViewItemMouseHoverEventHandler(resultListView_ItemMouseHover);
-                resultListView.ColumnClick -= new ColumnClickEventHandler(resultListView_ColumnClick);
-                resultListView.DragDrop -= new DragEventHandler(targetFolder2_DragDrop);
-                resultListView.DragEnter -= new DragEventHandler(targetFolder1_2_DragEnter);
-                resultListView.MouseClick -= new MouseEventHandler(resultListView_MouseClick);
-                resultListView.MouseDoubleClick -= new MouseEventHandler(resultListView_MouseDoubleClick);
-
                 targetFolder2TextBox.Text = "Now in Clean Empty Folders mode";
                 targetFolder2TextBox.Enabled = false;
                 targetFolder2TextBox.TextAlign = HorizontalAlignment.Center;
@@ -2908,10 +2967,6 @@ namespace DailyWallpaper
             }
             else
             {
-                resultListView.ItemMouseHover += new ListViewItemMouseHoverEventHandler(resultListView_ItemMouseHover);
-                resultListView.ColumnClick += new ColumnClickEventHandler(resultListView_ColumnClick);
-                resultListView.DragDrop += new DragEventHandler(targetFolder2_DragDrop);
-                resultListView.DragEnter += new DragEventHandler(targetFolder1_2_DragEnter);
                 resultListView.MouseClick += new MouseEventHandler(resultListView_MouseClick);
                 resultListView.MouseDoubleClick += new MouseEventHandler(resultListView_MouseDoubleClick);
 
@@ -3192,6 +3247,42 @@ namespace DailyWallpaper
             Server Configuration Manager both re-implement the dialog, rather than showing the services.msc version.
               Related: How do I open properties box for individual services from command line or link?*/
             OpenFileOrDirectory(FileOP.PROPERTIES);
+        }
+
+        private void resultListView_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                var fitem = e.Item.ListView.FocusedItem;
+                try
+                {
+                    if (int.TryParse(fitem.SubItems["index"].Text, out int ret))
+                    {
+                        var gf = geminiFileStructListForLV[ret];
+                        if (gf.index == ret)
+                        {
+                            gf.Checked = fitem.Checked;
+                        }
+                    }
+                    _console.WriteLine("FAST CHECKED.");
+                }
+                catch
+                {
+                    _console.WriteLine("SLOW CHECKED.");
+                    var tmpL = new List<GeminiFileStruct>();
+                    foreach (var item in geminiFileStructListForLV)
+                    {
+                        var tmp = item;
+                        if (item.fullPath.Equals(fitem.SubItems["fullPath"].Text))
+                        {
+                            tmp.Checked = fitem.Checked;
+                        }
+                        tmpL.Add(tmp);
+                    }
+                    geminiFileStructListForLV = tmpL;
+                }
+            }
+            
         }
     }
 }

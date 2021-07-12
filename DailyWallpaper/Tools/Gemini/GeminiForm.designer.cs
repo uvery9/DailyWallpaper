@@ -334,6 +334,13 @@
             this.resultListView.TabStop = false;
             this.resultListView.UseCompatibleStateImageBehavior = false;
             this.resultListView.View = System.Windows.Forms.View.Details;
+            this.resultListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.resultListView_ColumnClick);
+            this.resultListView.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.resultListView_ItemChecked);
+            this.resultListView.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.resultListView_ItemMouseHover);
+            this.resultListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder1_DragDrop);
+            this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
+            this.resultListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.resultListView_MouseClick);
+            this.resultListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.resultListView_MouseDoubleClick);
             // 
             // CBcolumnHeader
             // 
@@ -387,7 +394,7 @@
             this.toolStripMenuItem4,
             this.propertiesToolStripMenuItem});
             this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
-            this.listViewContextMenuStrip.Size = new System.Drawing.Size(241, 325);
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(214, 292);
             // 
             // openToolStripMenuItem
             // 
@@ -458,7 +465,7 @@
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -476,7 +483,7 @@
             // propertiesToolStripMenuItem
             // 
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(240, 30);
+            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
             this.propertiesToolStripMenuItem.Text = "Properties";
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
