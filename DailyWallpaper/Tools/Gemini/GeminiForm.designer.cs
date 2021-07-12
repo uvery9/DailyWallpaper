@@ -98,6 +98,7 @@
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveLogToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveResultListToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
             this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -113,7 +114,6 @@
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -329,7 +329,6 @@
             this.resultListView.ContextMenuStrip = this.listViewContextMenuStrip;
             this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
-            this.resultListView.LabelEdit = true;
             this.resultListView.Location = new System.Drawing.Point(0, 3);
             this.resultListView.MultiSelect = false;
             this.resultListView.Name = "resultListView";
@@ -806,6 +805,11 @@
             this.saveResultListToFileToolStripMenuItem.Text = "Save List to file";
             this.saveResultListToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultListToFileToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem8
+            // 
+            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(332, 6);
+            // 
             // loadListViewFromFileToolStripMenuItem
             // 
             this.loadListViewFromFileToolStripMenuItem.Name = "loadListViewFromFileToolStripMenuItem";
@@ -914,11 +918,6 @@
             this.usageToolStripMenuItem.Size = new System.Drawing.Size(163, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem8
-            // 
-            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(332, 6);
             // 
             // GeminiForm
             // 

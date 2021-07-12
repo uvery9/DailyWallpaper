@@ -677,7 +677,8 @@ namespace DailyWallpaper
             CLEAR,
             UPDATE_CHECK,
             UPDATE_CHECK_INTHELOOP,
-            UPDATE_CHECK_BY_INDEX
+            UPDATE_CHECK_BY_INDEX,
+            CEF_INTHELOOP
         }
 
 
@@ -736,6 +737,10 @@ namespace DailyWallpaper
                         }
                     }
                     actionLoop(true, tmpL);
+
+                }
+                if (op == ListViewOP.CEF_INTHELOOP)
+                {
 
                 }
             }
@@ -3203,8 +3208,9 @@ namespace DailyWallpaper
                 dialog.EnsureFileExists = true;
                 dialog.Multiselect = false;
                 dialog.Title = "Select xml file"; // "XML files (*.xml)|*.xml";
+                dialog.Filters.Add(new CommonFileDialogFilter("Xml file", "*.xml"));
                 // maybe add some log
-                
+
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
                    UpdateFileToListView(dialog.FileName);
