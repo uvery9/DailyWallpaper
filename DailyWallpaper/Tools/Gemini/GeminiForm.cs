@@ -542,8 +542,8 @@ namespace DailyWallpaper
                     geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
 
                     _console.WriteLine(">>> Update to ListView...");
-                    UpdateListView(geminiFileStructListForLV, token);
-
+                    UpdateListView(resultListView, ref geminiFileStructListForLV, token);
+                  
                     timer.Stop();
                     string hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
                     _console.WriteLine($">>> Cost time: {hashCostTime}");
@@ -659,49 +659,76 @@ namespace DailyWallpaper
             return sameList.Distinct().ToList();
         }
 
-        private delegate void GeminiFileStructToListViewDelegate(
-            List<GeminiFileStruct> gfL, CancellationToken token);
-
-        private void UpdateListView(List<GeminiFileStruct> gfL,
-            CancellationToken token)
+        
+        private enum ListViewOP
         {
-            if (InvokeRequired)
+            ADD,
+            CLEAR,
+            UPDATE_CHECK
+        }
+        private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
+            System.Windows.Forms.ListViewItem item = null, bool ischeck = false);
+        private void ListViewOperate(System.Windows.Forms.ListView liv, ListViewOP op,
+            System.Windows.Forms.ListViewItem item = null, bool ischeck = false)
+        {
+            if (liv.InvokeRequired)
             {
-                var f = new GeminiFileStructToListViewDelegate(UpdateListView);
-                Invoke(f, new object[] { gfL, token});
-                Debug.WriteLine("->>> InvokeRequired");
-                _console.WriteLine("->>> InvokeRequired");
+                var addDele = new ListViewOperateDelegate(ListViewOperate);
+                liv.Invoke(addDele, new object[] { liv, op, item, ischeck});
             }
             else
             {
-                resultListView.Items.Clear();
-                if (gfL.Count > 0)
+                if (op == ListViewOP.ADD)
                 {
-                    foreach (var gf in gfL)
+                    liv.Items.Add(item);
+                }
+                if (op == ListViewOP.CLEAR)
+                {
+                    liv.Items.Clear();
+                }
+                if (op == ListViewOP.UPDATE_CHECK)
+                {
+                    item.Checked = ischeck;
+                }
+            }
+        }
+
+        private void UpdateListView(System.Windows.Forms.ListView liv, 
+            ref List<GeminiFileStruct> gfL,  CancellationToken token)
+        {
+            ListViewOperate(liv, ListViewOP.CLEAR);
+            var tmpL = new List<GeminiFileStruct>();
+            if (gfL.Count > 0)
+            {
+                int index = 0;
+                foreach (var gf in gfL)
+                {
+                    if (token.IsCancellationRequested)
                     {
-                        if (token.IsCancellationRequested)
-                        {
-                            token.ThrowIfCancellationRequested();
-                        }
-                        var item = new System.Windows.Forms.ListViewItem();
-                        // var item = new System.Windows.Forms.ListViewItem(" ");
-                        item.BackColor = gf.color;
-                        AddSubItem(item, "name", gf.name);
-                        AddSubItem(item, "lastMtime", gf.lastMtime);
-                        AddSubItem(item, "extName", gf.extName);
-                        AddSubItem(item, "sizeStr", gf.sizeStr);
-                        AddSubItem(item, "dir", gf.dir);
-                        AddSubItem(item, "HASH", gf.hash ?? "");
-                        AddSubItem(item, "fullPath", gf.fullPath);
-                        AddSubItem(item, "size", gf.size.ToString());
-                        resultListView.Items.Add(item);
+                        token.ThrowIfCancellationRequested();
                     }
-                    SetText(summaryTextBox, $"Summay: Found {gfL.Count:N0} duplicate files.", themeColor);
+                    var item = new System.Windows.Forms.ListViewItem();
+                    item.BackColor = gf.color;
+                    AddSubItem(item, "name", gf.name);
+                    AddSubItem(item, "lastMtime", gf.lastMtime);
+                    AddSubItem(item, "extName", gf.extName);
+                    AddSubItem(item, "sizeStr", gf.sizeStr);
+                    AddSubItem(item, "dir", gf.dir);
+                    AddSubItem(item, "HASH", gf.hash ?? "");
+                    AddSubItem(item, "fullPath", gf.fullPath);
+                    AddSubItem(item, "size", gf.size.ToString());
+                    ListViewOperate(liv, ListViewOP.ADD, item);
+                    var tmp = gf;
+                    tmp.index = index;
+                    index++;
+                    tmpL.Add(tmp);
                 }
-                else
-                {
-                    SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
-                }
+                gfL = tmpL;
+                SetText(summaryTextBox, $"Summay: Found {gfL.Count:N0} duplicate files.", themeColor);
+            }
+            else
+            {
+                SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
             }
         }
 
@@ -995,7 +1022,7 @@ namespace DailyWallpaper
 
         private void UpdateEmptyFoldersToLV(List<GeminiCEFStruct> gcefl, CancellationToken token)
         {
-            resultListView.Items.Clear();
+            ListViewOperate(resultListView, ListViewOP.CLEAR);
             if (gcefl.Count < 1)
             {
                 SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
@@ -1011,7 +1038,7 @@ namespace DailyWallpaper
                 var item = new System.Windows.Forms.ListViewItem();
                 AddSubItem(item, "name", gcef.fullPath);
                 AddSubItem(item, "lastMtime", gcef.lastMtime);
-                resultListView.Items.Add(item);
+                ListViewOperate(resultListView, ListViewOP.ADD, item);
             }
             _console.WriteLine($">>> Found {geminiCEFStructList.Count:N0} empty folder(s).");
             SetText(summaryTextBox, $"Summay: Found {geminiCEFStructList.Count:N0} duplicate files.", themeColor);
@@ -1098,7 +1125,7 @@ namespace DailyWallpaper
 
         private void btnAnalyze_Click(object sender, EventArgs e)
         {
-            resultListView.Items.Clear();
+            ListViewOperate(resultListView, ListViewOP.CLEAR);
             if (cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
                 AnalyzeEmptyFolder(targetFolder1TextBox.Text);
@@ -2346,7 +2373,7 @@ namespace DailyWallpaper
                     return;
                 }
                 geminiFileStructListForLV = tmpGfl;
-                RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
+                RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
             });
             _tasks.Add(mpTask);
         }
@@ -2432,8 +2459,8 @@ namespace DailyWallpaper
 
         private void UpdateLVAndRestoreChoice(List<GeminiFileStruct> gfl)
         {
-            UpdateListView(gfl, _source.Token);
-            RestoreListViewChoice(gfl, _source.Token);
+            UpdateListView(resultListView, ref gfl, _source.Token);
+            RestoreListViewChoice(resultListView, gfl, _source.Token);
         }
 
         private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
@@ -2459,7 +2486,9 @@ namespace DailyWallpaper
             }
         }
 
-        private void RestoreListViewChoice(List<GeminiFileStruct> gfl, CancellationToken token)
+        
+        private void RestoreListViewChoice(System.Windows.Forms.ListView liv, 
+            List<GeminiFileStruct> gfl, CancellationToken token)
         {
             if (resultListView.Items.Count > 0)
             {
@@ -2475,7 +2504,7 @@ namespace DailyWallpaper
                         }
                         if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
                         {
-                            it.Checked = gf.Checked;
+                            ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
                         }
                     }
                 }
@@ -2639,8 +2668,8 @@ namespace DailyWallpaper
                     geminiFileStructListForLVRedo = geminiFileStructListForLV;
                     geminiFileStructListForLV = geminiFileStructListForLVUndo;
                     if (needFlush)
-                        UpdateListView(geminiFileStructListForLV, _source.Token);
-                    RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
+                        UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
                     redoToolStripMenuItem.Enabled = true;
                     undoToolStripMenuItem.Enabled = false;
                 }
@@ -2661,8 +2690,8 @@ namespace DailyWallpaper
                     geminiFileStructListForLVUndo = geminiFileStructListForLV;
                     geminiFileStructListForLV = geminiFileStructListForLVRedo;
                     if (needFlush)
-                        UpdateListView(geminiFileStructListForLV, _source.Token);
-                    RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
+                        UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
                     redoToolStripMenuItem.Enabled = false;
                     undoToolStripMenuItem.Enabled = false;
                 }
@@ -2837,7 +2866,7 @@ namespace DailyWallpaper
 
         private void ConvertToCEFMode(bool cef = false)
         {
-            resultListView.Items.Clear();
+            ListViewOperate(resultListView, ListViewOP.CLEAR);
             cefScanRes = false;
             if (cef)
             {
@@ -2947,61 +2976,26 @@ namespace DailyWallpaper
                 {
                     return;
                 }
+                btnStop.Enabled = true;
+                _console.WriteLine(">>> Loading xml file...");
                 geminiFileStructListForLV =
                         ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                btnStop.Enabled = true;
-                _console.WriteLine(">>> Start to load file.");
-                _console.WriteLine(">>> Load file: Recolor...");
-                geminiFileStructListForLVUndo = geminiFileStructListForLV;
-                
-                /*var _updateFromFileTask = */Task.Run(() =>
+                var _updateFromFileTask = Task.Run(() =>
                 {
                     var token = _source.Token;
+                    geminiFileStructListForLVUndo = geminiFileStructListForLV;
+                    _console.WriteLine(">>> Recolor...");
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
                         SetCompareMode(), token);
-                    _console.WriteLine(">>> Load file: UpdateListView...");
-                    resultListView.Items.Clear();
-                    if (geminiFileStructListForLV.Count > 0)
-                    {
-                        foreach (var gf in geminiFileStructListForLV)
-                        {
-                            if (token.IsCancellationRequested)
-                            {
-                                token.ThrowIfCancellationRequested();
-                            }
-                            var item = new System.Windows.Forms.ListViewItem();
-                            // var item = new System.Windows.Forms.ListViewItem(" ");
-                            item.BackColor = gf.color;
-                            AddSubItem(item, "name", gf.name);
-                            AddSubItem(item, "lastMtime", gf.lastMtime);
-                            AddSubItem(item, "extName", gf.extName);
-                            AddSubItem(item, "sizeStr", gf.sizeStr);
-                            AddSubItem(item, "dir", gf.dir);
-                            AddSubItem(item, "HASH", gf.hash ?? "");
-                            AddSubItem(item, "fullPath", gf.fullPath);
-                            AddSubItem(item, "size", gf.size.ToString());
-                            resultListView.Items.Add(item);
-                        }
-                        SetText(summaryTextBox, $"Summay: Found "+
-                            "{geminiFileStructListForLV.Count:N0} duplicate files.", themeColor);
-                    }
-                    else
-                    {
-                        SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
-                    }
-                    RestoreListViewChoice(geminiFileStructListForLV, _source.Token);
-                });/*, _source.Token);
-                _tasks.Add(_updateFromFileTask);*/
+                    _console.WriteLine(">>> Load file, update to ListView...");
+                    UpdateListView(resultListView, ref geminiFileStructListForLV, token);
+                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
+                }, _source.Token);
+                _tasks.Add(_updateFromFileTask);
             }
-            /*catch (InvalidOperationException ex)
-            {
-                _console.WriteLine("\r\n!!! DO NOT modify the xml file by yourself: " +
-                    $"\r\n   {path}\r\n   {ex.Message}");
-            }*/
             catch (Exception ex)
             {
-                // _console.WriteLine($"xml -> Struct failed: {ex.Message}");
-                _console.WriteLine($"xml -> Struct failed: {ex}");
+                _console.WriteLine($"xml -> Struct failed: {ex.Message}");
             }
         }
 
@@ -3024,7 +3018,6 @@ namespace DailyWallpaper
                 
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
-                    /*var loadFileTask = */
                    UpdateFileToListView(dialog.FileName);
                 }               
             }

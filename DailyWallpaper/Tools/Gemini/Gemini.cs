@@ -80,6 +80,7 @@ namespace DailyWallpaper.Tools
             public bool available;
             private bool @checked;
             public bool selected;
+            public int index;
             public long size;
             public string sizeStr;
             public string name;
@@ -206,6 +207,7 @@ namespace DailyWallpaper.Tools
         {
             var tmp = new GeminiFileStruct
             {
+                index = 0,
                 fullPath = fullPath,
                 Checked = false,
                 available = false,
