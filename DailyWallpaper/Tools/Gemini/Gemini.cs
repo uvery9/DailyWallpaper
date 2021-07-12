@@ -1,10 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -500,6 +502,37 @@ namespace DailyWallpaper.Tools
         /// <param name="filePath">The file path to write the object instance to.</param>
         /// <param name="objectToWrite">The object instance to write to the file.</param>
         /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
+
+        public static bool IsList(object o)
+        {
+            if (o == null) return false;
+            return o is IList &&
+                   o.GetType().IsGenericType &&
+                   o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>));
+        }
+
+        public static void SaveOperationHistory<T>(string pathName, List<T> list)
+        {
+            // Path.
+            var executingLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var dir = Path.Combine(executingLocation, "Gemini.History");
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            /*if (!IsList(list))
+            {
+                return;
+            }*/
+
+            if (list.Count < 1)
+            {
+                return;
+            }
+            pathName = Path.Combine(dir, pathName);
+            WriteToXmlFile(pathName, list);
+        }
+
         public static void WriteToXmlFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
         {
             TextWriter writer = null;
