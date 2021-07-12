@@ -664,12 +664,79 @@ namespace DailyWallpaper
         {
             ADD,
             CLEAR,
-            UPDATE_CHECK
+            UPDATE_CHECK,
+            UPDATE_CHECK_INTHELOOP,
+            UPDATE_CHECK_BY_INDEX
         }
+
+
+        private delegate void ListViewOperateLoopDelegate(System.Windows.Forms.ListView liv, 
+            ListViewOP op, List<GeminiFileStruct> gfl,
+            Action<bool, List<GeminiFileStruct>> actionLoop);
+
+        private void ListViewOperateLoop(System.Windows.Forms.ListView liv,
+            ListViewOP op, List<GeminiFileStruct> gfl,
+            Action<bool, List<GeminiFileStruct>> actionLoop)
+        {
+            if (liv.InvokeRequired)
+            {
+                var addDele = new ListViewOperateLoopDelegate(ListViewOperateLoop);
+                liv.Invoke(addDele, new object[] { liv, op, gfl, actionLoop });
+            }
+            else
+            {
+                if (op == ListViewOP.UPDATE_CHECK_INTHELOOP)
+                {
+                    var tmpL = new List<GeminiFileStruct>();
+                    foreach (var it in liv.Items)
+                    {
+                        var lvi = ((System.Windows.Forms.ListViewItem)it);
+                        var fullPathLV = lvi.SubItems["fullPath"].Text;
+                        foreach (var gf in gfl)
+                        {
+                            var tmp = gf;
+                            if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                            {
+                                tmp.Checked = lvi.Checked;
+                                tmpL.Add(tmp);
+                                break;
+                            }
+                        }
+                    }
+                    actionLoop(true, tmpL);
+
+                }
+                if (op == ListViewOP.UPDATE_CHECK_BY_INDEX)
+                {
+                    var tmpL = new List<GeminiFileStruct>();
+                    foreach (var gf in gfl)
+                    {
+                        var tmp = gf;
+                        var lvi = resultListView.Items[tmp.index];
+                        var fullPathLV = lvi.SubItems["fullPath"].Text;
+                        if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                        {
+                            tmp.Checked = lvi.Checked;
+                            tmpL.Add(tmp);
+                        }
+                        else
+                        {
+                            actionLoop(false, tmpL);
+                        }
+                    }
+                    actionLoop(true, tmpL);
+
+                }
+            }
+
+        }
+
+
         private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
             System.Windows.Forms.ListViewItem item = null, bool ischeck = false);
         private void ListViewOperate(System.Windows.Forms.ListView liv, ListViewOP op,
-            System.Windows.Forms.ListViewItem item = null, bool ischeck = false)
+            System.Windows.Forms.ListViewItem item = null, bool ischeck = false
+           )
         {
             if (liv.InvokeRequired)
             {
@@ -2141,57 +2208,27 @@ namespace DailyWallpaper
         private List<GeminiFileStruct> UpdateGFLChecked(List<GeminiFileStruct> gfl)
         {
             var tmpL = new List<GeminiFileStruct>();
-            if (resultListView.Items.Count > 0)
+            void UpdateGeminiFileStruct(bool res, List<GeminiFileStruct> gf)
             {
-                /*var timer = new Stopwatch();
-                timer.Start();*/
-                try
+                if (res)
                 {
-                    Debug.WriteLine("Fast start...");
-                    foreach (var gf in gfl)
-                    {
-                        var tmp = gf;
-                        var item = resultListView.Items[tmp.index];
-                        var fullPathLV = item.SubItems["fullPath"].Text;
-                        if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                        {
-                            tmp.Checked = item.Checked;
-                            tmpL.Add(tmp);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                    if (tmpL.Count == gfl.Count)
-                    {
-                        return tmpL;
-                    }
-                    Debug.WriteLine("Fast succeed.");
+                    tmpL = gf;
                 }
-                catch
+            }
+            try
+            {
+                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_CHECK_BY_INDEX, gfl,
+                    UpdateGeminiFileStruct);
+                if (tmpL.Count == gfl.Count)
                 {
-                    Debug.WriteLine("Slow...");
-                    tmpL = new List<GeminiFileStruct>();
-                    foreach (var item in resultListView.Items)
-                    {
-                        var it = ((System.Windows.Forms.ListViewItem)item);
-                        var fullPathLV = it.SubItems["fullPath"].Text;
-                        foreach (var gf in gfl)
-                        {
-                            var tmp = gf;
-                            if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                            {
-                                tmp.Checked = it.Checked;
-                                tmpL.Add(tmp);
-                                break;
-                            }
-                        }
-                    }
+                    return tmpL;
                 }
-                /*timer.Stop();
-                var hashCostTime = GetTimeStringMsOrS(timer.Elapsed);
-                _console.WriteLine($"click cost time: {hashCostTime}");*/
+            }
+            catch
+            {
+                tmpL = new List<GeminiFileStruct>();
+                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_CHECK_INTHELOOP, gfl, 
+                    UpdateGeminiFileStruct);
             }
             return tmpL;
         }
@@ -2204,7 +2241,7 @@ namespace DailyWallpaper
             }
             else
             {
-                MultipleSelectOperationsAction(MultipleSelectOperations.SELECT_ALL);
+                MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.SELECT_ALL);
             }
         }
 
@@ -2216,7 +2253,7 @@ namespace DailyWallpaper
             }
             else
             {
-                MultipleSelectOperationsAction(MultipleSelectOperations.UNSELECT_ALL);
+                MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.UNSELECT_ALL);
             }
         }
 
@@ -2229,7 +2266,7 @@ namespace DailyWallpaper
             }
             else
             {
-                MultipleSelectOperationsAction(MultipleSelectOperations.REVERSE_ELECTION);
+                MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.REVERSE_ELECTION);
             }
         }
 
@@ -2338,7 +2375,7 @@ namespace DailyWallpaper
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
                         SetCompareMode(), _source.Token);
                     UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
-                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token, true);
+                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token, true);
                 }
                 _console.WriteLine(">>> Clean-UP Finished.");
             });
@@ -2364,51 +2401,59 @@ namespace DailyWallpaper
             UNSELECT_ALL,
             REVERSE_ELECTION
         };
-        private void MultipleSelectOperationsAction(MultipleSelectOperations op)
+        private void MultipleSelectOperationsAction(
+            System.Windows.Forms.ListView liv, MultipleSelectOperations op)
         {
+            if (liv.Items.Count < 1)
+            {
+                return;
+            }
+            geminiFileStructListForLVUndo = geminiFileStructListForLV;
+            undoToolStripMenuItem.Enabled = true;
             var mpTask = Task.Run(() => {
-                if (resultListView.Items.Count < 1)
+                try 
                 {
-                    return;
-                }
-                geminiFileStructListForLVUndo = geminiFileStructListForLV;
-                undoToolStripMenuItem.Enabled = true;
-                if (op == MultipleSelectOperations.REVERSE_ELECTION)
-                {
-                    geminiFileStructListForLV = UpdateGFLChecked(geminiFileStructListForLV)
-                        ?? geminiFileStructListForLV;
-                }
-                var tmpGfl = new List<GeminiFileStruct>();
-                foreach (var item in geminiFileStructListForLV)
-                {
-                    var tmp = item;
                     if (op == MultipleSelectOperations.REVERSE_ELECTION)
                     {
-                        if (item.Checked)
+                        geminiFileStructListForLV = UpdateGFLChecked(geminiFileStructListForLV)
+                            ?? geminiFileStructListForLV;
+                    }
+                    var tmpGfl = new List<GeminiFileStruct>();
+                    foreach (var item in geminiFileStructListForLV)
+                    {
+                        var tmp = item;
+                        if (op == MultipleSelectOperations.REVERSE_ELECTION)
                         {
-                            tmp.Checked = false;
+                            if (item.Checked)
+                            {
+                                tmp.Checked = false;
+                            }
+                            else
+                            {
+                                tmp.Checked = true;
+                            }
                         }
-                        else
+                        else if (op == MultipleSelectOperations.SELECT_ALL)
                         {
                             tmp.Checked = true;
                         }
+                        else if (op == MultipleSelectOperations.UNSELECT_ALL)
+                        {
+                            tmp.Checked = false;
+                        }
+                        tmpGfl.Add(tmp);
                     }
-                    else if (op == MultipleSelectOperations.SELECT_ALL)
+                    if (tmpGfl.Count < 1)
                     {
-                        tmp.Checked = true;
+                        return;
                     }
-                    else if (op == MultipleSelectOperations.UNSELECT_ALL)
-                    {
-                        tmp.Checked = false;
-                    }
-                    tmpGfl.Add(tmp);
-                }
-                if (tmpGfl.Count < 1)
+                    geminiFileStructListForLV = tmpGfl;
+                    RestoreListViewChoiceInvoke(liv, geminiFileStructListForLV, _source.Token);
+                } catch (Exception ex)
                 {
-                    return;
+                    _console.WriteLine($"{ex}");
+                    _console.WriteLine($"{ex.Message}");
                 }
-                geminiFileStructListForLV = tmpGfl;
-                RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
             });
             _tasks.Add(mpTask);
         }
@@ -2495,7 +2540,7 @@ namespace DailyWallpaper
         private void UpdateLVAndRestoreChoice(List<GeminiFileStruct> gfl)
         {
             UpdateListView(resultListView, ref gfl, _source.Token);
-            RestoreListViewChoice(resultListView, gfl, _source.Token);
+            RestoreListViewChoiceInvoke(resultListView, gfl, _source.Token);
         }
 
         private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
@@ -2521,11 +2566,17 @@ namespace DailyWallpaper
             }
         }
 
-        
-        private void RestoreListViewChoice(System.Windows.Forms.ListView liv, 
+        private delegate void RestoreListViewChoiceInvokeDele(System.Windows.Forms.ListView liv,
+            List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false);
+        private void RestoreListViewChoiceInvoke(System.Windows.Forms.ListView liv,
             List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false)
         {
-            if (resultListView.Items.Count > 0)
+            if (liv.InvokeRequired)
+            {
+                var f = new RestoreListViewChoiceInvokeDele(RestoreListViewChoiceInvoke);
+                liv.Invoke(f, new object[] { liv, gfl, token, indexChange });
+            }
+            else
             {
                 try
                 {
@@ -2533,25 +2584,35 @@ namespace DailyWallpaper
                     {
                         throw new Exception("USE SLOW MODE.");
                     }
-                    _console.WriteLine("FAST..........");
+                    // _console.WriteLine("FAST..........");
                     foreach (var gf in gfl)
                     {
                         if (token.IsCancellationRequested)
                         {
                             token.ThrowIfCancellationRequested();
                         }
-                        var it = resultListView.Items[gf.index];
+                        if (liv.Items.Count < 1)
+                        {
+                            return;
+                        }
+                        var it = liv.Items[gf.index];
                         var fullPathLV = it.SubItems["fullPath"].Text;
                         if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
                         {
                             ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
                         }
                     }
+                    // _console.WriteLine("FAST No Exception..........");
                 }
-                catch
+                catch (Exception ex)
                 {
+                    _console.WriteLine($"{ex.Message}");
                     _console.WriteLine("SLOW..........");
-                    foreach (var item in resultListView.Items)
+                    if (liv.Items.Count < 1)
+                    {
+                        return;
+                    }
+                    foreach (var item in liv.Items)
                     {
                         var it = (System.Windows.Forms.ListViewItem)item;
                         var fullPathLV = it.SubItems["fullPath"].Text;
@@ -2567,8 +2628,64 @@ namespace DailyWallpaper
                             }
                         }
                     }
-                }         
+                }
             }
+
+        }
+        private void RestoreListViewChoice(System.Windows.Forms.ListView liv, 
+            List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false)
+        {
+            try
+            {
+                if (indexChange)
+                {
+                    throw new Exception("USE SLOW MODE.");
+                }
+                // _console.WriteLine("FAST..........");
+                foreach (var gf in gfl)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                    if (resultListView.Items.Count < 1)
+                    {
+                        return;
+                    }
+                        var it = resultListView.Items[gf.index];
+                    var fullPathLV = it.SubItems["fullPath"].Text;
+                    if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
+                    {
+                        ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
+                    }
+                }
+            }
+            catch (FieldAccessException ex)
+            {
+                _console.WriteLine($"{ex.Message}");
+                _console.WriteLine("SLOW..........");
+                if (resultListView.Items.Count < 1)
+                {
+                    return;
+                }
+                foreach (var item in resultListView.Items)
+                {
+                    var it = (System.Windows.Forms.ListViewItem)item;
+                    var fullPathLV = it.SubItems["fullPath"].Text;
+                    foreach (var gf in gfl)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
+                        {
+                            ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
+                        }
+                    }
+                }
+            }         
+
         }
 
         private void updateButton_Click(object sender, EventArgs e)
@@ -2732,7 +2849,7 @@ namespace DailyWallpaper
                     geminiFileStructListForLV = geminiFileStructListForLVUndo;
                     if (needFlush)
                         UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
-                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                     redoToolStripMenuItem.Enabled = true;
                     undoToolStripMenuItem.Enabled = false;
                 }
@@ -2754,7 +2871,7 @@ namespace DailyWallpaper
                     geminiFileStructListForLV = geminiFileStructListForLVRedo;
                     if (needFlush)
                         UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
-                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                     redoToolStripMenuItem.Enabled = false;
                     undoToolStripMenuItem.Enabled = false;
                 }
@@ -3044,7 +3161,7 @@ namespace DailyWallpaper
                         SetCompareMode(), token);
                     _console.WriteLine(">>> Load file, update to ListView...");
                     UpdateListView(resultListView, ref geminiFileStructListForLV, token);
-                    RestoreListViewChoice(resultListView, geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                 }, _source.Token);
                 _tasks.Add(_updateFromFileTask);
             }
@@ -3266,13 +3383,11 @@ namespace DailyWallpaper
                         var gf = geminiFileStructListForLV[ret];
                         if (gf.index == ret && gf.fullPath.Equals(fitem.SubItems["fullPath"].Text))
                         {
-                            gf.Checked = fitem.Checked;
                             geminiFileStructListForLV[ret].Checked = fitem.Checked;
-                            // Checked = fitem.Checked;
                             //_console.WriteLine("FAST CHECKED1.");
                         }
-                        _console.WriteLine($"{gf.Checked}");
-                        _console.WriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");
+                        /*_console.WriteLine($"{gf.Checked}");
+                        _console.WriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");*/
                     }
                     //_console.WriteLine("FAST CHECKED2.");
                 }
