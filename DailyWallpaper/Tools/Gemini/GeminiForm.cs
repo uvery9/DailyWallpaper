@@ -292,10 +292,10 @@ namespace DailyWallpaper
             }
             try
             {
+                redoToolStripMenuItem.Enabled = false;
+                undoToolStripMenuItem.Enabled = false;
                 var taskDel = Task.Run(() => 
                 {
-                    redoToolStripMenuItem.Enabled = false;
-                    undoToolStripMenuItem.Enabled = false;
                     deleteList.Clear();
                     if (resultListView.Items.Count > 0)
                     {
@@ -712,7 +712,7 @@ namespace DailyWallpaper
                     foreach (var gf in gfl)
                     {
                         var tmp = gf;
-                        var lvi = resultListView.Items[tmp.index];
+                        var lvi = liv.Items[tmp.index];
                         var fullPathLV = lvi.SubItems["fullPath"].Text;
                         if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
                         {
