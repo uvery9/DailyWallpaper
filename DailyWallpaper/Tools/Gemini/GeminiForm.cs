@@ -678,6 +678,8 @@ namespace DailyWallpaper
             ref List<GeminiFileStruct> gfL,  CancellationToken token)
         {
             ListViewOperate(liv, ListViewOP.CLEAR);
+            undoToolStripMenuItem.Enabled = false;
+            redoToolStripMenuItem.Enabled = false;
             var tmpL = new List<GeminiFileStruct>();
             if (gfL.Count > 0)
             {
@@ -2483,11 +2485,6 @@ namespace DailyWallpaper
             gfL.Add(item);
         }
 
-        private void UpdateLVAndRestoreChoice(List<GeminiFileStruct> gfl)
-        {
-            UpdateListView(resultListView, ref gfl, _source.Token);
-            RestoreListViewChoiceInvoke(resultListView, gfl, _source.Token);
-        }
 
         private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
         {
@@ -2638,6 +2635,7 @@ namespace DailyWallpaper
             Task.Run(() => {
                 _console.WriteLine($">>> Update start with {filterMode}...");
                 SetFolderFilter(folderFilterTextBox.Text, print: true);
+
                 var updatedList = new List<GeminiFileStruct>();
                 if (folderFilter.Count > 0)
                 {
@@ -2656,8 +2654,9 @@ namespace DailyWallpaper
                     }
                 }
                 geminiFileStructListForLVUndo = geminiFileStructListForLV;
+                undoToolStripMenuItem.Enabled = true;
                 geminiFileStructListForLV = ListReColorByGroup(updatedList, SetCompareMode(), _source.Token);
-                UpdateLVAndRestoreChoice(geminiFileStructListForLV);
+                RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
 
                 var cnt =
                     (from i in geminiFileStructListForLV
@@ -2803,8 +2802,6 @@ namespace DailyWallpaper
                 {
                     geminiFileStructListForLVRedo = geminiFileStructListForLV;
                     geminiFileStructListForLV = geminiFileStructListForLVUndo;
-                    if (needFlush)
-                        UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
                     RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                     redoToolStripMenuItem.Enabled = true;
                     undoToolStripMenuItem.Enabled = false;
@@ -2825,8 +2822,6 @@ namespace DailyWallpaper
                 {
                     geminiFileStructListForLVUndo = geminiFileStructListForLV;
                     geminiFileStructListForLV = geminiFileStructListForLVRedo;
-                    if (needFlush)
-                        UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
                     RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                     redoToolStripMenuItem.Enabled = false;
                     undoToolStripMenuItem.Enabled = false;
@@ -2921,6 +2916,7 @@ namespace DailyWallpaper
                         return;
                     }
                     geminiFileStructListForLVUndo = geminiFileStructListForLV;
+                    undoToolStripMenuItem.Enabled = true;
                     geminiFileStructListForLV = godsChoiceList;
                     RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                     SetText(summaryTextBox, $"God chose {cnt:N0} files", cnt > 0 ? themeColor : themeColorClean);
@@ -3022,9 +3018,6 @@ namespace DailyWallpaper
                 nameColumnHeader.Width = (int)(1.5 * nameColumnHeaderWidth);
                 modifiedTimeColumnHeader.Width = (int)(1.5 * modifiedTimeColumnHeaderWidth);
 
-                redoToolStripMenuItem.Enabled = false;
-                undoToolStripMenuItem.Enabled = false;
-
             }
             else
             {
@@ -3053,9 +3046,6 @@ namespace DailyWallpaper
 
                 nameColumnHeader.Width = nameColumnHeaderWidth;
                 modifiedTimeColumnHeader.Width = modifiedTimeColumnHeaderWidth;
-
-                redoToolStripMenuItem.Enabled = true;
-                undoToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -3080,7 +3070,7 @@ namespace DailyWallpaper
             cleanEmptyFolderModeToolStripMenuItem.PerformClick();
         }
 
-        private void UpdateGeminiFileToListView(string path)
+        private void LoadGeminiFileFileToListView(string path)
         {
             try
             {
@@ -3096,7 +3086,6 @@ namespace DailyWallpaper
                 var _updateFromFileTask = Task.Run(() =>
                 {
                     var token = _source.Token;
-                    geminiFileStructListForLVUndo = geminiFileStructListForLV;
                     _console.WriteLine(">>> Recolor...");
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
                         SetCompareMode(), token);
@@ -3139,7 +3128,7 @@ namespace DailyWallpaper
                     }
                     else
                     {
-                        UpdateGeminiFileToListView(dialog.FileName);
+                        LoadGeminiFileFileToListView(dialog.FileName);
                     }
                 }               
             }
@@ -3408,7 +3397,7 @@ namespace DailyWallpaper
                     }
                     else if (File.Exists(path) && path.ToLower().EndsWith(".xml"))
                     {
-                        UpdateGeminiFileToListView(path);
+                        LoadGeminiFileFileToListView(path);
                     }
                 }
                 else

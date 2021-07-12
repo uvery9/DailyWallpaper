@@ -18,18 +18,27 @@ using static DailyWallpaper.Tools.Gemini;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Reflection;
+using Button = System.Windows.Forms.Button;
 
 namespace DailyWallpaper
 {
     partial class GeminiForm
     {
-        private void UpdateIndexInGFLAfterSorted()
-        {
-            foreach (var item in resultListView.Items)
-            {
+        private delegate void EnableButtonDelegate(Button b, bool enable);
 
+        private void EnableButton(Button b, bool enable)
+        {
+            if (b.InvokeRequired) //  && b.IsHandleCreated
+            {
+                var f = new EnableButtonDelegate(EnableButton);
+                b.Invoke(f, new object[] { b, enable });
             }
+            else
+            {
+                b.Enabled = enable;
+            } 
         }
+
         private enum ListViewOP
         {
             ADD,
