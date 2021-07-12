@@ -842,8 +842,10 @@ namespace DailyWallpaper.View
             // panel.Size = new System.Drawing.Size(241, 37);
             //MessageBox.Show(_Icon_Every24HoursMenuItem.); // 32, 19
             // panel.TabIndex = 7;
-            var panelHost = new ToolStripControlHost(panel);
-            panelHost.BackColor = backColor;
+            var panelHost = new ToolStripControlHost(panel)
+            {
+                BackColor = backColor
+            };
 
             return panelHost;
         }

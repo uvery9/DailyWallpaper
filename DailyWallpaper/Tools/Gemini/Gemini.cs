@@ -75,11 +75,9 @@ namespace DailyWallpaper.Tools
 
             public bool Checked { get => @checked; set => @checked = value; }
         }
-        public struct GeminiFileStruct
+        public class GeminiFileStruct
         {
-            public bool available;
             private bool @checked;
-            public bool selected;
             public int index;
             public long size;
             public string sizeStr;
@@ -158,7 +156,6 @@ namespace DailyWallpaper.Tools
                 tmp += "\r\nhash:         " + hash ?? "";
                 tmp += "\r\ncreateTime:   " + crtTime.ToString() ?? "";
                 tmp += "\r\nlastMtime:    " + lastMtime.ToString() ?? "";
-                tmp += "\r\navailable:    " + available.ToString() ?? "";
                 tmp += "\r\nwillDelete:   " + Checked.ToString() ?? "";
                 return tmp;
             }
@@ -184,7 +181,7 @@ namespace DailyWallpaper.Tools
         }
         public static string Len2Str(long len)
         {
-            var str = "";
+            string str;
             if (len > 1024 * 1024 * 1024)
             {
                 str = (len / 1024 / 1024 / 1024) + "GB";
@@ -210,8 +207,6 @@ namespace DailyWallpaper.Tools
                 index = 0,
                 fullPath = fullPath,
                 Checked = false,
-                available = false,
-                selected = false,
 
                 name = null,
                 extName = null,
@@ -233,16 +228,10 @@ namespace DailyWallpaper.Tools
                 tmp.lastMtime = new FileInfo(fullPath).LastWriteTime.ToString("yyyy/M/d H:mm");
                 tmp.crtTime = new FileInfo(fullPath).CreationTime.ToString("yyyy/M/d H:mm");
                 tmp.extName = Path.GetExtension(fullPath);
-                tmp.available = true;
             }
             catch
             {
-                tmp.available = false;
                 throw;
-            }
-            finally
-            {
-
             }
             return tmp;
         }

@@ -3249,22 +3249,32 @@ namespace DailyWallpaper
             OpenFileOrDirectory(FileOP.PROPERTIES);
         }
 
+        // unselect and select all will flush.
         private void resultListView_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
                 var fitem = e.Item.ListView.FocusedItem;
+                if (fitem == null)
+                {
+                    return;
+                }
                 try
                 {
                     if (int.TryParse(fitem.SubItems["index"].Text, out int ret))
                     {
                         var gf = geminiFileStructListForLV[ret];
-                        if (gf.index == ret)
+                        if (gf.index == ret && gf.fullPath.Equals(fitem.SubItems["fullPath"].Text))
                         {
                             gf.Checked = fitem.Checked;
+                            geminiFileStructListForLV[ret].Checked = fitem.Checked;
+                            // Checked = fitem.Checked;
+                            //_console.WriteLine("FAST CHECKED1.");
                         }
+                        _console.WriteLine($"{gf.Checked}");
+                        _console.WriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");
                     }
-                    _console.WriteLine("FAST CHECKED.");
+                    //_console.WriteLine("FAST CHECKED2.");
                 }
                 catch
                 {
@@ -3282,7 +3292,6 @@ namespace DailyWallpaper
                     geminiFileStructListForLV = tmpL;
                 }
             }
-            
         }
     }
 }
