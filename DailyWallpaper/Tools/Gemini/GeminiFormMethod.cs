@@ -449,6 +449,357 @@ namespace DailyWallpaper
 
         }
 
+        private void ConvertToCEFMode(bool cef = false)
+        {
+            ListViewOperate(resultListView, ListViewOP.CLEAR);
+            cefScanRes = false;
+            if (cef)
+            {
+                targetFolder2TextBox.Text = "Now in Clean Empty Folders mode";
+                targetFolder2TextBox.Enabled = false;
+                targetFolder2TextBox.TextAlign = HorizontalAlignment.Center;
+                btnSelectTargetFolder2.Enabled = false;
+
+                fileMD5CheckBox.Enabled = false;
+                fileNameCheckBox.Enabled = false;
+                fileExtNameCheckBox.Enabled = false;
+                fileSHA1CheckBox.Enabled = false;
+                updateButton.Enabled = false;
+                ignoreFileCheckBox.Enabled = false;
+                ignoreFileSizecomboBox.Enabled = false;
+                ignoreFileSizeTextBox.Enabled = false;
+                cleanUpButton.Enabled = false;
+
+                alwaysCalculateHashToolStripMenuItem.Enabled = false;
+                protectFilesInGrpToolStripMenuItem.Enabled = false;
+                autocleanEmptyFoldersToolStripMenuItem.Enabled = false;
+
+                godsChoiceToolStripMenuItem.Enabled = false;
+
+                geminiProgressBar.Visible = false;
+                nameColumnHeader.Width = (int)(1.5 * nameColumnHeaderWidth);
+                modifiedTimeColumnHeader.Width = (int)(1.5 * modifiedTimeColumnHeaderWidth);
+
+            }
+            else
+            {
+                targetFolder2TextBox.Text = "";
+                targetFolder2TextBox.Enabled = true;
+                targetFolder2TextBox.TextAlign = default;
+                btnSelectTargetFolder2.Enabled = true;
+
+                fileMD5CheckBox.Enabled = true;
+                fileNameCheckBox.Enabled = true;
+                fileExtNameCheckBox.Enabled = true;
+                fileSHA1CheckBox.Enabled = true;
+                updateButton.Enabled = true;
+                ignoreFileCheckBox.Enabled = true;
+                ignoreFileSizecomboBox.Enabled = true;
+                ignoreFileSizeTextBox.Enabled = true;
+                cleanUpButton.Enabled = true;
+
+                alwaysCalculateHashToolStripMenuItem.Enabled = true;
+                protectFilesInGrpToolStripMenuItem.Enabled = true;
+                autocleanEmptyFoldersToolStripMenuItem.Enabled = true;
+
+                godsChoiceToolStripMenuItem.Enabled = true;
+
+                geminiProgressBar.Visible = true;
+
+                nameColumnHeader.Width = nameColumnHeaderWidth;
+                modifiedTimeColumnHeader.Width = modifiedTimeColumnHeaderWidth;
+            }
+        }
+        private void SelectFolder(string keyInIni, System.Windows.Forms.TextBox tx,
+            List<string> targetFolderHistory)
+        {
+            using (var dialog = new CommonOpenFileDialog())
+            {
+                if (Directory.Exists(tx.Text))
+                {
+                    dialog.InitialDirectory = tx.Text;
+                }
+                else
+                {
+                    dialog.InitialDirectory = desktopPath;
+                }
+                dialog.IsFolderPicker = true;
+                dialog.EnsurePathExists = true;
+                dialog.Multiselect = false;
+                dialog.Title = "Select Target Folders";
+
+                // maybe add some log
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
+                {
+                    var path = dialog.FileName;
+                    if (!UpdateTextAndIniFile(keyInIni, path, targetFolderHistory, tx))
+                    {
+                        return;
+                    }
+                    tx.Text = path;
+                }
+            }
+        }
+
+        private void UpdateCheckedInDelGFL(List<GeminiFileStruct> gfl, List<string> delList, GeminiFileStruct item)
+        {
+            item.Checked = false;
+            foreach (var it in delList)
+            {
+                if (item.fullPath.ToLower().Equals(it.ToLower()))
+                {
+                    item.Checked = true;
+                }
+            }
+            gfl.Add(item);
+        }
+        private void DeleteCEF()
+        {
+            if (!cefScanRes)
+            {
+                btnAnalyze.PerformClick();
+            }
+            var deleteCEF = Task.Run(() => {
+                foreach (var item in resultListView.Items)
+                {
+                    var it = (System.Windows.Forms.ListViewItem)item;
+                    var fullPathLV = it.SubItems["name"].Text;
+                    if (it.Checked && Directory.Exists(fullPathLV))
+                    {
+                        _console.WriteLine($"delete ###  {fullPathLV}");
+                        FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
+                        deleteOrRecycleBin.Checked ?
+                        RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                        UICancelOption.DoNothing);
+                    }
+                }
+                var tmpL = new List<GeminiCEFStruct>();
+                foreach (var item in geminiCEFStructList)
+                {
+                    if (Directory.Exists(item.fullPath))
+                    {
+                        tmpL.Add(item);
+                    }
+                }
+                geminiCEFStructList = tmpL;
+                UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
+                UpdateCEFChecked(geminiCEFStructList);
+                cefScanRes = false;
+            });
+            _tasks.Add(deleteCEF);
+        }
+        private void EmptyJudge(string dir)
+        {
+            if (!Directory.Exists(dir))
+            {
+                return;
+            }
+            var entries = Directory.EnumerateFileSystemEntries(dir);
+            if (!entries.Any())
+            {
+                try
+                {
+                    FileSystem.DeleteDirectory(dir, UIOption.OnlyErrorDialogs,
+                        deleteOrRecycleBin.Checked ?
+                        RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                        UICancelOption.DoNothing);
+                    _console.WriteLine($"...... Delete empty folder:  {dir}");
+                }
+                catch (UnauthorizedAccessException) { }
+                catch (DirectoryNotFoundException) { }
+            }
+        }
+
+        private void EmptyJudgeCEF(string dir)
+        {
+            var entries = Directory.EnumerateFileSystemEntries(dir);
+            if (!entries.Any())
+            {
+                try
+                {
+                    string lastMtime = "";
+                    try
+                    {
+                        lastMtime = new FileInfo(dir).LastWriteTime.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        lastMtime = ex.Message;
+                    }
+                    var geminiCEF = new GeminiCEFStruct();
+                    geminiCEF.name = dir;
+                    geminiCEF.fullPath = dir;
+                    geminiCEF.Checked = false;
+                    geminiCEF.lastMtime = lastMtime;
+                    geminiCEFStructList.Add(geminiCEF);
+                    _console.WriteLine($"... Found empty folder: {dir}");
+                }
+                catch (UnauthorizedAccessException) { }
+                catch (DirectoryNotFoundException) { }
+            }
+        }
+
+        void FileList2GeminiFileStructList(List<string> filesList,
+            ref List<GeminiFileStruct> gList, CancellationToken token)
+        {
+            gList = new List<GeminiFileStruct>();
+            if (filesList.Count > 0)
+            {
+                SetProgressMessage(geminiProgressBar, 0);
+                _console.WriteLine(">>> Start collecting all files...");
+                int i = 0;
+                foreach (var f in filesList)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                    gList.Add(Gemini.FillGeminiFileStruct(f));
+                    i++;
+                    if (i % 100 == 0)
+                    {
+                        _mutex.WaitOne();
+                        SetProgressMessage(geminiProgressBar, (int)((double)i / filesList.Count * 100));
+                        _mutex.ReleaseMutex();
+                    }
+                }
+                _console.WriteLine(">>> All files collected.");
+            }
+        }
+
+        private void FindFilesInDir(string dir, List<string> filesList, CancellationToken token)
+        {
+            try
+            {
+                foreach (var fi in Directory.EnumerateFiles(dir))
+                {
+                    filesList.Add(fi);
+                    // _console.WriteLine($"print >>>  {fi}");
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                }
+            }
+            catch (UnauthorizedAccessException) { }
+            catch (DirectoryNotFoundException) { }
+        }
+
+        private void FindFilesWithProtectMode(string dir, List<string> filesList, CancellationToken token)
+        {
+            if (String.IsNullOrEmpty(dir))
+            {
+                throw new ArgumentException("Starting directory is a null reference or an empty string: dir");
+            }
+            try
+            {
+                foreach (var d in Directory.EnumerateDirectories(dir))
+                {
+                    // FUCK THE $RECYCLE.BIN
+                    if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
+                    {
+                        continue;
+                    }
+                    if (FolderFilter(d, filterMode))
+                    {
+                        continue;
+                    }
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                    FindFilesWithProtectMode(d, filesList, token);
+                }
+                FindFilesInDir(dir, filesList, token);
+            }
+            catch (UnauthorizedAccessException) { }
+        }
+
+        /// <summary>
+        /// check if Controlled Or NotExist
+        /// </summary>
+        private bool IsControlled(string path, bool print = true)
+        {
+            if (gemini.IsControlledFolder(path))
+            {
+                if (print)
+                {
+                    _console.WriteLine($"\r\nThe folder is CONTROLLED, please re-select:\r\n   {path}");
+                    _console.WriteLine("\r\nYou could Type \" list controlled \" in the \r\n" +
+                        "\"Folder Filter\" and Type ENTER" +
+                        " to see all the controlled folders.");
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private bool UpdateTextAndIniFile(string keyInIni, string path,
+            List<string> targetFolderHistory, System.Windows.Forms.TextBox tx = null,
+            bool updateIni = true, bool print = true)
+        {
+            if (IsControlled(path))
+            {
+                return false;
+            }
+            if (!Directory.Exists(path))
+            {
+                if (print)
+                {
+                    _console.WriteLine($"\r\nThe {keyInIni} folder dose NOT EXIST, please re-select:\r\n   {path}");
+                }
+                return false;
+            }
+            // DirectoryIn
+            path = Path.GetFullPath(path);
+            if (tx != null)
+            {
+                tx.Text = path;
+                targetFolderHistory.Add(path);
+                BindHistory(tx, targetFolderHistory);
+            }
+            if (updateIni)
+            {
+                gemini.ini.UpdateIniItem(keyInIni, path, "Gemini");
+            }
+            if (print)
+            {
+                _console.WriteLine($">>> You have selected {keyInIni} folder:\r\n  {path}");
+            }
+            return true;
+        }
+
+        private void UpdateREAndModeCheckBox(FilterMode mode)
+        {
+            if (mode == FilterMode.GEN_FIND)
+            {
+                regexCheckBox.Checked = false;
+                modeCheckBox.Checked = true;
+            }
+            if (mode == FilterMode.GEN_PROTECT)
+            {
+                regexCheckBox.Checked = false;
+                modeCheckBox.Checked = false;
+            }
+            if (mode == FilterMode.REGEX_FIND)
+            {
+                regexCheckBox.Checked = true;
+                modeCheckBox.Checked = true;
+            }
+            if (mode == FilterMode.REGEX_PROTECT)
+            {
+                regexCheckBox.Checked = true;
+                modeCheckBox.Checked = false;
+            }
+        }
+        private void UpdateIniAndTextBox()
+        {
+            _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
+            UpdateFilterExampleText(filterMode);
+            gemini.ini.UpdateIniItem("FilterMode", filterMode.ToString(), "Gemini");
+        }
+
+
         private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
             System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
             System.Windows.Forms.ListViewItem[] items = null, Action<bool, string> action = null);
