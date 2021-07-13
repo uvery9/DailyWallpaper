@@ -18,6 +18,7 @@ using static DailyWallpaper.Tools.Gemini;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Reflection;
+using ListViewItem = System.Windows.Forms.ListViewItem;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -572,6 +573,7 @@ namespace DailyWallpaper
             if (gfL.Count > 0)
             {
                 int index = 0;
+                var items = new List<ListViewItem>();
                 foreach (var gf in gfL)
                 {
                     if (token.IsCancellationRequested)
@@ -589,13 +591,18 @@ namespace DailyWallpaper
                     AddSubItem(item, "fullPath", gf.fullPath);
                     AddSubItem(item, "size", gf.size.ToString());
                     AddSubItem(item, "index", index.ToString());
-                    ListViewOperate(liv, ListViewOP.ADD, item);
+                    // ListViewOperate(liv, ListViewOP.ADD, item);
+                    items.Add(item);
                     var tmp = gf;
                     tmp.index = index;
                     index++;
                     tmpL.Add(tmp);
                 }
                 gfL = tmpL;
+                if (items.Count > 0)
+                {
+                    ListViewOperate(liv, ListViewOP.ADDRANGE, items: items.ToArray());
+                }
                 SetText(summaryTextBox, $"Summay: Found {gfL.Count:N0} duplicate files.", themeColor);
             }
             else
@@ -903,16 +910,21 @@ namespace DailyWallpaper
                 _console.WriteLine(">>> The folder is CLEAN.");
                 return;
             }
+            var items = new List<ListViewItem>();
             foreach (var gcef in gcefl)
             {
                 if (token.IsCancellationRequested)
                 {
                     token.ThrowIfCancellationRequested();
                 }
-                var item = new System.Windows.Forms.ListViewItem();
+                var item = new ListViewItem();
                 AddSubItem(item, "name", gcef.fullPath);
                 AddSubItem(item, "lastMtime", gcef.lastMtime);
-                ListViewOperate(resultListView, ListViewOP.ADD, item);
+                items.Add(item);
+            }
+            if (items.Count > 0)
+            {
+                ListViewOperate(resultListView, ListViewOP.ADDRANGE, items: items.ToArray());
             }
             _console.WriteLine($">>> Found {geminiCEFStructList.Count:N0} empty folder(s).");
             SetText(summaryTextBox, $"Summay: Found {geminiCEFStructList.Count:N0} duplicate files.", themeColor);
@@ -2846,9 +2858,9 @@ namespace DailyWallpaper
                 //use cursor points.
                 var p = e.Item.ListView.PointToClient(Cursor.Position);
                 // e.Item.ListView.Columns.IndexOf(e.Item.ListView.Items.);
-                var where = e.Item.ListView;
-                var sp = new Point(p.X + 25, p.Y + 10);
-                var duration = 3000;
+                //var where = e.Item.ListView;
+                //var sp = new Point(p.X + 25, p.Y + 10);
+                // var duration = 3000;
                 // when I move the cursor, will no cause disappear.
                 if (subI["dir"].Bounds.Contains(p))
                 {

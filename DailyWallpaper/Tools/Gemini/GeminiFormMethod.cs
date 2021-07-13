@@ -476,6 +476,7 @@ namespace DailyWallpaper
         private enum ListViewOP
         {
             ADD,
+            ADDRANGE,
             CLEAR,
             UPDATE_CHECK,
             UPDATE_CHECK_INTHELOOP,
@@ -574,15 +575,17 @@ namespace DailyWallpaper
 
 
         private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
-            System.Windows.Forms.ListViewItem item = null, bool ischeck = false);
+            System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
+            System.Windows.Forms.ListViewItem[] items = null);
         private void ListViewOperate(System.Windows.Forms.ListView liv, ListViewOP op,
-            System.Windows.Forms.ListViewItem item = null, bool ischeck = false
+            System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
+            System.Windows.Forms.ListViewItem[] items = null 
            )
         {
             if (liv.InvokeRequired)
             {
                 var addDele = new ListViewOperateDelegate(ListViewOperate);
-                liv.Invoke(addDele, new object[] { liv, op, item, ischeck });
+                liv.Invoke(addDele, new object[] { liv, op, item, ischeck, items });
             }
             else
             {
@@ -597,6 +600,10 @@ namespace DailyWallpaper
                 if (op == ListViewOP.UPDATE_CHECK)
                 {
                     item.Checked = ischeck;
+                }
+                if (op == ListViewOP.ADDRANGE)
+                {
+                    liv.Items.AddRange(items);
                 }
             }
         }
