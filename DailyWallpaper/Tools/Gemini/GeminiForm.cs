@@ -103,7 +103,6 @@ namespace DailyWallpaper
                     targetFolder2History, targetFolder2TextBox, updateIni: false);
             }*/
 
-            btnStop.Enabled = false;
             // default: send to RecycleBin
             deleteOrRecycleBin.Checked = false;
             if (gemini.ini.EqualsIgnoreCase("RecycleBin", "true", "Gemini"))
@@ -824,7 +823,6 @@ namespace DailyWallpaper
             {
                 btnDelete.Enabled = true;
                 btnAnalyze.Enabled = true;
-                btnStop.Enabled = false;
             }
         }
         private void AnalyzeEmptyFolder(string path)
@@ -2708,6 +2706,11 @@ namespace DailyWallpaper
         }
 
         private void GeminiForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void resultListView_SelectedIndexChanged_1(object sender, EventArgs e)
         {
 
         }

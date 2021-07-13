@@ -880,11 +880,11 @@ namespace DailyWallpaper
 
 
         private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
-            System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
-            System.Windows.Forms.ListViewItem[] items = null, Action<bool, string> action = null);
+            ListViewItem item = null, bool ischeck = false,
+            ListViewItem[] items = null, Action<bool, string> action = null);
         private void ListViewOperate(ListView liv, ListViewOP op,
-            System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
-            System.Windows.Forms.ListViewItem[] items = null, Action <bool, string> action = null
+            ListViewItem item = null, bool ischeck = false,
+            ListViewItem[] items = null, Action <bool, string> action = null
            )
         {
             if (liv.InvokeRequired)

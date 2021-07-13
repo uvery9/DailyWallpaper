@@ -95,9 +95,9 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanEmptyFolderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveLogToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveResultListToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -341,6 +341,7 @@
             this.resultListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.resultListView_ColumnClick);
             this.resultListView.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.resultListView_ItemChecked);
             this.resultListView.ItemMouseHover += new System.Windows.Forms.ListViewItemMouseHoverEventHandler(this.resultListView_ItemMouseHover);
+            this.resultListView.SelectedIndexChanged += new System.EventHandler(this.resultListView_SelectedIndexChanged_1);
             this.resultListView.DragDrop += new System.Windows.Forms.DragEventHandler(this.resultListView_DragDrop);
             this.resultListView.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
             this.resultListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.resultListView_KeyDown);
@@ -785,13 +786,6 @@
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(332, 6);
             // 
-            // loadListViewFromFileToolStripMenuItem
-            // 
-            this.loadListViewFromFileToolStripMenuItem.Name = "loadListViewFromFileToolStripMenuItem";
-            this.loadListViewFromFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
-            this.loadListViewFromFileToolStripMenuItem.Text = "Load ListView From File";
-            this.loadListViewFromFileToolStripMenuItem.Click += new System.EventHandler(this.loadListViewFromFileToolStripMenuItem_Click);
-            // 
             // saveLogToFileToolStripMenuItem
             // 
             this.saveLogToFileToolStripMenuItem.Name = "saveLogToFileToolStripMenuItem";
@@ -805,6 +799,13 @@
             this.saveResultListToFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
             this.saveResultListToFileToolStripMenuItem.Text = "Save List to file";
             this.saveResultListToFileToolStripMenuItem.Click += new System.EventHandler(this.saveResultListToFileToolStripMenuItem_Click);
+            // 
+            // loadListViewFromFileToolStripMenuItem
+            // 
+            this.loadListViewFromFileToolStripMenuItem.Name = "loadListViewFromFileToolStripMenuItem";
+            this.loadListViewFromFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.loadListViewFromFileToolStripMenuItem.Text = "Load ListView From File";
+            this.loadListViewFromFileToolStripMenuItem.Click += new System.EventHandler(this.loadListViewFromFileToolStripMenuItem_Click);
             // 
             // toolStripMenuItem8
             // 
