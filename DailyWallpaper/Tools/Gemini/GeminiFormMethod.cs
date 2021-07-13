@@ -28,10 +28,10 @@ namespace DailyWallpaper
         private enum LoadFileStep
         {
             NO_LOAD,
-            STEP_1_ALLFILES,
-            STEP_2_FILESTOSTRUCT,
-            STEP_3_FASTCOMPARE,
-            STEP_4_COMPAREHASH,
+            STEP_1_ALL_FILES,
+            STEP_2_FILES_TO_STRUCT,
+            STEP_3_FAST_COMPARE,
+            STEP_4_COMPARE_HASH,
             DEFAULT,
             ERROR
         }
@@ -51,7 +51,7 @@ namespace DailyWallpaper
                     _console.WriteLine("!!! LoadFileStep.ERROR");
                     return;
                 }               
-                if (op == LoadFileStep.STEP_1_ALLFILES)
+                if (op == LoadFileStep.STEP_1_ALL_FILES)
                     StartAnalyzeStep(op, sL: (List<string>)listFromFile);
                 else
                     StartAnalyzeStep(op, gfL: (List<GeminiFileStruct>)listFromFile);
@@ -100,22 +100,22 @@ namespace DailyWallpaper
                     if (pathLow.Contains("step-1-".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<string>>(path);
-                    op = LoadFileStep.STEP_1_ALLFILES;
+                    op = LoadFileStep.STEP_1_ALL_FILES;
                 }
                 else if (pathLow.Contains("step-2-".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                    op = LoadFileStep.STEP_2_FILESTOSTRUCT;
+                    op = LoadFileStep.STEP_2_FILES_TO_STRUCT;
                 }
                 else if (pathLow.Contains("step-3-".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                    op = LoadFileStep.STEP_3_FASTCOMPARE;
+                    op = LoadFileStep.STEP_3_FAST_COMPARE;
                 }
                 else if (pathLow.Contains("step-4-".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                    op = LoadFileStep.STEP_4_COMPAREHASH;
+                    op = LoadFileStep.STEP_4_COMPARE_HASH;
                 }
                 else
                 {
@@ -154,7 +154,7 @@ namespace DailyWallpaper
                     timer.Start();
                     // Get all files from folder1/2
                     
-                    if(!IsSkip(op, LoadFileStep.STEP_1_ALLFILES))
+                    if(!IsSkip(op, LoadFileStep.STEP_1_ALL_FILES))
                     {
                         bool fld1 = false;
                         bool fld2 = false;
@@ -189,15 +189,15 @@ namespace DailyWallpaper
                     {
                         _console.WriteLine($">>> Start Analyze Operation...");
                         _console.WriteLine($">>> Load FileList from file..., \r\n");
-                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_1_ALLFILES}... ");
+                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_1_ALL_FILES}... ");
                         filesList1 = sL;
                         filesList2 = new List<string>();
                     }
-                    if (op <= LoadFileStep.STEP_1_ALLFILES)
+                    if (op <= LoadFileStep.STEP_1_ALL_FILES)
                         SaveOperationHistory("step-1-allfiles_1.xml", filesList1);
 
                     SetProgressBarVisible(geminiProgressBar, true);
-                    if (!IsSkip(op, LoadFileStep.STEP_2_FILESTOSTRUCT))
+                    if (!IsSkip(op, LoadFileStep.STEP_2_FILES_TO_STRUCT))
                     {
                         // get files info exclude HASH.(FASTER) 
                         FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
@@ -209,14 +209,14 @@ namespace DailyWallpaper
                         // get files info exclude HASH.(FASTER) 
                         geminiFileStructList1 = gfL;
                         geminiFileStructList2 = new List<GeminiFileStruct>();
-                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_2_FILESTOSTRUCT}... ");
+                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_2_FILES_TO_STRUCT}... ");
                     }
-                    if (op <= LoadFileStep.STEP_2_FILESTOSTRUCT)
+                    if (op <= LoadFileStep.STEP_2_FILES_TO_STRUCT)
                         SaveOperationHistory("step-2-filesToStruct_1.xml", geminiFileStructList1);
                     
                     List<GeminiFileStruct> sameListNoDup;
                     var mode = SetCompareMode();
-                    if (!IsSkip(op, LoadFileStep.STEP_3_FASTCOMPARE))
+                    if (!IsSkip(op, LoadFileStep.STEP_3_FAST_COMPARE))
                     {
                         _console.WriteLine(">>> Start Fast Compare...");
                         // compare folders and themselves, return duplicated files list.
@@ -227,14 +227,14 @@ namespace DailyWallpaper
                     else
                     {
                         sameListNoDup = gfL;
-                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_3_FASTCOMPARE}... ");
+                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_3_FAST_COMPARE}... ");
                     }
-                    if (op <= LoadFileStep.STEP_3_FASTCOMPARE)
+                    if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
                         SaveOperationHistory("step-3-FastCompare.xml", sameListNoDup);
                     
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
-                        if (!IsSkip(op, LoadFileStep.STEP_4_COMPAREHASH))
+                        if (!IsSkip(op, LoadFileStep.STEP_4_COMPARE_HASH))
                         {
                             _console.WriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
                             sameListNoDup =
@@ -244,10 +244,10 @@ namespace DailyWallpaper
                         else
                         {
                             sameListNoDup = gfL;
-                            _console.WriteLine($">>> Skip {LoadFileStep.STEP_4_COMPAREHASH}... ");
+                            _console.WriteLine($">>> Skip {LoadFileStep.STEP_4_COMPARE_HASH}... ");
 
                         }
-                        if (op <= LoadFileStep.STEP_4_COMPAREHASH)
+                        if (op <= LoadFileStep.STEP_4_COMPARE_HASH)
                             SaveOperationHistory("step-4-CompareHash.xml", sameListNoDup);
                     }
 
