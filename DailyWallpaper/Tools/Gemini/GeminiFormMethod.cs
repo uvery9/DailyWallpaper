@@ -26,6 +26,7 @@ namespace DailyWallpaper
     {
         private enum LoadFileStep
         {
+            NO_LOAD,
             STEP_1_ALLFILES,
             STEP_2_FILESTOSTRUCT,
             STEP_3_FASTCOMPARE,
@@ -141,7 +142,7 @@ namespace DailyWallpaper
         {
             return op >= opcmp;
         }
-        private async void StartAnalyzeStep(LoadFileStep op, 
+        private async void StartAnalyzeStep(LoadFileStep op = LoadFileStep.NO_LOAD, 
             List<string> sL = null, List<GeminiFileStruct> gfL = null)
         {
             _source = new CancellationTokenSource();
@@ -310,6 +311,120 @@ namespace DailyWallpaper
 
         }
 
+        private async void StartAnalyze()
+        {
+            _source = new CancellationTokenSource();
+            var token = _source.Token;
+            btnStop.Enabled = true;
+            btnAnalyze.Enabled = false;
+            geminiProgressBar.Visible = true;
+            var limit = SetMinimumFileLimit();
+            try
+            {
+                var _task = Task.Run(() =>
+                {
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    // Get all files from folder1/2
+                    bool fld1 = false;
+                    bool fld2 = false;
+                    var t1 = targetFolder1TextBox.Text;
+                    var t2 = targetFolder2TextBox.Text;
+                    _console.WriteLine($">>> Start Analyze Operation...");
+                    _console.WriteLine($">>> Because it is a recursive search, \r\n" +
+                        "  Program don't know the progress, please wait patiently...");
+                    SetText(summaryTextBox, "Please wait patiently...", themeColor);
+                    if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
+                    {
+                        fld2 = true;
+                        RecurseScanDir(t2, ref filesList2, token);
+                        _console.WriteLine($">>> Found {filesList2.Count} file(s) in: {t2}");
+                    }
+
+                    if (!string.IsNullOrEmpty(t1) && Directory.Exists(t1) && !t1.Equals(t2))
+                    {
+                        fld1 = true;
+                        RecurseScanDir(t1, ref filesList1, token);
+                        _console.WriteLine($">>> Found {filesList1.Count} file(s) in: {t1}");
+                    }
+
+                    if (!fld2 && !fld1)
+                    {
+                        _console.WriteLine("!!! Two folder invalid.");
+                        return;
+                    }
+                    // step one
+                    SaveOperationHistory("step-1-allfiles_1.xml", filesList1);
+                    SaveOperationHistory("step-1_allfiles_2.xml", filesList2);
+
+                    SetProgressBarVisible(geminiProgressBar, true);
+                    // get files info exclude HASH.(FASTER) 
+                    FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
+                    FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
+                    SaveOperationHistory("step-2-filesToStruct_1.xml", geminiFileStructList1);
+                    SaveOperationHistory("step-2_filesToStruct_2.xml", geminiFileStructList2);
+
+                    // compare folders and themselves, return duplicated files list.
+                    _console.WriteLine(">>> Start Fast Compare...");
+                    var mode = SetCompareMode();
+                    var sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
+                            geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
+                    _console.WriteLine(">>> Fast Compare finished...");
+                    SaveOperationHistory("step-3-FastCompare.xml", sameListNoDup);
+
+                    if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
+                    {
+                        _console.WriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
+                        sameListNoDup =
+                            UpdateHashInGeminiFileStructList(sameListNoDup).Result;
+                        _console.WriteLine(">>> Update HASH finished.");
+                        SaveOperationHistory("step-4-CompareHash.xml", sameListNoDup);
+                    }
+
+                    // Color by Group.
+                    _console.WriteLine(">>> ListView Color...");
+                    geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
+                    SaveOperationHistory("step-5-RegrpAndColor.xml", sameListNoDup);
+
+                    _console.WriteLine(">>> Update to ListView...");
+                    UpdateListView(resultListView, ref geminiFileStructListForLV, token);
+
+                    timer.Stop();
+                    _console.WriteLine($">>> Cost time: {GetTimeStringMsOrS(timer.Elapsed)}");
+
+                }, _source.Token);
+
+                _tasks.Add(_task);
+                await _task;
+                // No Error, filesList is usable
+                scanRes = true;
+                /*WriteToXmlFile("GeminiListLatest.xml",
+                        geminiFileStructListForLV);*/
+                SaveOperationHistory("step-6-GeminiListLatest.xml", geminiFileStructListForLV);
+            }
+            catch (OperationCanceledException e)
+            {
+                scanRes = false;
+                _console.WriteLine($"\r\n>>> OperationCanceledException: {e.Message}");
+            }
+            catch (AggregateException e)
+            {
+                _console.WriteLine($"\r\n>>> AggregateException[Cancel exception]: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                scanRes = false;
+                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e}");
+                _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
+            }
+            finally
+            {
+                geminiProgressBar.Visible = false;
+                _console.WriteLine(">>> Analyse is over.");
+            }
+            btnAnalyze.Enabled = true;
+
+        }
         private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var dialog = new CommonOpenFileDialog())
