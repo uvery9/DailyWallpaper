@@ -1137,7 +1137,8 @@ namespace DailyWallpaper
                     {
                         foreach (var gf in gfl)
                         {
-                            // foreach (ListViewItem item in ListViewName.Items) blck program.
+                            // foreach (ListViewItem item in ListViewName.Items) block program.
+
                             foreach (ListViewItem it in GetListViewItems(liv))
                             {
                                 var fullPathLV = it.SubItems["fullPath"].Text;

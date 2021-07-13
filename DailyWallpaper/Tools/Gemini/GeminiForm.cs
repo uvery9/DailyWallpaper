@@ -230,34 +230,34 @@ namespace DailyWallpaper
                     try
                     {
                         deleteList.Clear();
-
-                    resultListView.Invoke(new MethodInvoker(delegate () {
-                        if (resultListView.Items.Count > 0)
-                        {
-                            foreach (ListViewItem it in resultListView.Items)
+                        resultListView.Invoke(new MethodInvoker(delegate () {
+                            var checkedItems = resultListView.CheckedItems;
+                            if (checkedItems != null)
                             {
-                                var fullPathLV = it.SubItems["fullPath"].Text;
-                                if (it.Checked && File.Exists(fullPathLV))
+                                foreach (ListViewItem item in checkedItems)
                                 {
-                                    deleteList.Add(fullPathLV);
+                                    var fullPathLV = item.SubItems["fullPath"].Text;
+                                    if (File.Exists(fullPathLV))
+                                    {
+                                        deleteList.Add(fullPathLV);
+                                        CWriteLine("....." + fullPathLV);
+                                    }
                                 }
                             }
-                        }
-                    }));
-                    
-                    CWriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
+                        }));
+                        CWriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
                     // SetText(summaryTextBox, $"Selected {deleteList.Count} file(s).", themeColor);
-                    if (deleteList.Count < 1)
-                    {
-                        return;
-                    }
+                        if (deleteList.Count < 1)
+                        {
+                            return;
+                        }
 
-                    // update Checked in GeminiFileStruct;
-                    var delGflChecked = new List<GeminiFileStruct>();
-                    foreach (var item in geminiFileStructListForLV)
-                    {
-                        UpdateCheckedInDelGFL(delGflChecked, deleteList, item);
-                    }
+                        // update Checked in GeminiFileStruct;
+                        var delGflChecked = new List<GeminiFileStruct>();
+                        foreach (var item in geminiFileStructListForLV)
+                        {
+                            UpdateCheckedInDelGFL(delGflChecked, deleteList, item);
+                        }
 
                     /*
                     * TODO: 
@@ -331,6 +331,7 @@ namespace DailyWallpaper
                 catch (Exception ex)
                 {
                     CWriteLine("btnDelete_Click:" + ex.Message);
+                    Debug.WriteLine("btnDelete_Click:" + ex);
                 }
                 }, _source.Token);
                 _tasks.Add(taskDel);
