@@ -416,6 +416,7 @@ namespace DailyWallpaper
                 }
                 if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
+                    // HUGE BUGS. INDEX FCK CHAOTIC..
                     var updateIndex = Task.Run(() =>
                     {
                         var tmpL = new List<GeminiFileStruct>();

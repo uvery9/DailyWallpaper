@@ -72,6 +72,7 @@ namespace DailyWallpaper
         // TODO, F2 rename
         // TODO FIX CLICK-CHECK EVENT UPDATE GFL.
         // https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/use-combobox-edit-listview#verify-that-it-works
+        // https://docs.microsoft.com/zh-cn/previous-versions/dotnet/netframework-3.0/ms171728(v=vs.85)?redirectedfrom=MSDN
         public GeminiForm()
         {
             InitializeComponent();
