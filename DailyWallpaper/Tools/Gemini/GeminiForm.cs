@@ -445,54 +445,7 @@ namespace DailyWallpaper
         }
       
 
-        private void UpdateListView(ListView liv, 
-            ref List<GeminiFileStruct> gfL,  CancellationToken token)
-        {
-            ListViewOperate(liv, ListViewOP.CLEAR);
-            undoToolStripMenuItem.Enabled = false;
-            redoToolStripMenuItem.Enabled = false;
-            var tmpL = new List<GeminiFileStruct>();
-            if (gfL.Count > 0)
-            {
-                int index = 0;
-                var items = new List<ListViewItem>();
-                foreach (var gf in gfL)
-                {
-                    if (token.IsCancellationRequested)
-                    {
-                        token.ThrowIfCancellationRequested();
-                    }
-                    var item = new ListViewItem(index.ToString())
-                    {
-                        BackColor = gf.color
-                    };
-                    AddSubItem(item, "name", gf.name);
-                    AddSubItem(item, "lastMtime", gf.lastMtime);
-                    AddSubItem(item, "extName", gf.extName);
-                    AddSubItem(item, "sizeStr", gf.sizeStr);
-                    AddSubItem(item, "dir", gf.dir);
-                    AddSubItem(item, "HASH", gf.hash ?? "");
-                    AddSubItem(item, "fullPath", gf.fullPath);
-                    AddSubItem(item, "size", gf.size.ToString());
-                    AddSubItem(item, "index", index.ToString());
-                    items.Add(item);
-                    var tmp = gf;
-                    tmp.index = index;
-                    index++;
-                    tmpL.Add(tmp);
-                }
-                gfL = tmpL;
-                if (items.Count > 0)
-                {
-                    ListViewOperate(liv, ListViewOP.ADDRANGE, items: items.ToArray());
-                }
-                SetText(summaryTextBox, $"Summay: Found {gfL.Count:N0} duplicate files.", themeColor);
-            }
-            else
-            {
-                SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
-            }
-        }
+
 
         private async Task UpdateHash(List<GeminiFileStruct> gfL,
             GeminiFileStruct gf)
