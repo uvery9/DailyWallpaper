@@ -24,6 +24,71 @@ namespace DailyWallpaper
 {
     partial class GeminiForm
     {
+        private void LoadGeminiFileFileToListView(string path)
+        {
+            try
+            {
+                _source = new CancellationTokenSource();
+                if (string.IsNullOrEmpty(path))
+                {
+                    return;
+                }
+                btnStop.Enabled = true;
+                _console.WriteLine(">>> Loading xml file...");
+                geminiFileStructListForLV =
+                        ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                var _updateFromFileTask = Task.Run(() =>
+                {
+                    var token = _source.Token;
+                    _console.WriteLine(">>> Recolor...");
+                    geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
+                        SetCompareMode(), token);
+                    _console.WriteLine(">>> Load file, update to ListView...");
+                    UpdateListView(resultListView, ref geminiFileStructListForLV, token);
+                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
+                    _console.WriteLine(">>> Load xml file finished!");
+                }, _source.Token);
+                _tasks.Add(_updateFromFileTask);
+            }
+            catch (Exception ex)
+            {
+                _console.WriteLine($"xml -> Struct failed: {ex.Message}");
+            }
+        }
+
+        private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new CommonOpenFileDialog())
+            {
+                var saveDir = Path.Combine(Path.GetDirectoryName(Assembly.
+                    GetExecutingAssembly().Location), "Gemini.UserOperation");
+                if (!Directory.Exists(saveDir))
+                {
+                    saveDir = desktopPath;
+                }
+                dialog.InitialDirectory = saveDir;
+                dialog.IsFolderPicker = false;
+                dialog.EnsureFileExists = true;
+                dialog.Multiselect = false;
+                dialog.Title = "Select xml file"; // "XML files (*.xml)|*.xml";
+                dialog.Filters.Add(new CommonFileDialogFilter("Xml file", "*.xml"));
+                // maybe add some log
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
+                {
+                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+                    {
+
+                    }
+                    else
+                    {
+                        LoadGeminiFileFileToListView(dialog.FileName);
+                    }
+                }
+            }
+        }
+
+
         private delegate void EnableButtonDelegate(Button b, bool enable);
 
         private void EnableButton(Button b, bool enable)
