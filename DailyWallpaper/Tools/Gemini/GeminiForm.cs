@@ -19,6 +19,7 @@ using System.Drawing;
 using System.Security.Cryptography;
 using System.Reflection;
 using ListViewItem = System.Windows.Forms.ListViewItem;
+using ListView = System.Windows.Forms.ListView;
 // using System.Linq;
 
 namespace DailyWallpaper
@@ -317,6 +318,7 @@ namespace DailyWallpaper
                         }
                     }
                     _console.WriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
+                    // SetText(summaryTextBox, $"Selected {deleteList.Count} file(s).", themeColor);
                     if (deleteList.Count < 1)
                     {
                         return;
@@ -352,15 +354,24 @@ namespace DailyWallpaper
                                  select i).Count().Equals(item.Count))
                             {
                                 k++;
-                                _console.WriteLine($"![{k}] Prevent all files in the group from being deleted.");
+                                _console.WriteLine($"!! [{k}] Prevent all files in the group from being deleted.");
                                 continue;
                             }
                         }
 
+                        int hashEmpty = 0;
                         foreach (var it in item)
                         {
                             if (it.Checked && File.Exists(it.fullPath))
                             {
+                                if (!string.IsNullOrEmpty(it.hash)
+                                && it.hash.ToLower().Contains("NotCounting".ToLower()))
+                                {
+                                    hashEmpty++;
+                                    _console.WriteLine(
+                                        $"! [{hashEmpty}] Protect file without valid hash from being deleted: \r\n    {it.fullPath}");
+                                    continue;
+                                }
                                 _console.WriteLine($"...... Delete file: {it.fullPath}");
                                 emptyFolderList.Add(Path.GetDirectoryName(it.fullPath));
                                 FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
@@ -796,8 +807,8 @@ namespace DailyWallpaper
 
         }
 
-        delegate void SetTextCallBack(System.Windows.Forms.TextBox tb, string text, Color c);
-        private void SetText(System.Windows.Forms.TextBox tb, string text, Color c)
+        delegate void SetTextCallBack(System.Windows.Forms.TextBox tb, string text, Color c = default);
+        private void SetText(System.Windows.Forms.TextBox tb, string text, Color c = default)
         {
             if (summaryTextBox.InvokeRequired)
             {
@@ -1950,7 +1961,25 @@ namespace DailyWallpaper
                 }
 
                 // Perform the sort with these new sort options.
-                resultListView.Sort();
+                var sortTask = Task.Run(() =>
+                    {
+                        ListViewOperate((ListView)sender, ListViewOP.SORT);
+                        void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
+                        {
+                            if (res)
+                            {
+                                geminiFileStructListForLV = gfl;
+                            }
+                        }
+                        // Update Index string in resultListView, index in GeminiFileStruct.
+                        ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
+                            geminiFileStructListForLV, UpdateGFL);
+                    }
+                );
+                _tasks.Add(sortTask);
+                /*resultListView.BeginUpdate();
+                ListViewOperate(resultListView, ListViewOP.SORT);
+                resultListView.EndUpdate();
                 void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
                 {
                     if (res)
@@ -1959,8 +1988,8 @@ namespace DailyWallpaper
                     }
                 }
                 // Update Index string in resultListView, index in GeminiFileStruct.
-                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED, 
-                    geminiFileStructListForLV, UpdateGFL);
+                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
+                    geminiFileStructListForLV, UpdateGFL);*/
             }           
         }
 

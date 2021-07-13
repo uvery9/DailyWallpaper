@@ -351,7 +351,8 @@ namespace DailyWallpaper
             UPDATE_CHECK_INTHELOOP,
             UPDATE_CHECK_BY_INDEX,
             CEF_INTHELOOP,
-            UPDATE_INDEX_AFTER_SORTED
+            UPDATE_INDEX_AFTER_SORTED,
+            SORT
         }
 
 
@@ -473,6 +474,12 @@ namespace DailyWallpaper
                 if (op == ListViewOP.ADDRANGE)
                 {
                     liv.Items.AddRange(items);
+                }
+                if (op == ListViewOP.SORT)
+                {
+                    liv.BeginUpdate();
+                    liv.Sort();
+                    liv.EndUpdate();
                 }
             }
         }
