@@ -80,7 +80,7 @@ namespace DailyWallpaper
         {
             if (string.IsNullOrEmpty(path))
             {
-                return Tuple.Create(LoadFileStep.ERROR, (object)0);
+                return Tuple.Create(LoadFileStep.ERROR, (object)null);
             }
             /*
              *  step-1-allfiles_1.xml
@@ -91,53 +91,51 @@ namespace DailyWallpaper
              *  step-4-CompareHash.xml
              *  step-5-RegrpAndColor.xml
              */
-            object ret = null;
-            LoadFileStep op = default;
+            object ret;
+            LoadFileStep op;
             var pathLow = path.ToLower();
-
-            if (pathLow.Contains("step-1-".ToLower()))
+            try
             {
-                ret = ReadFromXmlFile<List<string>>(path);
-                op = LoadFileStep.STEP_1_ALLFILES;
-            }
-            else if (pathLow.Contains("step-2-".ToLower()))
-            {
-                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                op = LoadFileStep.STEP_2_FILESTOSTRUCT;
-            }
-            else if (pathLow.Contains("step-3-".ToLower()))
-            {
-                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                op = LoadFileStep.STEP_3_FASTCOMPARE;
-            }
-            else if (pathLow.Contains("step-4-".ToLower()))
-            {
-                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                op = LoadFileStep.STEP_4_COMPAREHASH;
-            }
-            else if (pathLow.Contains("step-5-".ToLower()))
-            {
-                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                op = LoadFileStep.STEP_5_REGRPANDCOLOR;
-            }
-            else
-            {
-                try
+                    if (pathLow.Contains("step-1-".ToLower()))
+                {
+                    ret = ReadFromXmlFile<List<string>>(path);
+                    op = LoadFileStep.STEP_1_ALLFILES;
+                }
+                else if (pathLow.Contains("step-2-".ToLower()))
+                {
+                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    op = LoadFileStep.STEP_2_FILESTOSTRUCT;
+                }
+                else if (pathLow.Contains("step-3-".ToLower()))
+                {
+                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    op = LoadFileStep.STEP_3_FASTCOMPARE;
+                }
+                else if (pathLow.Contains("step-4-".ToLower()))
+                {
+                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    op = LoadFileStep.STEP_4_COMPAREHASH;
+                }
+                else if (pathLow.Contains("step-5-".ToLower()))
+                {
+                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    op = LoadFileStep.STEP_5_REGRPANDCOLOR;
+                }
+                else
                 {
                     ret =
                     ReadFromXmlFile<List<GeminiFileStruct>>(path);
                     op = LoadFileStep.DEFAULT;
                 }
-                catch (Exception ex)
-                {
-                    _console.WriteLine("Can't read xml file to List<GeminiFileStruct>");
-                    op = LoadFileStep.ERROR;
-                    ret = null;
-                }
+            }
+            catch (Exception ex)
+            {
+                _console.WriteLine($"Can't read xml file to List<T>: {ex.Message}");
+                op = LoadFileStep.ERROR;
+                ret = null;
             }
             return Tuple.Create(op, ret);
         }
-
 
         private bool IsSkip(LoadFileStep op, LoadFileStep opcmp)
         {
