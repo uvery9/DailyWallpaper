@@ -24,17 +24,39 @@ namespace DailyWallpaper
 {
     partial class GeminiForm
     {
+        private enum LoadFileStep
+        {
+            STEP_1_ALLFILES,
+            STEP_2_FILESTOSTRUCT,
+            STEP_3_FASTCOMPARE,
+            STEP_4_COMPAREHASH,
+            STEP_5_REGRPANDCOLOR,
+            STEP_6_GEMINILISTLATEST,
+            DEFAULT,
+            ERROR
+        }
         private void LoadGeminiFileFileToListView(string path)
         {
             try
             {
-                _source = new CancellationTokenSource();
                 if (string.IsNullOrEmpty(path))
                 {
                     return;
                 }
-                btnStop.Enabled = true;
-                _console.WriteLine(">>> Loading xml file...");
+                var ret = LoadListFromFile(path);
+                var op = ret.Item1;
+                var listFromFile = ret.Item2;
+                if (op == LoadFileStep.ERROR)
+                {
+                    _console.WriteLine("!!! LoadFileStep.ERROR");
+                    return;
+                }               
+                if (op == LoadFileStep.STEP_1_ALLFILES)
+                    StartAnalyzeStep(op, sL: (List<string>)listFromFile);
+                else
+                    StartAnalyzeStep(op, gfL: (List<GeminiFileStruct>)listFromFile);
+
+                /*_console.WriteLine(">>> Loading xml file...");
                 geminiFileStructListForLV =
                         ReadFromXmlFile<List<GeminiFileStruct>>(path);
                 var _updateFromFileTask = Task.Run(() =>
@@ -48,12 +70,226 @@ namespace DailyWallpaper
                     RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
                     _console.WriteLine(">>> Load xml file finished!");
                 }, _source.Token);
-                _tasks.Add(_updateFromFileTask);
+                _tasks.Add(_updateFromFileTask);*/
             }
             catch (Exception ex)
             {
                 _console.WriteLine($"xml -> Struct failed: {ex.Message}");
             }
+        }
+        private Tuple<LoadFileStep, object> LoadListFromFile(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return Tuple.Create(LoadFileStep.ERROR, (object)0);
+            }
+            /*
+             *  step-1-allfiles_1.xml
+             *  step-1-allfiles_2.xml
+             *  step-2-filesToStruct_1.xml
+             *  step-2-filesToStruct_2.xml
+             *  step-3-FastCompare.xml
+             *  step-4-CompareHash.xml
+             *  step-5-RegrpAndColor.xml
+             *  step-6-GeminiListLatest.xml
+             */
+            object ret = null;
+            LoadFileStep op = default;
+            var pathLow = path.ToLower();
+
+            if (pathLow.Contains("step-1-allfiles"))
+            {
+                ret = ReadFromXmlFile<List<string>>(path);
+                op = LoadFileStep.STEP_1_ALLFILES;
+            }
+            else if (pathLow.Contains("step-2-filesToStruct"))
+            {
+                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                op = LoadFileStep.STEP_2_FILESTOSTRUCT;
+            }
+            else if (pathLow.Contains("step-3-FastCompare.xml"))
+            {
+                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                op = LoadFileStep.STEP_3_FASTCOMPARE;
+            }
+            else if (pathLow.Contains("step-4-CompareHash.xml"))
+            {
+                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                op = LoadFileStep.STEP_4_COMPAREHASH;
+            }
+            else if (pathLow.Contains("step-5-RegrpAndColor.xml"))
+            {
+                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                op = LoadFileStep.STEP_5_REGRPANDCOLOR;
+            }
+            else if (pathLow.Contains("step-6-GeminiListLatest.xml"))
+            {
+                ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                op = LoadFileStep.STEP_6_GEMINILISTLATEST;
+            }
+            else
+            {
+                ret =
+                    ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                op = LoadFileStep.DEFAULT;
+            }
+            return Tuple.Create(op, ret);
+        }
+
+
+        private bool IsSkip(LoadFileStep op, LoadFileStep opcmp)
+        {
+            return op > opcmp;
+        }
+        private async void StartAnalyzeStep(LoadFileStep op, 
+            List<string> sL = null, List<GeminiFileStruct> gfL = null)
+        {
+            _source = new CancellationTokenSource();
+            var token = _source.Token;
+            EnableButton(btnStop, true);
+            EnableButton(btnAnalyze, false);
+            SetProgressBarVisible(geminiProgressBar, true);
+            var limit = SetMinimumFileLimit();
+            try
+            {
+                var _task = Task.Run(() =>
+                {
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    // Get all files from folder1/2
+                    
+                    if(!IsSkip(op, LoadFileStep.STEP_1_ALLFILES))
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+
+                    if (!IsSkip(op, LoadFileStep.STEP_2_FILESTOSTRUCT))
+                    {
+
+                    }
+
+                    if (!IsSkip(op, LoadFileStep.STEP_3_FASTCOMPARE))
+                    {
+
+                    }
+
+                    if (!IsSkip(op, LoadFileStep.STEP_4_COMPAREHASH))
+                    {
+
+                    }
+
+                    if (!IsSkip(op, LoadFileStep.STEP_5_REGRPANDCOLOR))
+                    {
+
+                    }
+
+                    if (!IsSkip(op, LoadFileStep.STEP_6_GEMINILISTLATEST))
+                    {
+
+                    }
+                    bool fld1 = false;
+                    bool fld2 = false;
+                    var t1 = targetFolder1TextBox.Text;
+                    var t2 = targetFolder2TextBox.Text;
+                    _console.WriteLine($">>> Start Analyze Operation...");
+                    _console.WriteLine($">>> Because it is a recursive search, \r\n" +
+                        "  Program don't know the progress, please wait patiently...");
+                    SetText(summaryTextBox, "Please wait patiently...", themeColor);
+                    if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
+                    {
+                        fld2 = true;
+                        RecurseScanDir(t2, ref filesList2, token);
+                        _console.WriteLine($">>> Found {filesList2.Count} file(s) in: {t2}");
+                    }
+
+                    if (!string.IsNullOrEmpty(t1) && Directory.Exists(t1) && !t1.Equals(t2))
+                    {
+                        fld1 = true;
+                        RecurseScanDir(t1, ref filesList1, token);
+                        _console.WriteLine($">>> Found {filesList1.Count} file(s) in: {t1}");
+                    }
+
+                    if (!fld2 && !fld1)
+                    {
+                        _console.WriteLine("!!! Two folder invalid.");
+                        return;
+                    }
+
+                    // step one
+                    SaveOperationHistory("step-1-allfiles_1.xml", filesList1);
+                    SaveOperationHistory("step-1_allfiles_2.xml", filesList2);
+
+                    SetProgressBarVisible(geminiProgressBar, true);
+                    // get files info exclude HASH.(FASTER) 
+                    FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
+                    FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
+                    SaveOperationHistory("step-2-filesToStruct_1.xml", geminiFileStructList1);
+                    SaveOperationHistory("step-2_filesToStruct_2.xml", geminiFileStructList2);
+
+                    // compare folders and themselves, return duplicated files list.
+                    _console.WriteLine(">>> Start Fast Compare...");
+                    var mode = SetCompareMode();
+                    var sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
+                            geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
+                    _console.WriteLine(">>> Fast Compare finished...");
+                    SaveOperationHistory("step-3-FastCompare.xml", sameListNoDup);
+
+                    if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
+                    {
+                        _console.WriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
+                        sameListNoDup =
+                            UpdateHashInGeminiFileStructList(sameListNoDup).Result;
+                        _console.WriteLine(">>> Update HASH finished.");
+                        SaveOperationHistory("step-4-CompareHash.xml", sameListNoDup);
+                    }
+
+                    // Color by Group.
+                    _console.WriteLine(">>> ListView Color...");
+                    geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
+                    SaveOperationHistory("step-5-RegrpAndColor.xml", sameListNoDup);
+
+                    _console.WriteLine(">>> Update to ListView...");
+                    UpdateListView(resultListView, ref geminiFileStructListForLV, token);
+
+                    timer.Stop();
+                    _console.WriteLine($">>> Cost time: {GetTimeStringMsOrS(timer.Elapsed)}");
+
+                }, _source.Token);
+
+                _tasks.Add(_task);
+                await _task;
+                // No Error, filesList is usable
+                scanRes = true;
+                /*WriteToXmlFile("GeminiListLatest.xml",
+                        geminiFileStructListForLV);*/
+                SaveOperationHistory("step-6-GeminiListLatest.xml", geminiFileStructListForLV);
+            }
+            catch (OperationCanceledException e)
+            {
+                scanRes = false;
+                _console.WriteLine($"\r\n>>> OperationCanceledException: {e.Message}");
+            }
+            catch (AggregateException e)
+            {
+                _console.WriteLine($"\r\n>>> AggregateException[Cancel exception]: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                scanRes = false;
+                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e}");
+                _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
+            }
+            finally
+            {
+                geminiProgressBar.Visible = false;
+                _console.WriteLine(">>> Analyse is over.");
+            }
+            btnAnalyze.Enabled = true;
+
         }
 
         private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)

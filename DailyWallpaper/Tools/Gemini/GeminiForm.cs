@@ -55,7 +55,6 @@ namespace DailyWallpaper
         private List<GeminiFileStruct> geminiFileStructListForLV = new List<GeminiFileStruct>();
         private List<GeminiFileStruct> geminiFileStructListForLVUndo = new List<GeminiFileStruct>();
         private List<GeminiFileStruct> geminiFileStructListForLVRedo = new List<GeminiFileStruct>();
-        private bool needFlush = false;
         private Color themeColor = Color.FromArgb(250, 234, 192);
         private Color themeColorClean = Color.ForestGreen;
         private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
@@ -479,7 +478,7 @@ namespace DailyWallpaper
             }
             return mode;
         }
-        private async void StartAnalyze(bool delete = false)
+        private async void StartAnalyze()
         {
             _source = new CancellationTokenSource();
             var token = _source.Token;
