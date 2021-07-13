@@ -49,7 +49,7 @@ namespace DailyWallpaper
                 var listFromFile = ret.Item2;
                 if (op == LoadFileStep.ERROR)
                 {
-                    _console.WriteLine("!!! LoadFileStep.ERROR");
+                    CWriteLine("!!! LoadFileStep.ERROR");
                     return;
                 }               
                 if (op == LoadFileStep.STEP_1_ALL_FILES)
@@ -59,7 +59,7 @@ namespace DailyWallpaper
             }
             catch (Exception ex)
             {
-                _console.WriteLine($"xml -> Struct failed: {ex.Message}");
+                CWriteLine($"xml -> Struct failed: {ex.Message}");
             }
         }
         private Tuple<LoadFileStep, object> LoadListFromFile(string path)
@@ -111,7 +111,7 @@ namespace DailyWallpaper
             }
             catch (Exception ex)
             {
-                _console.WriteLine($"Can't read xml file to List<T>: {ex.Message}");
+                CWriteLine($"Can't read xml file to List<T>: {ex.Message}");
                 op = LoadFileStep.ERROR;
                 ret = null;
             }
@@ -145,36 +145,36 @@ namespace DailyWallpaper
                         bool fld2 = false;
                         var t1 = targetFolder1TextBox.Text;
                         var t2 = targetFolder2TextBox.Text;
-                        _console.WriteLine($">>> Start Analyze Operation...");
-                        _console.WriteLine($">>> Because it is a recursive search, \r\n" +
+                        CWriteLine($">>> Start Analyze Operation...");
+                        CWriteLine($">>> Because it is a recursive search, \r\n" +
                             "  Program don't know the progress, please wait patiently...");
                         SetText(summaryTextBox, "Please wait patiently...", themeColor);
                         if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
                         {
                             fld2 = true;
                             RecurseScanDir(t2, ref filesList2, token);
-                            _console.WriteLine($">>> Found {filesList2.Count} file(s) in: {t2}");
+                            CWriteLine($">>> Found {filesList2.Count} file(s) in: {t2}");
                         }
 
                         if (!string.IsNullOrEmpty(t1) && Directory.Exists(t1) && !t1.Equals(t2))
                         {
                             fld1 = true;
                             RecurseScanDir(t1, ref filesList1, token);
-                            _console.WriteLine($">>> Found {filesList1.Count} file(s) in: {t1}");
+                            CWriteLine($">>> Found {filesList1.Count} file(s) in: {t1}");
                         }
 
                         if (!fld2 && !fld1)
                         {
-                            _console.WriteLine("!!! Two folder invalid.");
+                            CWriteLine("!!! Two folder invalid.");
                             return;
                         }
                         SaveOperationHistory("step-1_allfiles_2.xml", filesList2);
                     }
                     else
                     {
-                        _console.WriteLine($">>> Start Analyze Operation...");
-                        _console.WriteLine($">>> Load FileList from file..., \r\n");
-                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_1_ALL_FILES}... ");
+                        CWriteLine($">>> Start Analyze Operation...");
+                        CWriteLine($">>> Load FileList from file..., \r\n");
+                        CWriteLine($">>> Skip {LoadFileStep.STEP_1_ALL_FILES}... ");
                         filesList1 = sL;
                         filesList2 = new List<string>();
                     }
@@ -194,7 +194,7 @@ namespace DailyWallpaper
                         // get files info exclude HASH.(FASTER) 
                         geminiFileStructList1 = gfL;
                         geminiFileStructList2 = new List<GeminiFileStruct>();
-                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_2_FILES_TO_STRUCT}... ");
+                        CWriteLine($">>> Skip {LoadFileStep.STEP_2_FILES_TO_STRUCT}... ");
                     }
                     if (op <= LoadFileStep.STEP_2_FILES_TO_STRUCT)
                         SaveOperationHistory("step-2-filesToStruct_1.xml", geminiFileStructList1);
@@ -203,16 +203,16 @@ namespace DailyWallpaper
                     var mode = SetCompareMode();
                     if (!IsSkip(op, LoadFileStep.STEP_3_FAST_COMPARE))
                     {
-                        _console.WriteLine(">>> Start Fast Compare...");
+                        CWriteLine(">>> Start Fast Compare...");
                         // compare folders and themselves, return duplicated files list.
                         sameListNoDup = ComparerTwoFolderGetList(geminiFileStructList1,
                                 geminiFileStructList2, mode, limit, token, geminiProgressBar).Result;
-                        _console.WriteLine(">>> Fast Compare finished...");
+                        CWriteLine(">>> Fast Compare finished...");
                     }
                     else
                     {
                         sameListNoDup = gfL;
-                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_3_FAST_COMPARE}... ");
+                        CWriteLine($">>> Skip {LoadFileStep.STEP_3_FAST_COMPARE}... ");
                     }
                     if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
                         SaveOperationHistory("step-3-FastCompare.xml", sameListNoDup);
@@ -221,15 +221,15 @@ namespace DailyWallpaper
                     {
                         if (!IsSkip(op, LoadFileStep.STEP_4_COMPARE_HASH))
                         {
-                            _console.WriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
+                            CWriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
                             sameListNoDup =
                             UpdateHashInGeminiFileStructList(sameListNoDup).Result;
-                            _console.WriteLine(">>> Update HASH finished.");
+                            CWriteLine(">>> Update HASH finished.");
                         }
                         else
                         {
                             sameListNoDup = gfL;
-                            _console.WriteLine($">>> Skip {LoadFileStep.STEP_4_COMPARE_HASH}... ");
+                            CWriteLine($">>> Skip {LoadFileStep.STEP_4_COMPARE_HASH}... ");
 
                         }
                         if (op <= LoadFileStep.STEP_4_COMPARE_HASH)
@@ -237,14 +237,14 @@ namespace DailyWallpaper
                     }
 
                     // Color by Group.
-                    _console.WriteLine(">>> ListView Color...");
+                    CWriteLine(">>> ListView Color...");
                     geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
 
-                    _console.WriteLine(">>> Update to ListView...");
+                    CWriteLine(">>> Update to ListView...");
                     UpdateListView(resultListView, ref geminiFileStructListForLV, token);
 
                     timer.Stop();
-                    _console.WriteLine($">>> Cost time: {GetTimeStringMsOrS(timer.Elapsed)}");
+                    CWriteLine($">>> Cost time: {GetTimeStringMsOrS(timer.Elapsed)}");
 
                 }, _source.Token);
 
@@ -259,22 +259,22 @@ namespace DailyWallpaper
             catch (OperationCanceledException e)
             {
                 scanRes = false;
-                _console.WriteLine($"\r\n>>> OperationCanceledException: {e.Message}");
+                CWriteLine($"\r\n>>> OperationCanceledException: {e.Message}");
             }
             catch (AggregateException e)
             {
-                _console.WriteLine($"\r\n>>> AggregateException[Cancel exception]: {e.Message}");
+                CWriteLine($"\r\n>>> AggregateException[Cancel exception]: {e.Message}");
             }
             catch (Exception e)
             {
                 scanRes = false;
-                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e}");
-                _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
+                CWriteLine($"\r\n RecurseScanDir throw exception message: {e}");
+                CWriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
             }
             finally
             {
                 geminiProgressBar.Visible = false;
-                _console.WriteLine(">>> Analyse is over.");
+                CWriteLine(">>> Analyse is over.");
             }
             btnAnalyze.Enabled = true;
 
@@ -340,92 +340,136 @@ namespace DailyWallpaper
             UPDATE_INDEX_AFTER_SORTED,
             SORT
         }
-
+        
+        private void CWriteLine(string msg)
+        {
+            _console.WriteLine(msg);
+        }
 
         private delegate void ListViewOperateLoopDelegate(System.Windows.Forms.ListView liv,
             ListViewOP op, List<GeminiFileStruct> gfl = null,
-            Action<bool, List<GeminiFileStruct>> actionLoop = null);
+            Action<bool, List<GeminiFileStruct>, string> actionLoop = null, 
+            CancellationToken token = default);
 
         private void ListViewOperateLoop(ListView liv,
             ListViewOP op, List<GeminiFileStruct> gfl = null,
-            Action<bool, List<GeminiFileStruct>> actionLoop = null)
+            Action<bool, List<GeminiFileStruct>, string> actionLoop = null, CancellationToken token = default)
         {
             if (liv.InvokeRequired)
             {
                 var addDele = new ListViewOperateLoopDelegate(ListViewOperateLoop);
-                liv.Invoke(addDele, new object[] { liv, op, gfl, actionLoop });
+                liv.Invoke(addDele, new object[] { liv, op, gfl, actionLoop, token });
             }
             else
             {
                 if (op == ListViewOP.UPDATE_CHECK_INTHELOOP)
                 {
-                    var tmpL = new List<GeminiFileStruct>();
-                    foreach (var it in liv.Items)
-                    {
-                        var lvi = ((System.Windows.Forms.ListViewItem)it);
-                        var fullPathLV = lvi.SubItems["fullPath"].Text;
-                        foreach (var gf in gfl)
+                    var updateCheckLoopTask = Task.Run(() => { 
+                        try
                         {
-                            var tmp = gf;
-                            if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                            var tmpL = new List<GeminiFileStruct>();
+                            foreach (var it in liv.Items)
                             {
-                                tmp.Checked = lvi.Checked;
-                                tmpL.Add(tmp);
-                                break;
+                                var lvi = (ListViewItem)it;
+                                var fullPathLV = lvi.SubItems["fullPath"].Text;
+                                foreach (var gf in gfl)
+                                {
+                                    if (token.IsCancellationRequested)
+                                    {
+                                        token.ThrowIfCancellationRequested();
+                                    }
+                                    var tmp = gf;
+                                    if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                    {
+                                        tmp.Checked = lvi.Checked;
+                                        tmpL.Add(tmp);
+                                        break;
+                                    }
+                                }
                             }
+                            actionLoop(true, tmpL, "");
                         }
-                    }
-                    actionLoop(true, tmpL);
+                        catch(Exception ex)
+                        {
+                            actionLoop(false, null, ex.Message);
+                        }
+                    });
+                    _tasks.Add(updateCheckLoopTask);
 
                 }
                 else if (op == ListViewOP.UPDATE_CHECK_BY_INDEX)
                 {
-                    var tmpL = new List<GeminiFileStruct>();
-                    foreach (var gf in gfl)
-                    {
-                        var tmp = gf;
-                        var lvi = liv.Items[tmp.index];
-                        var fullPathLV = lvi.SubItems["fullPath"].Text;
-                        if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                    var updateCheckIndexTask = Task.Run(() => { 
+                        try
                         {
-                            tmp.Checked = lvi.Checked;
-                            tmpL.Add(tmp);
+                            var tmpL = new List<GeminiFileStruct>();
+                            foreach (var gf in gfl)
+                            {
+                                if (token.IsCancellationRequested)
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                }
+                                var tmp = gf;
+                                var lvi = liv.Items[tmp.index];
+                                var fullPathLV = lvi.SubItems["fullPath"].Text;
+                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                {
+                                    tmp.Checked = lvi.Checked;
+                                    tmpL.Add(tmp);
+                                }
+                                else
+                                {
+                                    actionLoop(false, tmpL, "Not Equal");
+                                }
+                            }
+                            actionLoop(true, tmpL, "");
                         }
-                        else
+                        catch(Exception ex)
                         {
-                            actionLoop(false, tmpL);
+                            actionLoop(false, null, ex.Message);
                         }
-                    }
-                    actionLoop(true, tmpL);
+                    });
+                    _tasks.Add(updateCheckIndexTask);
 
                 }
                 else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
-                    // HUGE BUGS. INDEX FCK CHAOTIC..
                     var updateIndex = Task.Run(() =>
                     {
-                        var tmpL = new List<GeminiFileStruct>();
-                        int index = 0;
-                        foreach (ListViewItem lvi in liv.Items)
+                        try
                         {
-                            /*_console.WriteLine(liv.Items.IndexOf(lvi));*/
-                            // how to update index in SubItems
-                            lvi.SubItems["index"].Text = index.ToString();
-                            lvi.SubItems[0].Text = index.ToString();
-                            var fullPathLV = lvi.SubItems["fullPath"].Text;
-                            foreach (var gf in gfl)
+                            var tmpL = new List<GeminiFileStruct>();
+                            int index = 0;
+                            foreach (ListViewItem lvi in liv.Items)
                             {
-                                var tmp = gf;
-                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                /*CWriteLine(liv.Items.IndexOf(lvi));*/
+                                // how to update index in SubItems
+                                lvi.SubItems["index"].Text = index.ToString();
+                                lvi.SubItems[0].Text = index.ToString();
+                                var fullPathLV = lvi.SubItems["fullPath"].Text;
+                                foreach (var gf in gfl)
                                 {
-                                    tmp.index = index;
-                                    tmpL.Add(tmp);
-                                    break;
+                                    if (token.IsCancellationRequested)
+                                    {
+                                        token.ThrowIfCancellationRequested();
+                                    }
+                                    var tmp = gf;
+                                    if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                    {
+                                        tmp.index = index;
+                                        tmpL.Add(tmp);
+                                        break;
+                                    }
                                 }
+                                index++;
                             }
-                            index++;
+                            actionLoop(true, tmpL, "");
                         }
-                        actionLoop(true, tmpL);
+                        catch
+                        {
+                            actionLoop(false, null, "! UPDATE_INDEX_AFTER_SORTED cancel");
+                            throw;
+                        }
                     });
                     _tasks.Add(updateIndex);
                 }
@@ -436,141 +480,7 @@ namespace DailyWallpaper
         // https://stackoverflow.com/questions/17746013/how-to-change-order-of-columns-of-listview
         // https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/sort-listview-by-column
         
-        private bool sorting = false;
-        private void resultListView_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            if (sorting)
-            {
-                _console.WriteLine("! The Index is being updated in the background\r\n" + 
-                    "and can no longer be sorted, please try again later");
-                return;
-            }
-            _console.WriteLine(">>> Sort and update Index in the background...");
-            sorting = true;
-            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
-            {
-                // Determine if clicked column is already the column that is being sorted.
-                if (e.Column == lvwColumnSorter.SortColumn)
-                {
-                    // Reverse the current sort direction for this column.
-                    if (lvwColumnSorter.Order == SortOrder.Ascending)
-                    {
-                        lvwColumnSorter.Order = SortOrder.Descending;
-                    }
-                    else
-                    {
-                        lvwColumnSorter.Order = SortOrder.Ascending;
-                    }
-                }
-                else
-                {
-                    // Set the column number that is to be sorted; default to ascending.
-                    lvwColumnSorter.SortColumn = e.Column;
-                    lvwColumnSorter.Order = SortOrder.Ascending;
-                }
-
-                // Update Index string in resultListView, index in GeminiFileStruct.
-
-
-                // quick
-                ListViewOperate((ListView)sender, ListViewOP.SORT);
-
-                void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
-                {
-                    if (res)
-                    {
-                        geminiFileStructListForLV = gfl;
-                        sorting = false;
-                        _console.WriteLine(">>> Index background update completed");
-                    }
-                }
-                // Update Index string in resultListView, index in GeminiFileStruct.
-                // very slow, block the program.
-                // Task.Run here not work. Must inside the Invoked.
-
-                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
-                    geminiFileStructListForLV, UpdateGFL);
-
-                /*_source = new CancellationTokenSource();
-                var token = _source.Token;
-                var columnClickTask = Task.Run(() => {
-                    try
-                    {
-                        var tmpL = new List<GeminiFileStruct>();
-                        int index = 0;
-                        var items = new List<ListViewItem>();
-
-                        foreach (ListViewItem lvi in GetListViewItems(resultListView))
-                        {
-                            if (token.IsCancellationRequested)
-                            {
-                                token.ThrowIfCancellationRequested();
-                            }
-                            *//*_console.WriteLine(liv.Items.IndexOf(lvi));*//*
-                            // how to update index in SubItems
-                            lvi.SubItems["index"].Text = index.ToString();
-                            lvi.SubItems[0].Text = index.ToString();
-                            var fullPathLV = lvi.SubItems["fullPath"].Text;
-
-                            *//*items.Add(lvi);*//*
-                            SetListViewText(resultListView, index, 
-                                "index", index.ToString());
-                            foreach (var gf in geminiFileStructListForLV)
-                            {
-                                var tmp = gf;
-                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                                {
-                                    tmp.index = index;
-                                    tmpL.Add(tmp);
-                                    break;
-                                }
-                            }
-                            index++;
-                        }
-                        ListViewOperate(resultListView, ListViewOP.CLEAR);
-                        *//*if (items.Count > 0)
-                        {
-                            ListViewOperate(resultListView, ListViewOP.ADDRANGE, items: items.ToArray());
-                        }*//*
-                        UpdateGFL(true, tmpL);
-                    }
-                    catch (Exception ex)
-                    {
-                        // _console.WriteLine("resultListView_ColumnClick Run: " + ex.Message);
-                        _console.WriteLine("resultListView_ColumnClick Run: " + ex);
-                    }
-
-                });
-                _tasks.Add(columnClickTask);*/
-                /*
-
-                 public void add(string prob, string reg, string data, string user)
-                {
-                    String[] row = { prob, reg, data, user };
-
-                    ListViewItem item = new ListViewItem(row);
-
-
-                    if (listView1.InvokeRequired)
-                    {
-                         listView1.Invoke(new MethodInvoker(delegate
-                         {
-                             listView1.Items.Add(item);
-                             item.Checked = true;
-
-                         }));
-                    }   
-                    else
-                    {
-                        listView1.Items.Add(item);
-                        item.Checked = true;
-                    } 
-
-
-                }
-                 */
-            }
-        }
+        
 
 
         public static void SetListViewText(ListView lv, int index, string name, string text)
@@ -735,7 +645,7 @@ namespace DailyWallpaper
                     var fullPathLV = it.SubItems["name"].Text;
                     if (it.Checked && Directory.Exists(fullPathLV))
                     {
-                        _console.WriteLine($"delete ###  {fullPathLV}");
+                        CWriteLine($"delete ###  {fullPathLV}");
                         FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
                         deleteOrRecycleBin.Checked ?
                         RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
@@ -772,7 +682,7 @@ namespace DailyWallpaper
                         deleteOrRecycleBin.Checked ?
                         RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
                         UICancelOption.DoNothing);
-                    _console.WriteLine($"...... Delete empty folder:  {dir}");
+                    CWriteLine($"...... Delete empty folder:  {dir}");
                 }
                 catch (UnauthorizedAccessException) { }
                 catch (DirectoryNotFoundException) { }
@@ -801,7 +711,7 @@ namespace DailyWallpaper
                     geminiCEF.Checked = false;
                     geminiCEF.lastMtime = lastMtime;
                     geminiCEFStructList.Add(geminiCEF);
-                    _console.WriteLine($"... Found empty folder: {dir}");
+                    CWriteLine($"... Found empty folder: {dir}");
                 }
                 catch (UnauthorizedAccessException) { }
                 catch (DirectoryNotFoundException) { }
@@ -815,7 +725,7 @@ namespace DailyWallpaper
             if (filesList.Count > 0)
             {
                 SetProgressMessage(geminiProgressBar, 0);
-                _console.WriteLine(">>> Start collecting all files...");
+                CWriteLine(">>> Start collecting all files...");
                 int i = 0;
                 foreach (var f in filesList)
                 {
@@ -832,7 +742,7 @@ namespace DailyWallpaper
                         _mutex.ReleaseMutex();
                     }
                 }
-                _console.WriteLine(">>> All files collected.");
+                CWriteLine(">>> All files collected.");
             }
         }
 
@@ -843,7 +753,7 @@ namespace DailyWallpaper
                 foreach (var fi in Directory.EnumerateFiles(dir))
                 {
                     filesList.Add(fi);
-                    // _console.WriteLine($"print >>>  {fi}");
+                    // CWriteLine($"print >>>  {fi}");
                     if (token.IsCancellationRequested)
                     {
                         token.ThrowIfCancellationRequested();
@@ -893,8 +803,8 @@ namespace DailyWallpaper
             {
                 if (print)
                 {
-                    _console.WriteLine($"\r\nThe folder is CONTROLLED, please re-select:\r\n   {path}");
-                    _console.WriteLine("\r\nYou could Type \" list controlled \" in the \r\n" +
+                    CWriteLine($"\r\nThe folder is CONTROLLED, please re-select:\r\n   {path}");
+                    CWriteLine("\r\nYou could Type \" list controlled \" in the \r\n" +
                         "\"Folder Filter\" and Type ENTER" +
                         " to see all the controlled folders.");
                 }
@@ -915,7 +825,7 @@ namespace DailyWallpaper
             {
                 if (print)
                 {
-                    _console.WriteLine($"\r\nThe {keyInIni} folder dose NOT EXIST, please re-select:\r\n   {path}");
+                    CWriteLine($"\r\nThe {keyInIni} folder dose NOT EXIST, please re-select:\r\n   {path}");
                 }
                 return false;
             }
@@ -933,7 +843,7 @@ namespace DailyWallpaper
             }
             if (print)
             {
-                _console.WriteLine($">>> You have selected {keyInIni} folder:\r\n  {path}");
+                CWriteLine($">>> You have selected {keyInIni} folder:\r\n  {path}");
             }
             return true;
         }
@@ -963,7 +873,7 @@ namespace DailyWallpaper
         }
         private void UpdateIniAndTextBox()
         {
-            _console.WriteLine($"\r\n >>> FilterMode: {filterMode}");
+            CWriteLine($"\r\n >>> FilterMode: {filterMode}");
             UpdateFilterExampleText(filterMode);
             gemini.ini.UpdateIniItem("FilterMode", filterMode.ToString(), "Gemini");
         }
@@ -1066,8 +976,8 @@ namespace DailyWallpaper
                 }
                 catch (Exception ex)
                 {
-                    _console.WriteLine($"{ex}");
-                    _console.WriteLine($"{ex.Message}");
+                    CWriteLine($"{ex}");
+                    CWriteLine($"{ex.Message}");
                 }
             });
             _tasks.Add(mpTask);
@@ -1194,7 +1104,7 @@ namespace DailyWallpaper
                     {
                         throw new Exception(">>> Clean-UP Restore Mode.");
                     }
-                    // _console.WriteLine("FAST..........");
+                    // CWriteLine("FAST..........");
                     foreach (var gf in gfl)
                     {
                         if (token.IsCancellationRequested)
@@ -1212,11 +1122,11 @@ namespace DailyWallpaper
                             ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
                         }
                     }
-                    // _console.WriteLine("FAST No Exception..........");
+                    // CWriteLine("FAST No Exception..........");
                 }
                 catch (Exception ex)
                 {
-                    _console.WriteLine($"{ex.Message}");
+                    CWriteLine($"{ex.Message}");
                     if (liv.Items.Count < 1)
                     {
                         return;
@@ -1239,6 +1149,12 @@ namespace DailyWallpaper
                     }
                 }
             }
+
+        }
+
+        private void UpdateListViewForCleanUP(ListView liv,
+            ref List<GeminiFileStruct> gfL, CancellationToken token)
+        {
 
         }
 

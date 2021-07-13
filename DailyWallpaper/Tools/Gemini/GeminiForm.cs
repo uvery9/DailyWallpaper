@@ -30,6 +30,7 @@ namespace DailyWallpaper
         private TextBoxCons _console;
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private CancellationTokenSource _source = null;
+        private CancellationTokenSource reIndexTokenSrc = null;
 
         private bool scanRes = false;
         private bool cefScanRes = false;
@@ -119,7 +120,7 @@ namespace DailyWallpaper
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             SetUpFilterModeAndRegClick();
-            // _console.WriteLine("You could always TYPE help in folder filter textbox and press ENTER.");
+            // CWriteLine("You could always TYPE help in folder filter textbox and press ENTER.");
             InitFileSameMode();
             filesList1 = new List<string>();
             filesList2 = new List<string>();
@@ -240,7 +241,7 @@ namespace DailyWallpaper
                             }
                         }
                     }
-                    _console.WriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
+                    CWriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
                     // SetText(summaryTextBox, $"Selected {deleteList.Count} file(s).", themeColor);
                     if (deleteList.Count < 1)
                     {
@@ -277,7 +278,7 @@ namespace DailyWallpaper
                                  select i).Count().Equals(item.Count))
                             {
                                 k++;
-                                _console.WriteLine($"!! [{k}] Prevent all files in the group from being deleted.");
+                                CWriteLine($"!! [{k}] Prevent all files in the group from being deleted.");
                                 continue;
                             }
                         }
@@ -291,11 +292,11 @@ namespace DailyWallpaper
                                 && it.hash.ToLower().Contains("NotCounting".ToLower()))
                                 {
                                     hashEmpty++;
-                                    _console.WriteLine(
+                                    CWriteLine(
                                         $"! [{hashEmpty}] Protect file without valid hash from being deleted: \r\n    {it.fullPath}");
                                     continue;
                                 }
-                                _console.WriteLine($"...... Delete file: {it.fullPath}");
+                                CWriteLine($"...... Delete file: {it.fullPath}");
                                 emptyFolderList.Add(Path.GetDirectoryName(it.fullPath));
                                 FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
                                                 deleteOrRecycleBin.Checked ?
@@ -313,7 +314,7 @@ namespace DailyWallpaper
                             EmptyJudge(dir);
                         }
                     }
-                    _console.WriteLine($">>> Delete Finished.");
+                    CWriteLine($">>> Delete Finished.");
 
                     // clean non-existent file in geminiFileStructListForLV
                     //   update ListView and the checked in LV.
@@ -327,7 +328,7 @@ namespace DailyWallpaper
             catch (FileNotFoundException) { }
             catch (Exception ex)
             {
-                _console.WriteLine($"!!! Error occur when deleting files/empty folders: {ex.Message}");
+                CWriteLine($"!!! Error occur when deleting files/empty folders: {ex.Message}");
             }
         }
 
@@ -408,9 +409,9 @@ namespace DailyWallpaper
             {
                 tip = $" larger than {Len2Str(limit)}";
             }
-            _console.WriteLine($">>> folder1{tip}: {cnt1:N0}");
-            _console.WriteLine($">>> folder2{tip}: {cnt2:N0}");
-            _console.WriteLine($">>> about {totalCmpCnt:N0} times (x1*x1+x2*x2+x1*x2)...");
+            CWriteLine($">>> folder1{tip}: {cnt1:N0}");
+            CWriteLine($">>> folder2{tip}: {cnt2:N0}");
+            CWriteLine($">>> about {totalCmpCnt:N0} times (x1*x1+x2*x2+x1*x2)...");
 
             double percent = 0.0;
             void ProgressAction(long i) // percent in file.
@@ -743,7 +744,7 @@ namespace DailyWallpaper
             if (gcefl.Count < 1)
             {
                 SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
-                _console.WriteLine(">>> The folder is CLEAN.");
+                CWriteLine(">>> The folder is CLEAN.");
                 return;
             }
             var items = new List<ListViewItem>();
@@ -762,7 +763,7 @@ namespace DailyWallpaper
             {
                 ListViewOperate(resultListView, ListViewOP.ADDRANGE, items: items.ToArray());
             }
-            _console.WriteLine($">>> Found {geminiCEFStructList.Count:N0} empty folder(s).");
+            CWriteLine($">>> Found {geminiCEFStructList.Count:N0} empty folder(s).");
             SetText(summaryTextBox, $"Summay: Found {geminiCEFStructList.Count:N0} duplicate files.", themeColor);
         }
 
@@ -779,8 +780,8 @@ namespace DailyWallpaper
                     // Were we already canceled?
                     // token.ThrowIfCancellationRequested();
                     cefScanRes = false;
-                    _console.WriteLine($">>> Start Analyze Operation...");
-                    _console.WriteLine($">>> Because it is a recursive search, \r\n" +
+                    CWriteLine($">>> Start Analyze Operation...");
+                    CWriteLine($">>> Because it is a recursive search, \r\n" +
                         "  Program don't know the progress, please wait patiently...");
 
                     SetText(summaryTextBox, "Please wait patiently...", themeColor);
@@ -806,18 +807,18 @@ namespace DailyWallpaper
                 cefScanRes = true;
                 UpdateEmptyFoldersToLV(geminiCEFStructList, token);
                 selectAllToolStripMenuItem.PerformClick();
-                _console.WriteLine($">>> Finished Analyze Operation");
+                CWriteLine($">>> Finished Analyze Operation");
             }
             catch (OperationCanceledException e)
             {
                 cefScanRes = false;
-                _console.WriteLine($"\r\n>>> RecurseScanDir throw exception message: {e.Message}");
+                CWriteLine($"\r\n>>> RecurseScanDir throw exception message: {e.Message}");
             }
             catch (Exception e)
             {
                 cefScanRes = false;
-                _console.WriteLine($"\r\n RecurseScanDir throw exception message: {e.Message}");
-                _console.WriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
+                CWriteLine($"\r\n RecurseScanDir throw exception message: {e.Message}");
+                CWriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
             }
             finally
             {
@@ -834,7 +835,7 @@ namespace DailyWallpaper
             btnAnalyze.Enabled = false;
             if (!UpdateTextAndIniFile("TargetFolder1", path, targetFolder1History))
             {
-                _console.WriteLine("Invalid directory path: {0}", path);
+                CWriteLine("Invalid directory path: {0}" + path);
                 return;
             }
             if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
@@ -868,11 +869,13 @@ namespace DailyWallpaper
             if (_source != null)
             {
                 _source.Cancel();
-                //_source.Dispose();
-                //_source = null;
             }
-            _console.WriteLine("Stop...");
-            btnAnalyze.Enabled = true;
+            if (reIndexTokenSrc != null)
+            {
+                reIndexTokenSrc.Cancel();
+            }
+            CWriteLine("Stop...");
+            EnableButtonsForIndexUpdate(true);
         }
         private void btnClear_Click(object sender, EventArgs e)
         {
@@ -895,16 +898,16 @@ namespace DailyWallpaper
             filesList = new List<string>();
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
-                _console.WriteLine("Invalid directory path: {0}", path);
+                CWriteLine("Invalid directory path: {0}" + path);
                 return;
             }
 
-            // _console.WriteLine($"\r\n#---- Started Analyze Operation ----#\r\n");
+            // CWriteLine($"\r\n#---- Started Analyze Operation ----#\r\n");
             if (cefScanRes && filesList.Count > 0)
             {
                 foreach (var folder in filesList)
                 {
-                    _console.WriteLine($"found ###  {folder}");
+                    CWriteLine($"found ###  {folder}");
                 }
                 return;
             }
@@ -1039,10 +1042,10 @@ namespace DailyWallpaper
 
             if (cmd.ToLower().Equals("list controlled"))
             {
-                _console.WriteLine("\r\nThe following is a list of controlled folders:");
+                CWriteLine("\r\nThe following is a list of controlled folders:");
                 foreach (var f in gemini.GetAllControlledFolders())
                 {
-                    _console.WriteLine(f);
+                    CWriteLine(f);
                 }
                 useCommand = true;
             }
@@ -1106,7 +1109,7 @@ namespace DailyWallpaper
             }
             if (cmd.ToLower().Equals("help"))
             {
-                _console.WriteLine(gemini.helpString);
+                CWriteLine(gemini.helpString);
                 useCommand = true;
             }
 
@@ -1244,10 +1247,10 @@ namespace DailyWallpaper
             {
                 regexFilter = "";
                 regex = null;
-                _console.WriteLine($">>> Using: {filterMode}, but there is no valid filter value.");
+                CWriteLine($">>> Using: {filterMode}, but there is no valid filter value.");
                 return true;
             }
-            _console.WriteLine($">>> Using: {filterMode}");
+            CWriteLine($">>> Using: {filterMode}");
             regexFilter = "";
             if (regexCheckBox.Checked)
             {
@@ -1258,20 +1261,20 @@ namespace DailyWallpaper
                 }
                 catch (Exception e)
                 {
-                    _console.WriteLine($"\r\n!!! filter ERROR: {regexFilter} illegal");
-                    _console.WriteLine($"\r\n!!! ERROR: {e.Message}");
+                    CWriteLine($"\r\n!!! filter ERROR: {regexFilter} illegal");
+                    CWriteLine($"\r\n!!! ERROR: {e.Message}");
                     regex = null;
                     return false;
                 }
                 if (print)
                 {
-                    _console.WriteLine($"\r\nYou have set the regex filter: \" {regexFilter} \"");
+                    CWriteLine($"\r\nYou have set the regex filter: \" {regexFilter} \"");
                 }
                 return true;
             }
             if (filter.Contains("，"))
             {
-                if (print) _console.WriteLine("\r\n>>> WARNING: Chinese comma(full-width commas) in the filter <<<\r\n");
+                if (print) CWriteLine("\r\n>>> WARNING: Chinese comma(full-width commas) in the filter <<<\r\n");
             }
             filter = filter.Trim();
             var filterList = filter.Split(',');
@@ -1279,10 +1282,10 @@ namespace DailyWallpaper
             {
                 return false;
             }
-            if (print) _console.WriteLine("\r\nYou have set the following general filter(s):");
+            if (print) CWriteLine("\r\nYou have set the following general filter(s):");
             foreach (var ft in filterList)
             {
-                if (print) _console.WriteLine($" {ft} ");
+                if (print) CWriteLine($" {ft} ");
                 folderFilter.Add(ft);
             }
             return true;
@@ -1395,7 +1398,7 @@ namespace DailyWallpaper
                 }
                 else
                 {
-                    _console.WriteLine("\r\nAttention: File or multiple folders are not allowed!");
+                    CWriteLine("\r\nAttention: File or multiple folders are not allowed!");
                 }
 
             }
@@ -1674,11 +1677,15 @@ namespace DailyWallpaper
         private List<GeminiFileStruct> UpdateGFLChecked(List<GeminiFileStruct> gfl)
         {
             var tmpL = new List<GeminiFileStruct>();
-            void UpdateGeminiFileStruct(bool res, List<GeminiFileStruct> gf)
+            void UpdateGeminiFileStruct(bool res, List<GeminiFileStruct> gf, string msg)
             {
                 if (res)
                 {
                     tmpL = gf;
+                }
+                else
+                {
+                    CWriteLine(msg);
                 }
             }
             try
@@ -1745,13 +1752,13 @@ namespace DailyWallpaper
         {
             if (cleanEmptyFolderModeToolStripMenuItem.Checked && geminiCEFStructList.Count < 1)
             {
-                _console.WriteLine("--- No Empty folder, do not need to save to file.");
+                CWriteLine("--- No Empty folder, do not need to save to file.");
                 return;
             }
                 
             if (!cleanEmptyFolderModeToolStripMenuItem.Checked && geminiFileStructListForLV.Count < 1)
             {
-                _console.WriteLine("--- No file, do not need to save to file.");
+                CWriteLine("--- No file, do not need to save to file.");
                 return;
             }
             using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
@@ -1833,7 +1840,7 @@ namespace DailyWallpaper
 
         private void usageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _console.WriteLine(gemini.helpString);
+            CWriteLine(gemini.helpString);
         }
 
         private void cleanUpButton_Click(object sender, EventArgs e)
@@ -1844,7 +1851,7 @@ namespace DailyWallpaper
                 // custQuery is an IEnumerable<IGrouping<string, Customer>>
                 if (geminiFileStructListForLV.Count < 1)
                 {
-                    _console.WriteLine("!!! ANALYZE First.");
+                    CWriteLine("!!! ANALYZE First.");
                     return;
                 }
                 var duplicateGrp = GeminiFileStructList2IEnumerableGroup(geminiFileStructListForLV,
@@ -1859,7 +1866,7 @@ namespace DailyWallpaper
                 }
                 if (cnt < geminiFileStructListForLV.Count)
                 {
-                    _console.WriteLine(
+                    CWriteLine(
                         $">>> Remove {geminiFileStructListForLV.Count - cnt} " +
                         "items from ListView [ nonexistent + non-repeating ].");
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
@@ -1867,7 +1874,7 @@ namespace DailyWallpaper
                     UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
                     RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token, true);
                 }
-                _console.WriteLine(">>> Clean-UP Finished.");
+                CWriteLine(">>> Clean-UP Finished.");
             });
             _tasks.Add(taskCleanUp);
         }
@@ -1889,7 +1896,7 @@ namespace DailyWallpaper
         private void updateButton_Click(object sender, EventArgs e)
         {
             Task.Run(() => {
-                _console.WriteLine($">>> Update start with {filterMode}...");
+                CWriteLine($">>> Update start with {filterMode}...");
                 SetFolderFilter(folderFilterTextBox.Text, print: true);
 
                 var updatedList = new List<GeminiFileStruct>();
@@ -1918,7 +1925,7 @@ namespace DailyWallpaper
                     (from i in geminiFileStructListForLV
                      where i.Checked == true
                      select i).Count();
-                _console.WriteLine($">>> {filterMode} selectd {cnt:N0} file(s).");
+                CWriteLine($">>> {filterMode} selectd {cnt:N0} file(s).");
                 SetText(summaryTextBox, $"{filterMode} selectd {cnt:N0} file(s)", 
                     cnt == 0 ? themeColorClean : themeColor);
             });
@@ -2017,7 +2024,7 @@ namespace DailyWallpaper
                         }
                         catch (Exception ex)
                         {
-                            _console.WriteLine(ex.Message);
+                            CWriteLine(ex.Message);
                         }
                         
                     }
@@ -2166,7 +2173,7 @@ namespace DailyWallpaper
                             godsChoiceList.Add(tmp);
                         }
                     }
-                    _console.WriteLine($">>> God chose {cnt:N0} file(s).");
+                    CWriteLine($">>> God chose {cnt:N0} file(s).");
                     if (godsChoiceList.Count < 1)
                     {
                         return;
@@ -2185,7 +2192,7 @@ namespace DailyWallpaper
             catch (FileNotFoundException) { }
             catch (Exception ex)
             {
-                _console.WriteLine($"!!! Error occur when deleting files: {ex.Message}");
+                CWriteLine($"!!! Error occur when deleting files: {ex.Message}");
             }
 
         }
@@ -2305,7 +2312,7 @@ namespace DailyWallpaper
                         hash = _hash;
                         resultListView.FocusedItem.SubItems["HASH"].Text = hash;
                         geminiProgressBar.Visible = false;
-                        _console.WriteLine($"... Update [{_hash}] -> {fullPath}");
+                        CWriteLine($"... Update [{_hash}] -> {fullPath}");
                         var s = md5 ? "MD5" : "SHA1";
                         SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
                     }
@@ -2407,7 +2414,7 @@ namespace DailyWallpaper
                     {
                         FileSystem.DeleteFile(fullPath, UIOption.OnlyErrorDialogs,
                             RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
-                        _console.WriteLine($"... Send {fullPath} to RecycleBin");
+                        CWriteLine($"... Send {fullPath} to RecycleBin");
                         cleanUpButton.PerformClick();
                     }
                     else if (op == FileOP.PROPERTIES)
@@ -2421,20 +2428,20 @@ namespace DailyWallpaper
                         if (!string.IsNullOrEmpty(fileName))
                         {
                             Clipboard.SetText(fileName);
-                            _console.WriteLine("... Copied file name to Clipboard.");
+                            CWriteLine("... Copied file name to Clipboard.");
                         }
                     }
                     else if (op == FileOP.COPY_FULLPATH)
                     {
                         Clipboard.SetText(fullPath);
-                        _console.WriteLine("... Copied full path to Clipboard.");
+                        CWriteLine("... Copied full path to Clipboard.");
                     }
 
 
                 }
                 catch (Exception ex)
                 {
-                    _console.WriteLine($"!!! {ex.Message}");
+                    CWriteLine($"!!! {ex.Message}");
                 }
                             
             }
@@ -2459,6 +2466,164 @@ namespace DailyWallpaper
         }
 
         // unselect and select all will flush.
+
+        
+        private void EnableButtonsForIndexUpdate(bool enable)
+        {
+            EnableButton(btnAnalyze, enable);
+            EnableButton(modeSelectButton, enable);
+            EnableButton(cleanUpButton, enable);
+            EnableButton(btnDelete, enable);
+            selectAllToolStripMenuItem.Enabled = enable;
+            godsChoiceToolStripMenuItem.Enabled = enable;
+            unselectAllToolStripMenuItem.Enabled = enable;
+            reverseElectionToolStripMenuItem.Enabled = enable;
+        }
+
+        private bool sorting = false;
+        private void resultListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (sorting)
+            {
+                CWriteLine("! The Index is being updated in the background\r\n" +
+                    "and can no longer be sorted, please try again later");
+                
+                return;
+            }
+            CWriteLine(">>> Sort and update Index in the background...");
+            sorting = true;
+            EnableButtonsForIndexUpdate(false);
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                // Determine if clicked column is already the column that is being sorted.
+                if (e.Column == lvwColumnSorter.SortColumn)
+                {
+                    // Reverse the current sort direction for this column.
+                    if (lvwColumnSorter.Order == SortOrder.Ascending)
+                    {
+                        lvwColumnSorter.Order = SortOrder.Descending;
+                    }
+                    else
+                    {
+                        lvwColumnSorter.Order = SortOrder.Ascending;
+                    }
+                }
+                else
+                {
+                    // Set the column number that is to be sorted; default to ascending.
+                    lvwColumnSorter.SortColumn = e.Column;
+                    lvwColumnSorter.Order = SortOrder.Ascending;
+                }
+
+                // Update Index string in resultListView, index in GeminiFileStruct.
+
+
+                // quick
+                ListViewOperate((ListView)sender, ListViewOP.SORT);
+
+                void UpdateGFL(bool res, List<GeminiFileStruct> gfl, string msg)
+                {
+                    if (res)
+                    {
+                        geminiFileStructListForLV = gfl;
+                        CWriteLine(">>> Index background update completed");
+                    }
+                    else
+                    {
+                        CWriteLine(msg);
+                    }
+                    sorting = false;
+                    EnableButtonsForIndexUpdate(true);
+                }
+                // Update Index string in resultListView, index in GeminiFileStruct.
+                // very slow, block the program.
+                // Task.Run here not work. Must inside the Invoked.
+                reIndexTokenSrc = new CancellationTokenSource();
+
+                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
+                    geminiFileStructListForLV, UpdateGFL, token: reIndexTokenSrc.Token);
+
+                /*_source = new CancellationTokenSource();
+                var token = _source.Token;
+                var columnClickTask = Task.Run(() => {
+                    try
+                    {
+                        var tmpL = new List<GeminiFileStruct>();
+                        int index = 0;
+                        var items = new List<ListViewItem>();
+
+                        foreach (ListViewItem lvi in GetListViewItems(resultListView))
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                token.ThrowIfCancellationRequested();
+                            }
+                            *//*CWriteLine(liv.Items.IndexOf(lvi));*//*
+                            // how to update index in SubItems
+                            lvi.SubItems["index"].Text = index.ToString();
+                            lvi.SubItems[0].Text = index.ToString();
+                            var fullPathLV = lvi.SubItems["fullPath"].Text;
+
+                            *//*items.Add(lvi);*//*
+                            SetListViewText(resultListView, index, 
+                                "index", index.ToString());
+                            foreach (var gf in geminiFileStructListForLV)
+                            {
+                                var tmp = gf;
+                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                {
+                                    tmp.index = index;
+                                    tmpL.Add(tmp);
+                                    break;
+                                }
+                            }
+                            index++;
+                        }
+                        ListViewOperate(resultListView, ListViewOP.CLEAR);
+                        *//*if (items.Count > 0)
+                        {
+                            ListViewOperate(resultListView, ListViewOP.ADDRANGE, items: items.ToArray());
+                        }*//*
+                        UpdateGFL(true, tmpL);
+                    }
+                    catch (Exception ex)
+                    {
+                        // CWriteLine("resultListView_ColumnClick Run: " + ex.Message);
+                        CWriteLine("resultListView_ColumnClick Run: " + ex);
+                    }
+
+                });
+                _tasks.Add(columnClickTask);*/
+                /*
+
+                 public void add(string prob, string reg, string data, string user)
+                {
+                    String[] row = { prob, reg, data, user };
+
+                    ListViewItem item = new ListViewItem(row);
+
+
+                    if (listView1.InvokeRequired)
+                    {
+                         listView1.Invoke(new MethodInvoker(delegate
+                         {
+                             listView1.Items.Add(item);
+                             item.Checked = true;
+
+                         }));
+                    }   
+                    else
+                    {
+                        listView1.Items.Add(item);
+                        item.Checked = true;
+                    } 
+
+
+                }
+                 */
+            }
+        }
+
         private void resultListView_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             /*if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
@@ -2476,16 +2641,16 @@ namespace DailyWallpaper
                         if (gf.index == ret && gf.fullPath.Equals(fitem.SubItems["fullPath"].Text))
                         {
                             geminiFileStructListForLV[ret].Checked = fitem.Checked;
-                            //_console.WriteLine("FAST CHECKED1.");
+                            //CWriteLine("FAST CHECKED1.");
                         }
-                        *//*_console.WriteLine($"{gf.Checked}");
-                        _console.WriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");*//*
+                        *//*CWriteLine($"{gf.Checked}");
+                        CWriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");*//*
                     }
-                    //_console.WriteLine("FAST CHECKED2.");
+                    //CWriteLine("FAST CHECKED2.");
                 }
                 catch
                 {
-                    _console.WriteLine("SLOW CHECKED.");
+                    CWriteLine("SLOW CHECKED.");
                     var tmpL = new List<GeminiFileStruct>();
                     foreach (var item in geminiFileStructListForLV)
                     {
@@ -2536,7 +2701,7 @@ namespace DailyWallpaper
                 }
                 else
                 {
-                    _console.WriteLine("\r\nAttention: File or multiple folders are not allowed!");
+                    CWriteLine("\r\nAttention: File or multiple folders are not allowed!");
                 }
 
             }

@@ -95,12 +95,12 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanEmptyFolderModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveLogToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveResultListToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
-            this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setByYourselfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protectFilesInGrpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -760,9 +760,9 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cleanEmptyFolderModeToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.loadListViewFromFileToolStripMenuItem,
             this.saveLogToFileToolStripMenuItem,
             this.saveResultListToFileToolStripMenuItem,
+            this.loadListViewFromFileToolStripMenuItem,
             this.toolStripMenuItem8,
             this.toolStripMenuItem2,
             this.alwaysOnTopToolStripMenuItem,
@@ -785,12 +785,12 @@
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(332, 6);
             // 
-            // alwaysOnTopToolStripMenuItem
+            // loadListViewFromFileToolStripMenuItem
             // 
-            this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
-            this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
-            this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopMenu_Click);
+            this.loadListViewFromFileToolStripMenuItem.Name = "loadListViewFromFileToolStripMenuItem";
+            this.loadListViewFromFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.loadListViewFromFileToolStripMenuItem.Text = "Load ListView From File";
+            this.loadListViewFromFileToolStripMenuItem.Click += new System.EventHandler(this.loadListViewFromFileToolStripMenuItem_Click);
             // 
             // saveLogToFileToolStripMenuItem
             // 
@@ -811,17 +811,17 @@
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
             this.toolStripMenuItem8.Size = new System.Drawing.Size(332, 6);
             // 
-            // loadListViewFromFileToolStripMenuItem
-            // 
-            this.loadListViewFromFileToolStripMenuItem.Name = "loadListViewFromFileToolStripMenuItem";
-            this.loadListViewFromFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
-            this.loadListViewFromFileToolStripMenuItem.Text = "Load ListView From File";
-            this.loadListViewFromFileToolStripMenuItem.Click += new System.EventHandler(this.loadListViewFromFileToolStripMenuItem_Click);
-            // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(332, 6);
+            // 
+            // alwaysOnTopToolStripMenuItem
+            // 
+            this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
+            this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopMenu_Click);
             // 
             // alwaysCalculateHashToolStripMenuItem
             // 
