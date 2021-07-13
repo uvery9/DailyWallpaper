@@ -509,7 +509,7 @@ namespace DailyWallpaper
             Func<GeminiFileStruct, T> keySelector)
             => from i in gfl
                where File.Exists(i.fullPath)
-               orderby i.name
+               orderby i.size descending
                group i by keySelector(i) into grp
                where grp.Count() > 1
                select grp.ToList();
@@ -1889,12 +1889,11 @@ namespace DailyWallpaper
                     UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
                     void GetRet(bool ret, string msg)
                     {
-                       CWriteLine($">>> Clean-UP Finished: {msg}");
-                       CWriteLine($">>> 草你麻痹: {msg}");
                        if (!ret)
                             CWriteLine(msg);
                         else
-                            CWriteLine($">>> Clean-UP Finished: {msg}");
+                            CWriteLine($">>> Clean-UP Finished.");
+                            Debug.WriteLine($">>> Clean-UP Finished: {msg}");
                         
                     }
                     RestoreListViewChoiceInvoke(resultListView, 

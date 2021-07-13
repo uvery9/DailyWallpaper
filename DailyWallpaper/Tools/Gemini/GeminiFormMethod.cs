@@ -1128,7 +1128,7 @@ namespace DailyWallpaper
                 }
                 catch (CustomAttributeFormatException ex)
                 {
-                    CWriteLine($"{ex.Message}");
+                    Debug.WriteLine($"{ex.Message}");
                     if (liv.Items.Count < 1)
                     {
                         return;
@@ -1152,7 +1152,7 @@ namespace DailyWallpaper
                                 }
                             }
                         }                       
-                        CWriteLine("Slow Mode: " + ex.Message);
+                        Debug.WriteLine("Slow Mode: " + ex.Message);
                         action(true, "Slow Mode: " + ex.Message);
                     }
                     catch (Exception exr)
@@ -1168,7 +1168,7 @@ namespace DailyWallpaper
                 }
                 finally
                 {
-                        CWriteLine("---------finally: ");
+                        Debug.WriteLine("---------finally: ");
                 }
                 }); 
                 _tasks.Add(restoreTask);
