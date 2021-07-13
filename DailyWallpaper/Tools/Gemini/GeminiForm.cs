@@ -308,7 +308,7 @@ namespace DailyWallpaper
                     {
                         foreach (var item in resultListView.Items)
                         {
-                            var it = (System.Windows.Forms.ListViewItem)item;
+                            var it = (ListViewItem)item;
                             var fullPathLV = it.SubItems["fullPath"].Text;
                             if (it.Checked && File.Exists(fullPathLV))
                             {
@@ -3245,6 +3245,11 @@ namespace DailyWallpaper
                 }
 
             }
+        }
+
+        private void GeminiForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

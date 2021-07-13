@@ -31,7 +31,6 @@ namespace DailyWallpaper
             STEP_2_FILESTOSTRUCT,
             STEP_3_FASTCOMPARE,
             STEP_4_COMPAREHASH,
-            STEP_5_REGRPANDCOLOR,
             DEFAULT,
             ERROR
         }
@@ -90,7 +89,7 @@ namespace DailyWallpaper
              *  step-2-filesToStruct_2.xml
              *  step-3-FastCompare.xml
              *  step-4-CompareHash.xml
-             *  step-5-RegrpAndColor.xml
+             *  step-5-RegrpAndColor.xml // color can't be write into xml, delete it.
              */
             object ret;
             LoadFileStep op;
@@ -116,11 +115,6 @@ namespace DailyWallpaper
                 {
                     ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
                     op = LoadFileStep.STEP_4_COMPAREHASH;
-                }
-                else if (pathLow.Contains("step-5-".ToLower()))
-                {
-                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                    op = LoadFileStep.STEP_5_REGRPANDCOLOR;
                 }
                 else
                 {
@@ -256,20 +250,9 @@ namespace DailyWallpaper
                             SaveOperationHistory("step-4-CompareHash.xml", sameListNoDup);
                     }
 
-                    
                     // Color by Group.
-                    if (!IsSkip(op, LoadFileStep.STEP_5_REGRPANDCOLOR))
-                    {
-                        _console.WriteLine(">>> ListView Color...");
-                        geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
-                    }
-                    else
-                    {
-                        geminiFileStructListForLV = gfL;
-                        _console.WriteLine($">>> Skip {LoadFileStep.STEP_5_REGRPANDCOLOR}... ");
-                    }
-                    if (op <= LoadFileStep.STEP_5_REGRPANDCOLOR)
-                        SaveOperationHistory("step-5-RegrpAndColor.xml", sameListNoDup);
+                    _console.WriteLine(">>> ListView Color...");
+                    geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
 
                     _console.WriteLine(">>> Update to ListView...");
                     UpdateListView(resultListView, ref geminiFileStructListForLV, token);

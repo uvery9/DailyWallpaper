@@ -102,6 +102,7 @@
             this.loadListViewFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setByYourselfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protectFilesInGrpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autocleanEmptyFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,7 +115,6 @@
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setByYourselfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -832,6 +832,12 @@
             this.alwaysCalculateHashToolStripMenuItem.Text = "Always calculate Hash";
             this.alwaysCalculateHashToolStripMenuItem.Click += new System.EventHandler(this.alwaysCalculateHashToolStripMenuItem_Click);
             // 
+            // setByYourselfToolStripMenuItem
+            // 
+            this.setByYourselfToolStripMenuItem.Name = "setByYourselfToolStripMenuItem";
+            this.setByYourselfToolStripMenuItem.Size = new System.Drawing.Size(237, 34);
+            this.setByYourselfToolStripMenuItem.Text = "Set by yourself";
+            // 
             // protectFilesInGrpToolStripMenuItem
             // 
             this.protectFilesInGrpToolStripMenuItem.Name = "protectFilesInGrpToolStripMenuItem";
@@ -922,12 +928,6 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // setByYourselfToolStripMenuItem
-            // 
-            this.setByYourselfToolStripMenuItem.Name = "setByYourselfToolStripMenuItem";
-            this.setByYourselfToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
-            this.setByYourselfToolStripMenuItem.Text = "Set by yourself";
-            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -944,6 +944,7 @@
             this.Name = "GeminiForm";
             this.Text = "Gemini: find duplicate files and delete.";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GeminiForm_FormClosing);
+            this.Load += new System.EventHandler(this.GeminiForm_Load);
             this.listViewContextMenuStrip.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
