@@ -20,6 +20,7 @@ using System.Security.Cryptography;
 using System.Reflection;
 using Button = System.Windows.Forms.Button;
 using ListView = System.Windows.Forms.ListView;
+using ListViewItem = System.Windows.Forms.ListViewItem;
 
 namespace DailyWallpaper
 {
@@ -55,22 +56,6 @@ namespace DailyWallpaper
                     StartAnalyzeStep(op, sL: (List<string>)listFromFile);
                 else
                     StartAnalyzeStep(op, gfL: (List<GeminiFileStruct>)listFromFile);
-
-                /*_console.WriteLine(">>> Loading xml file...");
-                geminiFileStructListForLV =
-                        ReadFromXmlFile<List<GeminiFileStruct>>(path);
-                var _updateFromFileTask = Task.Run(() =>
-                {
-                    var token = _source.Token;
-                    _console.WriteLine(">>> Recolor...");
-                    geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
-                        SetCompareMode(), token);
-                    _console.WriteLine(">>> Load file, update to ListView...");
-                    UpdateListView(resultListView, ref geminiFileStructListForLV, token);
-                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
-                    _console.WriteLine(">>> Load xml file finished!");
-                }, _source.Token);
-                _tasks.Add(_updateFromFileTask);*/
             }
             catch (Exception ex)
             {
@@ -361,7 +346,7 @@ namespace DailyWallpaper
             ListViewOP op, List<GeminiFileStruct> gfl = null,
             Action<bool, List<GeminiFileStruct>> actionLoop = null);
 
-        private void ListViewOperateLoop(System.Windows.Forms.ListView liv,
+        private void ListViewOperateLoop(ListView liv,
             ListViewOP op, List<GeminiFileStruct> gfl = null,
             Action<bool, List<GeminiFileStruct>> actionLoop = null)
         {
@@ -393,7 +378,7 @@ namespace DailyWallpaper
                     actionLoop(true, tmpL);
 
                 }
-                if (op == ListViewOP.UPDATE_CHECK_BY_INDEX)
+                else if (op == ListViewOP.UPDATE_CHECK_BY_INDEX)
                 {
                     var tmpL = new List<GeminiFileStruct>();
                     foreach (var gf in gfl)
@@ -414,16 +399,15 @@ namespace DailyWallpaper
                     actionLoop(true, tmpL);
 
                 }
-                if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
+                else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
                     // HUGE BUGS. INDEX FCK CHAOTIC..
                     var updateIndex = Task.Run(() =>
                     {
                         var tmpL = new List<GeminiFileStruct>();
                         int index = 0;
-                        foreach (var it in liv.Items)
+                        foreach (ListViewItem lvi in liv.Items)
                         {
-                            var lvi = ((System.Windows.Forms.ListViewItem)it);
                             /*_console.WriteLine(liv.Items.IndexOf(lvi));*/
                             // how to update index in SubItems
                             lvi.SubItems["index"].Text = index.ToString();
@@ -448,6 +432,191 @@ namespace DailyWallpaper
             }
 
         }
+
+        // https://stackoverflow.com/questions/17746013/how-to-change-order-of-columns-of-listview
+        // https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/sort-listview-by-column
+        
+        private bool sorting = false;
+        private void resultListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (sorting)
+            {
+                _console.WriteLine("! The Index is being updated in the background\r\n" + 
+                    "and can no longer be sorted, please try again later");
+                return;
+            }
+            _console.WriteLine(">>> Sort and update Index in the background...");
+            sorting = true;
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
+            {
+                // Determine if clicked column is already the column that is being sorted.
+                if (e.Column == lvwColumnSorter.SortColumn)
+                {
+                    // Reverse the current sort direction for this column.
+                    if (lvwColumnSorter.Order == SortOrder.Ascending)
+                    {
+                        lvwColumnSorter.Order = SortOrder.Descending;
+                    }
+                    else
+                    {
+                        lvwColumnSorter.Order = SortOrder.Ascending;
+                    }
+                }
+                else
+                {
+                    // Set the column number that is to be sorted; default to ascending.
+                    lvwColumnSorter.SortColumn = e.Column;
+                    lvwColumnSorter.Order = SortOrder.Ascending;
+                }
+
+                // Update Index string in resultListView, index in GeminiFileStruct.
+
+
+                // quick
+                ListViewOperate((ListView)sender, ListViewOP.SORT);
+
+                void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
+                {
+                    if (res)
+                    {
+                        geminiFileStructListForLV = gfl;
+                        sorting = false;
+                        _console.WriteLine(">>> Index background update completed");
+                    }
+                }
+                // Update Index string in resultListView, index in GeminiFileStruct.
+                // very slow, block the program.
+                // Task.Run here not work. Must inside the Invoked.
+
+                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
+                    geminiFileStructListForLV, UpdateGFL);
+
+                /*_source = new CancellationTokenSource();
+                var token = _source.Token;
+                var columnClickTask = Task.Run(() => {
+                    try
+                    {
+                        var tmpL = new List<GeminiFileStruct>();
+                        int index = 0;
+                        var items = new List<ListViewItem>();
+
+                        foreach (ListViewItem lvi in GetListViewItems(resultListView))
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                token.ThrowIfCancellationRequested();
+                            }
+                            *//*_console.WriteLine(liv.Items.IndexOf(lvi));*//*
+                            // how to update index in SubItems
+                            lvi.SubItems["index"].Text = index.ToString();
+                            lvi.SubItems[0].Text = index.ToString();
+                            var fullPathLV = lvi.SubItems["fullPath"].Text;
+
+                            *//*items.Add(lvi);*//*
+                            SetListViewText(resultListView, index, 
+                                "index", index.ToString());
+                            foreach (var gf in geminiFileStructListForLV)
+                            {
+                                var tmp = gf;
+                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                {
+                                    tmp.index = index;
+                                    tmpL.Add(tmp);
+                                    break;
+                                }
+                            }
+                            index++;
+                        }
+                        ListViewOperate(resultListView, ListViewOP.CLEAR);
+                        *//*if (items.Count > 0)
+                        {
+                            ListViewOperate(resultListView, ListViewOP.ADDRANGE, items: items.ToArray());
+                        }*//*
+                        UpdateGFL(true, tmpL);
+                    }
+                    catch (Exception ex)
+                    {
+                        // _console.WriteLine("resultListView_ColumnClick Run: " + ex.Message);
+                        _console.WriteLine("resultListView_ColumnClick Run: " + ex);
+                    }
+
+                });
+                _tasks.Add(columnClickTask);*/
+                /*
+
+                 public void add(string prob, string reg, string data, string user)
+                {
+                    String[] row = { prob, reg, data, user };
+
+                    ListViewItem item = new ListViewItem(row);
+
+
+                    if (listView1.InvokeRequired)
+                    {
+                         listView1.Invoke(new MethodInvoker(delegate
+                         {
+                             listView1.Items.Add(item);
+                             item.Checked = true;
+
+                         }));
+                    }   
+                    else
+                    {
+                        listView1.Items.Add(item);
+                        item.Checked = true;
+                    } 
+
+
+                }
+                 */
+            }
+        }
+
+
+        public static void SetListViewText(ListView lv, int index, string name, string text)
+        {
+            if (lv.InvokeRequired)
+            {
+                lv.Invoke(new MethodInvoker(delegate () { SetListViewText(lv, index, name , text); }));
+            }
+            else
+            {
+                lv.Items[index].SubItems[name].Text = text;
+            }
+        }
+
+
+        public static void InvokeClearListViewItems(ListView listView)
+        {
+            if (listView.InvokeRequired)
+            {
+                listView.Invoke(new MethodInvoker(delegate () { InvokeClearListViewItems(listView); }));
+            }
+            else
+            {
+                listView.Items.Clear();
+            }
+        }
+
+        private delegate ListView.ListViewItemCollection GetItems(ListView lstview);
+        private ListView.ListViewItemCollection GetListViewItems(ListView lstview)
+        {
+            if (lstview.InvokeRequired)
+            {
+                return (ListView.ListViewItemCollection)
+                    lstview.Invoke(new GetItems(GetListViewItems), new object[] { lstview });
+                
+            }
+            else
+            {
+                var temp = new ListView.ListViewItemCollection(new ListView());
+                foreach (ListViewItem item in lstview.Items)
+                    temp.Add((ListViewItem)item.Clone());
+                // return temp;
+                return lstview.Items;
+            }
+        }
+
 
         private void ConvertToCEFMode(bool cef = false)
         {
@@ -803,7 +972,7 @@ namespace DailyWallpaper
         private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
             System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
             System.Windows.Forms.ListViewItem[] items = null, Action<bool, string> action = null);
-        private void ListViewOperate(System.Windows.Forms.ListView liv, ListViewOP op,
+        private void ListViewOperate(ListView liv, ListViewOP op,
             System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
             System.Windows.Forms.ListViewItem[] items = null, Action <bool, string> action = null
            )
@@ -833,15 +1002,6 @@ namespace DailyWallpaper
                 }
                 if (op == ListViewOP.SORT)
                 {
-                    /*Task.Run(() => { 
-                    liv.BeginUpdate();
-                    liv.Sort();
-                    liv.EndUpdate();
-                    action(true, "Finished");
-                    });*/
-
-                    /*liv.Sort();*/
-
                     liv.BeginUpdate();
                     liv.Sort();
                     liv.EndUpdate();
@@ -856,7 +1016,7 @@ namespace DailyWallpaper
             REVERSE_ELECTION
         };
         private void MultipleSelectOperationsAction(
-            System.Windows.Forms.ListView liv, MultipleSelectOperations op)
+            ListView liv, MultipleSelectOperations op)
         {
             if (liv.Items.Count < 1)
             {

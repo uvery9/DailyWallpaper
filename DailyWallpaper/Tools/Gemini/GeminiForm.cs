@@ -443,11 +443,9 @@ namespace DailyWallpaper
 
             return sameList.Distinct().ToList();
         }
+      
 
-        
-        
-
-        private void UpdateListView(System.Windows.Forms.ListView liv, 
+        private void UpdateListView(ListView liv, 
             ref List<GeminiFileStruct> gfL,  CancellationToken token)
         {
             ListViewOperate(liv, ListViewOP.CLEAR);
@@ -464,8 +462,10 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    var item = new System.Windows.Forms.ListViewItem(index.ToString());
-                    item.BackColor = gf.color;
+                    var item = new ListViewItem(index.ToString())
+                    {
+                        BackColor = gf.color
+                    };
                     AddSubItem(item, "name", gf.name);
                     AddSubItem(item, "lastMtime", gf.lastMtime);
                     AddSubItem(item, "extName", gf.extName);
@@ -475,7 +475,6 @@ namespace DailyWallpaper
                     AddSubItem(item, "fullPath", gf.fullPath);
                     AddSubItem(item, "size", gf.size.ToString());
                     AddSubItem(item, "index", index.ToString());
-                    // ListViewOperate(liv, ListViewOP.ADD, item);
                     items.Add(item);
                     var tmp = gf;
                     tmp.index = index;
@@ -1652,51 +1651,6 @@ namespace DailyWallpaper
 
         }
 
-        // https://stackoverflow.com/questions/17746013/how-to-change-order-of-columns-of-listview
-        // https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/sort-listview-by-column
-        private void resultListView_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
-            {
-                // Determine if clicked column is already the column that is being sorted.
-                if (e.Column == lvwColumnSorter.SortColumn)
-                {
-                    // Reverse the current sort direction for this column.
-                    if (lvwColumnSorter.Order == SortOrder.Ascending)
-                    {
-                        lvwColumnSorter.Order = SortOrder.Descending;
-                    }
-                    else
-                    {
-                        lvwColumnSorter.Order = SortOrder.Ascending;
-                    }
-                }
-                else
-                {
-                    // Set the column number that is to be sorted; default to ascending.
-                    lvwColumnSorter.SortColumn = e.Column;
-                    lvwColumnSorter.Order = SortOrder.Ascending;
-                }
-
-                // Update Index string in resultListView, index in GeminiFileStruct.
-
-               
-                // quick
-                ListViewOperate((ListView)sender, ListViewOP.SORT);
-                
-                void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
-                {
-                    if (res)
-                    {
-                        geminiFileStructListForLV = gfl;
-                    }
-                }
-                // Update Index string in resultListView, index in GeminiFileStruct.
-                // very slow, block the program.
-                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
-                    geminiFileStructListForLV, UpdateGFL);
-            }
-        }
 
         private delegate void SetProgressMessageDelegate(
             System.Windows.Forms.ProgressBar proBar, int value);
@@ -2554,7 +2508,7 @@ namespace DailyWallpaper
         // unselect and select all will flush.
         private void resultListView_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (!cleanEmptyFolderModeToolStripMenuItem.Checked && false)
+            /*if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
                 var fitem = e.Item.ListView.FocusedItem;
                 if (fitem == null)
@@ -2571,8 +2525,8 @@ namespace DailyWallpaper
                             geminiFileStructListForLV[ret].Checked = fitem.Checked;
                             //_console.WriteLine("FAST CHECKED1.");
                         }
-                        /*_console.WriteLine($"{gf.Checked}");
-                        _console.WriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");*/
+                        *//*_console.WriteLine($"{gf.Checked}");
+                        _console.WriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");*//*
                     }
                     //_console.WriteLine("FAST CHECKED2.");
                 }
@@ -2591,7 +2545,7 @@ namespace DailyWallpaper
                     }
                     geminiFileStructListForLV = tmpL;
                 }
-            }
+            }*/
         }
 
         private void copyFileNameToolStripMenuItem_Click(object sender, EventArgs e)
