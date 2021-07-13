@@ -760,12 +760,12 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cleanEmptyFolderModeToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.alwaysOnTopToolStripMenuItem,
+            this.loadListViewFromFileToolStripMenuItem,
             this.saveLogToFileToolStripMenuItem,
             this.saveResultListToFileToolStripMenuItem,
             this.toolStripMenuItem8,
-            this.loadListViewFromFileToolStripMenuItem,
             this.toolStripMenuItem2,
+            this.alwaysOnTopToolStripMenuItem,
             this.alwaysCalculateHashToolStripMenuItem,
             this.protectFilesInGrpToolStripMenuItem,
             this.autocleanEmptyFoldersToolStripMenuItem});

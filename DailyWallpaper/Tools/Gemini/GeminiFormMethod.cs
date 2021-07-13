@@ -19,6 +19,7 @@ using System.Drawing;
 using System.Security.Cryptography;
 using System.Reflection;
 using Button = System.Windows.Forms.Button;
+using ListView = System.Windows.Forms.ListView;
 
 namespace DailyWallpaper
 {
@@ -415,47 +416,50 @@ namespace DailyWallpaper
                 }
                 if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
-                    var tmpL = new List<GeminiFileStruct>();
-                    int index = 0;
-                    foreach (var it in liv.Items)
+                    var updateIndex = Task.Run(() =>
                     {
-                        var lvi = ((System.Windows.Forms.ListViewItem)it);
-                        /*_console.WriteLine(liv.Items.IndexOf(lvi));*/
-                        // how to update index in SubItems
-                        lvi.SubItems["index"].Text = index.ToString();
-                        lvi.SubItems[0].Text = index.ToString();
-                        var fullPathLV = lvi.SubItems["fullPath"].Text;
-                        foreach (var gf in gfl)
+                        var tmpL = new List<GeminiFileStruct>();
+                        int index = 0;
+                        foreach (var it in liv.Items)
                         {
-                            var tmp = gf;
-                            if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                            var lvi = ((System.Windows.Forms.ListViewItem)it);
+                            /*_console.WriteLine(liv.Items.IndexOf(lvi));*/
+                            // how to update index in SubItems
+                            lvi.SubItems["index"].Text = index.ToString();
+                            lvi.SubItems[0].Text = index.ToString();
+                            var fullPathLV = lvi.SubItems["fullPath"].Text;
+                            foreach (var gf in gfl)
                             {
-                                tmp.index = index;
-                                tmpL.Add(tmp);
-                                break;
+                                var tmp = gf;
+                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                {
+                                    tmp.index = index;
+                                    tmpL.Add(tmp);
+                                    break;
+                                }
                             }
+                            index++;
                         }
-                        index++;
-                    }
-                    actionLoop(true, tmpL);
+                        actionLoop(true, tmpL);
+                    });
+                    _tasks.Add(updateIndex);
                 }
             }
 
         }
 
-
         private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
             System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
-            System.Windows.Forms.ListViewItem[] items = null);
+            System.Windows.Forms.ListViewItem[] items = null, Action<bool, string> action = null);
         private void ListViewOperate(System.Windows.Forms.ListView liv, ListViewOP op,
             System.Windows.Forms.ListViewItem item = null, bool ischeck = false, 
-            System.Windows.Forms.ListViewItem[] items = null 
+            System.Windows.Forms.ListViewItem[] items = null, Action <bool, string> action = null
            )
         {
             if (liv.InvokeRequired)
             {
-                var addDele = new ListViewOperateDelegate(ListViewOperate);
-                liv.Invoke(addDele, new object[] { liv, op, item, ischeck, items });
+                var func = new ListViewOperateDelegate(ListViewOperate);
+                liv.Invoke(func, new object[] { liv, op, item, ischeck, items, action });
             }
             else
             {
@@ -477,6 +481,15 @@ namespace DailyWallpaper
                 }
                 if (op == ListViewOP.SORT)
                 {
+                    /*Task.Run(() => { 
+                    liv.BeginUpdate();
+                    liv.Sort();
+                    liv.EndUpdate();
+                    action(true, "Finished");
+                    });*/
+
+                    /*liv.Sort();*/
+
                     liv.BeginUpdate();
                     liv.Sort();
                     liv.EndUpdate();

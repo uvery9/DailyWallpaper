@@ -1960,26 +1960,12 @@ namespace DailyWallpaper
                     lvwColumnSorter.Order = SortOrder.Ascending;
                 }
 
-                // Perform the sort with these new sort options.
-                var sortTask = Task.Run(() =>
-                    {
-                        ListViewOperate((ListView)sender, ListViewOP.SORT);
-                        void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
-                        {
-                            if (res)
-                            {
-                                geminiFileStructListForLV = gfl;
-                            }
-                        }
-                        // Update Index string in resultListView, index in GeminiFileStruct.
-                        ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
-                            geminiFileStructListForLV, UpdateGFL);
-                    }
-                );
-                _tasks.Add(sortTask);
-                /*resultListView.BeginUpdate();
-                ListViewOperate(resultListView, ListViewOP.SORT);
-                resultListView.EndUpdate();
+                // Update Index string in resultListView, index in GeminiFileStruct.
+
+               
+                // quick
+                ListViewOperate((ListView)sender, ListViewOP.SORT);
+                
                 void UpdateGFL(bool res, List<GeminiFileStruct> gfl)
                 {
                     if (res)
@@ -1988,9 +1974,10 @@ namespace DailyWallpaper
                     }
                 }
                 // Update Index string in resultListView, index in GeminiFileStruct.
+                // very slow, block the program.
                 ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
-                    geminiFileStructListForLV, UpdateGFL);*/
-            }           
+                    geminiFileStructListForLV, UpdateGFL);
+            }
         }
 
         private delegate void SetProgressMessageDelegate(
@@ -3195,7 +3182,7 @@ namespace DailyWallpaper
         // unselect and select all will flush.
         private void resultListView_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked && false)
             {
                 var fitem = e.Item.ListView.FocusedItem;
                 if (fitem == null)
