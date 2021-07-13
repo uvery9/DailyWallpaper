@@ -513,6 +513,10 @@ namespace DailyWallpaper.Tools
 
         public static void SaveOperationHistory<T>(string pathName, List<T> list)
         {
+            if (list == null)
+            {
+                return;
+            }
             // Path.
             var executingLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var dir = Path.Combine(executingLocation, "Gemini.History");
