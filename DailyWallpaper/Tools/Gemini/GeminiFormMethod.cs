@@ -1086,25 +1086,26 @@ namespace DailyWallpaper
             }
         }
 
-        private delegate void RestoreListViewChoiceInvokeDele(System.Windows.Forms.ListView liv,
-            List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false);
-        private void RestoreListViewChoiceInvoke(System.Windows.Forms.ListView liv,
-            List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false)
+        private delegate void RestoreListViewChoiceInvokeDele(ListView liv, List<GeminiFileStruct> gfl, 
+            CancellationToken token, bool indexChange = false, Action<bool, string> action = default);
+        
+        private void RestoreListViewChoiceInvoke(ListView liv, List<GeminiFileStruct> gfl, 
+            CancellationToken token, bool indexChange = false, Action<bool, string> action = default)
         {
             if (liv.InvokeRequired)
             {
                 var f = new RestoreListViewChoiceInvokeDele(RestoreListViewChoiceInvoke);
-                liv.Invoke(f, new object[] { liv, gfl, token, indexChange });
+                liv.Invoke(f, new object[] { liv, gfl, token, indexChange, action });
             }
             else
             {
+                var restoreTask = Task.Run(() => {
                 try
                 {
                     if (indexChange)
                     {
-                        throw new Exception(">>> Clean-UP Restore Mode.");
+                        throw new CustomAttributeFormatException(">>> Clean-UP Restore Mode.");
                     }
-                    // CWriteLine("FAST..........");
                     foreach (var gf in gfl)
                     {
                         if (token.IsCancellationRequested)
@@ -1122,32 +1123,55 @@ namespace DailyWallpaper
                             ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
                         }
                     }
-                    // CWriteLine("FAST No Exception..........");
+                    action(true, "Fast Mode Finished");
+                        // CWriteLine("FAST No Exception..........");
                 }
-                catch (Exception ex)
+                catch (CustomAttributeFormatException ex)
                 {
                     CWriteLine($"{ex.Message}");
                     if (liv.Items.Count < 1)
                     {
                         return;
                     }
-                    foreach (var item in liv.Items)
+                    try
                     {
-                        var it = (System.Windows.Forms.ListViewItem)item;
-                        var fullPathLV = it.SubItems["fullPath"].Text;
                         foreach (var gf in gfl)
                         {
-                            if (token.IsCancellationRequested)
+                            // foreach (ListViewItem item in ListViewName.Items) blck program.
+                            foreach (ListViewItem it in GetListViewItems(liv))
                             {
-                                token.ThrowIfCancellationRequested();
+                                var fullPathLV = it.SubItems["fullPath"].Text;
+                                if (token.IsCancellationRequested)
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                }
+                                if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
+                                {
+                                    ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
+                                }
                             }
-                            if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
-                            {
-                                ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
-                            }
-                        }
+                        }                       
+                        CWriteLine("Slow Mode: " + ex.Message);
+                        action(true, "Slow Mode: " + ex.Message);
+                    }
+                    catch (Exception exr)
+                    {
+                        // CWriteLine("! Error: " + exr.Message);
+                        Debug.WriteLine("! Error: " + exr);
+                        action(false, "! Error: " + exr.Message);
                     }
                 }
+                catch (Exception ext)
+                {
+                        Debug.WriteLine("! ext: " + ext.Message);
+                }
+                finally
+                {
+                        CWriteLine("---------finally: ");
+                }
+                }); 
+                _tasks.Add(restoreTask);
+
             }
 
         }

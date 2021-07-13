@@ -227,19 +227,24 @@ namespace DailyWallpaper
                 undoToolStripMenuItem.Enabled = false;
                 var taskDel = Task.Run(() => 
                 {
-                    deleteList.Clear();
-                    if (resultListView.Items.Count > 0)
+                    try
                     {
-                        foreach (var item in resultListView.Items)
+                        deleteList.Clear();
+
+                    resultListView.Invoke(new MethodInvoker(delegate () {
+                        if (resultListView.Items.Count > 0)
                         {
-                            var it = (ListViewItem)item;
-                            var fullPathLV = it.SubItems["fullPath"].Text;
-                            if (it.Checked && File.Exists(fullPathLV))
+                            foreach (ListViewItem it in resultListView.Items)
                             {
-                                deleteList.Add(fullPathLV);
+                                var fullPathLV = it.SubItems["fullPath"].Text;
+                                if (it.Checked && File.Exists(fullPathLV))
+                                {
+                                    deleteList.Add(fullPathLV);
+                                }
                             }
                         }
-                    }
+                    }));
+                    
                     CWriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
                     // SetText(summaryTextBox, $"Selected {deleteList.Count} file(s).", themeColor);
                     if (deleteList.Count < 1)
@@ -317,7 +322,16 @@ namespace DailyWallpaper
 
                     // clean non-existent file in geminiFileStructListForLV
                     //   update ListView and the checked in LV.
-                    cleanUpButton.PerformClick();
+                    
+                    cleanUpButton.Invoke(new MethodInvoker(delegate () {
+                        cleanUpButton.PerformClick();
+                    }));
+
+                    }
+                catch (Exception ex)
+                {
+                    CWriteLine("btnDelete_Click:" + ex.Message);
+                }
                 }, _source.Token);
                 _tasks.Add(taskDel);
                 // taskDel.Wait();
@@ -1844,6 +1858,8 @@ namespace DailyWallpaper
         private void cleanUpButton_Click(object sender, EventArgs e)
         {
             var taskCleanUp = Task.Run(() => {
+                try
+                {              
                 redoToolStripMenuItem.Enabled = false;
                 undoToolStripMenuItem.Enabled = false;
                 // custQuery is an IEnumerable<IGrouping<string, Customer>>
@@ -1870,10 +1886,29 @@ namespace DailyWallpaper
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
                         SetCompareMode(), _source.Token);
                     UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
-                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token, true);
+                    void GetRet(bool ret, string msg)
+                    {
+                       CWriteLine($">>> Clean-UP Finished: {msg}");
+                       CWriteLine($">>> 草你麻痹: {msg}");
+                       if (!ret)
+                            CWriteLine(msg);
+                        else
+                            CWriteLine($">>> Clean-UP Finished: {msg}");
+                        
+                    }
+                    RestoreListViewChoiceInvoke(resultListView, 
+                        geminiFileStructListForLV, _source.Token, indexChange: true, action: GetRet);
                 }
-                CWriteLine(">>> Clean-UP Finished.");
-            });
+                else
+                {
+                    CWriteLine(">>> Clean-UP Finished.");
+                }
+            }
+            catch (Exception ex)
+            {
+                CWriteLine(ex.ToString());
+            }
+             });
             _tasks.Add(taskCleanUp);
         }
 
