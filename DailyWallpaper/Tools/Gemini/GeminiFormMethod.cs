@@ -848,5 +848,239 @@ namespace DailyWallpaper
                 }
             }
         }
+
+        private enum MultipleSelectOperations
+        {
+            SELECT_ALL,
+            UNSELECT_ALL,
+            REVERSE_ELECTION
+        };
+        private void MultipleSelectOperationsAction(
+            System.Windows.Forms.ListView liv, MultipleSelectOperations op)
+        {
+            if (liv.Items.Count < 1)
+            {
+                return;
+            }
+            geminiFileStructListForLVUndo = geminiFileStructListForLV;
+            undoToolStripMenuItem.Enabled = true;
+            var mpTask = Task.Run(() => {
+                try
+                {
+                    if (op == MultipleSelectOperations.REVERSE_ELECTION)
+                    {
+                        geminiFileStructListForLV = UpdateGFLChecked(geminiFileStructListForLV)
+                            ?? geminiFileStructListForLV;
+                    }
+                    var tmpGfl = new List<GeminiFileStruct>();
+                    foreach (var item in geminiFileStructListForLV)
+                    {
+                        var tmp = item;
+                        if (op == MultipleSelectOperations.REVERSE_ELECTION)
+                        {
+                            if (item.Checked)
+                            {
+                                tmp.Checked = false;
+                            }
+                            else
+                            {
+                                tmp.Checked = true;
+                            }
+                        }
+                        else if (op == MultipleSelectOperations.SELECT_ALL)
+                        {
+                            tmp.Checked = true;
+                        }
+                        else if (op == MultipleSelectOperations.UNSELECT_ALL)
+                        {
+                            tmp.Checked = false;
+                        }
+                        tmpGfl.Add(tmp);
+                    }
+                    if (tmpGfl.Count < 1)
+                    {
+                        return;
+                    }
+                    geminiFileStructListForLV = tmpGfl;
+                    RestoreListViewChoiceInvoke(liv, geminiFileStructListForLV, _source.Token);
+                }
+                catch (Exception ex)
+                {
+                    _console.WriteLine($"{ex}");
+                    _console.WriteLine($"{ex.Message}");
+                }
+            });
+            _tasks.Add(mpTask);
+        }
+
+        private void MultipleSelectOperationsActionCEF(MultipleSelectOperations op)
+        {
+            var mpCEFTask = Task.Run(() => {
+                if (resultListView.Items.Count < 1)
+                {
+                    return;
+                }
+                undoToolStripMenuItem.Enabled = true;
+                // geminiCEFStructListRedo
+                if (op == MultipleSelectOperations.REVERSE_ELECTION)
+                {
+                    geminiCEFStructList = UpdateCEFChecked(geminiCEFStructList)
+                        ?? geminiCEFStructList;
+                }
+                var tmpGfl = new List<GeminiCEFStruct>();
+                if (geminiCEFStructList.Count < 1)
+                {
+                    return;
+                }
+                foreach (var item in geminiCEFStructList)
+                {
+                    var tmp = item;
+                    if (op == MultipleSelectOperations.REVERSE_ELECTION)
+                    {
+                        if (item.Checked)
+                        {
+                            tmp.Checked = false;
+                        }
+                        else
+                        {
+                            tmp.Checked = true;
+                        }
+                    }
+                    else if (op == MultipleSelectOperations.SELECT_ALL)
+                    {
+                        tmp.Checked = true;
+                    }
+                    else if (op == MultipleSelectOperations.UNSELECT_ALL)
+                    {
+                        tmp.Checked = false;
+                    }
+                    tmpGfl.Add(tmp);
+                }
+                if (tmpGfl.Count < 1)
+                {
+                    return;
+                }
+                geminiCEFStructList = tmpGfl;
+                RestoreCEFListViewChoice(geminiCEFStructList, _source.Token);
+            });
+            _tasks.Add(mpCEFTask);
+        }
+
+        private void GeminiFileStructListRE(List<GeminiFileStruct> gfL,
+            GeminiFileStruct item, Regex rege, bool find = true)
+        {
+            item.Checked = !find;
+            if (rege.IsMatch(item.fullPath))
+            {
+                item.Checked = find;
+            }
+            gfL.Add(item);
+        }
+
+        private void GeminiFileStructListGeneral(List<GeminiFileStruct> gfL,
+            GeminiFileStruct item, List<string> filter, bool find = true)
+        {
+            item.Checked = !find;
+            foreach (var it in filter)
+            {
+                if (item.fullPath.ToLower().Contains(it.ToLower()))
+                {
+                    item.Checked = find;
+                    break;
+                }
+            }
+            gfL.Add(item);
+        }
+
+
+        private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
+        {
+            if (resultListView.Items.Count > 0)
+            {
+                foreach (var item in resultListView.Items)
+                {
+                    var it = (System.Windows.Forms.ListViewItem)item;
+                    var fullPathLV = it.SubItems["name"].Text;
+                    foreach (var gcef in gcefl)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        if (Directory.Exists(gcef.fullPath) && fullPathLV.Equals(gcef.fullPath))
+                        {
+                            it.Checked = gcef.Checked;
+                        }
+                    }
+                }
+            }
+        }
+
+        private delegate void RestoreListViewChoiceInvokeDele(System.Windows.Forms.ListView liv,
+            List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false);
+        private void RestoreListViewChoiceInvoke(System.Windows.Forms.ListView liv,
+            List<GeminiFileStruct> gfl, CancellationToken token, bool indexChange = false)
+        {
+            if (liv.InvokeRequired)
+            {
+                var f = new RestoreListViewChoiceInvokeDele(RestoreListViewChoiceInvoke);
+                liv.Invoke(f, new object[] { liv, gfl, token, indexChange });
+            }
+            else
+            {
+                try
+                {
+                    if (indexChange)
+                    {
+                        throw new Exception(">>> Clean-UP Restore Mode.");
+                    }
+                    // _console.WriteLine("FAST..........");
+                    foreach (var gf in gfl)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                        if (liv.Items.Count < 1)
+                        {
+                            return;
+                        }
+                        var it = liv.Items[gf.index];
+                        var fullPathLV = it.SubItems["fullPath"].Text;
+                        if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
+                        {
+                            ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
+                        }
+                    }
+                    // _console.WriteLine("FAST No Exception..........");
+                }
+                catch (Exception ex)
+                {
+                    _console.WriteLine($"{ex.Message}");
+                    if (liv.Items.Count < 1)
+                    {
+                        return;
+                    }
+                    foreach (var item in liv.Items)
+                    {
+                        var it = (System.Windows.Forms.ListViewItem)item;
+                        var fullPathLV = it.SubItems["fullPath"].Text;
+                        foreach (var gf in gfl)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                token.ThrowIfCancellationRequested();
+                            }
+                            if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
+                            {
+                                ListViewOperate(liv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 }
