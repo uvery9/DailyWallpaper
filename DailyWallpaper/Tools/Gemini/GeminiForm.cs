@@ -29,7 +29,7 @@ namespace DailyWallpaper
         private Gemini gemini;
         private TextBoxCons _console;
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        private CancellationTokenSource _source = null;
+        private CancellationTokenSource _source = new CancellationTokenSource();
         private CancellationTokenSource reIndexTokenSrc = null;
 
         private bool scanRes = false;
