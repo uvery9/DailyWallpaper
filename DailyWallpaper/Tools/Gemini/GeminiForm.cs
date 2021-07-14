@@ -240,8 +240,9 @@ namespace DailyWallpaper
                                     if (File.Exists(fullPathLV))
                                     {
                                         deleteList.Add(fullPathLV);
-                                        CWriteLine("....." + fullPathLV);
+                                        CWriteLineFast("....." + fullPathLV);
                                     }
+                                    Application.DoEvents();
                                 }
                             }
                         }));
@@ -282,7 +283,7 @@ namespace DailyWallpaper
                                  select i).Count().Equals(item.Count))
                             {
                                 k++;
-                                CWriteLine($"!! [{k}] Prevent all files in the group from being deleted.");
+                                CWriteLineFast($"!! [{k}] Prevent all files in the group from being deleted.");
                                 continue;
                             }
                         }
@@ -613,22 +614,24 @@ namespace DailyWallpaper
         }
 
         private async Task<List<GeminiFileStruct>> UpdateHashInGeminiFileStructList(
-            List<GeminiFileStruct> gfL, bool updateBigFile = false)
+            List<GeminiFileStruct> gfL, CancellationToken token, bool updateBigFile)
         {
             var tmp = new List<GeminiFileStruct>();
             int i = 0;
-            int bigFileCnt = 0;
             foreach (var it in gfL)
             {
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
                 i++;
                 int hashSizeLimit = 100;
-                if (it.size < hashSizeLimit * 1024 * 1024 || updateBigFile || bigFileCnt < 20)
+                if (it.size < hashSizeLimit * 1024 * 1024 || updateBigFile)
                 {
                     await UpdateHash(tmp, it);
                 }
                 else
                 {
-                    bigFileCnt++;
                     var bp = it;
                     bp.hash = $">{hashSizeLimit}MB,NotCounting.YouCouldEnableAlwaysCalculateHash";
                     bp.bigFile = true;
@@ -864,16 +867,14 @@ namespace DailyWallpaper
 
         private void btnAnalyze_Click(object sender, EventArgs e)
         {
-            ListViewOperate(resultListView, ListViewOP.CLEAR);
             if (cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
+                ListViewOperate(resultListView, ListViewOP.CLEAR);
                 AnalyzeEmptyFolder(targetFolder1TextBox.Text);
             }
             else
             {
-                btnClear.PerformClick();
-                geminiProgressBar.Visible = true;
-                deleteList = new List<string>();
+                // btnClear.PerformClick();
                 StartAnalyzeStep();
                 redoToolStripMenuItem.Enabled = false;
                 undoToolStripMenuItem.Enabled = false;
@@ -1169,13 +1170,9 @@ namespace DailyWallpaper
             }
         }
 
-        private void saveListOrLog2File(bool log = true)
+        private void saveLogToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (log && tbConsole.Text.Length < 1)
-            {
-                return;
-            }
-            if (!log && deleteList.Count < 1)
+            if (tbConsole.Text.Length < 1)
             {
                 return;
             }
@@ -1197,7 +1194,7 @@ namespace DailyWallpaper
                 var f2 = targetFolder2TextBox.Text;
                 if (string.IsNullOrEmpty(f1) || !Directory.Exists(f1))
                 {
-                    t1 = "NONE";
+                    t1 = "";
                 }
                 else
                 {
@@ -1205,43 +1202,22 @@ namespace DailyWallpaper
                 }
                 if (string.IsNullOrEmpty(f2) || !Directory.Exists(f2))
                 {
-                    t2 = "NONE";
+                    t2 = "";
                 }
                 else
                 {
-                    t2 = new DirectoryInfo(f2).Name;
+                    t2 = "-" + new DirectoryInfo(f2).Name;
                 }
-
-                var name = t1 + "-" + t2;
-                name = name.Replace(":", "_");
-                if (!log)
-                {
-                    saveFileDialog.FileName = "Gemini-list_" + name + "_" +
-                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm") + ".txt";
-                }
-                else
-                {
-                    saveFileDialog.FileName = "Gemini-log_" + name + "_" +
-                                         DateTime.Now.ToString("yyyy-MM-dd_HH-mm") + ".txt";
-                }
-
-
+                var name = t1 + t2;
+                name = string.Join("_", name.Split(Path.GetInvalidFileNameChars()));
+                
+                saveFileDialog.FileName = "Gemini-log-" +
+                                        DateTime.Now.ToString("yyyy-MM-dd_HH-mm") + "-" + name + ".txt";
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     using (var stream = saveFileDialog.OpenFile())
                     {
-                        // Code to write the stream goes here.
-                        byte[] dataAsBytes = null;
-
-                        if (!log)
-                        {
-                            dataAsBytes = filesList1.SelectMany(s =>
-                            System.Text.Encoding.Default.GetBytes(s + Environment.NewLine)).ToArray();
-                        }
-                        else
-                        {
-                            dataAsBytes = System.Text.Encoding.Default.GetBytes(tbConsole.Text);
-                        }
+                        var dataAsBytes = System.Text.Encoding.Default.GetBytes(tbConsole.Text);
                         stream.Write(dataAsBytes, 0, dataAsBytes.Length);
                     }
                 }
@@ -1762,10 +1738,6 @@ namespace DailyWallpaper
             }
         }
 
-        private void saveLogToFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveListOrLog2File(log: true);
-        }
 
         private void saveResultListToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {

@@ -127,9 +127,10 @@ namespace DailyWallpaper
         {
             _source = new CancellationTokenSource();
             var token = _source.Token;
+            ListViewOperate(resultListView, ListViewOP.CLEAR);
+            deleteList = new List<string>();
             EnableButton(btnStop, true);
             EnableButton(btnAnalyze, false);
-            SetProgressBarVisible(geminiProgressBar, true);
             var limit = SetMinimumFileLimit();
             try
             {
@@ -138,8 +139,9 @@ namespace DailyWallpaper
                     var timer = new Stopwatch();
                     timer.Start();
                     // Get all files from folder1/2
-                    
-                    if(!IsSkip(op, LoadFileStep.STEP_1_ALL_FILES))
+
+                    SetProgressBarVisible(geminiProgressBar, true);
+                    if (!IsSkip(op, LoadFileStep.STEP_1_ALL_FILES))
                     {
                         bool fld1 = false;
                         bool fld2 = false;
@@ -213,7 +215,15 @@ namespace DailyWallpaper
                     {
                         sameListNoDup = gfL;
                         CWriteLine($">>> Skip {LoadFileStep.STEP_3_FAST_COMPARE}... ");
+                        if (ignoreFileCheckBox.Checked)
+                        {
+                            sameListNoDup =
+                                (from i in sameListNoDup
+                                 where i.size > limit
+                                 select i).ToList();
+                        }
                     }
+
                     if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
                         SaveOperationHistory("step-3-FastCompare.xml", sameListNoDup);
                     
@@ -222,18 +232,17 @@ namespace DailyWallpaper
                         if (!IsSkip(op, LoadFileStep.STEP_4_COMPARE_HASH))
                         {
                             CWriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
+                            SetProgressBarVisible(geminiProgressBar, true);
                             sameListNoDup =
-                            UpdateHashInGeminiFileStructList(sameListNoDup, 
+                            UpdateHashInGeminiFileStructList(sameListNoDup, token,
                                 alwaysCalculateHashToolStripMenuItem.Checked).Result;
                             SaveOperationHistory("step-4-CompareHashForLittleFiles.xml", sameListNoDup);
-                            int bigFileCnt = 0;
                             var sameListNoDupHash = new List<GeminiFileStruct>();
                             var sameListNoDupBigFiles = new List<GeminiFileStruct>();
                             foreach (var sl in sameListNoDup)
                             {
                                 if (sl.bigFile)
                                 {
-                                    bigFileCnt++;
                                     sameListNoDupBigFiles.Add(sl);
                                 }
                                 else
@@ -241,12 +250,15 @@ namespace DailyWallpaper
                                     sameListNoDupHash.Add(sl);
                                 }
                             }
-                            if (bigFileCnt < 20)
+                            CWriteLine($">>> Found " +
+                                    $"{sameListNoDupBigFiles.Count:N0} bigfile(s), do not calculate the hash value...");
+                            if (sameListNoDupBigFiles.Count < 30)
                             {
                                 CWriteLine($">>> Update HASH for remaining " +
                                     $"{sameListNoDupBigFiles.Count:N0} bigfile(s)...");
                                 sameListNoDupBigFiles =
-                                    UpdateHashInGeminiFileStructList(sameListNoDupBigFiles, true).Result;
+                                    UpdateHashInGeminiFileStructList(sameListNoDupBigFiles,
+                                    token, true).Result;
                                 // UpdateHash For BigFiles.
                             }
                             sameListNoDupHash.AddRange(sameListNoDupBigFiles);
@@ -306,6 +318,7 @@ namespace DailyWallpaper
             btnAnalyze.Enabled = true;
 
         }
+
 
         private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -387,6 +400,26 @@ namespace DailyWallpaper
             }
             
         }
+
+        [DebuggerStepThrough]
+        private void CWriteLineFast(object msg)
+        {
+            if (msg == null)
+            {
+                return;
+            }
+            if (msg.GetType().Equals("".GetType()))
+            {
+                // _console.WriteLine(msg.GetType());
+                tbConsole.Text += msg + Environment.NewLine;
+            }
+            else
+            {
+                tbConsole.Text += msg.ToString() + Environment.NewLine;
+            }
+
+        }
+
 
         private delegate void ListViewOperateLoopDelegate(System.Windows.Forms.ListView liv,
             ListViewOP op, List<GeminiFileStruct> gfl = null,
@@ -513,7 +546,7 @@ namespace DailyWallpaper
         }
 
 
-        public static void InvokeClearListViewItems(ListView listView)
+        /*public static void InvokeClearListViewItems(ListView listView)
         {
             if (listView.InvokeRequired)
             {
@@ -523,7 +556,7 @@ namespace DailyWallpaper
             {
                 listView.Items.Clear();
             }
-        }
+        }*/
 
         private delegate ListView.ListViewItemCollection GetItems(ListView lstview);
         private ListView.ListViewItemCollection GetListViewItems(ListView lstview)
@@ -1049,7 +1082,7 @@ namespace DailyWallpaper
                         }
                     }
                     rgfL = tmpL;
-                    CWriteLine(">>> Succeed convert lv to gfL.");
+                    Debug.WriteLine(">>> Succeed convert lv to gfL.");
                 }
 
             }
