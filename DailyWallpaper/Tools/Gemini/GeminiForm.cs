@@ -1890,17 +1890,22 @@ namespace DailyWallpaper
                     CWriteLine(
                         $">>> Remove {geminiFileStructListForLV.Count - cnt} " +
                         "items from ListView [ nonexistent + non-repeating ].");
-                    var index = Math.Max(resultListView.FocusedItem.Index - 2, 0);
+                    int findex;
+                    try
+                    {
+                        findex = resultListView.FocusedItem.Index;
+                    }
+                    catch
+                    {
+                        findex = 0;
+                    }
+                    var index = Math.Max(findex - 2, 0);
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
                         SetCompareMode(), _source.Token);
                     UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
                     void GetRet(bool ret, string msg)
                     {
-                       if (!ret)
-                       {
-                            CWriteLine(msg);
-                       }   
-                       else
+                       if (ret)
                        {
                             if (resultListView.Items.Count > 0 && deleteKey)
                             {
@@ -1914,14 +1919,18 @@ namespace DailyWallpaper
                             }
                             CWriteLine($">>> Clean-UP Finished.");
                             Debug.WriteLine($">>> Clean-UP Finished: {msg}");
-                        }
+                       }
                     }
-                    RestoreListViewChoiceInvoke(resultListView, 
-                        geminiFileStructListForLV, _source.Token, indexChange: true, action: GetRet);
+                    /*RestoreListViewChoiceInvoke(resultListView, 
+                        geminiFileStructListForLV, , indexChange: true, action: GetRet);*/
+
+                    // geminiFileStructListForLV will not be modify, if toListView is true.
+                    ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV,
+                        resultListView, toListView: true, token: _source.Token, action: GetRet);
                 }
                 else
                 {
-                    CWriteLine(">>> Clean-UP Finished.");
+                    CWriteLine(">>> All exist, no need to clean up.");
                 }
             }
             catch (Exception ex)
@@ -2520,7 +2529,8 @@ namespace DailyWallpaper
 
         // unselect and select all will flush.
 
-        
+
+        [DebuggerStepThrough]
         private void EnableButtonsForIndexUpdate(bool enable)
         {
             EnableButton(btnAnalyze, enable);
@@ -2575,7 +2585,7 @@ namespace DailyWallpaper
                 // quick
                 ListViewOperate((ListView)sender, ListViewOP.SORT);
 
-                void UpdateGFL(bool res, List<GeminiFileStruct> gfl, string msg)
+                /*void UpdateGFL(bool res, List<GeminiFileStruct> gfl, string msg)
                 {
                     if (res)
                     {
@@ -2588,93 +2598,20 @@ namespace DailyWallpaper
                     }
                     sorting = false;
                     EnableButtonsForIndexUpdate(true);
-                }
+                }*/
                 // Update Index string in resultListView, index in GeminiFileStruct.
                 // very slow, block the program.
                 // Task.Run here not work. Must inside the Invoked.
                 reIndexTokenSrc = new CancellationTokenSource();
 
-                ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
-                    geminiFileStructListForLV, UpdateGFL, token: reIndexTokenSrc.Token);
+                /*ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
+                    geminiFileStructListForLV, UpdateGFL, token: reIndexTokenSrc.Token);*/
 
-                /*_source = new CancellationTokenSource();
-                var token = _source.Token;
-                var columnClickTask = Task.Run(() => {
-                    try
-                    {
-                        var tmpL = new List<GeminiFileStruct>();
-                        int index = 0;
-                        var items = new List<ListViewItem>();
-
-                        foreach (ListViewItem lvi in GetListViewItems(resultListView))
-                        {
-                            if (token.IsCancellationRequested)
-                            {
-                                token.ThrowIfCancellationRequested();
-                            }
-                            *//*CWriteLine(liv.Items.IndexOf(lvi));*//*
-                            // how to update index in SubItems
-                            lvi.SubItems["index"].Text = index.ToString();
-                            lvi.SubItems[0].Text = index.ToString();
-                            var fullPathLV = lvi.SubItems["fullPath"].Text;
-
-                            *//*items.Add(lvi);*//*
-                            SetListViewText(resultListView, index, 
-                                "index", index.ToString());
-                            foreach (var gf in geminiFileStructListForLV)
-                            {
-                                var tmp = gf;
-                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                                {
-                                    tmp.index = index;
-                                    tmpL.Add(tmp);
-                                    break;
-                                }
-                            }
-                            index++;
-                        }
-                        ListViewOperate(resultListView, ListViewOP.CLEAR);
-                        *//*if (items.Count > 0)
-                        {
-                            ListViewOperate(resultListView, ListViewOP.ADDRANGE, items: items.ToArray());
-                        }*//*
-                        UpdateGFL(true, tmpL);
-                    }
-                    catch (Exception ex)
-                    {
-                        // CWriteLine("resultListView_ColumnClick Run: " + ex.Message);
-                        CWriteLine("resultListView_ColumnClick Run: " + ex);
-                    }
-
-                });
-                _tasks.Add(columnClickTask);*/
-                /*
-
-                 public void add(string prob, string reg, string data, string user)
-                {
-                    String[] row = { prob, reg, data, user };
-
-                    ListViewItem item = new ListViewItem(row);
-
-
-                    if (listView1.InvokeRequired)
-                    {
-                         listView1.Invoke(new MethodInvoker(delegate
-                         {
-                             listView1.Items.Add(item);
-                             item.Checked = true;
-
-                         }));
-                    }   
-                    else
-                    {
-                        listView1.Items.Add(item);
-                        item.Checked = true;
-                    } 
-
-
-                }
-                 */
+                ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV, resultListView,
+                    toListView: false, updateIndex: true, token: reIndexTokenSrc.Token);
+                sorting = false;
+                EnableButtonsForIndexUpdate(true);
+                CWriteLine(">>> Index background update completed");
             }
         }
 

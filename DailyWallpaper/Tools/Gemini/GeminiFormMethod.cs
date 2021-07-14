@@ -243,8 +243,8 @@ namespace DailyWallpaper
                             }
                             if (bigFileCnt < 20)
                             {
-                                CWriteLine($">>> Update HASH for remaining bigfile(s): " +
-                                    $"{sameListNoDupBigFiles.Count:N0}...");
+                                CWriteLine($">>> Update HASH for remaining " +
+                                    $"{sameListNoDupBigFiles.Count:N0} bigfile(s)...");
                                 sameListNoDupBigFiles =
                                     UpdateHashInGeminiFileStructList(sameListNoDupBigFiles, true).Result;
                                 // UpdateHash For BigFiles.
@@ -342,6 +342,7 @@ namespace DailyWallpaper
 
         private delegate void EnableButtonDelegate(Button b, bool enable);
 
+        [DebuggerStepThrough]
         private void EnableButton(Button b, bool enable)
         {
             if (b.InvokeRequired) //  && b.IsHandleCreated
@@ -515,6 +516,7 @@ namespace DailyWallpaper
                     });
                     _tasks.Add(updateIndex);
                 }
+
                 // DOES NOT WORK.
                 /*else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
@@ -1003,62 +1005,94 @@ namespace DailyWallpaper
             liv.EndUpdate();
 
             // update geminiFileStructListForLV
-            void UpdateFunc(bool ret, List<GeminiFileStruct> gfl, ListView lv, string msg)
-            {
-                if(ret)
-                {
-                    geminiFileStructListForLV = gfl;
-                    /*CWriteLine("SUCCEED.........");
-                    CWriteLine(gfl[0].Checked);*/
-                }
-                else
-                {
-                    CWriteLine("ConvertGeminiFileStructListAndListView: " + msg);
-                }
-            }
-            ConvertGeminiFileStructListAndListView(geminiFileStructListForLV, liv, false, action: UpdateFunc);
 
-
+            ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV, liv, 
+                toListView: false, token: _source.Token);
         }
 
-        private void ConvertGeminiFileStructListAndListView(List<GeminiFileStruct> gfL,
-            ListView lv, bool toListView = true, 
-            Action<bool, List<GeminiFileStruct>, ListView, string> action = default)
+        private void ConvertGeminiFileStructListAndListView(ref List<GeminiFileStruct> rgfL,
+            ListView lv, bool toListView = true, bool updateIndex = false, CancellationToken token = default, 
+            Action<bool, string> action = null)
         {
             if (toListView)
             {
-
+                foreach (var gf in rgfL)
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+                    Application.DoEvents();
+                    if (lv.Items.Count < 1)
+                    {
+                        return;
+                    }
+                    var it = lv.Items[gf.index];
+                    var fullPathLV = it.SubItems["fullPath"].Text;
+                    if (File.Exists(gf.fullPath) && fullPathLV.Equals(gf.fullPath))
+                    {
+                        ListViewOperate(lv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
+                    }
+                }
+                action(true, "Succeed");
             }
             else
             {
-                Task.Run(() =>
+                if (updateIndex)
                 {
-                    // Cause System.InvalidOperationException
-                    try
+                    var tmpL = new List<GeminiFileStruct>();
+                    int index = 0;
+                    foreach (ListViewItem lvi in lv.Items)
                     {
-                        var tmpL = new List<GeminiFileStruct>();
-                        foreach (ListViewItem item in lv.Items)
+                        /*CWriteLine(liv.Items.IndexOf(lvi));*/
+                        // how to update index in SubItems
+                        lvi.SubItems["index"].Text = index.ToString();
+                        lvi.SubItems[0].Text = index.ToString();
+                        var fullPathLV = lvi.SubItems["fullPath"].Text;
+                        foreach (var gf in rgfL)
                         {
-                            var fullPath = item.SubItems["fullPath"].Text;
-                            foreach (var gl in gfL)
+                            if (token.IsCancellationRequested)
                             {
-                                var glt = gl;
-                                if (fullPath.Equals(gl.fullPath))
-                                {
-                                    glt.Checked = item.Checked;
-                                    tmpL.Add(glt);
-                                }
+                                token.ThrowIfCancellationRequested();
+                            }
+                            Application.DoEvents();
+                            if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                            {
+                                var tmp = gf;
+                                tmp.index = index;
+                                tmpL.Add(tmp);
+                                break;
                             }
                         }
-                        action(true, tmpL, null, ">>> Succeed convert lv to gfL.");
+                        index++;
                     }
-                    catch (Exception ee)
+                    rgfL = tmpL;
+                }
+                else
+                {
+                    var tmpL = new List<GeminiFileStruct>();
+                    foreach (ListViewItem item in lv.Items)
                     {
-                        action(false, null, null, ee.Message);
-                        Debug.WriteLine(ee);
+                        var fullPath = item.SubItems["fullPath"].Text;
+                        foreach (var gl in rgfL)
+                        {
+                            if (token.IsCancellationRequested)
+                            {
+                                token.ThrowIfCancellationRequested();
+                            }
+                            Application.DoEvents();
+                            if (fullPath.Equals(gl.fullPath))
+                            {
+                                var glt = gl;
+                                glt.Checked = item.Checked;
+                                tmpL.Add(glt);
+                            }
+                        }
                     }
-                    
-                });
+                    rgfL = tmpL;
+                    CWriteLine(">>> Succeed convert lv to gfL.");
+                }
+
             }
         }
 
