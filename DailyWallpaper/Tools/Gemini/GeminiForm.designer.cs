@@ -331,7 +331,6 @@
             this.resultListView.FullRowSelect = true;
             this.resultListView.HideSelection = false;
             this.resultListView.Location = new System.Drawing.Point(0, 3);
-            this.resultListView.MultiSelect = false;
             this.resultListView.Name = "resultListView";
             this.resultListView.Size = new System.Drawing.Size(1285, 533);
             this.resultListView.TabIndex = 2;
