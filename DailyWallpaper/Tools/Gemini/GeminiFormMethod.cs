@@ -368,9 +368,22 @@ namespace DailyWallpaper
             SORT
         }
         
-        private void CWriteLine(string msg)
+        private void CWriteLine(object msg)
         {
-            _console.WriteLine(msg);
+            if (msg == null)
+            {
+                return;
+            }
+            if (msg.GetType().Equals("".GetType()))
+            {
+                // _console.WriteLine(msg.GetType());
+                _console.WriteLine(msg);
+            }
+            else
+            {
+                _console.WriteLine(msg.ToString());
+            }
+            
         }
 
         private delegate void ListViewOperateLoopDelegate(System.Windows.Forms.ListView liv,
@@ -461,43 +474,43 @@ namespace DailyWallpaper
                 }
                 else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
+                    var tmpL = new List<GeminiFileStruct>();
                     var updateIndex = Task.Run(() =>
                     {
-                        try
+                        int index = 0;
+                        foreach (ListViewItem lvi in liv.Items)
                         {
-                            var tmpL = new List<GeminiFileStruct>();
-                            int index = 0;
-                            foreach (ListViewItem lvi in liv.Items)
+                            /*CWriteLine(liv.Items.IndexOf(lvi));*/
+                            // how to update index in SubItems
+                            lvi.SubItems["index"].Text = index.ToString();
+                            lvi.SubItems[0].Text = index.ToString();
+                            var fullPathLV = lvi.SubItems["fullPath"].Text;
+                            foreach (var gf in gfl)
                             {
-                                /*CWriteLine(liv.Items.IndexOf(lvi));*/
-                                // how to update index in SubItems
-                                lvi.SubItems["index"].Text = index.ToString();
-                                lvi.SubItems[0].Text = index.ToString();
-                                var fullPathLV = lvi.SubItems["fullPath"].Text;
-                                foreach (var gf in gfl)
+                                if (token.IsCancellationRequested)
                                 {
-                                    if (token.IsCancellationRequested)
-                                    {
-                                        token.ThrowIfCancellationRequested();
-                                    }
-                                    var tmp = gf;
-                                    if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                                    {
-                                        tmp.index = index;
-                                        tmpL.Add(tmp);
-                                        break;
-                                    }
+                                    token.ThrowIfCancellationRequested();
                                 }
-                                index++;
+                                var tmp = gf;
+                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                {
+                                    tmp.index = index;
+                                    tmpL.Add(tmp);
+                                    break;
+                                }
                             }
+                            index++;
+                        } 
+                    }).ContinueWith((t) =>
+                    {
+                        if (t.IsFaulted)
+                            throw t.Exception;
+                        if (t.IsCompleted)
+                        {
+                            Debug.WriteLine("IsCompleted");
                             actionLoop(true, tmpL, "");
                         }
-                        catch
-                        {
-                            actionLoop(false, null, "! UPDATE_INDEX_AFTER_SORTED cancel");
-                            throw;
-                        }
-                    });
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
                     _tasks.Add(updateIndex);
                 }
             }
@@ -948,10 +961,47 @@ namespace DailyWallpaper
 
         private enum MultipleSelectOperations
         {
-            SELECT_ALL,
-            UNSELECT_ALL,
+            CHECK_ALL,
+            UNCHECK_ALL,
             REVERSE_ELECTION
         };
+
+        private void MultipleSelectOpAction(
+            ListView liv, MultipleSelectOperations op)
+        {
+            liv.BeginUpdate();
+            if (op == MultipleSelectOperations.CHECK_ALL)
+            {
+                liv.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = true);
+            }
+            else if(op == MultipleSelectOperations.UNCHECK_ALL)
+            {
+                liv.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = false);
+            }
+            else if (op == MultipleSelectOperations.REVERSE_ELECTION)
+            {
+                liv.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = !item.Checked);
+            }
+            liv.EndUpdate();
+
+            Task.Run(() =>
+            {
+                // Cause System.InvalidOperationException
+                foreach (ListViewItem item in liv.Items) 
+                {
+                    var fullPath = item.SubItems["fullPath"].Text;
+                    
+                    foreach (var gl in geminiFileStructListForLV)
+                    {
+                        if (fullPath.Equals(gl.fullPath))
+                        {
+                            gl.Checked = item.Checked;
+                        }
+                    }
+                }
+            });
+        }
+
         private void MultipleSelectOperationsAction(
             ListView liv, MultipleSelectOperations op)
         {
@@ -984,11 +1034,11 @@ namespace DailyWallpaper
                                 tmp.Checked = true;
                             }
                         }
-                        else if (op == MultipleSelectOperations.SELECT_ALL)
+                        else if (op == MultipleSelectOperations.CHECK_ALL)
                         {
                             tmp.Checked = true;
                         }
-                        else if (op == MultipleSelectOperations.UNSELECT_ALL)
+                        else if (op == MultipleSelectOperations.UNCHECK_ALL)
                         {
                             tmp.Checked = false;
                         }
@@ -1043,11 +1093,11 @@ namespace DailyWallpaper
                             tmp.Checked = true;
                         }
                     }
-                    else if (op == MultipleSelectOperations.SELECT_ALL)
+                    else if (op == MultipleSelectOperations.CHECK_ALL)
                     {
                         tmp.Checked = true;
                     }
-                    else if (op == MultipleSelectOperations.UNSELECT_ALL)
+                    else if (op == MultipleSelectOperations.UNCHECK_ALL)
                     {
                         tmp.Checked = false;
                     }

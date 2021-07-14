@@ -84,7 +84,7 @@ namespace DailyWallpaper
             gemini = new Gemini();
             _console = new TextBoxCons(new ConsWriter(tbConsole));
 
-            // System.Windows.Forms.TextBox.CheckForIllegalCrossThreadCalls = false;
+            // CheckForIllegalCrossThreadCalls = false;
 
             // init targetfolder 1&2
             targetFolder1TextBox.Text = desktopPath;
@@ -1726,11 +1726,12 @@ namespace DailyWallpaper
         {
             if (cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
-                MultipleSelectOperationsActionCEF(MultipleSelectOperations.SELECT_ALL);
+                MultipleSelectOperationsActionCEF(MultipleSelectOperations.CHECK_ALL);
             }
             else
             {
-                MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.SELECT_ALL);
+                // MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.CHECK_ALL);
+                MultipleSelectOpAction(resultListView, MultipleSelectOperations.CHECK_ALL);
             }
         }
 
@@ -1738,11 +1739,12 @@ namespace DailyWallpaper
         {
             if (cleanEmptyFolderModeToolStripMenuItem.Checked)
             {
-                MultipleSelectOperationsActionCEF(MultipleSelectOperations.UNSELECT_ALL);
+                MultipleSelectOperationsActionCEF(MultipleSelectOperations.UNCHECK_ALL);
             }
             else
             {
-                MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.UNSELECT_ALL);
+                // MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.UNCHECK_ALL);
+                MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL);
             }
         }
 
@@ -1755,7 +1757,8 @@ namespace DailyWallpaper
             }
             else
             {
-                MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.REVERSE_ELECTION);
+                // MultipleSelectOperationsAction(resultListView, MultipleSelectOperations.REVERSE_ELECTION);
+                MultipleSelectOpAction(resultListView, MultipleSelectOperations.REVERSE_ELECTION);
             }
         }
 
@@ -1887,17 +1890,31 @@ namespace DailyWallpaper
                     CWriteLine(
                         $">>> Remove {geminiFileStructListForLV.Count - cnt} " +
                         "items from ListView [ nonexistent + non-repeating ].");
+                    var index = Math.Max(resultListView.FocusedItem.Index - 2, 0);
                     geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
                         SetCompareMode(), _source.Token);
                     UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
                     void GetRet(bool ret, string msg)
                     {
                        if (!ret)
+                       {
                             CWriteLine(msg);
-                        else
+                       }   
+                       else
+                       {
+                            if (resultListView.Items.Count > 0 && deleteKey)
+                            {
+                                deleteKey = false;
+                                resultListView.FocusedItem = resultListView.Items[index];
+                                resultListView.SelectedIndices.Clear();
+                                resultListView.Items[index].Selected = true;
+                                resultListView.Select();
+                                resultListView.EnsureVisible(index); 
+                                // This is the trick, EnsureVisible() is just as important.
+                            }
                             CWriteLine($">>> Clean-UP Finished.");
                             Debug.WriteLine($">>> Clean-UP Finished: {msg}");
-                        
+                        }
                     }
                     RestoreListViewChoiceInvoke(resultListView, 
                         geminiFileStructListForLV, _source.Token, indexChange: true, action: GetRet);
@@ -2707,6 +2724,7 @@ namespace DailyWallpaper
             OpenFileOrDirectory(FileOP.COPY_FILENAME);
         }
 
+        private bool deleteKey = false;
         private void resultListView_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.F2 && resultListView.SelectedItems.Count > 0)
@@ -2720,9 +2738,8 @@ namespace DailyWallpaper
             }
             else if (e.KeyData == Keys.Delete)
             {
-                //var index = resultListView.SelectedIndices;
+                deleteKey = true;
                 deleteToolStripMenuItem.PerformClick();
-                //resultListView.Items[index[0] - 1].Selected = true;
             }
         }
 
