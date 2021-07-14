@@ -477,42 +477,59 @@ namespace DailyWallpaper
                     var tmpL = new List<GeminiFileStruct>();
                     var updateIndex = Task.Run(() =>
                     {
-                        int index = 0;
-                        foreach (ListViewItem lvi in liv.Items)
+                        try
                         {
-                            /*CWriteLine(liv.Items.IndexOf(lvi));*/
-                            // how to update index in SubItems
-                            lvi.SubItems["index"].Text = index.ToString();
-                            lvi.SubItems[0].Text = index.ToString();
-                            var fullPathLV = lvi.SubItems["fullPath"].Text;
-                            foreach (var gf in gfl)
+                            int index = 0;
+                            foreach (ListViewItem lvi in liv.Items)
                             {
-                                if (token.IsCancellationRequested)
+                                /*CWriteLine(liv.Items.IndexOf(lvi));*/
+                                // how to update index in SubItems
+                                lvi.SubItems["index"].Text = index.ToString();
+                                lvi.SubItems[0].Text = index.ToString();
+                                var fullPathLV = lvi.SubItems["fullPath"].Text;
+                                foreach (var gf in gfl)
                                 {
-                                    token.ThrowIfCancellationRequested();
+                                    if (token.IsCancellationRequested)
+                                    {
+                                        token.ThrowIfCancellationRequested();
+                                    }
+                                    var tmp = gf;
+                                    if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
+                                    {
+                                        tmp.index = index;
+                                        tmpL.Add(tmp);
+                                        break;
+                                    }
                                 }
-                                var tmp = gf;
-                                if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                                {
-                                    tmp.index = index;
-                                    tmpL.Add(tmp);
-                                    break;
-                                }
+                                index++;
                             }
-                            index++;
-                        } 
-                    }).ContinueWith((t) =>
-                    {
-                        if (t.IsFaulted)
-                            throw t.Exception;
-                        if (t.IsCompleted)
-                        {
-                            Debug.WriteLine("IsCompleted");
-                            actionLoop(true, tmpL, "");
+                            actionLoop(true, tmpL, "Succeed in UPDATE_INDEX_AFTER_SORTED.");
                         }
-                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                        catch (Exception ee)
+                        {
+                            Debug.WriteLine(ee);
+                            actionLoop(false, null, ee.Message);
+                        }
+                    });
                     _tasks.Add(updateIndex);
                 }
+                // DOES NOT WORK.
+                /*else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
+                {
+                    var tmpL = new List<GeminiFileStruct>();
+                    var updateIndex = Task.Run();
+                    updateIndex.ContinueWith((t) =>
+                     {
+                         if (t.Exception != null) throw t.Exception;
+                         if (t.IsCompleted)
+                         {
+                             Debug.WriteLine("IsCompleted");
+                             CWriteLine("IsCompleted");
+                             actionLoop(true, tmpL, "");
+                         }
+                    });
+                    _tasks.Add(updateIndex);
+                }*/
             }
 
         }

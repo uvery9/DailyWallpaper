@@ -2531,6 +2531,7 @@ namespace DailyWallpaper
             godsChoiceToolStripMenuItem.Enabled = enable;
             unselectAllToolStripMenuItem.Enabled = enable;
             reverseElectionToolStripMenuItem.Enabled = enable;
+            sorting = !enable;
         }
 
         private bool sorting = false;
