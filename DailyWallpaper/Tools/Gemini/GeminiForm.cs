@@ -2714,6 +2714,16 @@ namespace DailyWallpaper
                 resultListView.LabelEdit = true;
                 resultListView.SelectedItems[0].BeginEdit();
             }
+            else if (e.KeyData == Keys.F5)
+            {
+                cleanUpButton.PerformClick();
+            }
+            else if (e.KeyData == Keys.Delete)
+            {
+                //var index = resultListView.SelectedIndices;
+                deleteToolStripMenuItem.PerformClick();
+                //resultListView.Items[index[0] - 1].Selected = true;
+            }
         }
 
         private void resultListView_DragDrop(object sender, DragEventArgs e)
