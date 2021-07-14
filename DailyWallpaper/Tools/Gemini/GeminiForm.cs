@@ -1981,7 +1981,7 @@ namespace DailyWallpaper
                 geminiFileStructListForLVUndo = geminiFileStructListForLV;
                 undoToolStripMenuItem.Enabled = true;
                 geminiFileStructListForLV = ListReColorByGroup(updatedList, SetCompareMode(), _source.Token);
-                RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
+                RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
 
                 var cnt =
                     (from i in geminiFileStructListForLV
@@ -2127,7 +2127,7 @@ namespace DailyWallpaper
                 {
                     geminiFileStructListForLVRedo = geminiFileStructListForLV;
                     geminiFileStructListForLV = geminiFileStructListForLVUndo;
-                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
                     redoToolStripMenuItem.Enabled = true;
                     undoToolStripMenuItem.Enabled = false;
                 }
@@ -2147,7 +2147,7 @@ namespace DailyWallpaper
                 {
                     geminiFileStructListForLVUndo = geminiFileStructListForLV;
                     geminiFileStructListForLV = geminiFileStructListForLVRedo;
-                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
                     redoToolStripMenuItem.Enabled = false;
                     undoToolStripMenuItem.Enabled = false;
                 }
@@ -2243,7 +2243,7 @@ namespace DailyWallpaper
                     geminiFileStructListForLVUndo = geminiFileStructListForLV;
                     undoToolStripMenuItem.Enabled = true;
                     geminiFileStructListForLV = godsChoiceList;
-                    RestoreListViewChoiceInvoke(resultListView, geminiFileStructListForLV, _source.Token);
+                    RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
                     SetText(summaryTextBox, $"God chose {cnt:N0} files", cnt > 0 ? themeColor : themeColorClean);
                 }, _source.Token);
                 _tasks.Add(taskDel);
@@ -2617,44 +2617,7 @@ namespace DailyWallpaper
 
         private void resultListView_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            /*if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
-            {
-                var fitem = e.Item.ListView.FocusedItem;
-                if (fitem == null)
-                {
-                    return;
-                }
-                try
-                {
-                    if (int.TryParse(fitem.SubItems["index"].Text, out int ret))
-                    {
-                        var gf = geminiFileStructListForLV[ret];
-                        if (gf.index == ret && gf.fullPath.Equals(fitem.SubItems["fullPath"].Text))
-                        {
-                            geminiFileStructListForLV[ret].Checked = fitem.Checked;
-                            //CWriteLine("FAST CHECKED1.");
-                        }
-                        *//*CWriteLine($"{gf.Checked}");
-                        CWriteLine($"GFL: {geminiFileStructListForLV[ret].Checked}");*//*
-                    }
-                    //CWriteLine("FAST CHECKED2.");
-                }
-                catch
-                {
-                    CWriteLine("SLOW CHECKED.");
-                    var tmpL = new List<GeminiFileStruct>();
-                    foreach (var item in geminiFileStructListForLV)
-                    {
-                        var tmp = item;
-                        if (item.fullPath.Equals(fitem.SubItems["fullPath"].Text))
-                        {
-                            tmp.Checked = fitem.Checked;
-                        }
-                        tmpL.Add(tmp);
-                    }
-                    geminiFileStructListForLV = tmpL;
-                }
-            }*/
+            
         }
 
         private void copyFileNameToolStripMenuItem_Click(object sender, EventArgs e)

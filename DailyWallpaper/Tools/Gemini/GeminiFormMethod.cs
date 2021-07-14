@@ -365,7 +365,6 @@ namespace DailyWallpaper
             UPDATE_CHECK_INTHELOOP,
             UPDATE_CHECK_BY_INDEX,
             CEF_INTHELOOP,
-            UPDATE_INDEX_AFTER_SORTED,
             SORT
         }
 
@@ -475,48 +474,6 @@ namespace DailyWallpaper
                     _tasks.Add(updateCheckIndexTask);
 
                 }
-                else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
-                {
-                    var tmpL = new List<GeminiFileStruct>();
-                    var updateIndex = Task.Run(() =>
-                    {
-                        try
-                        {
-                            int index = 0;
-                            foreach (ListViewItem lvi in liv.Items)
-                            {
-                                /*CWriteLine(liv.Items.IndexOf(lvi));*/
-                                // how to update index in SubItems
-                                lvi.SubItems["index"].Text = index.ToString();
-                                lvi.SubItems[0].Text = index.ToString();
-                                var fullPathLV = lvi.SubItems["fullPath"].Text;
-                                foreach (var gf in gfl)
-                                {
-                                    if (token.IsCancellationRequested)
-                                    {
-                                        token.ThrowIfCancellationRequested();
-                                    }
-                                    var tmp = gf;
-                                    if (gf.fullPath.ToLower().Equals(fullPathLV.ToLower()))
-                                    {
-                                        tmp.index = index;
-                                        tmpL.Add(tmp);
-                                        break;
-                                    }
-                                }
-                                index++;
-                            }
-                            actionLoop(true, tmpL, "Succeed in UPDATE_INDEX_AFTER_SORTED.");
-                        }
-                        catch (Exception ee)
-                        {
-                            Debug.WriteLine(ee);
-                            actionLoop(false, null, ee.Message);
-                        }
-                    });
-                    _tasks.Add(updateIndex);
-                }
-
                 // DOES NOT WORK.
                 /*else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
@@ -1005,7 +962,8 @@ namespace DailyWallpaper
             liv.EndUpdate();
 
             // update geminiFileStructListForLV
-
+            geminiFileStructListForLVUndo = geminiFileStructListForLV;
+            undoToolStripMenuItem.Enabled = true;
             ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV, liv, 
                 toListView: false, token: _source.Token);
         }
@@ -1034,7 +992,8 @@ namespace DailyWallpaper
                         ListViewOperate(lv, ListViewOP.UPDATE_CHECK, it, gf.Checked);
                     }
                 }
-                action(true, "Succeed");
+                if (action != null)
+                    action(true, "Succeed");
             }
             else
             {
@@ -1097,7 +1056,7 @@ namespace DailyWallpaper
         }
 
         // not good enough
-        private void MultipleSelectOperationsAction(
+        /*private void MultipleSelectOperationsAction(
             ListView liv, MultipleSelectOperations op)
         {
             if (liv.Items.Count < 1)
@@ -1153,7 +1112,7 @@ namespace DailyWallpaper
                 }
             });
             _tasks.Add(mpTask);
-        }
+        }*/
 
         private void MultipleSelectOperationsActionCEF(MultipleSelectOperations op)
         {
@@ -1260,7 +1219,15 @@ namespace DailyWallpaper
 
         private delegate void RestoreListViewChoiceInvokeDele(ListView liv, List<GeminiFileStruct> gfl, 
             CancellationToken token, bool indexChange = false, Action<bool, string> action = default);
-        
+
+
+         private void RestoreListViewChoice(List<GeminiFileStruct> gfl, ListView liv,
+            CancellationToken token)
+        {
+            ConvertGeminiFileStructListAndListView(ref gfl,
+                        liv, toListView: true, token: token);
+        }
+
         private void RestoreListViewChoiceInvoke(ListView liv, List<GeminiFileStruct> gfl, 
             CancellationToken token, bool indexChange = false, Action<bool, string> action = default)
         {
