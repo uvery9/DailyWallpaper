@@ -128,7 +128,7 @@
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(821, 105);
+            this.updateButton.Location = new System.Drawing.Point(845, 105);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(77, 28);
             this.updateButton.TabIndex = 11;
@@ -140,7 +140,7 @@
             // 
             this.filterExample.BackColor = System.Drawing.SystemColors.Control;
             this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(569, 110);
+            this.filterExample.Location = new System.Drawing.Point(584, 110);
             this.filterExample.Name = "filterExample";
             this.filterExample.ReadOnly = true;
             this.filterExample.Size = new System.Drawing.Size(246, 21);
@@ -150,7 +150,7 @@
             // btnSelectTargetFolder2
             // 
             this.btnSelectTargetFolder2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(821, 54);
+            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(845, 54);
             this.btnSelectTargetFolder2.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder2.Name = "btnSelectTargetFolder2";
             this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 33);
@@ -162,7 +162,7 @@
             // modeCheckBox
             // 
             this.modeCheckBox.AutoSize = true;
-            this.modeCheckBox.Location = new System.Drawing.Point(497, 109);
+            this.modeCheckBox.Location = new System.Drawing.Point(508, 109);
             this.modeCheckBox.Name = "modeCheckBox";
             this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
             this.modeCheckBox.TabIndex = 10;
@@ -172,7 +172,7 @@
             // regexCheckBox
             // 
             this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(439, 109);
+            this.regexCheckBox.Location = new System.Drawing.Point(450, 109);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
             this.regexCheckBox.TabIndex = 9;
@@ -203,7 +203,7 @@
             // 
             this.folderFilterTextBox.Location = new System.Drawing.Point(125, 107);
             this.folderFilterTextBox.Name = "folderFilterTextBox";
-            this.folderFilterTextBox.Size = new System.Drawing.Size(294, 28);
+            this.folderFilterTextBox.Size = new System.Drawing.Size(308, 28);
             this.folderFilterTextBox.TabIndex = 7;
             // 
             // fldFilterText
@@ -225,7 +225,7 @@
             this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 58);
             this.targetFolder2TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder2TextBox.Name = "targetFolder2TextBox";
-            this.targetFolder2TextBox.Size = new System.Drawing.Size(695, 28);
+            this.targetFolder2TextBox.Size = new System.Drawing.Size(719, 28);
             this.targetFolder2TextBox.TabIndex = 3;
             this.targetFolder2TextBox.TabStop = false;
             this.targetFolder2TextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
@@ -234,7 +234,7 @@
             // btnSelectTargetFolder1
             // 
             this.btnSelectTargetFolder1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(821, 7);
+            this.btnSelectTargetFolder1.Location = new System.Drawing.Point(845, 7);
             this.btnSelectTargetFolder1.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder1.Name = "btnSelectTargetFolder1";
             this.btnSelectTargetFolder1.Size = new System.Drawing.Size(77, 30);
@@ -251,7 +251,7 @@
             this.targetFolder1TextBox.Location = new System.Drawing.Point(108, 10);
             this.targetFolder1TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder1TextBox.Name = "targetFolder1TextBox";
-            this.targetFolder1TextBox.Size = new System.Drawing.Size(695, 28);
+            this.targetFolder1TextBox.Size = new System.Drawing.Size(719, 28);
             this.targetFolder1TextBox.TabIndex = 3;
             this.targetFolder1TextBox.TabStop = false;
             this.targetFolder1TextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder1_DragDrop);
@@ -260,7 +260,7 @@
             // btnAnalyze
             // 
             this.btnAnalyze.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAnalyze.Location = new System.Drawing.Point(4, 106);
+            this.btnAnalyze.Location = new System.Drawing.Point(12, 143);
             this.btnAnalyze.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnalyze.Name = "btnAnalyze";
             this.btnAnalyze.Size = new System.Drawing.Size(93, 43);
@@ -272,10 +272,10 @@
             // btnDelete
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDelete.Location = new System.Drawing.Point(252, 107);
+            this.btnDelete.Location = new System.Drawing.Point(254, 144);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(4);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(109, 40);
+            this.btnDelete.Size = new System.Drawing.Size(108, 41);
             this.btnDelete.TabIndex = 4;
             this.btnDelete.Text = "RecycleBin";
             this.btnDelete.UseVisualStyleBackColor = true;
@@ -284,7 +284,7 @@
             // btnClear
             // 
             this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClear.Location = new System.Drawing.Point(4, 48);
+            this.btnClear.Location = new System.Drawing.Point(24, 68);
             this.btnClear.Margin = new System.Windows.Forms.Padding(4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(61, 32);
@@ -296,7 +296,7 @@
             // btnStop
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStop.Location = new System.Drawing.Point(139, 111);
+            this.btnStop.Location = new System.Drawing.Point(146, 148);
             this.btnStop.Margin = new System.Windows.Forms.Padding(4);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(61, 32);
@@ -308,7 +308,7 @@
             // deleteOrRecycleBin
             // 
             this.deleteOrRecycleBin.AutoSize = true;
-            this.deleteOrRecycleBin.Location = new System.Drawing.Point(223, 118);
+            this.deleteOrRecycleBin.Location = new System.Drawing.Point(225, 155);
             this.deleteOrRecycleBin.Name = "deleteOrRecycleBin";
             this.deleteOrRecycleBin.Size = new System.Drawing.Size(22, 21);
             this.deleteOrRecycleBin.TabIndex = 6;
@@ -332,7 +332,7 @@
             this.resultListView.HideSelection = false;
             this.resultListView.Location = new System.Drawing.Point(0, 3);
             this.resultListView.Name = "resultListView";
-            this.resultListView.Size = new System.Drawing.Size(1285, 533);
+            this.resultListView.Size = new System.Drawing.Size(1301, 533);
             this.resultListView.TabIndex = 2;
             this.resultListView.TabStop = false;
             this.resultListView.UseCompatibleStateImageBehavior = false;
@@ -517,15 +517,15 @@
             this.panel2.Controls.Add(this.btnStop);
             this.panel2.Controls.Add(this.geminiProgressBar);
             this.panel2.Controls.Add(this.summaryTextBox);
-            this.panel2.Location = new System.Drawing.Point(922, 3);
+            this.panel2.Location = new System.Drawing.Point(934, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(363, 168);
+            this.panel2.Size = new System.Drawing.Size(370, 194);
             this.panel2.TabIndex = 10;
             // 
             // cleanUpButton
             // 
             this.cleanUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cleanUpButton.Location = new System.Drawing.Point(269, 48);
+            this.cleanUpButton.Location = new System.Drawing.Point(254, 68);
             this.cleanUpButton.Margin = new System.Windows.Forms.Padding(4);
             this.cleanUpButton.Name = "cleanUpButton";
             this.cleanUpButton.Size = new System.Drawing.Size(91, 32);
@@ -537,7 +537,7 @@
             // modeSelectButton
             // 
             this.modeSelectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.modeSelectButton.Location = new System.Drawing.Point(139, 48);
+            this.modeSelectButton.Location = new System.Drawing.Point(146, 68);
             this.modeSelectButton.Margin = new System.Windows.Forms.Padding(4);
             this.modeSelectButton.Name = "modeSelectButton";
             this.modeSelectButton.Size = new System.Drawing.Size(61, 32);
@@ -548,7 +548,7 @@
             // 
             // geminiProgressBar
             // 
-            this.geminiProgressBar.Location = new System.Drawing.Point(5, 13);
+            this.geminiProgressBar.Location = new System.Drawing.Point(11, 13);
             this.geminiProgressBar.Name = "geminiProgressBar";
             this.geminiProgressBar.Size = new System.Drawing.Size(356, 28);
             this.geminiProgressBar.TabIndex = 10;
@@ -556,7 +556,7 @@
             // 
             // summaryTextBox
             // 
-            this.summaryTextBox.Location = new System.Drawing.Point(5, 13);
+            this.summaryTextBox.Location = new System.Drawing.Point(12, 13);
             this.summaryTextBox.Name = "summaryTextBox";
             this.summaryTextBox.ReadOnly = true;
             this.summaryTextBox.Size = new System.Drawing.Size(350, 28);
@@ -569,7 +569,7 @@
             this.fileModeGroupBox.Controls.Add(this.fileExtNameCheckBox);
             this.fileModeGroupBox.Controls.Add(this.fileNameCheckBox);
             this.fileModeGroupBox.Controls.Add(this.panel1);
-            this.fileModeGroupBox.Location = new System.Drawing.Point(916, 6);
+            this.fileModeGroupBox.Location = new System.Drawing.Point(935, 4);
             this.fileModeGroupBox.Name = "fileModeGroupBox";
             this.fileModeGroupBox.Size = new System.Drawing.Size(367, 151);
             this.fileModeGroupBox.TabIndex = 14;
@@ -686,23 +686,24 @@
             this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbConsole.Location = new System.Drawing.Point(4, 4);
+            this.tbConsole.Location = new System.Drawing.Point(2, 4);
             this.tbConsole.Margin = new System.Windows.Forms.Padding(4);
             this.tbConsole.Multiline = true;
             this.tbConsole.Name = "tbConsole";
             this.tbConsole.ReadOnly = true;
             this.tbConsole.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbConsole.Size = new System.Drawing.Size(911, 170);
+            this.tbConsole.Size = new System.Drawing.Size(927, 192);
             this.tbConsole.TabIndex = 0;
+            this.tbConsole.TabStop = false;
             this.tbConsole.WordWrap = false;
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.tbConsole);
             this.panel3.Controls.Add(this.panel2);
-            this.panel3.Location = new System.Drawing.Point(12, 735);
+            this.panel3.Location = new System.Drawing.Point(11, 735);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1286, 178);
+            this.panel3.Size = new System.Drawing.Size(1305, 212);
             this.panel3.TabIndex = 15;
             // 
             // panel4
@@ -711,7 +712,7 @@
             this.panel4.Controls.Add(this.panel6);
             this.panel4.Location = new System.Drawing.Point(11, 35);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1287, 155);
+            this.panel4.Size = new System.Drawing.Size(1305, 155);
             this.panel4.TabIndex = 16;
             // 
             // panel6
@@ -730,7 +731,7 @@
             this.panel6.Controls.Add(this.labelTargetFolder2);
             this.panel6.Location = new System.Drawing.Point(3, 3);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(916, 157);
+            this.panel6.Size = new System.Drawing.Size(926, 157);
             this.panel6.TabIndex = 3;
             // 
             // panel5
@@ -738,12 +739,11 @@
             this.panel5.Controls.Add(this.resultListView);
             this.panel5.Location = new System.Drawing.Point(12, 193);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1286, 539);
+            this.panel5.Size = new System.Drawing.Size(1304, 539);
             this.panel5.TabIndex = 17;
             // 
             // fileOptionsmenuStrip
             // 
-            this.fileOptionsmenuStrip.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.fileOptionsmenuStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.fileOptionsmenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -751,7 +751,7 @@
             this.helpToolStripMenuItem});
             this.fileOptionsmenuStrip.Location = new System.Drawing.Point(0, 0);
             this.fileOptionsmenuStrip.Name = "fileOptionsmenuStrip";
-            this.fileOptionsmenuStrip.Size = new System.Drawing.Size(1310, 32);
+            this.fileOptionsmenuStrip.Size = new System.Drawing.Size(1328, 32);
             this.fileOptionsmenuStrip.TabIndex = 18;
             this.fileOptionsmenuStrip.Text = "menuStrip1";
             // 
@@ -932,7 +932,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1310, 915);
+            this.ClientSize = new System.Drawing.Size(1328, 944);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel5);
