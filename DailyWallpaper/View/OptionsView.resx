@@ -203,6 +203,12 @@
   <data name="Icon_Notepad.Text" xml:space="preserve">
     <value>NotePad++/记事本</value>
   </data>
+  <data name="videoEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>274, 34</value>
+  </data>
+  <data name="videoEditorToolStripMenuItem.Text" xml:space="preserve">
+    <value>Video Editor</value>
+  </data>
   <data name="Icon_HashCalc.Size" type="System.Drawing.Size, System.Drawing">
     <value>274, 34</value>
   </data>
@@ -477,16 +483,16 @@
   <data name="&gt;&gt;Icon_Toolbox.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_HashCalc.Name" xml:space="preserve">
-    <value>Icon_HashCalc</value>
-  </data>
-  <data name="&gt;&gt;Icon_HashCalc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;Icon_Notepad.Name" xml:space="preserve">
     <value>Icon_Notepad</value>
   </data>
   <data name="&gt;&gt;Icon_Notepad.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Icon_HashCalc.Name" xml:space="preserve">
+    <value>Icon_HashCalc</value>
+  </data>
+  <data name="&gt;&gt;Icon_HashCalc.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;geminiToolStripMenuItem.Name" xml:space="preserve">
@@ -518,6 +524,12 @@
   </data>
   <data name="&gt;&gt;_notifyIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;videoEditorToolStripMenuItem.Name" xml:space="preserve">
+    <value>videoEditorToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;videoEditorToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OptionsView</value>

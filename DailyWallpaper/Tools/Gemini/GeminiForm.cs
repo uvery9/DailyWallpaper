@@ -34,7 +34,7 @@ namespace DailyWallpaper
 
         private bool scanRes = false;
         private bool cefScanRes = false;
-        private List<string> folderFilter;
+        private List<string> folderFilter = new List<string>();
         private string regexFilter;
         private Regex regex;
         private List<string> emptyFolderList = new List<string>();
@@ -613,22 +613,25 @@ namespace DailyWallpaper
         }
 
         private async Task<List<GeminiFileStruct>> UpdateHashInGeminiFileStructList(
-            List<GeminiFileStruct> gfL)
+            List<GeminiFileStruct> gfL, bool updateBigFile = false)
         {
             var tmp = new List<GeminiFileStruct>();
             int i = 0;
+            int bigFileCnt = 0;
             foreach (var it in gfL)
             {
                 i++;
                 int hashSizeLimit = 100;
-                if (it.size < hashSizeLimit * 1024 * 1024 || alwaysCalculateHashToolStripMenuItem.Checked)
+                if (it.size < hashSizeLimit * 1024 * 1024 || updateBigFile || bigFileCnt < 20)
                 {
                     await UpdateHash(tmp, it);
                 }
                 else
                 {
+                    bigFileCnt++;
                     var bp = it;
                     bp.hash = $">{hashSizeLimit}MB,NotCounting.YouCouldEnableAlwaysCalculateHash";
+                    bp.bigFile = true;
                     tmp.Add(bp);
                 }
                 SetProgressMessage(geminiProgressBar, (int)((double)i / gfL.Count * 100));

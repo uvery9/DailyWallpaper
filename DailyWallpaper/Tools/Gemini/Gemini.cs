@@ -80,6 +80,7 @@ namespace DailyWallpaper.Tools
         public class GeminiFileStruct
         {
             private bool @checked;
+            public bool bigFile = false;
             public int index;
             public long size;
             public string sizeStr;

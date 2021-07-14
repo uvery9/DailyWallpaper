@@ -1227,5 +1227,10 @@ namespace DailyWallpaper.View
         {
             new GeminiForm().Show();
         }
+
+        private void videoEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Tools.VideoEditorForm().Show();
+        }
     }
 }

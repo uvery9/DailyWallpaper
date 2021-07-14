@@ -223,7 +223,34 @@ namespace DailyWallpaper
                         {
                             CWriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
                             sameListNoDup =
-                            UpdateHashInGeminiFileStructList(sameListNoDup).Result;
+                            UpdateHashInGeminiFileStructList(sameListNoDup, 
+                                alwaysCalculateHashToolStripMenuItem.Checked).Result;
+                            SaveOperationHistory("step-4-CompareHashForLittleFiles.xml", sameListNoDup);
+                            int bigFileCnt = 0;
+                            var sameListNoDupHash = new List<GeminiFileStruct>();
+                            var sameListNoDupBigFiles = new List<GeminiFileStruct>();
+                            foreach (var sl in sameListNoDup)
+                            {
+                                if (sl.bigFile)
+                                {
+                                    bigFileCnt++;
+                                    sameListNoDupBigFiles.Add(sl);
+                                }
+                                else
+                                {
+                                    sameListNoDupHash.Add(sl);
+                                }
+                            }
+                            if (bigFileCnt < 20)
+                            {
+                                CWriteLine($">>> Update HASH for remaining bigfile(s): " +
+                                    $"{sameListNoDupBigFiles.Count:N0}...");
+                                sameListNoDupBigFiles =
+                                    UpdateHashInGeminiFileStructList(sameListNoDupBigFiles, true).Result;
+                                // UpdateHash For BigFiles.
+                            }
+                            sameListNoDupHash.AddRange(sameListNoDupBigFiles);
+                            sameListNoDup = sameListNoDupHash;
                             CWriteLine(">>> Update HASH finished.");
                         }
                         else

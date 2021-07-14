@@ -117,41 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="cef32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\cef32x32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DailyWallpaper256x256" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\DailyWallpaper256x256.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="DailyWallpaper_80x80" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\DailyWallpaper_80x80.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="draganddrop" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\draganddrop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="GE32X32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\GE32X32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="HASH32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\HASH32x32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon32x32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon32x32_ban" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon32x32_ban.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon32x32_exclamation" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon32x32_exclamation.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon32x32_good" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon32x32_good.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icon32x32_timer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\icon32x32_timer.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Ve32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\res\Ve32x32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>
