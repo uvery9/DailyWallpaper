@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Windows.Forms;
 
 namespace DailyWallpaper
 {
+    [DebuggerStepThrough]
     class TextBoxCons : TextWriter
     {
         private IEnumerable<TextWriter> writers;
@@ -47,6 +49,8 @@ namespace DailyWallpaper
             get { return Encoding.Default; }
         }
     }
+
+    [DebuggerStepThrough]
     public class ConsWriter : TextWriter
     {
         private TextBox textbox;

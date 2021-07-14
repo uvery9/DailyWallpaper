@@ -367,7 +367,9 @@ namespace DailyWallpaper
             UPDATE_INDEX_AFTER_SORTED,
             SORT
         }
-        
+
+
+        [DebuggerStepThrough]
         private void CWriteLine(object msg)
         {
             if (msg == null)
@@ -531,7 +533,6 @@ namespace DailyWallpaper
                     _tasks.Add(updateIndex);
                 }*/
             }
-
         }
 
         // https://stackoverflow.com/questions/17746013/how-to-change-order-of-columns-of-listview
@@ -1001,24 +1002,67 @@ namespace DailyWallpaper
             }
             liv.EndUpdate();
 
-            Task.Run(() =>
+            // update geminiFileStructListForLV
+            void UpdateFunc(bool ret, List<GeminiFileStruct> gfl, ListView lv, string msg)
             {
-                // Cause System.InvalidOperationException
-                foreach (ListViewItem item in liv.Items) 
+                if(ret)
                 {
-                    var fullPath = item.SubItems["fullPath"].Text;
-                    
-                    foreach (var gl in geminiFileStructListForLV)
-                    {
-                        if (fullPath.Equals(gl.fullPath))
-                        {
-                            gl.Checked = item.Checked;
-                        }
-                    }
+                    geminiFileStructListForLV = gfl;
+                    /*CWriteLine("SUCCEED.........");
+                    CWriteLine(gfl[0].Checked);*/
                 }
-            });
+                else
+                {
+                    CWriteLine("ConvertGeminiFileStructListAndListView: " + msg);
+                }
+            }
+            ConvertGeminiFileStructListAndListView(geminiFileStructListForLV, liv, false, action: UpdateFunc);
+
+
         }
 
+        private void ConvertGeminiFileStructListAndListView(List<GeminiFileStruct> gfL,
+            ListView lv, bool toListView = true, 
+            Action<bool, List<GeminiFileStruct>, ListView, string> action = default)
+        {
+            if (toListView)
+            {
+
+            }
+            else
+            {
+                Task.Run(() =>
+                {
+                    // Cause System.InvalidOperationException
+                    try
+                    {
+                        var tmpL = new List<GeminiFileStruct>();
+                        foreach (ListViewItem item in lv.Items)
+                        {
+                            var fullPath = item.SubItems["fullPath"].Text;
+                            foreach (var gl in gfL)
+                            {
+                                var glt = gl;
+                                if (fullPath.Equals(gl.fullPath))
+                                {
+                                    glt.Checked = item.Checked;
+                                    tmpL.Add(glt);
+                                }
+                            }
+                        }
+                        action(true, tmpL, null, ">>> Succeed convert lv to gfL.");
+                    }
+                    catch (Exception ee)
+                    {
+                        action(false, null, null, ee.Message);
+                        Debug.WriteLine(ee);
+                    }
+                    
+                });
+            }
+        }
+
+        // not good enough
         private void MultipleSelectOperationsAction(
             ListView liv, MultipleSelectOperations op)
         {
