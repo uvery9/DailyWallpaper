@@ -979,6 +979,15 @@ namespace DailyWallpaper
         private void MultipleSelectOpAction(
             ListView liv, MultipleSelectOperations op)
         {
+            if (_source == null)
+            {
+                _source = new CancellationTokenSource();
+            }
+            if (liv.Items.Count < 1)
+            {
+                CWriteLine("!!! ANALYZE First.");
+                return;
+            }
             liv.BeginUpdate();
             if (op == MultipleSelectOperations.CHECK_ALL)
             {

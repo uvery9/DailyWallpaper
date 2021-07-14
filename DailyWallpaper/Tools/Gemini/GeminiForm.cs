@@ -2178,6 +2178,12 @@ namespace DailyWallpaper
         // Keep only one for each group
         private void godsChoiceToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (resultListView.Items.Count < 1)
+            {
+                CWriteLine("!!! ANALYZE First.");
+                return;
+            }
+
             try
             {
                 var taskDel = Task.Run(() => {
@@ -2598,6 +2604,7 @@ namespace DailyWallpaper
         }
 
         private bool deleteKey = false;
+        private bool selectAll = true;
         private void resultListView_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.F2 && resultListView.SelectedItems.Count > 0)
@@ -2613,6 +2620,31 @@ namespace DailyWallpaper
             {
                 deleteKey = true;
                 deleteToolStripMenuItem.PerformClick();
+            }
+            else if (e.KeyData == (Keys.A | Keys.Control))
+            {
+                selectAll = !selectAll;
+                if (selectAll)
+                    selectAllToolStripMenuItem.PerformClick();
+                else
+                    unselectAllToolStripMenuItem.PerformClick();
+
+            }
+            else if (e.KeyData == (Keys.G | Keys.Control))
+            {
+                godsChoiceToolStripMenuItem.PerformClick();
+            }
+            else if (e.KeyData == (Keys.R | Keys.Control))
+            {
+                reverseElectionToolStripMenuItem.PerformClick();
+            }
+            else if (e.KeyData == (Keys.S | Keys.Control))
+            {
+                saveResultListToFileToolStripMenuItem.PerformClick();
+            }
+            else if (e.KeyData == (Keys.L | Keys.Control))
+            {
+                loadListViewFromFileToolStripMenuItem.PerformClick();
             }
         }
 
