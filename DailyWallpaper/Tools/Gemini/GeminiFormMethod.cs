@@ -22,6 +22,22 @@ using Button = System.Windows.Forms.Button;
 using ListView = System.Windows.Forms.ListView;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 
+// TODO: Use linq more.
+/*decimal total = 0;
+foreach (Account account in myAccounts)
+{
+    if (account.Status == "active")
+    {
+        total += account.Balance;
+    }
+}
+you could just write:
+decimal total = (from account in myAccounts
+                 where account.Status == "active"
+                 select account.Balance).Sum();
+*/
+
+
 namespace DailyWallpaper
 {
     partial class GeminiForm
