@@ -1042,18 +1042,15 @@ namespace DailyWallpaper
             }
             Debug.WriteLine(selectList[0].Checked);
             Debug.WriteLine(geminiFileStructListForLV[0].Checked); // why change me, FU.
-            Debug.WriteLine(geminiFileStructListForLV[0].Checked); // why change me, FU.
             
             updatedList.AddRange(selectList);
 
             // update geminiFileStructListForLV
-            CWriteLine("1." + geminiFileStructListForLV[0].Checked); // why change me, FU.
-            geminiFileStructListForLV = updatedList;
+            // Debug.WriteLine("1." + geminiFileStructListForLV[0].Checked); // why change me, FU.
+            geminiFileStructListForLV = updatedList; // can remove.
 
-            CWriteLine("2uodo." + geminiFileStructListForLVUndo[0].Checked); // why change me, FU.
-            CWriteLine("3." + geminiFileStructListForLV[0].Checked); // why change me, FU.
-
-            undoToolStripMenuItem.Enabled = true;
+            // Debug.WriteLine("2.uodo." + geminiFileStructListForLVUndo[0].Checked); // why change me, FU.
+            // Debug.WriteLine("3." + geminiFileStructListForLV[0].Checked); // why change me, FU.
             ConvertGeminiFileClsListAndListView(ref geminiFileStructListForLV, liv,
                 toListView: true, token: _source.Token);
         }
