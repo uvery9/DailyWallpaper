@@ -1998,23 +1998,6 @@ namespace DailyWallpaper
                 }
                 updatedList.AddRange(selectList);
 
-                /*if (pathFilter.Count > 0)
-                {
-                    foreach (var item in selectList)
-                    {
-                        GeminiFileStructListGeneral(updatedList, item, pathFilter,
-                            find: filterMode == FilterMode.GEN_FIND); // FilterMode.GEN_PROTECT
-                    }
-                }
-                else if (regex != null)
-                {
-                    foreach (var item in selectList)
-                    {
-                        GeminiFileStructListRE(updatedList, item, regex,
-                            find: filterMode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
-                    }
-                }*/
-
                 geminiFileStructListForLV = ListReColorByGroup(updatedList, SetCompareMode(), _source.Token);
                 RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
 

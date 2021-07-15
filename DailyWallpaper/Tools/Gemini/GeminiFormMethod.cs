@@ -1249,17 +1249,6 @@ namespace DailyWallpaper
             _tasks.Add(mpCEFTask);
         }
 
-        private void GeminiFileStructListRE(List<GeminiFileStruct> gfL,
-            GeminiFileStruct item, Regex rege, bool find = true)
-        {
-            item.Checked = !find;
-            if (rege.IsMatch(item.fullPath))
-            {
-                item.Checked = find;
-            }
-            gfL.Add(item);
-        }
-
         private bool GeminiFileStructListREForEach(GeminiFileStruct item, 
             Regex rege, bool find = true)
         {
@@ -1296,20 +1285,6 @@ namespace DailyWallpaper
             CWriteLine($"in.cnt={gflIn.Count}");
             CWriteLine($"Notin.cnt={gflNotIn.Count}");*/
             return Tuple.Create(gflIn, gflNotIn);
-        }
-        private void GeminiFileStructListGeneral(List<GeminiFileStruct> gfL,
-            GeminiFileStruct item, List<string> filter, bool find = true)
-        {
-            item.Checked = !find;
-            foreach (var it in filter)
-            {
-                if (item.fullPath.ToLower().Contains(it.ToLower()))
-                {
-                    item.Checked = find;
-                    break;
-                }
-            }
-            gfL.Add(item);
         }
 
         private bool GeminiFileStructListGeneralForEach(GeminiFileStruct item, List<string> filter, 
