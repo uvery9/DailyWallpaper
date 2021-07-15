@@ -2824,7 +2824,7 @@ namespace DailyWallpaper
         private void calcHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // CheckedItems of SelectedItems ??? FocusedItem
-            try
+            /*try
             {
                 // var multi = resultListView.CheckedItems;
                 var multi = resultListView.SelectedItems;
@@ -2845,8 +2845,9 @@ namespace DailyWallpaper
             catch (Exception ee)
             {
                 CWriteLine(ee.Message);
-            }
-            
+            }*/
+            CalcHashMenuClick();
+
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
