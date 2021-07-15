@@ -1031,7 +1031,7 @@ namespace DailyWallpaper
 
             var updatedList = new List<GeminiFileCls>();
             var selectList = new List<GeminiFileCls>();
-            var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
+            var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, !force);
             var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter);
             if (fldFilter.Count > 0)
             {
@@ -1064,6 +1064,12 @@ namespace DailyWallpaper
             // update geminiFileStructListForLV
             // Debug.WriteLine("1." + geminiFileStructListForLV[0].Checked); // why change me, FU.
             geminiFileStructListForLV = updatedList; // can remove.
+            var cnt =
+                (from i in geminiFileStructListForLV
+                 where i.Checked == true
+                 select i).Count();
+            if (!force)
+                SetSummaryBoxText($"{op} Selected {cnt:N0} file(s).", cnt);
             /*geminiFileStructListForLV[0].fullPath = "TEST....";
             CWriteLine("2.uodo." + geminiFileStructListForLVUndo[0].fullPath); // why change me, FU.
             CWriteLine("3." + geminiFileStructListForLV[0].fullPath); // why change me, FU.*/

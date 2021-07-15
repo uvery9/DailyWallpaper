@@ -75,6 +75,11 @@ namespace DailyWallpaper
         // TODO FIX CLICK-CHECK EVENT UPDATE GFL.
         // https://docs.microsoft.com/en-us/troubleshoot/dotnet/csharp/use-combobox-edit-listview#verify-that-it-works
         // https://docs.microsoft.com/zh-cn/previous-versions/dotnet/netframework-3.0/ms171728(v=vs.85)?redirectedfrom=MSDN
+        
+        private void IgnoreThreadingEx()
+        {
+            CheckForIllegalCrossThreadCalls = false;
+        }
         public GeminiForm()
         {
             InitializeComponent();
@@ -85,7 +90,7 @@ namespace DailyWallpaper
             gemini = new Gemini();
             _console = new TextBoxCons(new ConsWriter(tbConsole));
 
-            // CheckForIllegalCrossThreadCalls = false;
+            IgnoreThreadingEx();
 
             // init targetfolder 1&2
             targetFolder1TextBox.Text = desktopPath;
@@ -2254,15 +2259,33 @@ namespace DailyWallpaper
 
             try
             {
-                var taskDel = Task.Run(() => {
-                    // group GeminiFileClsList
-                    var delGflGrp = GeminiFileClsList2IEnumerableGroup(geminiFileStructListForLV,
-                        SetCompareMode());
+                var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
+                var taskDel = Task.Run(() => {              
                     geminiFileStructListForLVUndo = BackUpForUndoRedo(
                         geminiFileStructListForLV, undoToolStripMenuItem);
-                    // do not need to recolor.
+                    MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL, force: true);
+
+                    var cntb =
+                        (from i in geminiFileStructListForLV
+                         where i.Checked == true
+                         select i).Count();
+
+                    var updatedList = new List<GeminiFileCls>();
                     var godsChoiceList = new List<GeminiFileCls>();
-                    int cnt = 0;
+                    var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter);
+                    if (fldFilter.Count > 0)
+                    {
+                        godsChoiceList = tpl.Item1;
+                        updatedList.AddRange(tpl.Item2);
+                    }
+                    else
+                    {
+                        godsChoiceList = tpl.Item2;
+                    }
+                    var delGflGrp = GeminiFileClsList2IEnumerableGroup(godsChoiceList,
+                        SetCompareMode());
+                    godsChoiceList.Clear();
+                    int cntInLoop = 0;
                     foreach (var item in delGflGrp)
                     {
                         bool first = true;
@@ -2277,20 +2300,30 @@ namespace DailyWallpaper
                             else
                             {
                                 tmp.Checked = true;
-                                cnt++;
+                                cntInLoop++;
                             }
                             godsChoiceList.Add(tmp);
                         }
                     }
-                    CWriteLine($">>> God chose {cnt:N0} file(s).");
                     if (godsChoiceList.Count < 1)
                     {
                         return;
                     }
-                    
-                    geminiFileStructListForLV = godsChoiceList;
+                    updatedList.AddRange(godsChoiceList);
+                    CWriteLine("updatedList.Count = " + updatedList.Count);
+                    CWriteLine("geminiFileStructListForLV.Count = " + geminiFileStructListForLV.Count);
+                    // update geminiFileStructListForLV
+                    // Debug.WriteLine("1." + geminiFileStructListForLV[0].Checked); // why change me, FU.
+                    geminiFileStructListForLV = updatedList; // can remove.
+                    var cnt =
+                        (from i in geminiFileStructListForLV
+                         where i.Checked == true
+                         select i).Count();
+                    CWriteLine($">>> loop: God chose {cntInLoop:N0} file(s).");
+                    CWriteLine($">>> God chose {cnt:N0} file(s).");
+                    SetSummaryBoxText($"God chose {cnt:N0} file(s).", cnt);
                     RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
-                    SetSummaryBoxText($"God chose {cnt:N0} files", cnt);
+
                 }, _source.Token);
                 _tasks.Add(taskDel);
                 // taskDel.Wait();
