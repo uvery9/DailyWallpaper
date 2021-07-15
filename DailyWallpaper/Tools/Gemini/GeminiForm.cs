@@ -31,6 +31,7 @@ namespace DailyWallpaper
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private CancellationTokenSource _source = new CancellationTokenSource();
         private CancellationTokenSource reIndexTokenSrc = null;
+        private CancellationTokenSource hashTokenSrc = null;
 
         private bool scanRes = false;
         private bool cefScanRes = false;
@@ -913,7 +914,12 @@ namespace DailyWallpaper
             {
                 reIndexTokenSrc.Cancel();
             }
+            if (hashTokenSrc != null)
+            {
+                hashTokenSrc.Cancel();
+            }
             CWriteLine("Stop...");
+            geminiProgressBar.Value = 0;
             EnableButtonsForIndexUpdate(true);
         }
         private void btnClear_Click(object sender, EventArgs e)
@@ -2377,8 +2383,8 @@ namespace DailyWallpaper
 
 
         
-        private void CalcHashMenuClick(string fullPath, ListViewItem item, 
-            bool md5 = true)
+        private void CalcHashMenuClick(string fullPath, ListViewItem item, int total,
+            bool md5 = true, CancellationToken token = default)
         {
             if (string.IsNullOrEmpty(fullPath))
             {
@@ -2387,6 +2393,7 @@ namespace DailyWallpaper
             if (File.Exists(fullPath))
             {
                 string hash = null;
+                int cnt = 0;
                 void getRes(bool res, string who, string _hash, string costTimeOrMsg)
                 {
                     if (res)
@@ -2394,12 +2401,19 @@ namespace DailyWallpaper
                         hash = _hash;
                         item.SubItems["HASH"].Text = hash;
                         item.ForeColor = Color.Blue;
+                        cnt++;
                         geminiFileStructListForLV.ForEach(i => {
                             if (i.fullPath.Equals(fullPath))
                             {
                                 i.hash = hash;
                             }
                         });
+                        if (cnt == total)
+                        {
+                            var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
+                            SetProgressBarVisible(geminiProgressBar, false);
+                            SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
+                        }
                         /*var s = md5 ? "MD5" : "SHA1";
                         CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");*/
                     }
@@ -2423,12 +2437,12 @@ namespace DailyWallpaper
                         if (md5)
                         {
                             await ComputeHashAsync(
-                                MD5.Create(), fullPath, _source.Token, "MD5", getRes, progessDouble);
+                                MD5.Create(), fullPath, token, "MD5", getRes, progessDouble);
                         }
                         else
                         {
                             await ComputeHashAsync(
-                                SHA1.Create(), fullPath, _source.Token, "SHA1", getRes, progessDouble);
+                                SHA1.Create(), fullPath, token, "SHA1", getRes, progessDouble);
                         }
                     }
                     catch (Exception ee)
@@ -2748,15 +2762,15 @@ namespace DailyWallpaper
                 {
                     return;
                 }
+                var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
+                CWriteLine($"Start calculating hash[{s}] for {multi.Count} file(s)");
                 SetProgressBarVisible(geminiProgressBar, true);
+                hashTokenSrc = new CancellationTokenSource();
                 foreach (ListViewItem item in multi)
                 {
-                    CalcHashMenuClick(item.SubItems["fullPath"].Text, item, 
-                        fileMD5CheckBox.Checked);
+                    CalcHashMenuClick(item.SubItems["fullPath"].Text, item, multi.Count,
+                        fileMD5CheckBox.Checked, hashTokenSrc.Token);
                 }
-                var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
-                SetProgressBarVisible(geminiProgressBar, false);
-                SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
             }
             catch (Exception ee)
             {
