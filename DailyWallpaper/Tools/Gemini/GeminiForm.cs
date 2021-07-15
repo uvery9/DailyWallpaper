@@ -2372,19 +2372,9 @@ namespace DailyWallpaper
 
 
         
-        private void CalcHashMenuClick(bool md5 = true)
+        private void CalcHashMenuClick(string fullPath, ListViewItem.ListViewSubItem hashSub, 
+            bool md5 = true)
         {
-            // var item = (ToolStripItem)sender;
-            /*var hitest = resultListView.HitTest(Cursor.Position)*/
-            string fullPath = null;
-            try
-            {
-                fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
-            }
-            catch
-            {
-                fullPath = null;
-            }
             if (string.IsNullOrEmpty(fullPath))
             {
                 return;
@@ -2396,15 +2386,22 @@ namespace DailyWallpaper
                 {
                     if (res)
                     {
+                        _mutex.WaitOne();
                         hash = _hash;
-                        resultListView.FocusedItem.SubItems["HASH"].Text = hash;
+                        hashSub.Text = hash;
                         geminiProgressBar.Visible = false;
                         var s = md5 ? "MD5" : "SHA1";
                         CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");
-                        SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
+                        geminiFileStructListForLV.ForEach(i => {
+                            if (i.fullPath.Equals(fullPath))
+                            {
+                                i.hash = hash;
+                            }
+                        });
+                        _mutex.WaitOne();
                     }
                 }
-                geminiProgressBar.Visible = true;
+                
                 void ProgressActionD(double i)
                 {
                     SetProgressMessage(geminiProgressBar, (int)i);
@@ -2418,27 +2415,24 @@ namespace DailyWallpaper
 
                 Task.Run(async () =>
                 {
-                    if (md5)
+                    try 
                     {
-                        await ComputeHashAsync(
-                            MD5.Create(), fullPath, _source.Token, "MD5", getRes, progessDouble);
-                    }
-                    else
-                    {
-                        await ComputeHashAsync(
-                            SHA1.Create(), fullPath, _source.Token, "SHA1", getRes, progessDouble);
-                    }
-                    var tmpL = new List<GeminiFileCls>();
-                    foreach (var item in geminiFileStructListForLV)
-                    {
-                        var tmp = item;
-                        if (tmp.fullPath.Equals(fullPath))
+                        if (md5)
                         {
-                            tmp.hash = hash;
+                            await ComputeHashAsync(
+                                MD5.Create(), fullPath, _source.Token, "MD5", getRes, progessDouble);
                         }
-                        tmpL.Add(tmp);
+                        else
+                        {
+                            await ComputeHashAsync(
+                                SHA1.Create(), fullPath, _source.Token, "SHA1", getRes, progessDouble);
+                        }
                     }
-                    geminiFileStructListForLV = tmpL;
+                    catch (Exception ee)
+                    {
+                        CWriteLine("ComputeHashAsync: " + ee.Message);
+                    }
+                    
                 });
             }
         }
@@ -2742,7 +2736,38 @@ namespace DailyWallpaper
 
         private void calcHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CalcHashMenuClick(fileMD5CheckBox.Checked);
+            /*// var item = (ToolStripItem)sender;
+            *//*var hitest = resultListView.HitTest(Cursor.Position)*//*
+            string fullPath = null;
+            try
+            {
+                fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
+            }
+            catch
+            {
+                fullPath = null;
+            }*/
+            if (resultListView.SelectedItems.Count < 1)
+            {
+                return;
+            }
+            try
+            {
+                SetProgressBarVisible(geminiProgressBar, true);
+                foreach (ListViewItem item in resultListView.SelectedItems)
+                {
+                    CalcHashMenuClick(item.SubItems["fullPath"].Text, item.SubItems["HASH"], 
+                        fileMD5CheckBox.Checked);
+                }
+                var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
+                SetProgressBarVisible(geminiProgressBar, false);
+                SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
+            }
+            catch (Exception ee)
+            {
+                CWriteLine(ee.Message);
+            }
+            
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
