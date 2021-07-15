@@ -2404,19 +2404,23 @@ namespace DailyWallpaper
                 fullPathList.Add(item.SubItems["fullPath"].Text);
             }
             
-            void UpdateHashInLV()
+            void UpdateHashInLV(string fullPath, string hash)
             {
                 resultListView.Items.OfType<ListViewItem>().ToList().ForEach(item =>
                 {
                     var fullP = item.SubItems["fullPath"].Text;
-                    var hash =
+                    /*var hash =
                             (from i in geminiFileStructListForLV
                             where i.fullPath.Equals(fullP)
-                            select i.hash).ToList()[0];
-                    if (!string.IsNullOrEmpty(hash) && !hash.ToLower().Contains("not"))
+                            select i.hash).ToList()[0];*/
+                    if (fullPath.Equals(fullP))
                     {
-                        item.SubItems["HASH"].Text = hash;
-                        // item.ForeColor = Color.Blue;
+                        if (!string.IsNullOrEmpty(hash) && !hash.ToLower().Contains("not"))
+                        {
+                            item.SubItems["HASH"].Text = hash;
+                            item.ForeColor = Color.Blue;
+                        }
+                        return;
                     }
                 }
                 );
@@ -2442,8 +2446,10 @@ namespace DailyWallpaper
                                     if (i.fullPath.Equals(fullPath))
                                     {
                                         i.hash = _hash;
+                                        return;
                                     }
                                 });
+                                UpdateHashInLV(fullPath, _hash);
                                 cnt++;
                             }
                         }
@@ -2465,9 +2471,8 @@ namespace DailyWallpaper
                                 SHA1.Create(), fullPath, token, "SHA1", getRes);
                         }
                     }
-                    SetText(summaryTextBox, $"Updated {s}", themeColorClean);
+                    SetText(summaryTextBox, $"Updated hash[{s}] for {total} file(s)", themeColorClean);
                     CWriteLine($">>> Updated hash[{s}] for {total} file(s)");
-                    UpdateHashInLV();
                 }
                 catch (Exception ee)
                 {
