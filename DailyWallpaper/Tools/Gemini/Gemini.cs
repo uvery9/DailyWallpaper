@@ -79,7 +79,11 @@ namespace DailyWallpaper.Tools
 
             public bool Checked { get => @checked; set => @checked = value; }
         }
-        public class GeminiFileStruct
+        public interface ICloneable<T>
+        {
+            T Clone();
+        }
+        public class GeminiFileCls :ICloneable<GeminiFileCls>
         {
             private bool @checked;
             public bool bigFile = false;
@@ -97,11 +101,49 @@ namespace DailyWallpaper.Tools
             public string crtTime;
             public Color color;
 
+            public GeminiFileCls()
+            {
+
+            }
+            public GeminiFileCls(string outfullPath)
+            {
+
+                fullPath = outfullPath;
+                index = 0;
+
+                Checked = false;
+
+                name = "";
+                extName = "";
+                size = 0;
+                sha1 = "";
+                md5 = "";
+                hash = "";
+
+                try
+                {
+                    if (!File.Exists(fullPath))
+                    {
+                        return;
+                    }
+                    name = Path.GetFileName(fullPath);
+                    dir = Path.GetDirectoryName(fullPath);
+                    size = new FileInfo(fullPath).Length;
+                    sizeStr = Len2Str(size);
+                    lastMtime = new FileInfo(fullPath).LastWriteTime.ToString("yyyy/M/d H:mm");
+                    crtTime = new FileInfo(fullPath).CreationTime.ToString("yyyy/M/d H:mm");
+                    extName = Path.GetExtension(fullPath);
+                }
+                catch
+                {
+                    throw;
+                }
+            }
             public bool Checked { get => @checked; set => @checked = value; }
 
             public bool EqualsMD5(object obj)
             {
-                return obj is GeminiFileStruct @struct &&
+                return obj is GeminiFileCls @struct &&
                         fullPath != @struct.fullPath &&
                         size == @struct.size &&
                         md5 == @struct.md5;
@@ -109,7 +151,7 @@ namespace DailyWallpaper.Tools
 
             public bool EqualsHash(object obj)
             {
-                return obj is GeminiFileStruct @struct &&
+                return obj is GeminiFileCls @struct &&
                         fullPath != @struct.fullPath &&
                         size == @struct.size &&
                         hash == @struct.hash;
@@ -117,7 +159,7 @@ namespace DailyWallpaper.Tools
 
             public bool EqualsSHA1(object obj)
             {
-                return obj is GeminiFileStruct @struct &&
+                return obj is GeminiFileCls @struct &&
                         fullPath != @struct.fullPath &&
                         size == @struct.size &&
                         sha1 == @struct.sha1;
@@ -125,14 +167,14 @@ namespace DailyWallpaper.Tools
 
             public bool EqualSize(object obj)
             {
-                return obj is GeminiFileStruct @struct &&
+                return obj is GeminiFileCls @struct &&
                        fullPath != @struct.fullPath &&
                        size == @struct.size;
             }
 
             public bool EqualExtSize(object obj)
             {
-                return obj is GeminiFileStruct @struct &&
+                return obj is GeminiFileCls @struct &&
                        fullPath != @struct.fullPath &&
                        extName == @struct.extName &&
                        size == @struct.size;
@@ -141,7 +183,7 @@ namespace DailyWallpaper.Tools
             // fastest
             public bool EqualNameSize(object obj)
             {
-                return obj is GeminiFileStruct @struct &&
+                return obj is GeminiFileCls @struct &&
                        fullPath != @struct.fullPath &&
                        name == @struct.name &&
                        size == @struct.size;
@@ -175,13 +217,31 @@ namespace DailyWallpaper.Tools
 
             public override bool Equals(object obj)
             {
-                return obj is GeminiFileStruct @struct &&
+                return obj is GeminiFileCls @struct &&
                        fullPath == @struct.fullPath;
             }
 
             public override int GetHashCode()
             {
                 return -1906184077 + EqualityComparer<string>.Default.GetHashCode(fullPath);
+            }
+
+            public GeminiFileCls Clone()
+            {
+                var other = (GeminiFileCls)MemberwiseClone();
+                // https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
+                other.sizeStr = String.Copy(sizeStr);
+                other.name = String.Copy(name);
+                other.extName = String.Copy(extName);
+                other.fullPath = String.Copy(fullPath);
+                other.dir = String.Copy(dir);
+                other.sha1 = String.Copy(sha1);
+                other.md5 = String.Copy(md5);
+                other.hash = String.Copy(hash);
+                other.lastMtime = String.Copy(lastMtime);
+                other.crtTime = String.Copy(crtTime);
+                // if you have class in the member, you have to use n.classmember = new Classmember();
+                return other;
             }
         }
         public static string Len2Str(long len)
@@ -205,51 +265,15 @@ namespace DailyWallpaper.Tools
             }
             return str;
         }
-        public static GeminiFileStruct FillGeminiFileStruct(string fullPath)
-        {
-            var tmp = new GeminiFileStruct
-            {
-                index = 0,
-                fullPath = fullPath,
-                Checked = false,
 
-                name = null,
-                extName = null,
-                size = 0,
-                sha1 = null,
-                md5 = null,
-                hash = null,
-            };
-            try
-            {
-                if (!File.Exists(fullPath))
-                {
-                    return tmp;
-                }
-                tmp.name = Path.GetFileName(fullPath);
-                tmp.dir = Path.GetDirectoryName(fullPath);
-                tmp.size = new FileInfo(fullPath).Length;
-                tmp.sizeStr = Len2Str(tmp.size);
-                tmp.lastMtime = new FileInfo(fullPath).LastWriteTime.ToString("yyyy/M/d H:mm");
-                tmp.crtTime = new FileInfo(fullPath).CreationTime.ToString("yyyy/M/d H:mm");
-                tmp.extName = Path.GetExtension(fullPath);
-            }
-            catch
-            {
-                throw;
-            }
-            return tmp;
-        }
-
-
-        public static async Task<List<GeminiFileStruct>> ComparerTwoList(
-            List<GeminiFileStruct> li1, List<GeminiFileStruct> li2,
+        public static async Task<List<GeminiFileCls>> ComparerTwoList(
+            List<GeminiFileCls> li1, List<GeminiFileCls> li2,
             GeminiCompareMode mode,
             CancellationToken token = default, Action<bool,
-            List<GeminiFileStruct>> action = default,
+            List<GeminiFileCls>> action = default,
             IProgress<long> progress = null)
         {
-            var tmp = new List<GeminiFileStruct>();
+            var tmp = new List<GeminiFileCls>();
 
             if (li1.Count < 1 || li2.Count < 1)
             {
@@ -308,10 +332,10 @@ namespace DailyWallpaper.Tools
             return tmp;
         }
 
-        public static async Task<List<GeminiFileStruct>> ForceGetHashGeminiFileStructList(
-            List<GeminiFileStruct> li, CancellationToken token, bool calcSHA1 = false, bool calcMD5 = false)
+        public static async Task<List<GeminiFileCls>> ForceGetHashGeminiFileClsList(
+            List<GeminiFileCls> li, CancellationToken token, bool calcSHA1 = false, bool calcMD5 = false)
         {
-            var ret = new List<GeminiFileStruct>();
+            var ret = new List<GeminiFileCls>();
             foreach(var one in li)
             {
                 var tmp = one;
@@ -661,6 +685,7 @@ namespace DailyWallpaper.Tools
             }
         }
 
+        
     }
     class NativeMethods
     {

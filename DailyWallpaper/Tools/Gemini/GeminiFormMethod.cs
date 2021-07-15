@@ -55,7 +55,7 @@ namespace DailyWallpaper
                 if (op == LoadFileStep.STEP_1_ALL_FILES)
                     StartAnalyzeStep(op, sL: (List<string>)listFromFile);
                 else
-                    StartAnalyzeStep(op, gfL: (List<GeminiFileStruct>)listFromFile);
+                    StartAnalyzeStep(op, gfL: (List<GeminiFileCls>)listFromFile);
             }
             catch (Exception ex)
             {
@@ -89,23 +89,23 @@ namespace DailyWallpaper
                 }
                 else if (pathLow.Contains("step-2-".ToLower()))
                 {
-                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    ret = ReadFromXmlFile<List<GeminiFileCls>>(path);
                     op = LoadFileStep.STEP_2_FILES_TO_STRUCT;
                 }
                 else if (pathLow.Contains("step-3-".ToLower()))
                 {
-                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    ret = ReadFromXmlFile<List<GeminiFileCls>>(path);
                     op = LoadFileStep.STEP_3_FAST_COMPARE;
                 }
                 else if (pathLow.Contains("step-4-".ToLower()))
                 {
-                    ret = ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    ret = ReadFromXmlFile<List<GeminiFileCls>>(path);
                     op = LoadFileStep.STEP_4_COMPARE_HASH;
                 }
                 else
                 {
                     ret =
-                    ReadFromXmlFile<List<GeminiFileStruct>>(path);
+                    ReadFromXmlFile<List<GeminiFileCls>>(path);
                     op = LoadFileStep.DEFAULT;
                 }
             }
@@ -123,7 +123,7 @@ namespace DailyWallpaper
             return op >= opcmp;
         }
         private async void StartAnalyzeStep(LoadFileStep op = LoadFileStep.NO_LOAD, 
-            List<string> sL = null, List<GeminiFileStruct> gfL = null)
+            List<string> sL = null, List<GeminiFileCls> gfL = null)
         {
             _source = new CancellationTokenSource();
             var token = _source.Token;
@@ -187,21 +187,21 @@ namespace DailyWallpaper
                     if (!IsSkip(op, LoadFileStep.STEP_2_FILES_TO_STRUCT))
                     {
                         // get files info exclude HASH.(FASTER) 
-                        FileList2GeminiFileStructList(filesList1, ref geminiFileStructList1, token);
-                        FileList2GeminiFileStructList(filesList2, ref geminiFileStructList2, token);
+                        FileList2GeminiFileClsList(filesList1, ref geminiFileStructList1, token);
+                        FileList2GeminiFileClsList(filesList2, ref geminiFileStructList2, token);
                         SaveOperationHistory("step-2_filesToStruct_2.xml", geminiFileStructList2);
                     }
                     else
                     {
                         // get files info exclude HASH.(FASTER) 
                         geminiFileStructList1 = gfL;
-                        geminiFileStructList2 = new List<GeminiFileStruct>();
+                        geminiFileStructList2 = new List<GeminiFileCls>();
                         CWriteLine($">>> Skip {LoadFileStep.STEP_2_FILES_TO_STRUCT}... ");
                     }
                     if (op <= LoadFileStep.STEP_2_FILES_TO_STRUCT)
                         SaveOperationHistory("step-2-filesToStruct_1.xml", geminiFileStructList1);
                     
-                    List<GeminiFileStruct> sameListNoDup;
+                    List<GeminiFileCls> sameListNoDup;
                     var mode = SetCompareMode();
                     if (!IsSkip(op, LoadFileStep.STEP_3_FAST_COMPARE))
                     {
@@ -234,11 +234,11 @@ namespace DailyWallpaper
                             CWriteLine($">>> Update HASH for {sameListNoDup.Count:N0} file(s)...");
                             SetProgressBarVisible(geminiProgressBar, true);
                             sameListNoDup =
-                            UpdateHashInGeminiFileStructList(sameListNoDup, token,
+                            UpdateHashInGeminiFileClsList(sameListNoDup, token,
                                 alwaysCalculateHashToolStripMenuItem.Checked).Result;
                             SaveOperationHistory("step-4-CompareHashForLittleFiles.xml", sameListNoDup);
-                            var sameListNoDupHash = new List<GeminiFileStruct>();
-                            var sameListNoDupBigFiles = new List<GeminiFileStruct>();
+                            var sameListNoDupHash = new List<GeminiFileCls>();
+                            var sameListNoDupBigFiles = new List<GeminiFileCls>();
                             foreach (var sl in sameListNoDup)
                             {
                                 if (sl.bigFile)
@@ -257,7 +257,7 @@ namespace DailyWallpaper
                                 CWriteLine($">>> Update HASH for remaining " +
                                     $"{sameListNoDupBigFiles.Count:N0} bigfile(s)...");
                                 sameListNoDupBigFiles =
-                                    UpdateHashInGeminiFileStructList(sameListNoDupBigFiles,
+                                    UpdateHashInGeminiFileClsList(sameListNoDupBigFiles,
                                     token, true).Result;
                                 // UpdateHash For BigFiles.
                             }
@@ -422,13 +422,13 @@ namespace DailyWallpaper
 
 
         private delegate void ListViewOperateLoopDelegate(System.Windows.Forms.ListView liv,
-            ListViewOP op, List<GeminiFileStruct> gfl = null,
-            Action<bool, List<GeminiFileStruct>, string> actionLoop = null, 
+            ListViewOP op, List<GeminiFileCls> gfl = null,
+            Action<bool, List<GeminiFileCls>, string> actionLoop = null, 
             CancellationToken token = default);
 
         private void ListViewOperateLoop(ListView liv,
-            ListViewOP op, List<GeminiFileStruct> gfl = null,
-            Action<bool, List<GeminiFileStruct>, string> actionLoop = null, CancellationToken token = default)
+            ListViewOP op, List<GeminiFileCls> gfl = null,
+            Action<bool, List<GeminiFileCls>, string> actionLoop = null, CancellationToken token = default)
         {
             if (liv.InvokeRequired)
             {
@@ -442,7 +442,7 @@ namespace DailyWallpaper
                     var updateCheckLoopTask = Task.Run(() => { 
                         try
                         {
-                            var tmpL = new List<GeminiFileStruct>();
+                            var tmpL = new List<GeminiFileCls>();
                             foreach (var it in liv.Items)
                             {
                                 var lvi = (ListViewItem)it;
@@ -477,7 +477,7 @@ namespace DailyWallpaper
                     var updateCheckIndexTask = Task.Run(() => { 
                         try
                         {
-                            var tmpL = new List<GeminiFileStruct>();
+                            var tmpL = new List<GeminiFileCls>();
                             foreach (var gf in gfl)
                             {
                                 if (token.IsCancellationRequested)
@@ -510,7 +510,7 @@ namespace DailyWallpaper
                 // DOES NOT WORK.
                 /*else if (op == ListViewOP.UPDATE_INDEX_AFTER_SORTED)
                 {
-                    var tmpL = new List<GeminiFileStruct>();
+                    var tmpL = new List<GeminiFileCls>();
                     var updateIndex = Task.Run();
                     updateIndex.ContinueWith((t) =>
                      {
@@ -672,7 +672,7 @@ namespace DailyWallpaper
             }
         }
 
-        private void UpdateCheckedInDelGFL(List<GeminiFileStruct> gfl, List<string> delList, GeminiFileStruct item)
+        private void UpdateCheckedInDelGFL(List<GeminiFileCls> gfl, List<string> delList, GeminiFileCls item)
         {
             item.Checked = false;
             foreach (var it in delList)
@@ -770,10 +770,10 @@ namespace DailyWallpaper
             }
         }
 
-        void FileList2GeminiFileStructList(List<string> filesList,
-            ref List<GeminiFileStruct> gList, CancellationToken token)
+        void FileList2GeminiFileClsList(List<string> filesList,
+            ref List<GeminiFileCls> gList, CancellationToken token)
         {
-            gList = new List<GeminiFileStruct>();
+            gList = new List<GeminiFileCls>();
             if (filesList.Count > 0)
             {
                 SetProgressMessage(geminiProgressBar, 0);
@@ -785,7 +785,7 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    gList.Add(Gemini.FillGeminiFileStruct(f));
+                    gList.Add(new GeminiFileCls(f));
                     i++;
                     if (i % 100 == 0)
                     {
@@ -1008,12 +1008,13 @@ namespace DailyWallpaper
             // update geminiFileStructListForLV
             geminiFileStructListForLVUndo = geminiFileStructListForLV;
             undoToolStripMenuItem.Enabled = true;
-            ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV, liv, 
+            ConvertGeminiFileClsListAndListView(ref geminiFileStructListForLV, liv, 
                 toListView: false, token: _source.Token);*/
-            geminiFileStructListForLVUndo = geminiFileStructListForLV;
-            undoToolStripMenuItem.Enabled = true;
-            var updatedList = new List<GeminiFileStruct>();
-            var selectList = new List<GeminiFileStruct>();
+            geminiFileStructListForLVUndo = BackUpForUndoRedo(
+                 geminiFileStructListForLV, undoToolStripMenuItem);
+
+            var updatedList = new List<GeminiFileCls>();
+            var selectList = new List<GeminiFileCls>();
             var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
             var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter);
             if (fldFilter.Count > 0)
@@ -1041,16 +1042,23 @@ namespace DailyWallpaper
             }
             Debug.WriteLine(selectList[0].Checked);
             Debug.WriteLine(geminiFileStructListForLV[0].Checked); // why change me, FU.
+            Debug.WriteLine(geminiFileStructListForLV[0].Checked); // why change me, FU.
+            
             updatedList.AddRange(selectList);
 
             // update geminiFileStructListForLV
+            CWriteLine("1." + geminiFileStructListForLV[0].Checked); // why change me, FU.
             geminiFileStructListForLV = updatedList;
+
+            CWriteLine("2uodo." + geminiFileStructListForLVUndo[0].Checked); // why change me, FU.
+            CWriteLine("3." + geminiFileStructListForLV[0].Checked); // why change me, FU.
+
             undoToolStripMenuItem.Enabled = true;
-            ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV, liv,
+            ConvertGeminiFileClsListAndListView(ref geminiFileStructListForLV, liv,
                 toListView: true, token: _source.Token);
         }
 
-        private void ConvertGeminiFileStructListAndListView(ref List<GeminiFileStruct> rgfL,
+        private void ConvertGeminiFileClsListAndListView(ref List<GeminiFileCls> rgfL,
             ListView lv, bool toListView = true, bool updateIndex = false, CancellationToken token = default, 
             Action<bool, string> action = null)
         {
@@ -1081,7 +1089,7 @@ namespace DailyWallpaper
             {
                 if (updateIndex)
                 {
-                    var tmpL = new List<GeminiFileStruct>();
+                    var tmpL = new List<GeminiFileCls>();
                     int index = 0;
                     foreach (ListViewItem lvi in lv.Items)
                     {
@@ -1111,7 +1119,7 @@ namespace DailyWallpaper
                 }
                 else
                 {
-                    var tmpL = new List<GeminiFileStruct>();
+                    var tmpL = new List<GeminiFileCls>();
                     foreach (ListViewItem item in lv.Items)
                     {
                         var fullPath = item.SubItems["fullPath"].Text;
@@ -1155,7 +1163,7 @@ namespace DailyWallpaper
                         geminiFileStructListForLV = UpdateGFLChecked(geminiFileStructListForLV)
                             ?? geminiFileStructListForLV;
                     }
-                    var tmpGfl = new List<GeminiFileStruct>();
+                    var tmpGfl = new List<GeminiFileCls>();
                     foreach (var item in geminiFileStructListForLV)
                     {
                         var tmp = item;
@@ -1249,7 +1257,7 @@ namespace DailyWallpaper
             _tasks.Add(mpCEFTask);
         }
 
-        private bool GeminiFileStructListREForEach(GeminiFileStruct item, 
+        private bool GeminiFileClsListREForEach(GeminiFileCls item, 
             Regex rege, bool find = true)
         {
             bool ret = !find;
@@ -1260,12 +1268,12 @@ namespace DailyWallpaper
             return ret;
         }
 
-        private Tuple<List<GeminiFileStruct>, List<GeminiFileStruct>> 
+        private Tuple<List<GeminiFileCls>, List<GeminiFileCls>> 
             GetGFLbyTheFilter(
-            List<GeminiFileStruct> gfL, List<string> fldFilter)
+            List<GeminiFileCls> gfL, List<string> fldFilter)
         {
-            var gflIn = new List<GeminiFileStruct>();
-            var gflNotIn = new List<GeminiFileStruct>();
+            var gflIn = new List<GeminiFileCls>();
+            var gflNotIn = new List<GeminiFileCls>();
             foreach (var item in gfL) // why always change the value in gfL???
             {
                 bool inSide = false;
@@ -1287,7 +1295,7 @@ namespace DailyWallpaper
             return Tuple.Create(gflIn, gflNotIn);
         }
 
-        private bool GeminiFileStructListGeneralForEach(GeminiFileStruct item, List<string> filter, 
+        private bool GeminiFileClsListGeneralForEach(GeminiFileCls item, List<string> filter, 
             bool find = true)
         {
             bool ret = !find;
@@ -1325,18 +1333,18 @@ namespace DailyWallpaper
             }
         }
 
-        private delegate void RestoreListViewChoiceInvokeDele(ListView liv, List<GeminiFileStruct> gfl, 
+        private delegate void RestoreListViewChoiceInvokeDele(ListView liv, List<GeminiFileCls> gfl, 
             CancellationToken token, bool indexChange = false, Action<bool, string> action = default);
 
 
-         private void RestoreListViewChoice(List<GeminiFileStruct> gfl, ListView liv,
+         private void RestoreListViewChoice(List<GeminiFileCls> gfl, ListView liv,
             CancellationToken token)
         {
-            ConvertGeminiFileStructListAndListView(ref gfl,
+            ConvertGeminiFileClsListAndListView(ref gfl,
                         liv, toListView: true, token: token);
         }
 
-        private void RestoreListViewChoiceInvoke(ListView liv, List<GeminiFileStruct> gfl, 
+        private void RestoreListViewChoiceInvoke(ListView liv, List<GeminiFileCls> gfl, 
             CancellationToken token, bool indexChange = false, Action<bool, string> action = default)
         {
             if (liv.InvokeRequired)
@@ -1425,18 +1433,18 @@ namespace DailyWallpaper
         }
 
         private void UpdateListViewForCleanUP(ListView liv,
-            ref List<GeminiFileStruct> gfL, CancellationToken token)
+            ref List<GeminiFileCls> gfL, CancellationToken token)
         {
 
         }
 
         private void UpdateListView(ListView liv,
-            ref List<GeminiFileStruct> gfL, CancellationToken token)
+            ref List<GeminiFileCls> gfL, CancellationToken token)
         {
             ListViewOperate(liv, ListViewOP.CLEAR);
             undoToolStripMenuItem.Enabled = false;
             redoToolStripMenuItem.Enabled = false;
-            var tmpL = new List<GeminiFileStruct>();
+            var tmpL = new List<GeminiFileCls>();
             if (gfL.Count > 0)
             {
                 int index = 0;
