@@ -2386,72 +2386,66 @@ namespace DailyWallpaper
         private void CalcHashMenuClick(string fullPath, ListViewItem item, int total,
             bool md5 = true, CancellationToken token = default)
         {
-            if (string.IsNullOrEmpty(fullPath))
+            if (string.IsNullOrEmpty(fullPath) || !File.Exists(fullPath))
             {
                 return;
             }
-            if (File.Exists(fullPath))
+            void getRes(bool res, string who, string _hash, string costTimeOrMsg)
             {
-                string hash = null;
-                int cnt = 0;
-                void getRes(bool res, string who, string _hash, string costTimeOrMsg)
+                if (res)
                 {
-                    if (res)
-                    {
-                        hash = _hash;
-                        item.SubItems["HASH"].Text = hash;
-                        item.ForeColor = Color.Blue;
-                        cnt++;
-                        geminiFileStructListForLV.ForEach(i => {
-                            if (i.fullPath.Equals(fullPath))
-                            {
-                                i.hash = hash;
-                            }
-                        });
-                        if (cnt == total)
+                    item.SubItems["HASH"].Text = _hash;
+                    item.ForeColor = Color.Blue;
+                    geminiFileStructListForLV.ForEach(i => {
+                        if (i.fullPath.Equals(fullPath))
                         {
-                            var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
-                            SetProgressBarVisible(geminiProgressBar, false);
-                            SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
+                            i.hash = _hash;
                         }
-                        /*var s = md5 ? "MD5" : "SHA1";
-                        CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");*/
-                    }
+                    });
+                    /*if (cnt == total)
+                    {*/
+                    var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
+                    SetProgressBarVisible(geminiProgressBar, false);
+                    SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
+                    /*}*/
+                    /*var s = md5 ? "MD5" : "SHA1";
+                    CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");*/
                 }
-                
-                void ProgressActionD(double i)
-                {
-                    SetProgressMessage(geminiProgressBar, (int)i);
-                }
-                var progessDouble = new Progress<double>(ProgressActionD);
+            }
 
-                if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
+            Task.Run(async () =>
+            {
+                try 
                 {
-                    progessDouble = null;
-                }
-
-                Task.Run(async () =>
-                {
-                    try 
+                    SetProgressBarVisible(geminiProgressBar, true);
+                    void ProgressActionD(double i)
                     {
-                        if (md5)
-                        {
-                            await ComputeHashAsync(
-                                MD5.Create(), fullPath, token, "MD5", getRes, progessDouble);
-                        }
-                        else
-                        {
-                            await ComputeHashAsync(
-                                SHA1.Create(), fullPath, token, "SHA1", getRes, progessDouble);
-                        }
+                        SetProgressMessage(geminiProgressBar, (int)i);
                     }
-                    catch (Exception ee)
+                    var progessDouble = new Progress<double>(ProgressActionD);
+                    if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
                     {
-                        CWriteLine("ComputeHashAsync: " + ee.Message);
+                        progessDouble = null;
+                    }
+                    if (md5)
+                    {
+                        await ComputeHashAsync(
+                            MD5.Create(), fullPath, token, "MD5", getRes, progessDouble);
+                    }
+                    else
+                    {
+                        await ComputeHashAsync(
+                            SHA1.Create(), fullPath, token, "SHA1", getRes, progessDouble);
                     }
                     
-                });
-            }
+                }
+                catch (Exception ee)
+                {
+                    CWriteLine("ComputeHashAsync: " + ee.Message);
+                }
+                    
+            });
+
         }
 
         private enum FileOP
