@@ -1036,7 +1036,8 @@ namespace DailyWallpaper
             if (fldFilter.Count > 0)
             {
                 selectList = tpl.Item1;
-                updatedList.AddRange(tpl.Item2);
+                if(!force)
+                    updatedList.AddRange(tpl.Item2);
             }
             else
             {
@@ -1058,7 +1059,7 @@ namespace DailyWallpaper
             }
             Debug.WriteLine(selectList[0].Checked);
             Debug.WriteLine(geminiFileStructListForLV[0].Checked); // why change me, FU.
-            
+
             updatedList.AddRange(selectList);
 
             // update geminiFileStructListForLV
@@ -1304,10 +1305,12 @@ namespace DailyWallpaper
                         inSide = true;
                         break;
                     }
+                    Application.DoEvents();
                 }
                 if (!inSide)
                     gflNotIn.Add(item);
             }
+            // CWriteLine("gflNotIn.Count = " + gflNotIn.Count);
             /*CWriteLine($"total.cnt={gfL.Count}");
             CWriteLine($"in.cnt={gflIn.Count}");
             CWriteLine($"Notin.cnt={gflNotIn.Count}");*/

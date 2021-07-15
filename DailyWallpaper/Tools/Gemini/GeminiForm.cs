@@ -2260,80 +2260,69 @@ namespace DailyWallpaper
             try
             {
                 var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
-                var taskDel = Task.Run(() => {              
-                    geminiFileStructListForLVUndo = BackUpForUndoRedo(
-                        geminiFileStructListForLV, undoToolStripMenuItem);
-                    MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL, force: true);
+                geminiFileStructListForLVUndo = BackUpForUndoRedo(
+                    geminiFileStructListForLV, undoToolStripMenuItem);
+                MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL, force: true);
 
-                    var cntb =
-                        (from i in geminiFileStructListForLV
-                         where i.Checked == true
-                         select i).Count();
+                var updatedList = new List<GeminiFileCls>();
+                var selectList = new List<GeminiFileCls>();
+                var godsChoiceList = new List<GeminiFileCls>();
+                var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter); // may block program
+                if (fldFilter.Count > 0)
+                {
+                    selectList = tpl.Item1;
+                    updatedList.AddRange(tpl.Item2);
+                    // CWriteLine("tpl.Item2.Count" + tpl.Item2.Count);
+                }
+                else
+                {
+                    selectList = tpl.Item2;
+                }
+                var delGflGrp = GeminiFileClsList2IEnumerableGroup(selectList,
+                    SetCompareMode()); // Can not clear, linq will access the GFL later.
 
-                    var updatedList = new List<GeminiFileCls>();
-                    var godsChoiceList = new List<GeminiFileCls>();
-                    var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter);
-                    if (fldFilter.Count > 0)
+                int cntInLoop = 0;
+                foreach (var item in delGflGrp)
+                {
+                    bool first = true;
+                    foreach (var it in item)
                     {
-                        godsChoiceList = tpl.Item1;
-                        updatedList.AddRange(tpl.Item2);
-                    }
-                    else
-                    {
-                        godsChoiceList = tpl.Item2;
-                    }
-                    var delGflGrp = GeminiFileClsList2IEnumerableGroup(godsChoiceList,
-                        SetCompareMode());
-                    godsChoiceList.Clear();
-                    int cntInLoop = 0;
-                    foreach (var item in delGflGrp)
-                    {
-                        bool first = true;
-                        foreach (var it in item)
+                        var tmp = it;
+                        if (first)
                         {
-                            var tmp = it;
-                            if (first)
-                            {
-                                tmp.Checked = false;
-                                first = false;
-                            }
-                            else
-                            {
-                                tmp.Checked = true;
-                                cntInLoop++;
-                            }
-                            godsChoiceList.Add(tmp);
+                            tmp.Checked = false;
+                            first = false;
                         }
+                        else
+                        {
+                            tmp.Checked = true;
+                            cntInLoop++;
+                        }
+                        godsChoiceList.Add(tmp);
                     }
-                    if (godsChoiceList.Count < 1)
-                    {
-                        return;
-                    }
-                    updatedList.AddRange(godsChoiceList);
-                    CWriteLine("updatedList.Count = " + updatedList.Count);
-                    CWriteLine("geminiFileStructListForLV.Count = " + geminiFileStructListForLV.Count);
-                    // update geminiFileStructListForLV
-                    // Debug.WriteLine("1." + geminiFileStructListForLV[0].Checked); // why change me, FU.
-                    geminiFileStructListForLV = updatedList; // can remove.
-                    var cnt =
-                        (from i in geminiFileStructListForLV
-                         where i.Checked == true
-                         select i).Count();
-                    CWriteLine($">>> loop: God chose {cntInLoop:N0} file(s).");
-                    CWriteLine($">>> God chose {cnt:N0} file(s).");
-                    SetSummaryBoxText($"God chose {cnt:N0} file(s).", cnt);
-                    RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
-
-                }, _source.Token);
-                _tasks.Add(taskDel);
-                // taskDel.Wait();
-                // await taskDel;
+                }
+                if (godsChoiceList.Count < 1)
+                {
+                    CWriteLine($">>> God chose 0 file(s).");
+                    SetSummaryBoxText($"God chose 0 file(s).", 0);
+                    return;
+                }
+                updatedList.AddRange(godsChoiceList);
+                geminiFileStructListForLV = updatedList;
+                var cnt =
+                    (from i in geminiFileStructListForLV
+                        where i.Checked == true
+                        select i).Count();
+                // CWriteLine($">>> loop: God chose {cntInLoop:N0} file(s).");
+                CWriteLine($">>> God chose {cnt:N0} file(s).");
+                SetSummaryBoxText($"God chose {cnt:N0} file(s).", cnt);
+                RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
             }
             catch (UnauthorizedAccessException) { }
             catch (FileNotFoundException) { }
             catch (Exception ex)
             {
-                CWriteLine($"!!! Error occur when deleting files: {ex.Message}");
+                CWriteLine($"! GodsChoice: {ex.Message}");
             }
 
         }
