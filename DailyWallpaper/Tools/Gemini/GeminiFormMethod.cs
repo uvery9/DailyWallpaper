@@ -608,6 +608,7 @@ namespace DailyWallpaper
                 geminiProgressBar.Visible = false;
                 nameColumnHeader.Width = (int)(1.5 * nameColumnHeaderWidth);
                 modifiedTimeColumnHeader.Width = (int)(1.5 * modifiedTimeColumnHeaderWidth);
+                targetFolderFilterTextBox.Enabled = false;
 
             }
             else
@@ -637,6 +638,7 @@ namespace DailyWallpaper
 
                 nameColumnHeader.Width = nameColumnHeaderWidth;
                 modifiedTimeColumnHeader.Width = modifiedTimeColumnHeaderWidth;
+                targetFolderFilterTextBox.Enabled = true;
             }
         }
         private void SelectFolder(string keyInIni, System.Windows.Forms.TextBox tx,
@@ -1220,6 +1222,33 @@ namespace DailyWallpaper
             gfL.Add(item);
         }
 
+        
+        private Tuple<List<GeminiFileStruct>, List<GeminiFileStruct>> 
+            GetGFLbyTheFilter(
+            List<GeminiFileStruct> gfL, List<string> fldFilter)
+        {
+            var gflIn = new List<GeminiFileStruct>();
+            var gflNotIn = new List<GeminiFileStruct>();
+            foreach (var item in gfL)
+            {
+                bool inSide = false;
+                foreach (var fil in fldFilter)
+                {
+                    if (item.fullPath.Contains(fil))
+                    {
+                        gflIn.Add(item);
+                        inSide = true;
+                        break;
+                    }
+                }
+                if (!inSide)
+                    gflNotIn.Add(item);
+            }
+            /*CWriteLine($"total.cnt={gfL.Count}");
+            CWriteLine($"in.cnt={gflIn.Count}");
+            CWriteLine($"Notin.cnt={gflNotIn.Count}");*/
+            return Tuple.Create(gflIn, gflNotIn);
+        }
         private void GeminiFileStructListGeneral(List<GeminiFileStruct> gfL,
             GeminiFileStruct item, List<string> filter, bool find = true)
         {

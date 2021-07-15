@@ -57,12 +57,11 @@
             this.listViewContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFileNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyFullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calcHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.md5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sHA1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -115,6 +114,9 @@
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.targetFLtextBoxText = new System.Windows.Forms.TextBox();
+            this.targetFolderFilterTextBox = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -128,7 +130,7 @@
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(845, 105);
+            this.updateButton.Location = new System.Drawing.Point(846, 114);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(77, 28);
             this.updateButton.TabIndex = 11;
@@ -140,7 +142,7 @@
             // 
             this.filterExample.BackColor = System.Drawing.SystemColors.Control;
             this.filterExample.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.filterExample.Location = new System.Drawing.Point(584, 110);
+            this.filterExample.Location = new System.Drawing.Point(563, 124);
             this.filterExample.Name = "filterExample";
             this.filterExample.ReadOnly = true;
             this.filterExample.Size = new System.Drawing.Size(246, 21);
@@ -150,7 +152,7 @@
             // btnSelectTargetFolder2
             // 
             this.btnSelectTargetFolder2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(845, 54);
+            this.btnSelectTargetFolder2.Location = new System.Drawing.Point(846, 46);
             this.btnSelectTargetFolder2.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder2.Name = "btnSelectTargetFolder2";
             this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 33);
@@ -162,7 +164,7 @@
             // modeCheckBox
             // 
             this.modeCheckBox.AutoSize = true;
-            this.modeCheckBox.Location = new System.Drawing.Point(508, 109);
+            this.modeCheckBox.Location = new System.Drawing.Point(173, 123);
             this.modeCheckBox.Name = "modeCheckBox";
             this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
             this.modeCheckBox.TabIndex = 10;
@@ -172,7 +174,7 @@
             // regexCheckBox
             // 
             this.regexCheckBox.AutoSize = true;
-            this.regexCheckBox.Location = new System.Drawing.Point(450, 109);
+            this.regexCheckBox.Location = new System.Drawing.Point(125, 123);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
             this.regexCheckBox.TabIndex = 9;
@@ -192,7 +194,7 @@
             // labelTargetFolder2
             // 
             this.labelTargetFolder2.AutoSize = true;
-            this.labelTargetFolder2.Location = new System.Drawing.Point(11, 61);
+            this.labelTargetFolder2.Location = new System.Drawing.Point(11, 54);
             this.labelTargetFolder2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTargetFolder2.Name = "labelTargetFolder2";
             this.labelTargetFolder2.Size = new System.Drawing.Size(89, 18);
@@ -201,7 +203,7 @@
             // 
             // folderFilterTextBox
             // 
-            this.folderFilterTextBox.Location = new System.Drawing.Point(125, 107);
+            this.folderFilterTextBox.Location = new System.Drawing.Point(249, 121);
             this.folderFilterTextBox.Name = "folderFilterTextBox";
             this.folderFilterTextBox.Size = new System.Drawing.Size(308, 28);
             this.folderFilterTextBox.TabIndex = 7;
@@ -210,7 +212,7 @@
             // 
             this.fldFilterText.BackColor = System.Drawing.SystemColors.Control;
             this.fldFilterText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.fldFilterText.Location = new System.Drawing.Point(14, 110);
+            this.fldFilterText.Location = new System.Drawing.Point(14, 124);
             this.fldFilterText.Name = "fldFilterText";
             this.fldFilterText.ReadOnly = true;
             this.fldFilterText.Size = new System.Drawing.Size(117, 21);
@@ -222,7 +224,7 @@
             this.targetFolder2TextBox.AllowDrop = true;
             this.targetFolder2TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 58);
+            this.targetFolder2TextBox.Location = new System.Drawing.Point(108, 50);
             this.targetFolder2TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder2TextBox.Name = "targetFolder2TextBox";
             this.targetFolder2TextBox.Size = new System.Drawing.Size(719, 28);
@@ -388,6 +390,7 @@
             this.listViewContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.openDirectoryToolStripMenuItem,
+            this.refreshToolStripMenuItem,
             this.toolStripMenuItem7,
             this.copyFileNameToolStripMenuItem,
             this.copyFullPathToolStripMenuItem,
@@ -401,7 +404,7 @@
             this.toolStripMenuItem4,
             this.propertiesToolStripMenuItem});
             this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
-            this.listViewContextMenuStrip.Size = new System.Drawing.Size(214, 328);
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(214, 358);
             // 
             // openToolStripMenuItem
             // 
@@ -416,6 +419,13 @@
             this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
             this.openDirectoryToolStripMenuItem.Text = "Open Directory";
             this.openDirectoryToolStripMenuItem.Click += new System.EventHandler(this.openDirectoryToolStripMenuItem_Click);
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
+            this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // toolStripMenuItem7
             // 
@@ -438,26 +448,10 @@
             // 
             // calcHashToolStripMenuItem
             // 
-            this.calcHashToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.md5ToolStripMenuItem,
-            this.sHA1ToolStripMenuItem});
             this.calcHashToolStripMenuItem.Name = "calcHashToolStripMenuItem";
             this.calcHashToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
             this.calcHashToolStripMenuItem.Text = "Calc Hash";
-            // 
-            // md5ToolStripMenuItem
-            // 
-            this.md5ToolStripMenuItem.Name = "md5ToolStripMenuItem";
-            this.md5ToolStripMenuItem.Size = new System.Drawing.Size(158, 34);
-            this.md5ToolStripMenuItem.Text = "MD5";
-            this.md5ToolStripMenuItem.Click += new System.EventHandler(this.md5ToolStripMenuItem_Click);
-            // 
-            // sHA1ToolStripMenuItem
-            // 
-            this.sHA1ToolStripMenuItem.Name = "sHA1ToolStripMenuItem";
-            this.sHA1ToolStripMenuItem.Size = new System.Drawing.Size(158, 34);
-            this.sHA1ToolStripMenuItem.Text = "SHA1";
-            this.sHA1ToolStripMenuItem.Click += new System.EventHandler(this.sHA1ToolStripMenuItem_Click);
+            this.calcHashToolStripMenuItem.Click += new System.EventHandler(this.calcHashToolStripMenuItem_Click);
             // 
             // toolStripMenuItem5
             // 
@@ -717,15 +711,18 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.targetFolderFilterTextBox);
             this.panel6.Controls.Add(this.folderFilterTextBox);
             this.panel6.Controls.Add(this.updateButton);
             this.panel6.Controls.Add(this.labelTargetFolder1);
+            this.panel6.Controls.Add(this.textBox1);
             this.panel6.Controls.Add(this.filterExample);
             this.panel6.Controls.Add(this.targetFolder1TextBox);
             this.panel6.Controls.Add(this.btnSelectTargetFolder2);
             this.panel6.Controls.Add(this.btnSelectTargetFolder1);
             this.panel6.Controls.Add(this.modeCheckBox);
             this.panel6.Controls.Add(this.targetFolder2TextBox);
+            this.panel6.Controls.Add(this.targetFLtextBoxText);
             this.panel6.Controls.Add(this.regexCheckBox);
             this.panel6.Controls.Add(this.fldFilterText);
             this.panel6.Controls.Add(this.labelTargetFolder2);
@@ -777,19 +774,19 @@
             // cleanEmptyFolderModeToolStripMenuItem
             // 
             this.cleanEmptyFolderModeToolStripMenuItem.Name = "cleanEmptyFolderModeToolStripMenuItem";
-            this.cleanEmptyFolderModeToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.cleanEmptyFolderModeToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
             this.cleanEmptyFolderModeToolStripMenuItem.Text = "Clean Empty Folder Mode";
             this.cleanEmptyFolderModeToolStripMenuItem.Click += new System.EventHandler(this.cleanEmptyFolderModeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(332, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(382, 6);
             // 
             // saveLogToFileToolStripMenuItem
             // 
             this.saveLogToFileToolStripMenuItem.Name = "saveLogToFileToolStripMenuItem";
-            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.saveLogToFileToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
             this.saveLogToFileToolStripMenuItem.Text = "Save Log to file";
             this.saveLogToFileToolStripMenuItem.Click += new System.EventHandler(this.saveLogToFileToolStripMenuItem_Click);
             // 
@@ -812,17 +809,17 @@
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(332, 6);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(382, 6);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(332, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(382, 6);
             // 
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopMenu_Click);
             // 
@@ -831,7 +828,7 @@
             this.alwaysCalculateHashToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setByYourselfToolStripMenuItem});
             this.alwaysCalculateHashToolStripMenuItem.Name = "alwaysCalculateHashToolStripMenuItem";
-            this.alwaysCalculateHashToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.alwaysCalculateHashToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
             this.alwaysCalculateHashToolStripMenuItem.Text = "Always calculate Hash";
             this.alwaysCalculateHashToolStripMenuItem.Click += new System.EventHandler(this.alwaysCalculateHashToolStripMenuItem_Click);
             // 
@@ -844,14 +841,14 @@
             // protectFilesInGrpToolStripMenuItem
             // 
             this.protectFilesInGrpToolStripMenuItem.Name = "protectFilesInGrpToolStripMenuItem";
-            this.protectFilesInGrpToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.protectFilesInGrpToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
             this.protectFilesInGrpToolStripMenuItem.Text = "Protect Files In Group";
             this.protectFilesInGrpToolStripMenuItem.Click += new System.EventHandler(this.protectFilesInGrpToolStripMenuItem_Click);
             // 
             // autocleanEmptyFoldersToolStripMenuItem
             // 
             this.autocleanEmptyFoldersToolStripMenuItem.Name = "autocleanEmptyFoldersToolStripMenuItem";
-            this.autocleanEmptyFoldersToolStripMenuItem.Size = new System.Drawing.Size(335, 34);
+            this.autocleanEmptyFoldersToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
             this.autocleanEmptyFoldersToolStripMenuItem.Text = "Auto Clean Empty Folders";
             this.autocleanEmptyFoldersToolStripMenuItem.Click += new System.EventHandler(this.autocleanEmptyFoldersToolStripMenuItem_Click);
             // 
@@ -932,9 +929,38 @@
             // 
             this.usageToolStripMenuItem.Name = "usageToolStripMenuItem";
             this.usageToolStripMenuItem.ShortcutKeyDisplayString = "Shift + F1";
-            this.usageToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.usageToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
+            // 
+            // targetFLtextBoxText
+            // 
+            this.targetFLtextBoxText.BackColor = System.Drawing.SystemColors.Control;
+            this.targetFLtextBoxText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.targetFLtextBoxText.Location = new System.Drawing.Point(14, 88);
+            this.targetFLtextBoxText.Name = "targetFLtextBoxText";
+            this.targetFLtextBoxText.ReadOnly = true;
+            this.targetFLtextBoxText.Size = new System.Drawing.Size(229, 21);
+            this.targetFLtextBoxText.TabIndex = 6;
+            this.targetFLtextBoxText.Text = "Target folder filter:";
+            // 
+            // targetFolderFilterTextBox
+            // 
+            this.targetFolderFilterTextBox.Location = new System.Drawing.Point(249, 85);
+            this.targetFolderFilterTextBox.Name = "targetFolderFilterTextBox";
+            this.targetFolderFilterTextBox.Size = new System.Drawing.Size(392, 28);
+            this.targetFolderFilterTextBox.TabIndex = 7;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(654, 88);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(173, 21);
+            this.textBox1.TabIndex = 8;
+            this.textBox1.Text = "General Find mode";
             // 
             // GeminiForm
             // 
@@ -1054,11 +1080,13 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem md5ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem sHA1ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyFileNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
         private System.Windows.Forms.ToolStripMenuItem setByYourselfToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
+        private System.Windows.Forms.TextBox targetFolderFilterTextBox;
+        private System.Windows.Forms.TextBox targetFLtextBoxText;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

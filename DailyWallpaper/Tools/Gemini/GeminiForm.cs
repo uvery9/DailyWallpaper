@@ -34,7 +34,7 @@ namespace DailyWallpaper
 
         private bool scanRes = false;
         private bool cefScanRes = false;
-        private List<string> folderFilter = new List<string>();
+        private List<string> pathFilter = new List<string>();
         private string regexFilter;
         private Regex regex;
         private List<string> emptyFolderList = new List<string>();
@@ -736,7 +736,7 @@ namespace DailyWallpaper
                 }
                 else
                 {
-                    foreach (var filter in folderFilter)
+                    foreach (var filter in pathFilter)
                     {
                         if (token.IsCancellationRequested)
                         {
@@ -808,7 +808,7 @@ namespace DailyWallpaper
                     // Set a variable to the My Documents path.
                     // string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); 
 
-                    if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
+                    if (filterMode == FilterMode.GEN_FIND && pathFilter.Count > 0)
                     {
                         ScanEmptyDirsFindMode(path, token, re: false);
                     }
@@ -928,7 +928,7 @@ namespace DailyWallpaper
                 }
                 return;
             }
-            /*if (filterMode == FilterMode.GEN_FIND && folderFilter.Count > 0)
+            /*if (filterMode == FilterMode.GEN_FIND && pathFilter.Count > 0)
             {
                 FindFilesWithFindMode(path, filesList, token, re: false);
             }
@@ -946,9 +946,9 @@ namespace DailyWallpaper
         {
             if (mode == FilterMode.GEN_PROTECT)
             {
-                if (folderFilter.Count > 0)
+                if (pathFilter.Count > 0)
                 {
-                    foreach (var filter in folderFilter)
+                    foreach (var filter in pathFilter)
                     {
                         if (path.Contains(filter))
                         {
@@ -1008,7 +1008,7 @@ namespace DailyWallpaper
                 }
                 else
                 {
-                    foreach (var filter in folderFilter)
+                    foreach (var filter in pathFilter)
                     {
                         if (token.IsCancellationRequested)
                         {
@@ -1225,16 +1225,40 @@ namespace DailyWallpaper
 
         }
 
+        private List<string> StringToFilter(string filter, bool print = false)
+        {
+            var fldFilter = new List<string>();
+            if (string.IsNullOrEmpty(filter))
+            {
+                return fldFilter;
+            }
+            if (filter.Contains("，"))
+            {
+                if (print) CWriteLine("\r\n>>> WARNING: Chinese comma(full-width commas) in the filter <<<\r\n");
+            }
+            filter = filter.Trim();
+            var filterList = filter.Split(',');
+            if (filterList.Length < 1)
+            {
+                return fldFilter;
+            }
+            if (print) CWriteLine("\r\nYou have set the following general filter(s):");
+            foreach (var ft in filterList)
+            {
+                if (print) CWriteLine($" {ft} ");
+                fldFilter.Add(ft);
+            }
+            return fldFilter;
+        }
         /// <summary>
         ///             if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
         /// </summary>
         /// <param name="text"></param>
         /// <param name="print"></param>
         /// <returns></returns>
-        private bool SetFolderFilter(string text, bool print = false)
+        private bool SetFolderFilter(string filter, bool print = false)
         {
-            string filter = text;
-            folderFilter = new List<string>();
+            pathFilter = new List<string>();
             if (string.IsNullOrEmpty(filter))
             {
                 regexFilter = "";
@@ -1264,21 +1288,9 @@ namespace DailyWallpaper
                 }
                 return true;
             }
-            if (filter.Contains("，"))
+            else
             {
-                if (print) CWriteLine("\r\n>>> WARNING: Chinese comma(full-width commas) in the filter <<<\r\n");
-            }
-            filter = filter.Trim();
-            var filterList = filter.Split(',');
-            if (filterList.Length < 1)
-            {
-                return false;
-            }
-            if (print) CWriteLine("\r\nYou have set the following general filter(s):");
-            foreach (var ft in filterList)
-            {
-                if (print) CWriteLine($" {ft} ");
-                folderFilter.Add(ft);
+                pathFilter = StringToFilter(filter, print);
             }
             return true;
         }
@@ -1934,20 +1946,47 @@ namespace DailyWallpaper
                 SetFolderFilter(folderFilterTextBox.Text, print: true);
 
                 var updatedList = new List<GeminiFileStruct>();
-                if (folderFilter.Count > 0)
+                var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
+                if (fldFilter.Count > 0)
                 {
-                    foreach (var item in geminiFileStructListForLV)
+                    var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter);
+                    var gflIn = tpl.Item1;
+                    unselectAllToolStripMenuItem.PerformClick();
+                    updatedList.AddRange(tpl.Item2);
+                    if (pathFilter.Count > 0)
                     {
-                        GeminiFileStructListGeneral(updatedList, item, folderFilter,
-                            find: filterMode == FilterMode.GEN_FIND); // FilterMode.GEN_PROTECT
+                        foreach (var item in gflIn)
+                        {
+                            GeminiFileStructListGeneral(updatedList, item, pathFilter,
+                                find: filterMode == FilterMode.GEN_FIND); // FilterMode.GEN_PROTECT
+                        }
+                    }
+                    else if (regex != null)
+                    {
+                        foreach (var item in gflIn)
+                        {
+                            GeminiFileStructListRE(updatedList, item, regex,
+                                find: filterMode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
+                        }
                     }
                 }
-                else if (regex != null)
+                else
                 {
-                    foreach (var item in geminiFileStructListForLV)
+                    if (pathFilter.Count > 0)
                     {
-                        GeminiFileStructListRE(updatedList, item, regex,
-                            find: filterMode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
+                        foreach (var item in geminiFileStructListForLV)
+                        {
+                            GeminiFileStructListGeneral(updatedList, item, pathFilter,
+                                find: filterMode == FilterMode.GEN_FIND); // FilterMode.GEN_PROTECT
+                        }
+                    }
+                    else if (regex != null)
+                    {
+                        foreach (var item in geminiFileStructListForLV)
+                        {
+                            GeminiFileStructListRE(updatedList, item, regex,
+                                find: filterMode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
+                        }
                     }
                 }
                 geminiFileStructListForLVUndo = geminiFileStructListForLV;
@@ -2314,16 +2353,6 @@ namespace DailyWallpaper
         }
 
 
-       
-        private void md5ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CalcHashMenuClick();
-        }
-
-        private void sHA1ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CalcHashMenuClick(false);
-        }
         
         private void CalcHashMenuClick(bool md5 = true)
         {
@@ -2352,8 +2381,8 @@ namespace DailyWallpaper
                         hash = _hash;
                         resultListView.FocusedItem.SubItems["HASH"].Text = hash;
                         geminiProgressBar.Visible = false;
-                        CWriteLine($"... Update [{_hash}] -> {fullPath}");
                         var s = md5 ? "MD5" : "SHA1";
+                        CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");
                         SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
                     }
                 }
@@ -2683,6 +2712,16 @@ namespace DailyWallpaper
         private void resultListView_SelectedIndexChanged_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void calcHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CalcHashMenuClick(fileMD5CheckBox.Checked);
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            cleanUpButton.PerformClick();
         }
     }
 }
