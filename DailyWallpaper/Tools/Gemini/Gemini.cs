@@ -230,6 +230,7 @@ namespace DailyWallpaper.Tools
             {
                 var other = (GeminiFileCls)MemberwiseClone();
                 // https://docs.microsoft.com/en-us/dotnet/api/system.object.memberwiseclone?view=net-5.0
+                // string may be copied in MemberwiseClone
                 other.sizeStr = String.Copy(sizeStr);
                 other.name = String.Copy(name);
                 other.extName = String.Copy(extName);

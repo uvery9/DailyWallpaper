@@ -1048,9 +1048,9 @@ namespace DailyWallpaper
             // update geminiFileStructListForLV
             // Debug.WriteLine("1." + geminiFileStructListForLV[0].Checked); // why change me, FU.
             geminiFileStructListForLV = updatedList; // can remove.
-
-            // Debug.WriteLine("2.uodo." + geminiFileStructListForLVUndo[0].Checked); // why change me, FU.
-            // Debug.WriteLine("3." + geminiFileStructListForLV[0].Checked); // why change me, FU.
+            /*geminiFileStructListForLV[0].fullPath = "TEST....";
+            CWriteLine("2.uodo." + geminiFileStructListForLVUndo[0].fullPath); // why change me, FU.
+            CWriteLine("3." + geminiFileStructListForLV[0].fullPath); // why change me, FU.*/
             ConvertGeminiFileClsListAndListView(ref geminiFileStructListForLV, liv,
                 toListView: true, token: _source.Token);
         }

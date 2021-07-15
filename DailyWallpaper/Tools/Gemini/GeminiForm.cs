@@ -2670,11 +2670,11 @@ namespace DailyWallpaper
             }
             else if (e.KeyData == (Keys.A | Keys.Control))
             {
-                selectAll = !selectAll;
                 if (selectAll)
                     selectAllToolStripMenuItem.PerformClick();
                 else
                     unselectAllToolStripMenuItem.PerformClick();
+                selectAll = !selectAll;
 
             }
             else if (e.KeyData == (Keys.G | Keys.Control))
@@ -2692,6 +2692,14 @@ namespace DailyWallpaper
             else if (e.KeyData == (Keys.L | Keys.Control))
             {
                 loadListViewFromFileToolStripMenuItem.PerformClick();
+            }
+            else if (e.KeyData == (Keys.Z | Keys.Control))
+            {
+                undoToolStripMenuItem.PerformClick();
+            }
+            else if (e.KeyData == (Keys.Y | Keys.Control))
+            {
+                redoToolStripMenuItem.PerformClick();
             }
         }
 
