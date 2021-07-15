@@ -2391,19 +2391,45 @@ namespace DailyWallpaper
             }
             bool md5 = fileMD5CheckBox.Checked;
             var s = md5 ? "MD5" : "SHA1";
-            CWriteLine($">>> Start calculating hash[{s}] for {multi.Count} file(s)");
+            var total = multi.Count;
+            CWriteLine($">>> Start calculating hash[{s}] for {total} file(s)");
+
             SetProgressBarVisible(geminiProgressBar, true);
             hashTokenSrc = new CancellationTokenSource();
             var token = hashTokenSrc.Token;
+            
+            var fullPathList = new List<string>();
+            foreach (ListViewItem item in multi)
+            {
+                fullPathList.Add(item.SubItems["fullPath"].Text);
+            }
+            
+            void UpdateHashInLV()
+            {
+                resultListView.Items.OfType<ListViewItem>().ToList().ForEach(item =>
+                {
+                    var fullP = item.SubItems["fullPath"].Text;
+                    var hash =
+                            (from i in geminiFileStructListForLV
+                            where i.fullPath.Equals(fullP)
+                            select i.hash).ToList()[0];
+                    if (!string.IsNullOrEmpty(hash) && !hash.ToLower().Contains("not"))
+                    {
+                        item.SubItems["HASH"].Text = hash;
+                        // item.ForeColor = Color.Blue;
+                    }
+                }
+                );
+            }
 
             Task.Run(async () =>
             {
                 try
                 {
-                    foreach (ListViewItem item in multi)
+                    int cnt = 0;
+                    SetProgressBarVisible(geminiProgressBar, true);
+                    foreach (var fullPath in fullPathList)
                     {
-                        var fullPath = item.SubItems["fullPath"].Text;
-
                         if (string.IsNullOrEmpty(fullPath) || !File.Exists(fullPath))
                         {
                             break;
@@ -2412,39 +2438,36 @@ namespace DailyWallpaper
                         {
                             if (res)
                             {
-                                item.SubItems["HASH"].Text = _hash;
-                                item.ForeColor = Color.Blue;
                                 geminiFileStructListForLV.ForEach(i => {
                                     if (i.fullPath.Equals(fullPath))
                                     {
                                         i.hash = _hash;
                                     }
                                 });
+                                cnt++;
                             }
                         }
-                        SetProgressBarVisible(geminiProgressBar, true);
-                        void ProgressActionD(double i)
+                        var pbint = (int)((double)cnt / total * 100);
+                        if (pbint > 100)
                         {
-                            SetProgressMessage(geminiProgressBar, (int)i);
+                            CWriteLine("! Bug: pbint: " + pbint);
+                            pbint = 100;
                         }
-                        var progessDouble = new Progress<double>(ProgressActionD);
-                        if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
-                        {
-                            progessDouble = null;
-                        }
+                        SetProgressMessage(geminiProgressBar, pbint);
                         if (md5)
                         {
                             await ComputeHashAsync(
-                                MD5.Create(), fullPath, token, "MD5", getRes, progessDouble);
+                                MD5.Create(), fullPath, token, "MD5", getRes);
                         }
                         else
                         {
                             await ComputeHashAsync(
-                                SHA1.Create(), fullPath, token, "SHA1", getRes, progessDouble);
+                                SHA1.Create(), fullPath, token, "SHA1", getRes);
                         }
                     }
                     SetText(summaryTextBox, $"Updated {s}", themeColorClean);
-                    CWriteLine($">>> Updated hash[{s}] for {multi.Count} file(s)");
+                    CWriteLine($">>> Updated hash[{s}] for {total} file(s)");
+                    UpdateHashInLV();
                 }
                 catch (Exception ee)
                 {

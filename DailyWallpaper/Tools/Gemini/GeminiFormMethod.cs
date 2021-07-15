@@ -85,35 +85,35 @@ namespace DailyWallpaper
                 return Tuple.Create(LoadFileStep.ERROR, (object)null);
             }
             /*
-             *  step-1-allfiles_1.xml
-             *  step-1-allfiles_2.xml
-             *  step-2-filesToStruct_1.xml
-             *  step-2-filesToStruct_2.xml
-             *  step-3-FastCompare.xml
-             *  step-4-CompareHash.xml
-             *  step-5-RegrpAndColor.xml // color can't be write into xml, delete it.
+             *  step1-allfiles_1.xml
+             *  step1-allfiles_2.xml
+             *  step2-filesToStruct_1.xml
+             *  step2-filesToStruct_2.xml
+             *  step3-FastCompare.xml
+             *  step4-CompareHash.xml
+             *  step5-RegrpAndColor.xml // color can't be write into xml, delete it.
              */
             object ret;
             LoadFileStep op;
             var pathLow = path.ToLower();
             try
             {
-                    if (pathLow.Contains("step-1-".ToLower()))
+                    if (pathLow.Contains("step1".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<string>>(path);
                     op = LoadFileStep.STEP_1_ALL_FILES;
                 }
-                else if (pathLow.Contains("step-2-".ToLower()))
+                else if (pathLow.Contains("step2".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<GeminiFileCls>>(path);
                     op = LoadFileStep.STEP_2_FILES_TO_STRUCT;
                 }
-                else if (pathLow.Contains("step-3-".ToLower()))
+                else if (pathLow.Contains("step3".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<GeminiFileCls>>(path);
                     op = LoadFileStep.STEP_3_FAST_COMPARE;
                 }
-                else if (pathLow.Contains("step-4-".ToLower()))
+                else if (pathLow.Contains("step4".ToLower()))
                 {
                     ret = ReadFromXmlFile<List<GeminiFileCls>>(path);
                     op = LoadFileStep.STEP_4_COMPARE_HASH;
@@ -186,7 +186,7 @@ namespace DailyWallpaper
                             CWriteLine("!!! Two folder invalid.");
                             return;
                         }
-                        SaveOperationHistory("step-1_allfiles_2.xml", filesList2);
+                        SaveOperationHistory("step1_allfiles_2.xml", filesList2);
                     }
                     else
                     {
@@ -197,7 +197,7 @@ namespace DailyWallpaper
                         filesList2 = new List<string>();
                     }
                     if (op <= LoadFileStep.STEP_1_ALL_FILES)
-                        SaveOperationHistory("step-1-allfiles_1.xml", filesList1);
+                        SaveOperationHistory("step1-allfiles_1.xml", filesList1);
 
                     SetProgressBarVisible(geminiProgressBar, true);
                     if (!IsSkip(op, LoadFileStep.STEP_2_FILES_TO_STRUCT))
@@ -205,7 +205,7 @@ namespace DailyWallpaper
                         // get files info exclude HASH.(FASTER) 
                         FileList2GeminiFileClsList(filesList1, ref geminiFileStructList1, token);
                         FileList2GeminiFileClsList(filesList2, ref geminiFileStructList2, token);
-                        SaveOperationHistory("step-2_filesToStruct_2.xml", geminiFileStructList2);
+                        SaveOperationHistory("step2_filesToStruct_2.xml", geminiFileStructList2);
                     }
                     else
                     {
@@ -215,7 +215,7 @@ namespace DailyWallpaper
                         CWriteLine($">>> Skip {LoadFileStep.STEP_2_FILES_TO_STRUCT}... ");
                     }
                     if (op <= LoadFileStep.STEP_2_FILES_TO_STRUCT)
-                        SaveOperationHistory("step-2-filesToStruct_1.xml", geminiFileStructList1);
+                        SaveOperationHistory("step2-filesToStruct_1.xml", geminiFileStructList1);
                     
                     List<GeminiFileCls> sameListNoDup;
                     var mode = SetCompareMode();
@@ -241,7 +241,7 @@ namespace DailyWallpaper
                     }
 
                     if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
-                        SaveOperationHistory("step-3-FastCompare.xml", sameListNoDup);
+                        SaveOperationHistory("step3-FastCompare.xml", sameListNoDup);
                     
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
@@ -252,7 +252,7 @@ namespace DailyWallpaper
                             sameListNoDup =
                             UpdateHashInGeminiFileClsList(sameListNoDup, token,
                                 alwaysCalculateHashToolStripMenuItem.Checked).Result;
-                            SaveOperationHistory("step-4-CompareHashForLittleFiles.xml", sameListNoDup);
+                            SaveOperationHistory("step4-CompareHashForLittleFiles.xml", sameListNoDup);
                             var sameListNoDupHash = new List<GeminiFileCls>();
                             var sameListNoDupBigFiles = new List<GeminiFileCls>();
                             foreach (var sl in sameListNoDup)
@@ -288,7 +288,7 @@ namespace DailyWallpaper
 
                         }
                         if (op <= LoadFileStep.STEP_4_COMPARE_HASH)
-                            SaveOperationHistory("step-4-CompareHash.xml", sameListNoDup);
+                            SaveOperationHistory("step4-CompareHash.xml", sameListNoDup);
                     }
 
                     // Color by Group.
