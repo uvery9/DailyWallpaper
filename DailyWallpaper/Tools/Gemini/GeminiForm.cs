@@ -2382,7 +2382,83 @@ namespace DailyWallpaper
         }
 
 
-        
+        private void CalcHashMenuClick()
+        {
+            var multi = resultListView.SelectedItems;
+            if (multi.Count < 1)
+            {
+                return;
+            }
+            bool md5 = fileMD5CheckBox.Checked;
+            var s = md5 ? "MD5" : "SHA1";
+            CWriteLine($">>> Start calculating hash[{s}] for {multi.Count} file(s)");
+            SetProgressBarVisible(geminiProgressBar, true);
+            hashTokenSrc = new CancellationTokenSource();
+            var token = hashTokenSrc.Token;
+
+            Task.Run(async () =>
+            {
+                try
+                {
+                    foreach (ListViewItem item in multi)
+                    {
+                        var fullPath = item.SubItems["fullPath"].Text;
+
+                        if (string.IsNullOrEmpty(fullPath) || !File.Exists(fullPath))
+                        {
+                            break;
+                        }
+                        void getRes(bool res, string who, string _hash, string costTimeOrMsg)
+                        {
+                            if (res)
+                            {
+                                item.SubItems["HASH"].Text = _hash;
+                                item.ForeColor = Color.Blue;
+                                geminiFileStructListForLV.ForEach(i => {
+                                    if (i.fullPath.Equals(fullPath))
+                                    {
+                                        i.hash = _hash;
+                                    }
+                                });
+                            }
+                        }
+                        SetProgressBarVisible(geminiProgressBar, true);
+                        void ProgressActionD(double i)
+                        {
+                            SetProgressMessage(geminiProgressBar, (int)i);
+                        }
+                        var progessDouble = new Progress<double>(ProgressActionD);
+                        if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
+                        {
+                            progessDouble = null;
+                        }
+                        if (md5)
+                        {
+                            await ComputeHashAsync(
+                                MD5.Create(), fullPath, token, "MD5", getRes, progessDouble);
+                        }
+                        else
+                        {
+                            await ComputeHashAsync(
+                                SHA1.Create(), fullPath, token, "SHA1", getRes, progessDouble);
+                        }
+                    }
+                    SetText(summaryTextBox, $"Updated {s}", themeColorClean);
+                    CWriteLine($">>> Updated hash[{s}] for {multi.Count} file(s)");
+                }
+                catch (Exception ee)
+                {
+                    CWriteLine("ComputeHashAsync: " + ee.Message);
+                    SetText(summaryTextBox, $"Updated {s} failed.", themeColor);
+                }
+                finally
+                {
+                    SetProgressBarVisible(geminiProgressBar, false);
+                }
+
+            });
+        }
+
         private void CalcHashMenuClick(string fullPath, ListViewItem item, int total,
             bool md5 = true, CancellationToken token = default)
         {
