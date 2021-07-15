@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -112,6 +113,25 @@ namespace DailyWallpaper.Helpers
         {
             // begin, period
             new System.Threading.Timer(callback, null, 1000 * 60 * min, 1000 * 60 * min);
+        }
+        
+        public void TimedDoSomething(Action action)
+        {
+            var stopWatch = new Stopwatch();
+
+            try
+            {
+                // this.Cursor = Cursors.WaitCursor;
+                stopWatch.Start();
+                action();
+            }
+            finally
+            {
+                stopWatch.Stop();
+                // this.Cursor = Cursors.Default;
+                Debug.WriteLine(string.Format("Cost time: {0}ms",
+                              stopWatch.ElapsedMilliseconds));
+            }
         }
     }
 }
