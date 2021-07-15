@@ -150,7 +150,7 @@ namespace DailyWallpaper
                         CWriteLine($">>> Start Analyze Operation...");
                         CWriteLine($">>> Because it is a recursive search, \r\n" +
                             "  Program don't know the progress, please wait patiently...");
-                        SetText(summaryTextBox, "Please wait patiently...", themeColor);
+                        SetSummaryBoxText("Please wait patiently...", 1);
                         if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
                         {
                             fld2 = true;
@@ -979,7 +979,7 @@ namespace DailyWallpaper
         };
 
         private void MultipleSelectOpAction(
-            ListView liv, MultipleSelectOperations op)
+            ListView liv, MultipleSelectOperations op, bool force = false)
         {
             if (_source == null)
             {
@@ -990,7 +990,7 @@ namespace DailyWallpaper
                 CWriteLine("!!! ANALYZE First.");
                 return;
             }
-            liv.BeginUpdate();
+            /*liv.BeginUpdate();
             if (op == MultipleSelectOperations.CHECK_ALL)
             {
                 liv.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = true);
@@ -1009,7 +1009,45 @@ namespace DailyWallpaper
             geminiFileStructListForLVUndo = geminiFileStructListForLV;
             undoToolStripMenuItem.Enabled = true;
             ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV, liv, 
-                toListView: false, token: _source.Token);
+                toListView: false, token: _source.Token);*/
+            geminiFileStructListForLVUndo = geminiFileStructListForLV;
+            undoToolStripMenuItem.Enabled = true;
+            var updatedList = new List<GeminiFileStruct>();
+            var selectList = new List<GeminiFileStruct>();
+            var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
+            var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter);
+            if (fldFilter.Count > 0)
+            {
+                selectList = tpl.Item1;
+                updatedList.AddRange(tpl.Item2);
+            }
+            else
+            {
+                selectList = tpl.Item2;
+            }
+            if (force)
+                selectList = geminiFileStructListForLV;
+            if (op == MultipleSelectOperations.CHECK_ALL)
+            {
+                selectList.ForEach(item => item.Checked = true);
+            }
+            else if (op == MultipleSelectOperations.UNCHECK_ALL)
+            {
+                selectList.ForEach(item => item.Checked = false);
+            }
+            else if (op == MultipleSelectOperations.REVERSE_ELECTION)
+            {
+                selectList.ForEach(item => item.Checked = !item.Checked);
+            }
+            Debug.WriteLine(selectList[0].Checked);
+            Debug.WriteLine(geminiFileStructListForLV[0].Checked); // why change me, FU.
+            updatedList.AddRange(selectList);
+
+            // update geminiFileStructListForLV
+            geminiFileStructListForLV = updatedList;
+            undoToolStripMenuItem.Enabled = true;
+            ConvertGeminiFileStructListAndListView(ref geminiFileStructListForLV, liv,
+                toListView: true, token: _source.Token);
         }
 
         private void ConvertGeminiFileStructListAndListView(ref List<GeminiFileStruct> rgfL,
@@ -1222,14 +1260,24 @@ namespace DailyWallpaper
             gfL.Add(item);
         }
 
-        
+        private bool GeminiFileStructListREForEach(GeminiFileStruct item, 
+            Regex rege, bool find = true)
+        {
+            bool ret = !find;
+            if (rege.IsMatch(item.fullPath))
+            {
+                ret = find;
+            }
+            return ret;
+        }
+
         private Tuple<List<GeminiFileStruct>, List<GeminiFileStruct>> 
             GetGFLbyTheFilter(
             List<GeminiFileStruct> gfL, List<string> fldFilter)
         {
             var gflIn = new List<GeminiFileStruct>();
             var gflNotIn = new List<GeminiFileStruct>();
-            foreach (var item in gfL)
+            foreach (var item in gfL) // why always change the value in gfL???
             {
                 bool inSide = false;
                 foreach (var fil in fldFilter)
@@ -1264,6 +1312,20 @@ namespace DailyWallpaper
             gfL.Add(item);
         }
 
+        private bool GeminiFileStructListGeneralForEach(GeminiFileStruct item, List<string> filter, 
+            bool find = true)
+        {
+            bool ret = !find;
+            foreach (var it in filter)
+            {
+                if (item.fullPath.ToLower().Contains(it.ToLower()))
+                {
+                    ret = find;
+                    break;
+                }
+            }
+            return ret;
+        }
 
         private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
         {
@@ -1434,12 +1496,8 @@ namespace DailyWallpaper
                 {
                     ListViewOperate(liv, ListViewOP.ADDRANGE, items: items.ToArray());
                 }
-                SetText(summaryTextBox, $"Summay: Found {gfL.Count:N0} duplicate files.", themeColor);
             }
-            else
-            {
-                SetText(summaryTextBox, $"Summay: Found No duplicate files.", Color.ForestGreen);
-            }
+            SetSummaryBoxText($"Summay: Found {gfL.Count:N0} duplicate file(s).", gfL.Count);
         }
 
     }

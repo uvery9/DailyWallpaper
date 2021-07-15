@@ -89,6 +89,10 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.targetFolderFilterTextBox = new System.Windows.Forms.TextBox();
+            this.clearFilterbutton = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.targetFLtextBoxText = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.fileOptionsmenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,9 +118,6 @@
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.targetFLtextBoxText = new System.Windows.Forms.TextBox();
-            this.targetFolderFilterTextBox = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -130,7 +131,7 @@
             // 
             // updateButton
             // 
-            this.updateButton.Location = new System.Drawing.Point(846, 114);
+            this.updateButton.Location = new System.Drawing.Point(845, 119);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(77, 28);
             this.updateButton.TabIndex = 11;
@@ -147,7 +148,8 @@
             this.filterExample.ReadOnly = true;
             this.filterExample.Size = new System.Drawing.Size(246, 21);
             this.filterExample.TabIndex = 8;
-            this.filterExample.Text = "SSSSSS";
+            this.filterExample.TabStop = false;
+            this.filterExample.Text = "Using General Find mode";
             // 
             // btnSelectTargetFolder2
             // 
@@ -156,7 +158,7 @@
             this.btnSelectTargetFolder2.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder2.Name = "btnSelectTargetFolder2";
             this.btnSelectTargetFolder2.Size = new System.Drawing.Size(77, 33);
-            this.btnSelectTargetFolder2.TabIndex = 5;
+            this.btnSelectTargetFolder2.TabIndex = 4;
             this.btnSelectTargetFolder2.Text = "Browse";
             this.btnSelectTargetFolder2.UseVisualStyleBackColor = true;
             this.btnSelectTargetFolder2.Click += new System.EventHandler(this.btnSelectTargetFolder2_Click);
@@ -167,7 +169,7 @@
             this.modeCheckBox.Location = new System.Drawing.Point(173, 123);
             this.modeCheckBox.Name = "modeCheckBox";
             this.modeCheckBox.Size = new System.Drawing.Size(70, 22);
-            this.modeCheckBox.TabIndex = 10;
+            this.modeCheckBox.TabIndex = 8;
             this.modeCheckBox.Text = "Find";
             this.modeCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -177,7 +179,7 @@
             this.regexCheckBox.Location = new System.Drawing.Point(125, 123);
             this.regexCheckBox.Name = "regexCheckBox";
             this.regexCheckBox.Size = new System.Drawing.Size(52, 22);
-            this.regexCheckBox.TabIndex = 9;
+            this.regexCheckBox.TabIndex = 7;
             this.regexCheckBox.Text = "RE";
             this.regexCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -206,7 +208,7 @@
             this.folderFilterTextBox.Location = new System.Drawing.Point(249, 121);
             this.folderFilterTextBox.Name = "folderFilterTextBox";
             this.folderFilterTextBox.Size = new System.Drawing.Size(308, 28);
-            this.folderFilterTextBox.TabIndex = 7;
+            this.folderFilterTextBox.TabIndex = 9;
             // 
             // fldFilterText
             // 
@@ -217,6 +219,7 @@
             this.fldFilterText.ReadOnly = true;
             this.fldFilterText.Size = new System.Drawing.Size(117, 21);
             this.fldFilterText.TabIndex = 6;
+            this.fldFilterText.TabStop = false;
             this.fldFilterText.Text = "Path Filter:";
             // 
             // targetFolder2TextBox
@@ -229,7 +232,6 @@
             this.targetFolder2TextBox.Name = "targetFolder2TextBox";
             this.targetFolder2TextBox.Size = new System.Drawing.Size(719, 28);
             this.targetFolder2TextBox.TabIndex = 3;
-            this.targetFolder2TextBox.TabStop = false;
             this.targetFolder2TextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder2_DragDrop);
             this.targetFolder2TextBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
             // 
@@ -240,7 +242,7 @@
             this.btnSelectTargetFolder1.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectTargetFolder1.Name = "btnSelectTargetFolder1";
             this.btnSelectTargetFolder1.Size = new System.Drawing.Size(77, 30);
-            this.btnSelectTargetFolder1.TabIndex = 5;
+            this.btnSelectTargetFolder1.TabIndex = 2;
             this.btnSelectTargetFolder1.Text = "Browse";
             this.btnSelectTargetFolder1.UseVisualStyleBackColor = true;
             this.btnSelectTargetFolder1.Click += new System.EventHandler(this.btnSelectTargetFolder1_Click);
@@ -254,8 +256,7 @@
             this.targetFolder1TextBox.Margin = new System.Windows.Forms.Padding(4);
             this.targetFolder1TextBox.Name = "targetFolder1TextBox";
             this.targetFolder1TextBox.Size = new System.Drawing.Size(719, 28);
-            this.targetFolder1TextBox.TabIndex = 3;
-            this.targetFolder1TextBox.TabStop = false;
+            this.targetFolder1TextBox.TabIndex = 1;
             this.targetFolder1TextBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.targetFolder1_DragDrop);
             this.targetFolder1TextBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.targetFolder1_2_DragEnter);
             // 
@@ -266,7 +267,7 @@
             this.btnAnalyze.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnalyze.Name = "btnAnalyze";
             this.btnAnalyze.Size = new System.Drawing.Size(93, 43);
-            this.btnAnalyze.TabIndex = 5;
+            this.btnAnalyze.TabIndex = 3;
             this.btnAnalyze.Text = "Analyze";
             this.btnAnalyze.UseVisualStyleBackColor = true;
             this.btnAnalyze.Click += new System.EventHandler(this.btnAnalyze_Click);
@@ -278,7 +279,7 @@
             this.btnDelete.Margin = new System.Windows.Forms.Padding(4);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(108, 41);
-            this.btnDelete.TabIndex = 4;
+            this.btnDelete.TabIndex = 6;
             this.btnDelete.Text = "RecycleBin";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
@@ -290,7 +291,7 @@
             this.btnClear.Margin = new System.Windows.Forms.Padding(4);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(61, 32);
-            this.btnClear.TabIndex = 4;
+            this.btnClear.TabIndex = 0;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
@@ -313,7 +314,7 @@
             this.deleteOrRecycleBin.Location = new System.Drawing.Point(225, 155);
             this.deleteOrRecycleBin.Name = "deleteOrRecycleBin";
             this.deleteOrRecycleBin.Size = new System.Drawing.Size(22, 21);
-            this.deleteOrRecycleBin.TabIndex = 6;
+            this.deleteOrRecycleBin.TabIndex = 5;
             this.deleteOrRecycleBin.UseVisualStyleBackColor = true;
             this.deleteOrRecycleBin.Click += new System.EventHandler(this.deleteOrRecycleBin_Click);
             // 
@@ -523,7 +524,7 @@
             this.cleanUpButton.Margin = new System.Windows.Forms.Padding(4);
             this.cleanUpButton.Name = "cleanUpButton";
             this.cleanUpButton.Size = new System.Drawing.Size(91, 32);
-            this.cleanUpButton.TabIndex = 4;
+            this.cleanUpButton.TabIndex = 2;
             this.cleanUpButton.Text = "Clean-UP";
             this.cleanUpButton.UseVisualStyleBackColor = true;
             this.cleanUpButton.Click += new System.EventHandler(this.cleanUpButton_Click);
@@ -535,7 +536,7 @@
             this.modeSelectButton.Margin = new System.Windows.Forms.Padding(4);
             this.modeSelectButton.Name = "modeSelectButton";
             this.modeSelectButton.Size = new System.Drawing.Size(61, 32);
-            this.modeSelectButton.TabIndex = 4;
+            this.modeSelectButton.TabIndex = 1;
             this.modeSelectButton.Text = "Mode";
             this.modeSelectButton.UseVisualStyleBackColor = true;
             this.modeSelectButton.Click += new System.EventHandler(this.modeSelectButton_Click);
@@ -576,7 +577,7 @@
             this.fileExtNameCheckBox.Location = new System.Drawing.Point(162, 27);
             this.fileExtNameCheckBox.Name = "fileExtNameCheckBox";
             this.fileExtNameCheckBox.Size = new System.Drawing.Size(205, 22);
-            this.fileExtNameCheckBox.TabIndex = 0;
+            this.fileExtNameCheckBox.TabIndex = 1;
             this.fileExtNameCheckBox.Text = "Same File extension";
             this.fileExtNameCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -608,7 +609,7 @@
             this.ignoreFileSizeTextBox.Location = new System.Drawing.Point(232, 60);
             this.ignoreFileSizeTextBox.Name = "ignoreFileSizeTextBox";
             this.ignoreFileSizeTextBox.Size = new System.Drawing.Size(56, 28);
-            this.ignoreFileSizeTextBox.TabIndex = 2;
+            this.ignoreFileSizeTextBox.TabIndex = 5;
             this.ignoreFileSizeTextBox.Text = "1024";
             this.ignoreFileSizeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ignoreFileSizeTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ignoreFileSizeTextBox_KeyDown);
@@ -628,7 +629,7 @@
             this.ignoreFileSizecomboBox.MaxDropDownItems = 3;
             this.ignoreFileSizecomboBox.Name = "ignoreFileSizecomboBox";
             this.ignoreFileSizecomboBox.Size = new System.Drawing.Size(61, 26);
-            this.ignoreFileSizecomboBox.TabIndex = 1;
+            this.ignoreFileSizecomboBox.TabIndex = 6;
             this.ignoreFileSizecomboBox.TabStop = false;
             // 
             // ignoreFileCheckBox
@@ -637,7 +638,7 @@
             this.ignoreFileCheckBox.Location = new System.Drawing.Point(3, 62);
             this.ignoreFileCheckBox.Name = "ignoreFileCheckBox";
             this.ignoreFileCheckBox.Size = new System.Drawing.Size(232, 22);
-            this.ignoreFileCheckBox.TabIndex = 0;
+            this.ignoreFileCheckBox.TabIndex = 4;
             this.ignoreFileCheckBox.Text = "Ignore files less than";
             this.ignoreFileCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -647,7 +648,7 @@
             this.fileSHA1CheckBox.Location = new System.Drawing.Point(173, 35);
             this.fileSHA1CheckBox.Name = "fileSHA1CheckBox";
             this.fileSHA1CheckBox.Size = new System.Drawing.Size(115, 22);
-            this.fileSHA1CheckBox.TabIndex = 0;
+            this.fileSHA1CheckBox.TabIndex = 3;
             this.fileSHA1CheckBox.Text = "Same SHA1";
             this.fileSHA1CheckBox.UseVisualStyleBackColor = true;
             // 
@@ -661,6 +662,7 @@
             this.fileSizeCheckBox.Name = "fileSizeCheckBox";
             this.fileSizeCheckBox.Size = new System.Drawing.Size(223, 22);
             this.fileSizeCheckBox.TabIndex = 0;
+            this.fileSizeCheckBox.TabStop = false;
             this.fileSizeCheckBox.Text = "Same File Size (Base)";
             this.fileSizeCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -670,7 +672,7 @@
             this.fileMD5CheckBox.Location = new System.Drawing.Point(37, 35);
             this.fileMD5CheckBox.Name = "fileMD5CheckBox";
             this.fileMD5CheckBox.Size = new System.Drawing.Size(106, 22);
-            this.fileMD5CheckBox.TabIndex = 0;
+            this.fileMD5CheckBox.TabIndex = 2;
             this.fileMD5CheckBox.Text = "Same MD5";
             this.fileMD5CheckBox.UseVisualStyleBackColor = true;
             // 
@@ -713,6 +715,7 @@
             // 
             this.panel6.Controls.Add(this.targetFolderFilterTextBox);
             this.panel6.Controls.Add(this.folderFilterTextBox);
+            this.panel6.Controls.Add(this.clearFilterbutton);
             this.panel6.Controls.Add(this.updateButton);
             this.panel6.Controls.Add(this.labelTargetFolder1);
             this.panel6.Controls.Add(this.textBox1);
@@ -730,6 +733,47 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(926, 157);
             this.panel6.TabIndex = 3;
+            // 
+            // targetFolderFilterTextBox
+            // 
+            this.targetFolderFilterTextBox.Location = new System.Drawing.Point(249, 85);
+            this.targetFolderFilterTextBox.Name = "targetFolderFilterTextBox";
+            this.targetFolderFilterTextBox.Size = new System.Drawing.Size(392, 28);
+            this.targetFolderFilterTextBox.TabIndex = 5;
+            // 
+            // clearFilterbutton
+            // 
+            this.clearFilterbutton.Location = new System.Drawing.Point(846, 83);
+            this.clearFilterbutton.Name = "clearFilterbutton";
+            this.clearFilterbutton.Size = new System.Drawing.Size(77, 28);
+            this.clearFilterbutton.TabIndex = 6;
+            this.clearFilterbutton.Text = "Clear";
+            this.clearFilterbutton.UseVisualStyleBackColor = true;
+            this.clearFilterbutton.Click += new System.EventHandler(this.clearFilterbutton_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(654, 88);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(173, 21);
+            this.textBox1.TabIndex = 8;
+            this.textBox1.TabStop = false;
+            this.textBox1.Text = "General Find mode";
+            // 
+            // targetFLtextBoxText
+            // 
+            this.targetFLtextBoxText.BackColor = System.Drawing.SystemColors.Control;
+            this.targetFLtextBoxText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.targetFLtextBoxText.Location = new System.Drawing.Point(14, 88);
+            this.targetFLtextBoxText.Name = "targetFLtextBoxText";
+            this.targetFLtextBoxText.ReadOnly = true;
+            this.targetFLtextBoxText.Size = new System.Drawing.Size(229, 21);
+            this.targetFLtextBoxText.TabIndex = 6;
+            this.targetFLtextBoxText.TabStop = false;
+            this.targetFLtextBoxText.Text = "Target folder filter:";
             // 
             // panel5
             // 
@@ -933,35 +977,6 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
-            // targetFLtextBoxText
-            // 
-            this.targetFLtextBoxText.BackColor = System.Drawing.SystemColors.Control;
-            this.targetFLtextBoxText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.targetFLtextBoxText.Location = new System.Drawing.Point(14, 88);
-            this.targetFLtextBoxText.Name = "targetFLtextBoxText";
-            this.targetFLtextBoxText.ReadOnly = true;
-            this.targetFLtextBoxText.Size = new System.Drawing.Size(229, 21);
-            this.targetFLtextBoxText.TabIndex = 6;
-            this.targetFLtextBoxText.Text = "Target folder filter:";
-            // 
-            // targetFolderFilterTextBox
-            // 
-            this.targetFolderFilterTextBox.Location = new System.Drawing.Point(249, 85);
-            this.targetFolderFilterTextBox.Name = "targetFolderFilterTextBox";
-            this.targetFolderFilterTextBox.Size = new System.Drawing.Size(392, 28);
-            this.targetFolderFilterTextBox.TabIndex = 7;
-            // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(654, 88);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(173, 21);
-            this.textBox1.TabIndex = 8;
-            this.textBox1.Text = "General Find mode";
-            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
@@ -1088,5 +1103,6 @@
         private System.Windows.Forms.TextBox targetFolderFilterTextBox;
         private System.Windows.Forms.TextBox targetFLtextBoxText;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button clearFilterbutton;
     }
 }
