@@ -600,7 +600,7 @@ namespace DailyWallpaper
                 cleanUpButton.Enabled = false;
 
                 alwaysCalculateHashToolStripMenuItem.Enabled = false;
-                protectFilesInGrpToolStripMenuItem.Enabled = false;
+                notProtectFilesInGrpToolStripMenuItem.Enabled = false;
                 autocleanEmptyFoldersToolStripMenuItem.Enabled = false;
 
                 godsChoiceToolStripMenuItem.Enabled = false;
@@ -629,7 +629,7 @@ namespace DailyWallpaper
                 cleanUpButton.Enabled = true;
 
                 alwaysCalculateHashToolStripMenuItem.Enabled = true;
-                protectFilesInGrpToolStripMenuItem.Enabled = true;
+                notProtectFilesInGrpToolStripMenuItem.Enabled = true;
                 autocleanEmptyFoldersToolStripMenuItem.Enabled = true;
 
                 godsChoiceToolStripMenuItem.Enabled = true;

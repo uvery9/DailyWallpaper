@@ -61,6 +61,8 @@
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFileNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyFullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
+            this.justThisFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.calcHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,8 +107,7 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysCalculateHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setByYourselfToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.protectFilesInGrpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notProtectFilesInGrpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autocleanEmptyFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.godsChoiceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -395,6 +396,8 @@
             this.toolStripMenuItem7,
             this.copyFileNameToolStripMenuItem,
             this.copyFullPathToolStripMenuItem,
+            this.toolStripMenuItem9,
+            this.justThisFolderToolStripMenuItem,
             this.calcHashToolStripMenuItem,
             this.toolStripMenuItem5,
             this.cutToolStripMenuItem,
@@ -405,7 +408,7 @@
             this.toolStripMenuItem4,
             this.propertiesToolStripMenuItem});
             this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
-            this.listViewContextMenuStrip.Size = new System.Drawing.Size(214, 358);
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(214, 394);
             // 
             // openToolStripMenuItem
             // 
@@ -446,6 +449,18 @@
             this.copyFullPathToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
             this.copyFullPathToolStripMenuItem.Text = "Copy FullPath";
             this.copyFullPathToolStripMenuItem.Click += new System.EventHandler(this.copyFullPathToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem9
+            // 
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(210, 6);
+            // 
+            // justThisFolderToolStripMenuItem
+            // 
+            this.justThisFolderToolStripMenuItem.Name = "justThisFolderToolStripMenuItem";
+            this.justThisFolderToolStripMenuItem.Size = new System.Drawing.Size(213, 30);
+            this.justThisFolderToolStripMenuItem.Text = "Just this folder";
+            this.justThisFolderToolStripMenuItem.Click += new System.EventHandler(this.justThisFolderToolStripMenuItem_Click);
             // 
             // calcHashToolStripMenuItem
             // 
@@ -809,7 +824,7 @@
             this.toolStripMenuItem2,
             this.alwaysOnTopToolStripMenuItem,
             this.alwaysCalculateHashToolStripMenuItem,
-            this.protectFilesInGrpToolStripMenuItem,
+            this.notProtectFilesInGrpToolStripMenuItem,
             this.autocleanEmptyFoldersToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(56, 28);
@@ -869,25 +884,17 @@
             // 
             // alwaysCalculateHashToolStripMenuItem
             // 
-            this.alwaysCalculateHashToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setByYourselfToolStripMenuItem});
             this.alwaysCalculateHashToolStripMenuItem.Name = "alwaysCalculateHashToolStripMenuItem";
             this.alwaysCalculateHashToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
             this.alwaysCalculateHashToolStripMenuItem.Text = "Always calculate Hash";
             this.alwaysCalculateHashToolStripMenuItem.Click += new System.EventHandler(this.alwaysCalculateHashToolStripMenuItem_Click);
             // 
-            // setByYourselfToolStripMenuItem
+            // notProtectFilesInGrpToolStripMenuItem
             // 
-            this.setByYourselfToolStripMenuItem.Name = "setByYourselfToolStripMenuItem";
-            this.setByYourselfToolStripMenuItem.Size = new System.Drawing.Size(237, 34);
-            this.setByYourselfToolStripMenuItem.Text = "Set by yourself";
-            // 
-            // protectFilesInGrpToolStripMenuItem
-            // 
-            this.protectFilesInGrpToolStripMenuItem.Name = "protectFilesInGrpToolStripMenuItem";
-            this.protectFilesInGrpToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
-            this.protectFilesInGrpToolStripMenuItem.Text = "Protect Files In Group";
-            this.protectFilesInGrpToolStripMenuItem.Click += new System.EventHandler(this.protectFilesInGrpToolStripMenuItem_Click);
+            this.notProtectFilesInGrpToolStripMenuItem.Name = "notProtectFilesInGrpToolStripMenuItem";
+            this.notProtectFilesInGrpToolStripMenuItem.Size = new System.Drawing.Size(385, 34);
+            this.notProtectFilesInGrpToolStripMenuItem.Text = "Don\'t Protect Files In Group";
+            this.notProtectFilesInGrpToolStripMenuItem.Click += new System.EventHandler(this.notProtectFilesInGrpToolStripMenuItem_Click);
             // 
             // autocleanEmptyFoldersToolStripMenuItem
             // 
@@ -972,8 +979,8 @@
             // usageToolStripMenuItem
             // 
             this.usageToolStripMenuItem.Name = "usageToolStripMenuItem";
-            this.usageToolStripMenuItem.ShortcutKeyDisplayString = "Shift + F1";
-            this.usageToolStripMenuItem.Size = new System.Drawing.Size(256, 34);
+            this.usageToolStripMenuItem.ShortcutKeyDisplayString = "";
+            this.usageToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
@@ -1080,7 +1087,7 @@
         private System.Windows.Forms.ToolStripMenuItem cleanEmptyFolderModeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem alwaysCalculateHashToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem protectFilesInGrpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem notProtectFilesInGrpToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.Button modeSelectButton;
@@ -1098,11 +1105,12 @@
         private System.Windows.Forms.ToolStripMenuItem copyFileNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
-        private System.Windows.Forms.ToolStripMenuItem setByYourselfToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
         private System.Windows.Forms.TextBox targetFolderFilterTextBox;
         private System.Windows.Forms.TextBox targetFLtextBoxText;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button clearFilterbutton;
+        private System.Windows.Forms.ToolStripMenuItem justThisFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem9;
     }
 }

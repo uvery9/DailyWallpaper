@@ -112,7 +112,7 @@ namespace DailyWallpaper
             }
             // auto delete empty folder after remove.
             autocleanEmptyFoldersToolStripMenuItem.Checked = true;
-            protectFilesInGrpToolStripMenuItem.Checked = true;
+            notProtectFilesInGrpToolStripMenuItem.Checked = false;
             undoToolStripMenuItem.Enabled = false;
             redoToolStripMenuItem.Enabled = false;
 
@@ -277,7 +277,7 @@ namespace DailyWallpaper
                     foreach (var item in delGflGrp)
                     {
                         // Prevent all files in the group from being deleted
-                        if (protectFilesInGrpToolStripMenuItem.Checked)
+                        if (!notProtectFilesInGrpToolStripMenuItem.Checked)
                         {
                             if ((from i in item
                                  where i.Checked == true
@@ -1682,7 +1682,7 @@ namespace DailyWallpaper
                 var tmpL = new List<GeminiCEFStruct>();
                 foreach (var item in resultListView.Items)
                 {
-                    var it = ((System.Windows.Forms.ListViewItem)item);
+                    var it = ((ListViewItem)item);
                     var fullPathLV = it.SubItems["name"].Text;
                     foreach (var gcef in gcefl)
                     {
@@ -1870,6 +1870,11 @@ namespace DailyWallpaper
 
         private void cleanUpButton_Click(object sender, EventArgs e)
         {
+            if (resultListView.Items.Count > 0)
+            {
+                resultListView.Items.OfType<ListViewItem>().ToList().
+                    ForEach(item => item.ForeColor = Color.Black);
+            }
             var taskCleanUp = Task.Run(() => {
                 try
                 {              
@@ -2189,9 +2194,9 @@ namespace DailyWallpaper
             OpenFileOrDirectory(FileOP.COPY_FULLPATH);
         }
 
-        private void protectFilesInGrpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void notProtectFilesInGrpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var it = protectFilesInGrpToolStripMenuItem;
+            var it = notProtectFilesInGrpToolStripMenuItem;
             if (it.Checked)
             {
                 it.Checked = false;
@@ -2372,7 +2377,7 @@ namespace DailyWallpaper
 
 
         
-        private void CalcHashMenuClick(string fullPath, ListViewItem.ListViewSubItem hashSub, 
+        private void CalcHashMenuClick(string fullPath, ListViewItem item, 
             bool md5 = true)
         {
             if (string.IsNullOrEmpty(fullPath))
@@ -2386,19 +2391,17 @@ namespace DailyWallpaper
                 {
                     if (res)
                     {
-                        _mutex.WaitOne();
                         hash = _hash;
-                        hashSub.Text = hash;
-                        geminiProgressBar.Visible = false;
-                        var s = md5 ? "MD5" : "SHA1";
-                        CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");
+                        item.SubItems["HASH"].Text = hash;
+                        item.ForeColor = Color.Blue;
                         geminiFileStructListForLV.ForEach(i => {
                             if (i.fullPath.Equals(fullPath))
                             {
                                 i.hash = hash;
                             }
                         });
-                        _mutex.WaitOne();
+                        /*var s = md5 ? "MD5" : "SHA1";
+                        CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");*/
                     }
                 }
                 
@@ -2736,27 +2739,19 @@ namespace DailyWallpaper
 
         private void calcHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*// var item = (ToolStripItem)sender;
-            *//*var hitest = resultListView.HitTest(Cursor.Position)*//*
-            string fullPath = null;
+            // CheckedItems of SelectedItems ??? FocusedItem
             try
             {
-                fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
-            }
-            catch
-            {
-                fullPath = null;
-            }*/
-            if (resultListView.SelectedItems.Count < 1)
-            {
-                return;
-            }
-            try
-            {
-                SetProgressBarVisible(geminiProgressBar, true);
-                foreach (ListViewItem item in resultListView.SelectedItems)
+                // var multi = resultListView.CheckedItems;
+                var multi = resultListView.SelectedItems;
+                if (multi.Count < 1)
                 {
-                    CalcHashMenuClick(item.SubItems["fullPath"].Text, item.SubItems["HASH"], 
+                    return;
+                }
+                SetProgressBarVisible(geminiProgressBar, true);
+                foreach (ListViewItem item in multi)
+                {
+                    CalcHashMenuClick(item.SubItems["fullPath"].Text, item, 
                         fileMD5CheckBox.Checked);
                 }
                 var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
@@ -2779,6 +2774,19 @@ namespace DailyWallpaper
         {
             targetFolderFilterTextBox.Text = "";
             folderFilterTextBox.Text = "";
+        }
+
+        private void justThisFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var fld = resultListView.FocusedItem.SubItems["fullPath"].Text;
+                targetFolderFilterTextBox.Text = Path.GetDirectoryName(fld);
+            }
+            catch (Exception ee)
+            {
+                CWriteLine("Just this folder: Check if ListView has item, " + ee.Message);
+            }
         }
     }
 }
