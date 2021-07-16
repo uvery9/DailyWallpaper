@@ -13,12 +13,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;OutputDir=$(SolutionDir)Output\</DefineConstants>
+    <DefineConstants>Debug;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>OutputDir=$(SolutionDir)Output\</DefineConstants>
+    <DefineConstants>Debug;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DailyWallpaperComponents.wxs" />
@@ -83,7 +83,9 @@
     <PostBuildEvent>copy "!(TargetPath)" "$(SolutionDir)OUTPUT"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>REM powershell -file "$(SolutionDir)Scripts\update-version.ps1"
+    <PreBuildEvent>cd $(ProjectDir)
+call "$(ProjectDir)fuck-appveyor.bat"
+REM powershell -file "$(SolutionDir)Scripts\update-version.ps1"
 "$(WIX)bin\heat" dir "$(SolutionDir)OUTPUT" -dr INSTALLFOLDER -cg DailyWallpaperComponents -gg -g1 -sf -srd -sreg -var "var.OutputDir" -out "$(ProjectDir)DailyWallpaperComponents.wxs"</PreBuildEvent>
   </PropertyGroup>
   <!--

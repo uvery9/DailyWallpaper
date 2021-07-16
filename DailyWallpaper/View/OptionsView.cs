@@ -193,17 +193,12 @@ namespace DailyWallpaper.View
         }
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync()).Wait();
-            _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
-            // _ini.UpdateIniItem("TimerSetWallpaper", "false", "LOG");
-        }
-        public async Task DailyWallpaperConsSetWallpaperAsync()
-        {
-            await Task.Run(() => DailyWallpaperConsSetWallpaper());
+            Task.Run(() => { DailyWallpaperConsSetWallpaper(silent: true);
+                _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
+            });
         }
 
-
-        private void DailyWallpaperConsSetWallpaper()
+        private void DailyWallpaperConsSetWallpaper(bool silent = false)
         {
 
             if (consRunning)
@@ -216,7 +211,9 @@ namespace DailyWallpaper.View
             {
                 if (IsNoneSelected())
                 {
-                    ShowNotification("", TranslationHelper.Get("Notify_AtLeastSelectOneFeature"), isError: true);
+                    if (!silent)
+                        ShowNotification("", TranslationHelper.Get("Notify_AtLeastSelectOneFeature"), 
+                            isError: true);
                     return;
                 }
                 _notifyIcon.Icon = Properties.Resources.icon32x32_timer;
@@ -236,17 +233,18 @@ namespace DailyWallpaper.View
                 if (!res)
                 {
                     setWallpaperSucceed = false;
-                    ShowNotification("",
-                        string.Format(TranslationHelper.Get("Notify_SetWallpaper_Failed"), Environment.NewLine));
+                    if (!silent) 
+                        ShowNotification("",
+                            string.Format(TranslationHelper.Get("Notify_SetWallpaper_Failed"), Environment.NewLine));
 
                 }
                 else
                 {
                     setWallpaperSucceed = true;
-                    ShowNotification("",
-                        string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"),
-                        Environment.NewLine + $"{_ini.Read("WALLPAPER", "LOG")}")
-                        );
+                    if (!silent)
+                        ShowNotification("",
+                            string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"),
+                            Environment.NewLine + $"{_ini.Read("WALLPAPER", "LOG")}") );
                 }
             }
             catch
@@ -430,7 +428,7 @@ namespace DailyWallpaper.View
 
         private void Icon_ChangeWallpaper_Click(object sender, EventArgs e)
         {
-            Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
+            Task.Run(() => DailyWallpaperConsSetWallpaper());
         }
         
         private void notifyIcon_BalloonTipClicked(object sender, EventArgs e)
@@ -986,6 +984,16 @@ namespace DailyWallpaper.View
             UpdateExitIniTimer();
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
             LaterCheckUpdate();
+            
+            void LaterSetWallpaperWhenStart() 
+            {
+                Thread.Sleep(1000 * 60 * 10); // 10min later
+                Task.Run(() => {
+                    DailyWallpaperConsSetWallpaper(silent: true);
+                    _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
+                });
+            }
+            new Thread(LaterSetWallpaperWhenStart).Start();
         }
 
         private void UpdateExitIniTimer()
@@ -1216,9 +1224,7 @@ namespace DailyWallpaper.View
             {
                 if (_ini.EqualsIgnoreCase("UseShortcutKeys", "yes"))
                 {
-                    //DailyWallpaperConsSetWallpaper();
-                    // Will NOT wait
-                    Task.Run(async () => await DailyWallpaperConsSetWallpaperAsync());
+                    Task.Run(() => DailyWallpaperConsSetWallpaper());
                 }
             }
         }
