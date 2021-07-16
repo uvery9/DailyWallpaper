@@ -539,7 +539,8 @@ namespace DailyWallpaper.Tools
                    o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>));
         }
 
-        public static void SaveOperationHistory<T>(string pathName, List<T> list)
+        public static void SaveOperationHistory<T>(string pathName, List<T> list, 
+            Action<bool, string> action = null)
         {
             if (list == null)
             {
@@ -563,6 +564,8 @@ namespace DailyWallpaper.Tools
             }
             pathName = Path.Combine(dir, pathName);
             WriteToXmlFile(pathName, list);
+            if (action != null)
+                action(true, pathName);
         }
 
         public static void WriteToXmlFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()

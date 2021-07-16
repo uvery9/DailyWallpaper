@@ -2923,5 +2923,20 @@ namespace DailyWallpaper
                 CWriteLine("Just this folder: Check if ListView has item, " + ee.Message);
             }
         }
+
+        private void selectFilesInThisFolderFirstToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var fld = resultListView.FocusedItem.SubItems["fullPath"].Text;
+                folderFilterTextBox.Text = Path.GetDirectoryName(fld);
+                modeCheckBox.Checked = true;
+                updateButton.PerformClick();
+            }
+            catch (Exception ee)
+            {
+                CWriteLine("Just this folder: Check if ListView has item, " + ee.Message);
+            }
+        }
     }
 }

@@ -148,6 +148,11 @@ namespace DailyWallpaper
             EnableButton(btnStop, true);
             EnableButton(btnAnalyze, false);
             var limit = SetMinimumFileLimit();
+            void SaveOpHisRes(bool ret, string msg)
+            {
+                if (ret)
+                    CWriteLine(">>>  Save to file, restore progress by \"Load ListView from file\":\r\n    " + msg);
+            }
             try
             {
                 var _task = Task.Run(() =>
@@ -186,7 +191,7 @@ namespace DailyWallpaper
                             CWriteLine("!!! Two folder invalid.");
                             return;
                         }
-                        SaveOperationHistory("step1_allfiles_2.xml", filesList2);
+                        SaveOperationHistory("step1_allfiles_2.xml", filesList2, SaveOpHisRes);
                     }
                     else
                     {
@@ -241,7 +246,7 @@ namespace DailyWallpaper
                     }
 
                     if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
-                        SaveOperationHistory("step3-FastCompare.xml", sameListNoDup);
+                        SaveOperationHistory("step3-FastCompare.xml", sameListNoDup, SaveOpHisRes);
                     
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
@@ -252,7 +257,8 @@ namespace DailyWallpaper
                             sameListNoDup =
                             UpdateHashInGeminiFileClsList(sameListNoDup, token,
                                 alwaysCalculateHashToolStripMenuItem.Checked).Result;
-                            SaveOperationHistory("step4-CompareHashForLittleFiles.xml", sameListNoDup);
+                            SaveOperationHistory("step4-CompareHashForLittleFiles.xml", 
+                                sameListNoDup, SaveOpHisRes);
                             var sameListNoDupHash = new List<GeminiFileCls>();
                             var sameListNoDupBigFiles = new List<GeminiFileCls>();
                             foreach (var sl in sameListNoDup)
@@ -288,7 +294,7 @@ namespace DailyWallpaper
 
                         }
                         if (op <= LoadFileStep.STEP_4_COMPARE_HASH)
-                            SaveOperationHistory("step4-CompareHash.xml", sameListNoDup);
+                            SaveOperationHistory("step4-CompareHash.xml", sameListNoDup, SaveOpHisRes);
                     }
 
                     // Color by Group.
@@ -309,7 +315,7 @@ namespace DailyWallpaper
                 scanRes = true;
                 /*WriteToXmlFile("GeminiListLatest.xml",
                         geminiFileStructListForLV);*/
-                SaveOperationHistory("GeminiListLatest.xml", geminiFileStructListForLV);
+                SaveOperationHistory("GeminiListLatest.xml", geminiFileStructListForLV, SaveOpHisRes);
             }
             catch (OperationCanceledException e)
             {
