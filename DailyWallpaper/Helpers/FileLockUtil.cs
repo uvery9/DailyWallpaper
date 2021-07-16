@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 // https://stackoverflow.com/users/141172/eric-j
 // https://stackoverflow.com/questions/1304/how-to-check-for-file-lock/20623302#20623302
+// https://gist.github.com/mlaily/9423f1855bb176d52a327f5874915a97
+// https://docs.microsoft.com/en-us/archive/msdn-magazine/2007/april/net-matters-restart-manager-and-generic-method-compilation
+// https://github.com/dotnet/msbuild/blob/main/src/Tasks/LockCheck.cs
 
 namespace DailyWallpaper.Helpers { 
     static public class FileLockUtil
@@ -135,7 +138,17 @@ namespace DailyWallpaper.Helpers {
                     else throw new Exception("Could not list processes locking resource.");                    
                 }
                 else if (res == 5)
+                {
                     throw new Exception($"[{res}] Could not list processes locking resource for folder.");
+                    // https://blog.yaakov.online/failed-experiment-what-processes-have-a-lock-on-this-folder/
+                    // Particularly, Restart Manager appears to deal with files,
+                    // and only files.If you give it a file, it can tell you what's holding that file open.
+                    // If you give it a folder without a trailing backslash, it returns Windows error code 5,
+                    // or ERROR_ACCESS_DENIED. (Interestingly, this error code is not in the[documented list of error codes for RmGetList][4].)
+                    // If you give it a folder with a trailing backslash, it returns an empty list. No matter what I can do,
+                    // I cannot get Restart Manager to give me a list of applications holding a reference to a directory.
+                }
+
                 else if (res != 0) 
                     throw new Exception($"[{res}] Could not list processes locking resource. Failed to get size of result.");                    
             }
