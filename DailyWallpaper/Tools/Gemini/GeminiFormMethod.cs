@@ -191,7 +191,7 @@ namespace DailyWallpaper
                             CWriteLine("!!! Two folder invalid.");
                             return;
                         }
-                        SaveOperationHistory("step1_allfiles_2.xml", filesList2, SaveOpHisRes);
+                        SaveOperationHistory("step1_allfiles_2.xml", filesList2);
                     }
                     else
                     {
