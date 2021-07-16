@@ -195,23 +195,31 @@ namespace DailyWallpaper
 				{
 					if (length > 100)
 					{
-						/* python pillow PIL open just use 3s to scan the same folder
-							img_pillow = Image.open(realpath)
-							if img_pillow.width > 1900:
-								if img_pillow.width/img_pillow.height > 1.4:
-									img_list.append(realpath)
-							img_pillow.close()    
-						 */
 						// 74s
 						// using (var img = Image.FromFile(file))
-						using (var img = new Bitmap(file)) { 
+						/*using (var img = new Bitmap(file)) { 
 							if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
 							{
 								files.Add(file);
 								if (print) { Console.WriteLine(file + ": " + length + "KB"); }
 							}
+						}*/
+
+						// Cost 0.072833s
+						using (Stream stream = File.OpenRead(file))
+                        {
+							// validateImageData = false will be super fast.
+							using (var img = Image.FromStream(stream, false, false)) 
+							{
+								if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
+								{
+									files.Add(file);
+									if (print) { Console.WriteLine(file + ": " + length + "KB"); }
+								}
+							}
 						}
-					}
+
+                    }
 				}
 			}
 			if (files.Count < 1)
