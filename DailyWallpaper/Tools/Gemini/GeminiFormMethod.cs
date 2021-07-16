@@ -21,6 +21,7 @@ using System.Reflection;
 using Button = System.Windows.Forms.Button;
 using ListView = System.Windows.Forms.ListView;
 using ListViewItem = System.Windows.Forms.ListViewItem;
+using System.Text;
 
 // TODO: Use linq more.
 /*decimal total = 0;
@@ -63,20 +64,72 @@ namespace DailyWallpaper
                 var ret = LoadListFromFile(path);
                 var op = ret.Item1;
                 var listFromFile = ret.Item2;
+                
                 if (op == LoadFileStep.ERROR)
                 {
                     CWriteLine("!!! LoadFileStep.ERROR");
                     return;
-                }               
+                }
+                var folders = new List<string>();
                 if (op == LoadFileStep.STEP_1_ALL_FILES)
-                    StartAnalyzeStep(op, sL: (List<string>)listFromFile);
+                {
+                    var sl = (List<string>)listFromFile;
+                    StartAnalyzeStep(op, sL: sl);
+                    folders = sl;
+                }
                 else
-                    StartAnalyzeStep(op, gfL: (List<GeminiFileCls>)listFromFile);
+                {
+                    var gfl = (List<GeminiFileCls>)listFromFile;
+                    StartAnalyzeStep(op, gfL: gfl);
+                    folders =
+                        (from i in gfl
+                        select i.fullPath).ToList();
+                }
+                targetFolder1TextBox.Text = FileList2MaxCommonPathInTextBox(folders);
             }
             catch (Exception ex)
             {
                 CWriteLine($"xml -> Struct failed: {ex.Message}");
             }
+        }
+
+        // https://stackoverflow.com/questions/68407568/is-there-a-better-way-fastest-to-get-the-longest-common-folder-path/68408555#68408555
+        private string FileList2MaxCommonPathInTextBox(List<string> folders) 
+        {
+            string result;
+            try
+            {
+                var minPathLength = folders.Min(x => x.Length);
+
+                var maxCommonPath = new StringBuilder();
+                var currentCommonPath = new StringBuilder();
+                for (int i = 0; i < minPathLength; i++)
+                {
+                    var boolAllSame = true;
+                    var c = folders[0][i];
+                    boolAllSame = folders.All(x => x[i] == c);
+
+                    if (boolAllSame)
+                    {
+                        currentCommonPath.Append(c);
+                        if (c == '\\')
+                        {
+                            maxCommonPath.Append(currentCommonPath.ToString());
+                            currentCommonPath = new StringBuilder();
+                        }
+                    }
+                    else
+                        break;
+                }
+                result = maxCommonPath.ToString();
+            }
+            catch (Exception ee)
+            {
+                result = "";
+                CWriteLine("! FileList2MaxCommonPathInTextBox: " + ee.Message);
+            }
+            CWriteLine(">>> The folder from xml is: " + result);
+            return result;
         }
         private Tuple<LoadFileStep, object> LoadListFromFile(string path)
         {
@@ -160,7 +213,8 @@ namespace DailyWallpaper
                     var timer = new Stopwatch();
                     timer.Start();
                     // Get all files from folder1/2
-
+                    var filesList1 = new List<string>();
+                    var filesList2 = new List<string>();
                     SetProgressBarVisible(geminiProgressBar, true);
                     if (!IsSkip(op, LoadFileStep.STEP_1_ALL_FILES))
                     {
@@ -172,6 +226,7 @@ namespace DailyWallpaper
                         CWriteLine($">>> Because it is a recursive search, \r\n" +
                             "  Program don't know the progress, please wait patiently...");
                         SetSummaryBoxText("Please wait patiently...", 1);
+
                         if (!string.IsNullOrEmpty(t2) && Directory.Exists(t2))
                         {
                             fld2 = true;
@@ -196,7 +251,7 @@ namespace DailyWallpaper
                     else
                     {
                         CWriteLine($">>> Start Analyze Operation...");
-                        CWriteLine($">>> Load FileList from file..., \r\n");
+                        CWriteLine($">>> Load FileList from file...");
                         CWriteLine($">>> Skip {LoadFileStep.STEP_1_ALL_FILES}... ");
                         filesList1 = sL;
                         filesList2 = new List<string>();
@@ -204,6 +259,8 @@ namespace DailyWallpaper
                     if (op <= LoadFileStep.STEP_1_ALL_FILES)
                         SaveOperationHistory("step1-allfiles_1.xml", filesList1);
 
+                    var geminiFileStructList1 = new List<GeminiFileCls>();
+                    var geminiFileStructList2 = new List<GeminiFileCls>();
                     SetProgressBarVisible(geminiProgressBar, true);
                     if (!IsSkip(op, LoadFileStep.STEP_2_FILES_TO_STRUCT))
                     {
@@ -298,7 +355,7 @@ namespace DailyWallpaper
                     }
 
                     // Color by Group.
-                    CWriteLine(">>> ListView Color...");
+                    CWriteLine(">>> Regroup and ReColor for ListView...");
                     geminiFileStructListForLV = ListReColorByGroup(sameListNoDup, mode, token);
 
                     CWriteLine(">>> Update to ListView...");
@@ -340,40 +397,6 @@ namespace DailyWallpaper
             btnAnalyze.Enabled = true;
 
         }
-
-
-        private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new CommonOpenFileDialog())
-            {
-                var saveDir = Path.Combine(Path.GetDirectoryName(Assembly.
-                    GetExecutingAssembly().Location), "Gemini.UserOperation");
-                if (!Directory.Exists(saveDir))
-                {
-                    saveDir = desktopPath;
-                }
-                dialog.InitialDirectory = saveDir;
-                dialog.IsFolderPicker = false;
-                dialog.EnsureFileExists = true;
-                dialog.Multiselect = false;
-                dialog.Title = "Select xml file"; // "XML files (*.xml)|*.xml";
-                dialog.Filters.Add(new CommonFileDialogFilter("Xml file", "*.xml"));
-                // maybe add some log
-
-                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
-                {
-                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
-                    {
-
-                    }
-                    else
-                    {
-                        LoadGeminiFileFileToListView(dialog.FileName);
-                    }
-                }
-            }
-        }
-
 
         private delegate void EnableButtonDelegate(Button b, bool enable);
 

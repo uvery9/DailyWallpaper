@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 
+// list.Aggregate("", (max, cur) => max.Length > cur.Length ? max : cur);
+// find longest string in linq.
+
 namespace DailyWallpaper.Tools
 {
     [Serializable]

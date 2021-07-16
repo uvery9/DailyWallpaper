@@ -38,18 +38,13 @@ namespace DailyWallpaper
         private List<string> pathFilter = new List<string>();
         private string regexFilter;
         private Regex regex;
-        private List<string> emptyFolderList = new List<string>();
         private int nameColumnHeaderWidth = 0;
         private int modifiedTimeColumnHeaderWidth = 0;
         private List<GeminiCEFStruct> geminiCEFStructList = new List<GeminiCEFStruct>();
 
         private List<string> targetFolder1History = new List<string>();
         private List<string> targetFolder2History = new List<string>();
-        private List<string> filesList1;
-        private List<string> filesList2;
 
-        private List<GeminiFileCls> geminiFileStructList1;
-        private List<GeminiFileCls> geminiFileStructList2;
         private long minimumFileLimit = 0;
         private List<Task> _tasks = new List<Task>();
         private Mutex _mutex;
@@ -61,7 +56,7 @@ namespace DailyWallpaper
         private List<GeminiFileCls> geminiFileStructListForLVRedo = new List<GeminiFileCls>();
         private Color themeColor = Color.FromArgb(250, 234, 192);
         private Color themeColorClean = Color.ForestGreen;
-        private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
+        // private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
         private enum FilterMode : int
         {
             REGEX_FIND,
@@ -127,10 +122,6 @@ namespace DailyWallpaper
             SetUpFilterModeAndRegClick();
             // CWriteLine("You could always TYPE help in folder filter textbox and press ENTER.");
             InitFileSameMode();
-            filesList1 = new List<string>();
-            filesList2 = new List<string>();
-            geminiFileStructList1 = new List<GeminiFileCls>();
-            geminiFileStructList2 = new List<GeminiFileCls>();
             _mutex = new Mutex();
             _mutexPb = new Mutex();
 
@@ -152,8 +143,8 @@ namespace DailyWallpaper
             nameColumnHeaderWidth = nameColumnHeader.Width;
             modifiedTimeColumnHeaderWidth = modifiedTimeColumnHeader.Width;
             ConvertToCEFMode(cleanEmptyFolderModeToolStripMenuItem.Checked);
-            if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
-                m_lvToolTip.SetToolTip(resultListView, "Gemini");
+            /*if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
+                m_lvToolTip.SetToolTip(resultListView, "Gemini");*/
         }
 
         /// <summary>
@@ -2884,6 +2875,37 @@ namespace DailyWallpaper
             }
         }
 
+        private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new CommonOpenFileDialog())
+            {
+                var saveDir = Path.Combine(Path.GetDirectoryName(Assembly.
+                    GetExecutingAssembly().Location), "Gemini.UserOperation");
+                if (!Directory.Exists(saveDir))
+                {
+                    saveDir = desktopPath;
+                }
+                dialog.InitialDirectory = saveDir;
+                dialog.IsFolderPicker = false;
+                dialog.EnsureFileExists = true;
+                dialog.Multiselect = false;
+                dialog.Title = "Select xml file"; // "XML files (*.xml)|*.xml";
+                dialog.Filters.Add(new CommonFileDialogFilter("Xml file", "*.xml"));
+                // maybe add some log
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
+                {
+                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
+                    {
+
+                    }
+                    else
+                    {
+                        LoadGeminiFileFileToListView(dialog.FileName);
+                    }
+                }
+            }
+        }
         private void GeminiForm_Load(object sender, EventArgs e)
         {
 
