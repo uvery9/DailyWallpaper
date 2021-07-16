@@ -97,6 +97,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\FileLockUtil.cs" />
     <Compile Include="Helpers\ShellContextMenu.cs" />
     <Compile Include="Cons\AutoStartupHelper.cs" />
     <Compile Include="Cons\BingImageProvider.cs" />

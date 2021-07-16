@@ -935,6 +935,29 @@ namespace DailyWallpaper
             geminiProgressBar.Value = 0;
         }
 
+        // CheckFileIfLocked(@"e:\bd_download\Adobe_Audition_CC.7z");
+        private void CheckFileIfLocked(string path)
+        {
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    return;
+                }
+                var pl = FileLockUtil.WhoIsLocking(path);
+                if (pl.Count < 1)
+                {
+                    return;
+                }
+                (from i in pl
+                    select i.ProcessName).Distinct().ToList().ForEach(it =>
+                    CWriteLine($"{path} occupied by program " + it));            
+            }
+            catch (Exception ex)
+            {
+                CWriteLine(ex.Message);
+            }
+        }
 
         // Thanks to João Angelo
         // https://stackoverflow.com/questions/2811509/c-sharp-remove-all-empty-subdirectories
