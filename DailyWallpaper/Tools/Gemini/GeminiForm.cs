@@ -223,54 +223,58 @@ namespace DailyWallpaper
                 _source = new CancellationTokenSource();
                 redoToolStripMenuItem.Enabled = false;
                 undoToolStripMenuItem.Enabled = false;
+                deleteList.Clear();
+                // resultListView.Invoke(
+                    //new MethodInvoker(delegate () {
+                var checkedItems = resultListView.CheckedItems;
+                if (checkedItems != null)
+                {
+                    string deleteFiles = "";
+                    foreach (ListViewItem item in checkedItems)
+                    {
+                        if (_source.Token.IsCancellationRequested)
+                        {
+                            _source.Token.ThrowIfCancellationRequested();
+                        }
+                        var fullPathLV = item.SubItems["fullPath"].Text;
+                        if (File.Exists(fullPathLV))
+                        {
+                            deleteList.Add(fullPathLV);
+                            deleteFiles += "....." + fullPathLV + "\r\n";
+
+                        }
+                        Application.DoEvents();
+                    }
+                    CWriteLine("... will delete" + deleteFiles.Substring
+                        (Math.Max(0, deleteFiles.Length - 2500)));
+                }
+                //})
+                    //);
+                CWriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
+                SetSummaryBoxText($"Selected {deleteList.Count} file(s).", deleteList.Count);
+                if (deleteList.Count < 1)
+                {
+                    return;
+                }
                 var taskDel = Task.Run(() => 
                 {
                     try
                     {
-                        deleteList.Clear();
-                        resultListView.Invoke(new MethodInvoker(delegate () {
-                            var checkedItems = resultListView.CheckedItems;
-                            if (checkedItems != null)
-                            {
-                                string deleteFiles = "";
-                                foreach (ListViewItem item in checkedItems)
-                                {
-                                    if (_source.Token.IsCancellationRequested)
-                                    {
-                                        _source.Token.ThrowIfCancellationRequested();
-                                    }
-                                    var fullPathLV = item.SubItems["fullPath"].Text;
-                                    if (File.Exists(fullPathLV))
-                                    {
-                                        deleteList.Add(fullPathLV);
-                                        deleteFiles += "....." + fullPathLV + "\r\n";
-                                        
-                                    }
-                                    Application.DoEvents();
-                                }
-                                CWriteLine("....." + deleteFiles.Substring
-                                    (Math.Max(0, deleteFiles.Length - 2500)));
-                            }
-                        }));
-                        CWriteLine($"\r\n=== You have selected {deleteList.Count} file(s).");
-                        SetSummaryBoxText($"Selected {deleteList.Count} file(s).", deleteList.Count);
-
-                        if (deleteList.Count < 1)
-                        {
-                            return;
-                        }
-
                         // update Checked in GeminiFileCls;
                         var delGflChecked = new List<GeminiFileCls>();
                         CWriteLine($">>> updating Checked in GeminiFileCls...");
-                        foreach (var item in geminiFileStructListForLV)
+                        /*foreach (var item in geminiFileStructListForLV)
                         {
                             if (_source.Token.IsCancellationRequested)
                             {
                                 _source.Token.ThrowIfCancellationRequested();
                             }
                             UpdateCheckedInDelGFL(delGflChecked, deleteList, item);
-                        }
+                        }*/
+
+                        geminiFileStructListForLV.ForEach(a => a.Checked = false);
+                        geminiFileStructListForLV.Where(x => deleteList.Contains(x.fullPath)).
+                            ToList().ForEach(a =>a.Checked = true);
 
                         /*
                         * TODO: 
@@ -280,93 +284,113 @@ namespace DailyWallpaper
                         */
 
                         // group GeminiFileClsList
-                        var delGflGrp = GeminiFileClsList2IEnumerableGroup(delGflChecked, SetCompareMode());
+                        var delGflGrp = GeminiFileClsList2IEnumerableGroup(geminiFileStructListForLV, SetCompareMode());
 
-                    // begin delete files, and prevent all files in the group from being deleted
-                    int k = 0;
-                    int j = 0;
-                    bool notice = true;
-                    var emptyFolderList = new List<string>();
-                    CWriteLine(">>> updating prevent files in the group...");
-                    foreach (var item in delGflGrp)
-                    {
-                        if (_source.Token.IsCancellationRequested)
-                        {
-                            _source.Token.ThrowIfCancellationRequested();
-                        }
-                        // Prevent all files in the group from being deleted
-                        if (!notProtectFilesInGrpToolStripMenuItem.Checked)
-                        {
-                            if ((from i in item
-                                    where i.Checked == true
-                                    select i).Count().Equals(item.Count))
-                            {
-                                k++;
-                                if (k < 100)
-                                    CWriteLine($"!! [{k}] Prevent all files in the group from being deleted.");
-                                continue;
-                            }
-                        }
-
-                        int hashEmpty = 0;
-                        foreach (var it in item)
+                        // begin delete files, and prevent all files in the group from being deleted
+                        int k = 0;
+                        int j = 0;
+                        bool notice = true;
+                        var emptyFolderList = new List<string>();
+                        CWriteLine(">>> updating prevent files in the group...");
+                        string deletedFiles = "";
+                        string preventFiles = "";
+                        foreach (var item in delGflGrp)
                         {
                             if (_source.Token.IsCancellationRequested)
                             {
                                 _source.Token.ThrowIfCancellationRequested();
                             }
-                            if (it.Checked && File.Exists(it.fullPath))
+                            // Prevent all files in the group from being deleted
+                            if (!notProtectFilesInGrpToolStripMenuItem.Checked)
                             {
-                                if (!string.IsNullOrEmpty(it.hash)
-                                && it.hash.ToLower().Contains("NotCounting".ToLower()))
+                                if ((from i in item
+                                        where i.Checked == true
+                                        select i).Count().Equals(item.Count))
                                 {
-                                    hashEmpty++;
-                                    CWriteLine(
-                                        $"! [{hashEmpty}] Protect file without valid hash from being deleted: \r\n    {it.fullPath}");
+                                    k++;
+                                    if (k < 100)
+                                    {
+                                        CWriteLine($"!! [{k}] Prevent all files in the group from being deleted.");
+                                    }
+                                    preventFiles += $"!! [{k}] Prevent all files in the group from being deleted.\r\n";
                                     continue;
                                 }
-                                j++;
-                                if (j < 100)
-                                    CWriteLine($"...... Deleting file: {it.fullPath}");
-                                else
-                                    if (notice)
+                            }
+
+                            int hashEmpty = 0;
+                            foreach (var it in item)
+                            {
+                                if (_source.Token.IsCancellationRequested)
+                                {
+                                    _source.Token.ThrowIfCancellationRequested();
+                                }
+                                if (it.Checked && File.Exists(it.fullPath))
+                                {
+                                    if (!string.IsNullOrEmpty(it.hash)
+                                    && it.hash.ToLower().Contains("NotCounting".ToLower()))
                                     {
-                                        CWriteLine($"...... Waiting for deleting file.");
-                                        notice = false;
+                                        hashEmpty++;
+                                        CWriteLine(
+                                            $"! [{hashEmpty}] Protect file without valid hash from being deleted: \r\n    {it.fullPath}");
+                                        continue;
                                     }
-                                emptyFolderList.Add(Path.GetDirectoryName(it.fullPath));
-                                FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
-                                                deleteOrRecycleBin.Checked ?
-                                                RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                                                UICancelOption.DoNothing);
+                                    j++;
+                                    if (j < 100)
+                                    {
+                                        CWriteLine($"...... Deleting file: {it.fullPath}");
+                                    }
+                                    else
+                                    {
+                                        if (notice)
+                                        {
+                                            CWriteLine($"...... Waiting for deleting file.");
+                                            notice = false;
+                                        }   
+                                    }
+                                    deletedFiles += $"...... Deleting file: {it.fullPath}\r\n";
+                                    emptyFolderList.Add(Path.GetDirectoryName(it.fullPath));
+                                    FileSystem.DeleteFile(it.fullPath, UIOption.OnlyErrorDialogs,
+                                                    deleteOrRecycleBin.Checked ?
+                                                    RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                                                    UICancelOption.DoNothing);
+                                }
                             }
                         }
-                    }
-
-                    // Clean Empty folders
-                    if (autocleanEmptyFoldersToolStripMenuItem.Checked && emptyFolderList.Count > 0)
-                    {
-                        foreach (var dir in emptyFolderList)
+                        var executingLocation = Path.GetDirectoryName(Assembly.
+                            GetExecutingAssembly().Location);
+                        var hisdir = Path.Combine(executingLocation, "Gemini.History");
+                        if (!Directory.Exists(hisdir))
                         {
-                            EmptyJudge(dir);
+                            Directory.CreateDirectory(hisdir);
                         }
-                    }
-                    CWriteLine($">>> Delete Finished.");
+                        if (!string.IsNullOrEmpty(preventFiles) || !string.IsNullOrEmpty(deletedFiles))
+                            File.WriteAllText(Path.Combine(hisdir, "deleted.txt"), 
+                                preventFiles + deletedFiles);
 
-                    // clean non-existent file in geminiFileStructListForLV
-                    //   update ListView and the checked in LV.
+                        // Clean Empty folders
+                        if (autocleanEmptyFoldersToolStripMenuItem.Checked && emptyFolderList.Count > 0)
+                        {
+                            foreach (var dir in emptyFolderList)
+                            {
+                                EmptyJudge(dir);
+                            }
+                        }
+                        CWriteLine($">>> Delete Finished.");
+
+                        // clean non-existent file in geminiFileStructListForLV
+                        //   update ListView and the checked in LV.
                     
-                    cleanUpButton.Invoke(new MethodInvoker(delegate () {
-                        cleanUpButton.PerformClick();
-                    }));
+                        cleanUpButton.Invoke(new MethodInvoker(delegate () {
+                            cleanUpButton.PerformClick();
+                        }));
 
                     }
-                catch (Exception ex)
-                {
-                    CWriteLine("btnDelete_Click:" + ex.Message);
-                    Debug.WriteLine("btnDelete_Click:" + ex);
-                }
-                }, _source.Token);
+                    catch (Exception ex)
+                    {
+                        CWriteLine("btnDelete_Click:" + ex.Message);
+                        Debug.WriteLine("btnDelete_Click:" + ex);
+                    }
+                    }, _source.Token);
                 _tasks.Add(taskDel);
                 // taskDel.Wait();
                 // await taskDel;
@@ -2929,10 +2953,19 @@ namespace DailyWallpaper
                     {
                         UpdateTextAndIniFile("TargetFolder1", path,
                             targetFolder1History, targetFolder1TextBox);
+                        btnAnalyze.PerformClick();
                     }
-                    else if (File.Exists(path) && path.ToLower().EndsWith(".xml"))
+                    else if (File.Exists(path))
                     {
-                        LoadGeminiFileFileToListView(path);
+                        if (path.ToLower().EndsWith(".xml"))
+                            LoadGeminiFileFileToListView(path);
+                        else
+                        {
+                            UpdateTextAndIniFile("TargetFolder1", Path.GetDirectoryName(path),
+                                targetFolder1History, targetFolder1TextBox);
+                            CWriteLine(">>> Press button Analyze.");
+                        }
+                            
                     }
                 }
                 else
@@ -2943,8 +2976,9 @@ namespace DailyWallpaper
             }
         }
 
-        private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private string SelectXmlFileFromFolder()
         {
+            string ret = "";
             using (var dialog = new CommonOpenFileDialog())
             {
                 var saveDir = Path.Combine(Path.GetDirectoryName(Assembly.
@@ -2963,16 +2997,16 @@ namespace DailyWallpaper
 
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
-                    if (cleanEmptyFolderModeToolStripMenuItem.Checked)
-                    {
-
-                    }
-                    else
-                    {
-                        LoadGeminiFileFileToListView(dialog.FileName);
-                    }
+                   ret = dialog.FileName;
                 }
             }
+            return ret;
+        }
+        private void loadListViewFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var xmlFile = SelectXmlFileFromFolder();
+            if (!string.IsNullOrEmpty(xmlFile) && File.Exists(xmlFile))
+                LoadGeminiFileFileToListView(xmlFile);
         }
         private void GeminiForm_Load(object sender, EventArgs e)
         {
@@ -3043,6 +3077,7 @@ namespace DailyWallpaper
             {
                 var fld = resultListView.FocusedItem.SubItems["fullPath"].Text;
                 folderFilterTextBox.Text = Path.GetDirectoryName(fld);
+                targetFolderFilterTextBox.Text = "";
                 modeCheckBox.Checked = true;
                 updateButton.PerformClick();
             }
@@ -3051,5 +3086,35 @@ namespace DailyWallpaper
                 CWriteLine("Just this folder: Check if ListView has item, " + ee.Message);
             }
         }
+
+        private void protectThisFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void updateHashFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var xmlFile = SelectXmlFileFromFolder();
+            if (string.IsNullOrEmpty(xmlFile) || !File.Exists(xmlFile))
+                return;
+            try 
+            {
+                var gfl = ReadFromXmlFile<List<GeminiFileCls>>(xmlFile);
+                var gflHash = 
+                    gfl.Where(x => (!x.hash.ToLower().Contains("not") && 
+                        !string.IsNullOrEmpty(x.hash))).ToList();
+            }
+            catch (Exception ex)
+            {
+                CWriteLine($"Can't read xml file to List<T>: {ex.Message}");
+            }            
+        }
+
+
+
+
+
+
+            
     }
 }
