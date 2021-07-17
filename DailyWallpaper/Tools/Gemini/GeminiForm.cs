@@ -1573,7 +1573,7 @@ namespace DailyWallpaper
             SetMinimumFileLimit();
         }
 
-        private long SetMinimumFileLimit()
+        private long SetMinimumFileLimit(bool justPrint = false)
         {
             minimumFileLimit = 0;
             if (ignoreFileCheckBox.Checked)
@@ -1581,24 +1581,36 @@ namespace DailyWallpaper
                 ignoreFileSizeTextBox.Enabled = true;
                 if (int.TryParse(ignoreFileSizeTextBox.Text, out int ret))
                 {
+                    string unit;
                     switch (ignoreFileSizecomboBox.SelectedIndex)
                     {
                         case 0:
                             minimumFileLimit = ret * 1;
+                            unit = "B";
                             break;
                         case 1:
                             minimumFileLimit = ret * 1024;
+                            unit = "KB";
                             break;
                         case 2:
                             minimumFileLimit = ret * 1024 * 1024;
+                            unit = "MB";
                             break;
                         case 3:
                             minimumFileLimit = ret * 1024 * 1024 * 1024;
+                            unit = "GB";
                             break;
                         default:
                             minimumFileLimit = ret * 1024 * 1024;
+                            unit = "MB";
                             break;
                     }
+                    if (justPrint)
+                    {
+                        CWriteLine($"---- Ignore files less than {ret}{unit}");
+                        return 0;
+                    }
+                        
                 }
             }
             else
@@ -1609,6 +1621,28 @@ namespace DailyWallpaper
             gemini.ini.UpdateIniItem("ignoreFileIndex", ignoreFileSizecomboBox.SelectedIndex.ToString(), "Gemini");
             gemini.ini.UpdateIniItem("ignoreFileTextBox", ignoreFileSizeTextBox.Text, "Gemini");
             return minimumFileLimit;
+        }
+
+        private void GetCurrentScanStatus()
+        {
+            CWriteLine(">>> You have chosen the following mode: ");
+            if (fileNameCheckBox.Checked)
+            {
+                CWriteLine("---- Same File Name mode.");
+            }
+            else if (fileExtNameCheckBox.Checked)
+            {
+                CWriteLine("---- Same File extension mode.");
+            }
+            if (fileMD5CheckBox.Checked)
+            {
+                CWriteLine("---- Same MD5 mode.");
+            }
+            else if (fileSHA1CheckBox.Checked)
+            {
+                CWriteLine("---- Same SHA1 mode.");
+            }
+            SetMinimumFileLimit(justPrint: true);
         }
 
         private void ignoreFileCheckBox_Click(object sender, EventArgs e)

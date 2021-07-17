@@ -392,6 +392,7 @@ namespace DailyWallpaper
             finally
             {
                 geminiProgressBar.Visible = false;
+                GetCurrentScanStatus();
                 CWriteLine(">>> Analyse is over.");
             }
             btnAnalyze.Enabled = true;
