@@ -1625,7 +1625,7 @@ namespace DailyWallpaper
 
         private void GetCurrentScanStatus()
         {
-            CWriteLine(">>> You have chosen the following mode, check if it's what you want: ");
+            CWriteLine(">>> YOU HAVE CHOSEN THE FOLLOWING MODE, CHECK IF IT'S WHAT YOU WANT: ");
             if (fileNameCheckBox.Checked)
             {
                 CWriteLine("---- Same File Name mode.");
