@@ -74,18 +74,20 @@ namespace DailyWallpaper
                 if (op == LoadFileStep.STEP_1_ALL_FILES)
                 {
                     var sl = (List<string>)listFromFile;
-                    StartAnalyzeStep(op, sL: sl);
                     folders = sl;
+                    targetFolder1TextBox.Text = FileList2MaxCommonPathInTextBox(folders);
+                    StartAnalyzeStep(op, sL: sl);
                 }
                 else
                 {
                     var gfl = (List<GeminiFileCls>)listFromFile;
-                    StartAnalyzeStep(op, gfL: gfl);
                     folders =
                         (from i in gfl
                         select i.fullPath).ToList();
+                    targetFolder1TextBox.Text = FileList2MaxCommonPathInTextBox(folders);
+                    StartAnalyzeStep(op, gfL: gfl);
                 }
-                targetFolder1TextBox.Text = FileList2MaxCommonPathInTextBox(folders);
+                
             }
             catch (Exception ex)
             {
@@ -201,6 +203,17 @@ namespace DailyWallpaper
             EnableButton(btnStop, true);
             EnableButton(btnAnalyze, false);
             var limit = SetMinimumFileLimit();
+            var f1 = targetFolder1TextBox.Text;
+            string name;
+            if (string.IsNullOrEmpty(f1) || !Directory.Exists(f1))
+            {
+                name = "";
+            }
+            else
+            {
+                name = new DirectoryInfo(f1).Name;
+            }
+            var fldname = string.Join("_", name.Split(Path.GetInvalidFileNameChars()));
             void SaveOpHisRes(bool ret, string msg)
             {
                 if (ret)
@@ -216,6 +229,7 @@ namespace DailyWallpaper
                     var filesList1 = new List<string>();
                     var filesList2 = new List<string>();
                     SetProgressBarVisible(geminiProgressBar, true);
+                    
                     if (!IsSkip(op, LoadFileStep.STEP_1_ALL_FILES))
                     {
                         bool fld1 = false;
@@ -257,7 +271,7 @@ namespace DailyWallpaper
                         filesList2 = new List<string>();
                     }
                     if (op <= LoadFileStep.STEP_1_ALL_FILES)
-                        SaveOperationHistory("step1-allfiles_1.xml", filesList1);
+                        SaveOperationHistory($"step1-allfiles_1-{fldname}.xml", filesList1);
 
                     var geminiFileStructList1 = new List<GeminiFileCls>();
                     var geminiFileStructList2 = new List<GeminiFileCls>();
@@ -277,7 +291,7 @@ namespace DailyWallpaper
                         CWriteLine($">>> Skip {LoadFileStep.STEP_2_FILES_TO_STRUCT}... ");
                     }
                     if (op <= LoadFileStep.STEP_2_FILES_TO_STRUCT)
-                        SaveOperationHistory("step2-filesToStruct_1.xml", geminiFileStructList1);
+                        SaveOperationHistory($"step2-filesToStruct_1-{fldname}.xml", geminiFileStructList1);
                     
                     List<GeminiFileCls> sameListNoDup;
                     var mode = SetCompareMode();
@@ -303,7 +317,7 @@ namespace DailyWallpaper
                     }
 
                     if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
-                        SaveOperationHistory("step3-FastCompare.xml", sameListNoDup, SaveOpHisRes);
+                        SaveOperationHistory($"step3-FastCompare-{fldname}.xml", sameListNoDup, SaveOpHisRes);
                     
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
@@ -314,7 +328,7 @@ namespace DailyWallpaper
                             sameListNoDup =
                             UpdateHashInGeminiFileClsList(sameListNoDup, token,
                                 alwaysCalculateHashToolStripMenuItem.Checked).Result;
-                            SaveOperationHistory("step4-CompareHashForLittleFiles.xml", 
+                            SaveOperationHistory($"step4-CompareHashForLittleFiles-{fldname}.xml", 
                                 sameListNoDup, SaveOpHisRes);
                             var sameListNoDupHash = new List<GeminiFileCls>();
                             var sameListNoDupBigFiles = new List<GeminiFileCls>();
@@ -351,7 +365,7 @@ namespace DailyWallpaper
 
                         }
                         if (op <= LoadFileStep.STEP_4_COMPARE_HASH)
-                            SaveOperationHistory("step4-CompareHash.xml", sameListNoDup, SaveOpHisRes);
+                            SaveOperationHistory($"step4-CompareHash.xml-{fldname}", sameListNoDup, SaveOpHisRes);
                     }
 
                     // Color by Group.
@@ -372,7 +386,7 @@ namespace DailyWallpaper
                 scanRes = true;
                 /*WriteToXmlFile("GeminiListLatest.xml",
                         geminiFileStructListForLV);*/
-                SaveOperationHistory("GeminiListLatest.xml", geminiFileStructListForLV, SaveOpHisRes);
+                SaveOperationHistory($"GeminiListLatest-{fldname}.xml", geminiFileStructListForLV, SaveOpHisRes);
             }
             catch (OperationCanceledException e)
             {
@@ -1100,7 +1114,11 @@ namespace DailyWallpaper
                  where i.Checked == true
                  select i).Count();
             if (!force)
+            {
+                CWriteLine($">>> {op} Selected {cnt:N0} file(s).");
                 SetSummaryBoxText($"{op} Selected {cnt:N0} file(s).", cnt);
+            }
+                
             /*geminiFileStructListForLV[0].fullPath = "TEST....";
             CWriteLine("2.uodo." + geminiFileStructListForLVUndo[0].fullPath); // why change me, FU.
             CWriteLine("3." + geminiFileStructListForLV[0].fullPath); // why change me, FU.*/
