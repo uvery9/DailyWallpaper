@@ -51,9 +51,9 @@ namespace DailyWallpaper
         private Mutex _mutexPb;
         private ListViewColumnSorter lvwColumnSorter;
         private List<string> deleteList = new List<string>();
-        private List<GeminiFileCls> geminiFileStructListForLV = new List<GeminiFileCls>();
-        private List<GeminiFileCls> geminiFileStructListForLVUndo = new List<GeminiFileCls>();
-        private List<GeminiFileCls> geminiFileStructListForLVRedo = new List<GeminiFileCls>();
+        private List<GeminiFileCls> geminiFileClsListForLV = new List<GeminiFileCls>();
+        private List<GeminiFileCls> geminiFileClsListForLVUndo = new List<GeminiFileCls>();
+        private List<GeminiFileCls> geminiFileClsListForLVRedo = new List<GeminiFileCls>();
         private Color themeColor = Color.FromArgb(250, 234, 192);
         private Color themeColorClean = Color.ForestGreen;
         // private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
@@ -263,7 +263,7 @@ namespace DailyWallpaper
                         // update Checked in GeminiFileCls;
                         var delGflChecked = new List<GeminiFileCls>();
                         CWriteLine($">>> updating Checked in GeminiFileCls...");
-                        /*foreach (var item in geminiFileStructListForLV)
+                        /*foreach (var item in geminiFileClsListForLV)
                         {
                             if (_source.Token.IsCancellationRequested)
                             {
@@ -272,8 +272,8 @@ namespace DailyWallpaper
                             UpdateCheckedInDelGFL(delGflChecked, deleteList, item);
                         }*/
 
-                        geminiFileStructListForLV.ForEach(a => a.Checked = false);
-                        geminiFileStructListForLV.Where(x => deleteList.Contains(x.fullPath)).
+                        geminiFileClsListForLV.ForEach(a => a.Checked = false);
+                        geminiFileClsListForLV.Where(x => deleteList.Contains(x.fullPath)).
                             ToList().ForEach(a =>a.Checked = true);
 
                         /*
@@ -284,7 +284,7 @@ namespace DailyWallpaper
                         */
 
                         // group GeminiFileClsList
-                        var delGflGrp = GeminiFileClsList2IEnumerableGroup(geminiFileStructListForLV, SetCompareMode());
+                        var delGflGrp = GeminiFileClsList2IEnumerableGroup(geminiFileClsListForLV, SetCompareMode());
 
                         // begin delete files, and prevent all files in the group from being deleted
                         int k = 0;
@@ -377,7 +377,7 @@ namespace DailyWallpaper
                         }
                         CWriteLine($">>> Delete Finished.");
 
-                        // clean non-existent file in geminiFileStructListForLV
+                        // clean non-existent file in geminiFileClsListForLV
                         //   update ListView and the checked in LV.
                     
                         cleanUpButton.Invoke(new MethodInvoker(delegate () {
@@ -1898,7 +1898,7 @@ namespace DailyWallpaper
                 return;
             }
                 
-            if (!cleanEmptyFolderModeToolStripMenuItem.Checked && geminiFileStructListForLV.Count < 1)
+            if (!cleanEmptyFolderModeToolStripMenuItem.Checked && geminiFileClsListForLV.Count < 1)
             {
                 CWriteLine("--- No file, do not need to save to file.");
                 return;
@@ -1966,15 +1966,15 @@ namespace DailyWallpaper
                     {
                         Task.Run(() => {
                             WriteToXmlFile(saveFileDialog.FileName,
-                            geminiFileStructListForLV);
+                            geminiFileClsListForLV);
                         });
                     }                   
                     /*});
                     _tasks.Add(saveTask);*/
-                    // WriteToJsonFile<List<GeminiFileCls>>(@"GeminiFileCls.json", geminiFileStructListForLV);
+                    // WriteToJsonFile<List<GeminiFileCls>>(@"GeminiFileCls.json", geminiFileClsListForLV);
 
                     /*// Read the list of salesman objects from the file back into a variable.
-                    List<GeminiFileCls> geminiFileStructListForLVFromFile = 
+                    List<GeminiFileCls> geminiFileClsListForLVFromFile = 
                         ReadFromXmlFile<List<GeminiFileCls>>("GeminiFileCls.xml");*/
                 }
             }
@@ -1998,12 +1998,12 @@ namespace DailyWallpaper
                 redoToolStripMenuItem.Enabled = false;
                 undoToolStripMenuItem.Enabled = false;
                 // custQuery is an IEnumerable<IGrouping<string, Customer>>
-                if (geminiFileStructListForLV.Count < 1)
+                if (geminiFileClsListForLV.Count < 1)
                 {
                     CWriteLine("!!! ANALYZE First.");
                     return;
                 }
-                var duplicateGrp = GeminiFileClsList2IEnumerableGroup(geminiFileStructListForLV,
+                var duplicateGrp = GeminiFileClsList2IEnumerableGroup(geminiFileClsListForLV,
                     SetCompareMode());
                 int cnt = 0;
                 foreach (var item in duplicateGrp)
@@ -2013,10 +2013,10 @@ namespace DailyWallpaper
                         cnt++;
                     }
                 }
-                if (cnt < geminiFileStructListForLV.Count)
+                if (cnt < geminiFileClsListForLV.Count)
                 {
                     CWriteLine(
-                        $">>> Remove {geminiFileStructListForLV.Count - cnt} " +
+                        $">>> Remove {geminiFileClsListForLV.Count - cnt} " +
                         "items from ListView [ nonexistent + non-repeating ].");
                     int findex;
                     try
@@ -2028,9 +2028,9 @@ namespace DailyWallpaper
                         findex = 0;
                     }
                     var index = Math.Max(findex - 2, 0);
-                    geminiFileStructListForLV = ListReColorByGroup(geminiFileStructListForLV,
+                    geminiFileClsListForLV = ListReColorByGroup(geminiFileClsListForLV,
                         SetCompareMode(), _source.Token);
-                    UpdateListView(resultListView, ref geminiFileStructListForLV, _source.Token);
+                    UpdateListView(resultListView, ref geminiFileClsListForLV, _source.Token);
                     void GetRet(bool ret, string msg)
                     {
                        if (ret)
@@ -2050,10 +2050,10 @@ namespace DailyWallpaper
                        }
                     }
                     /*RestoreListViewChoiceInvoke(resultListView, 
-                        geminiFileStructListForLV, , indexChange: true, action: GetRet);*/
+                        geminiFileClsListForLV, , indexChange: true, action: GetRet);*/
 
-                    // geminiFileStructListForLV will not be modify, if toListView is true.
-                    ConvertGeminiFileClsListAndListView(ref geminiFileStructListForLV,
+                    // geminiFileClsListForLV will not be modify, if toListView is true.
+                    ConvertGeminiFileClsListAndListView(ref geminiFileClsListForLV,
                         resultListView, toListView: true, token: _source.Token, action: GetRet);
                 }
                 else
@@ -2088,13 +2088,13 @@ namespace DailyWallpaper
             MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL, force: true);
             Task.Run(() => {
                 CWriteLine($">>> Update start with {filterMode}...");
-                geminiFileStructListForLVUndo = BackUpForUndoRedo(
-                 geminiFileStructListForLV, undoToolStripMenuItem);
+                geminiFileClsListForLVUndo = BackUpForUndoRedo(
+                 geminiFileClsListForLV, undoToolStripMenuItem);
                 SetFolderFilter(folderFilterTextBox.Text);
                 var updatedList = new List<GeminiFileCls>();
                 var selectList = new List<GeminiFileCls>();
                 var fldFilter = StringToFilter(targetFolderFilterTextBox.Text);
-                var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter);
+                var tpl = GetGFLbyTheFilter(geminiFileClsListForLV, fldFilter);
                 if (fldFilter.Count > 0)
                 {
                     selectList = tpl.Item1;
@@ -2120,11 +2120,11 @@ namespace DailyWallpaper
                 }
                 updatedList.AddRange(selectList);
 
-                geminiFileStructListForLV = ListReColorByGroup(updatedList, SetCompareMode(), _source.Token);
-                RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
+                geminiFileClsListForLV = ListReColorByGroup(updatedList, SetCompareMode(), _source.Token);
+                RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
 
                 var cnt =
-                    (from i in geminiFileStructListForLV
+                    (from i in geminiFileClsListForLV
                      where i.Checked == true
                      select i).Count();
                 CWriteLine($">>> {filterMode} selectd {cnt:N0} file(s).");
@@ -2273,12 +2273,12 @@ namespace DailyWallpaper
             }
             else
             {
-                if (geminiFileStructListForLVUndo.Count > 0)
+                if (geminiFileClsListForLVUndo.Count > 0)
                 {
-                    geminiFileStructListForLVRedo = BackUpForUndoRedo(
-                        geminiFileStructListForLV, redoToolStripMenuItem);
-                    geminiFileStructListForLV = geminiFileStructListForLVUndo;
-                    RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
+                    geminiFileClsListForLVRedo = BackUpForUndoRedo(
+                        geminiFileClsListForLV, redoToolStripMenuItem);
+                    geminiFileClsListForLV = geminiFileClsListForLVUndo;
+                    RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
                     undoToolStripMenuItem.Enabled = false;
                 }
             }
@@ -2293,12 +2293,12 @@ namespace DailyWallpaper
             }
             else
             {
-                if (geminiFileStructListForLVRedo.Count > 0)
+                if (geminiFileClsListForLVRedo.Count > 0)
                 {
-                    geminiFileStructListForLVUndo = BackUpForUndoRedo(
-                        geminiFileStructListForLV, undoToolStripMenuItem);
-                    geminiFileStructListForLV = geminiFileStructListForLVRedo;
-                    RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
+                    geminiFileClsListForLVUndo = BackUpForUndoRedo(
+                        geminiFileClsListForLV, undoToolStripMenuItem);
+                    geminiFileClsListForLV = geminiFileClsListForLVRedo;
+                    RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
                     redoToolStripMenuItem.Enabled = false;
                     undoToolStripMenuItem.Enabled = false;
                 }
@@ -2366,14 +2366,14 @@ namespace DailyWallpaper
             try
             {
                 var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
-                geminiFileStructListForLVUndo = BackUpForUndoRedo(
-                    geminiFileStructListForLV, undoToolStripMenuItem);
+                geminiFileClsListForLVUndo = BackUpForUndoRedo(
+                    geminiFileClsListForLV, undoToolStripMenuItem);
                 MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL, force: true);
 
                 var updatedList = new List<GeminiFileCls>();
                 var selectList = new List<GeminiFileCls>();
                 var godsChoiceList = new List<GeminiFileCls>();
-                var tpl = GetGFLbyTheFilter(geminiFileStructListForLV, fldFilter); // may block program
+                var tpl = GetGFLbyTheFilter(geminiFileClsListForLV, fldFilter); // may block program
                 if (fldFilter.Count > 0)
                 {
                     selectList = tpl.Item1;
@@ -2414,15 +2414,15 @@ namespace DailyWallpaper
                     return;
                 }
                 updatedList.AddRange(godsChoiceList);
-                geminiFileStructListForLV = updatedList;
+                geminiFileClsListForLV = updatedList;
                 var cnt =
-                    (from i in geminiFileStructListForLV
+                    (from i in geminiFileClsListForLV
                         where i.Checked == true
                         select i).Count();
                 // CWriteLine($">>> loop: God chose {cntInLoop:N0} file(s).");
                 CWriteLine($">>> God chose {cnt:N0} file(s).");
                 SetSummaryBoxText($"God chose {cnt:N0} file(s).", cnt);
-                RestoreListViewChoice(geminiFileStructListForLV, resultListView, _source.Token);
+                RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
             }
             catch (UnauthorizedAccessException) { }
             catch (FileNotFoundException) { }
@@ -2538,7 +2538,7 @@ namespace DailyWallpaper
                 {
                     var fullP = item.SubItems["fullPath"].Text;
                     /*var hash =
-                            (from i in geminiFileStructListForLV
+                            (from i in geminiFileClsListForLV
                             where i.fullPath.Equals(fullP)
                             select i.hash).ToList()[0];*/
                     if (fullPath.Equals(fullP))
@@ -2570,7 +2570,7 @@ namespace DailyWallpaper
                         {
                             if (res)
                             {
-                                geminiFileStructListForLV.ForEach(i => {
+                                geminiFileClsListForLV.ForEach(i => {
                                     if (i.fullPath.Equals(fullPath))
                                     {
                                         i.hash = _hash;
@@ -2628,7 +2628,7 @@ namespace DailyWallpaper
                 {
                     item.SubItems["HASH"].Text = _hash;
                     item.ForeColor = Color.Blue;
-                    geminiFileStructListForLV.ForEach(i => {
+                    geminiFileClsListForLV.ForEach(i => {
                         if (i.fullPath.Equals(fullPath))
                         {
                             i.hash = _hash;
@@ -2851,7 +2851,7 @@ namespace DailyWallpaper
                 {
                     if (res)
                     {
-                        geminiFileStructListForLV = gfl;
+                        geminiFileClsListForLV = gfl;
                         CWriteLine(">>> Index background update completed");
                     }
                     else
@@ -2867,9 +2867,9 @@ namespace DailyWallpaper
                 reIndexTokenSrc = new CancellationTokenSource();
 
                 /*ListViewOperateLoop(resultListView, ListViewOP.UPDATE_INDEX_AFTER_SORTED,
-                    geminiFileStructListForLV, UpdateGFL, token: reIndexTokenSrc.Token);*/
+                    geminiFileClsListForLV, UpdateGFL, token: reIndexTokenSrc.Token);*/
 
-                ConvertGeminiFileClsListAndListView(ref geminiFileStructListForLV, resultListView,
+                ConvertGeminiFileClsListAndListView(ref geminiFileClsListForLV, resultListView,
                     toListView: false, updateIndex: true, token: reIndexTokenSrc.Token);
                 sorting = false;
                 EnableButtonsForIndexUpdate(true);
