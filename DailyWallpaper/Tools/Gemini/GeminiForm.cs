@@ -3094,6 +3094,8 @@ namespace DailyWallpaper
 
         private void updateHashFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (geminiFileClsListForLV.Count < 1)
+                return;
             var xmlFile = SelectXmlFileFromFolder();
             if (string.IsNullOrEmpty(xmlFile) || !File.Exists(xmlFile))
                 return;
@@ -3102,7 +3104,37 @@ namespace DailyWallpaper
                 var gfl = ReadFromXmlFile<List<GeminiFileCls>>(xmlFile);
                 var gflHash = 
                     gfl.Where(x => (!x.hash.ToLower().Contains("not") && 
-                        !string.IsNullOrEmpty(x.hash))).ToList();
+                        !string.IsNullOrEmpty(x.hash)));
+                if (gflHash.Count() < 1)
+                    return;
+
+                // update hash in geminiFileClsListForLV
+                geminiFileClsListForLV.ForEach(d => { d.hash = 
+                    gflHash.Where(sd => sd.fullPath.Equals(d.fullPath)).FirstOrDefault().hash;
+                    });
+
+                // update hash in ListView
+                geminiFileClsListForLV.ForEach(i =>
+                {
+                    resultListView.Items.OfType<ListViewItem>().ToList().ForEach(item =>
+                    {
+                        var fullP = item.SubItems["fullPath"].Text;
+                        /*var hash =
+                                (from i in geminiFileClsListForLV
+                                where i.fullPath.Equals(fullP)
+                                select i.hash).ToList()[0];*/
+                        if (i.fullPath.Equals(fullP))
+                        {
+                            if (!string.IsNullOrEmpty(i.hash) && !i.hash.ToLower().Contains("not"))
+                            {
+                                item.SubItems["HASH"].Text = i.hash;
+                                item.ForeColor = Color.Blue;
+                            }
+                            return;
+                        }
+                    }
+                    );
+                });
             }
             catch (Exception ex)
             {
