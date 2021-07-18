@@ -64,6 +64,8 @@ namespace DailyWallpaper
                 if (op == LoadFileStep.STEP_1_ALL_FILES)
                 {
                     var sl = (List<string>)listFromFile;
+                    if (sl.Count < 1)
+                        return;
                     folders = sl;
                     targetFolder1TextBox.Text = FileList2MaxCommonPathInTextBox(folders);
                     StartAnalyzeStep(op, sL: sl);
