@@ -270,6 +270,7 @@ namespace DailyWallpaper
                         filesList1 = sL;
                         filesList2 = new List<string>();
                     }
+                    
                     if (op <= LoadFileStep.STEP_1_ALL_FILES)
                         SaveOperationHistory($"step1-allfiles_1-{fldname}.xml", filesList1);
 
@@ -291,8 +292,8 @@ namespace DailyWallpaper
                         CWriteLine($">>> Skip {LoadFileStep.STEP_2_FILES_TO_STRUCT}... ");
                     }
                     if (op <= LoadFileStep.STEP_2_FILES_TO_STRUCT)
-                        SaveOperationHistory($"step2-filesToStruct_1-{fldname}.xml", geminiFileClsList1);
-                    
+                        SaveOperationHistoryInfo($"step2-filesToStruct_1-{fldname}.xml", geminiFileClsList1,
+                            GetCurrentMode(), STEP.STEP_2, ignoreFileCheckBox.Checked, minimumFileLimit);
                     List<GeminiFileCls> sameListNoDup;
                     var mode = SetCompareMode();
                     if (!IsSkip(op, LoadFileStep.STEP_3_FAST_COMPARE))
@@ -317,8 +318,9 @@ namespace DailyWallpaper
                     }
 
                     if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
-                        SaveOperationHistory($"step3-FastCompare-{fldname}.xml", sameListNoDup, SaveOpHisRes);
-                    
+                        SaveOperationHistoryInfo($"step3-FastCompare-{fldname}.xml", sameListNoDup, GetCurrentMode(), STEP.STEP_3, 
+                            ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
+
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
                         if (!IsSkip(op, LoadFileStep.STEP_4_COMPARE_HASH))
@@ -328,8 +330,9 @@ namespace DailyWallpaper
                             sameListNoDup =
                             UpdateHashInGeminiFileClsList(sameListNoDup, token,
                                 alwaysCalculateHashToolStripMenuItem.Checked).Result;
-                            SaveOperationHistory($"step4-CompareHashForLittleFiles-{fldname}.xml", 
-                                sameListNoDup, SaveOpHisRes);
+                            /*SaveOperationHistoryInfo($"step4-CompareHashForLittleFiles-{fldname}.xml", 
+                                sameListNoDup, GetCurrentMode(), STEP.STEP_4,
+                            ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);*/
                             var sameListNoDupHash = new List<GeminiFileCls>();
                             var sameListNoDupBigFiles = new List<GeminiFileCls>();
                             foreach (var sl in sameListNoDup)
@@ -365,7 +368,8 @@ namespace DailyWallpaper
 
                         }
                         if (op <= LoadFileStep.STEP_4_COMPARE_HASH)
-                            SaveOperationHistory($"step4-CompareHash.xml-{fldname}", sameListNoDup, SaveOpHisRes);
+                            SaveOperationHistoryInfo($"step4-CompareHash-{fldname}.xml", sameListNoDup, GetCurrentMode(), STEP.STEP_4,
+                            ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
                     }
 
                     // Color by Group.
@@ -386,7 +390,8 @@ namespace DailyWallpaper
                 scanRes = true;
                 /*WriteToXmlFile("GeminiListLatest.xml",
                         geminiFileClsListForLV);*/
-                SaveOperationHistory($"GeminiListLatest-{fldname}.xml", geminiFileClsListForLV, SaveOpHisRes);
+                SaveOperationHistoryInfo($"GeminiListLatest-{fldname}.xml", geminiFileClsListForLV, GetCurrentMode(), STEP.STEP_LATEST,
+                            ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
             }
             catch (OperationCanceledException e)
             {
@@ -411,6 +416,17 @@ namespace DailyWallpaper
             }
             btnAnalyze.Enabled = true;
 
+        }
+        
+        private MODE GetCurrentMode()
+        {
+            if (fileMD5CheckBox.Checked)
+                return MODE.MD5;
+            if (fileSHA1CheckBox.Checked)
+                return MODE.SHA1;
+            if (fileExtNameCheckBox.Checked)
+                return MODE.EXT;
+            return MODE.NAME; // if (fileNameCheckBox.Checked)
         }
 
         private delegate void EnableButtonDelegate(Button b, bool enable);

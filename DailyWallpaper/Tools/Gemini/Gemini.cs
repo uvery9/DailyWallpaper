@@ -86,23 +86,55 @@ namespace DailyWallpaper.Tools
         {
             T Clone();
         }
+        public enum STEP
+        {
+            STEP_1,
+            STEP_2,
+            STEP_3,
+            STEP_4,
+            STEP_LATEST
+        }
+        public enum MODE
+        {
+            MD5,
+            SHA1,
+            NAME,
+            EXT
+        }
+
         public class GeminiFileCls :ICloneable<GeminiFileCls>
         {
-            private bool @checked;
-            public bool bigFile = false;
+            
             public int index;
-            public long size;
-            public string sizeStr;
             public string name;
-            public string extName;
             public string fullPath;
-            public string dir;
-            public string sha1;
-            public string md5;
+            public string sizeStr;
+            
             public string hash;
-            public string lastMtime;
             public string crtTime;
+            public string lastMtime;
+            /*public string sha1;
+            public string md5;*/
+            
+            public bool bigFile = false;
+            public string dir;
+            public string extName;
+            public long size;
             public Color color;
+            private bool @checked;
+            
+            public MODE mode;
+            public STEP step;
+            public bool ignoreLittleFile;
+            public long ignoreLittleFileSize;
+            
+            public void SetModeStepIgnoreFile(MODE m, STEP s, bool ignore = false, long size = 0)
+            {
+                mode = m;
+                step = s;
+                ignoreLittleFile = ignore;
+                ignoreLittleFileSize = size;
+            }
 
             public GeminiFileCls()
             {
@@ -119,8 +151,8 @@ namespace DailyWallpaper.Tools
                 name = "";
                 extName = "";
                 size = 0;
-                sha1 = "";
-                md5 = "";
+                /*sha1 = "";
+                md5 = "";*/
                 hash = "";
 
                 try
@@ -144,13 +176,13 @@ namespace DailyWallpaper.Tools
             }
             public bool Checked { get => @checked; set => @checked = value; }
 
-            public bool EqualsMD5(object obj)
+            /*public bool EqualsMD5(object obj)
             {
                 return obj is GeminiFileCls @struct &&
                         fullPath != @struct.fullPath &&
                         size == @struct.size &&
                         md5 == @struct.md5;
-            }
+            }*/
 
             public bool EqualsHash(object obj)
             {
@@ -160,13 +192,13 @@ namespace DailyWallpaper.Tools
                         hash == @struct.hash;
             }
 
-            public bool EqualsSHA1(object obj)
+            /*public bool EqualsSHA1(object obj)
             {
                 return obj is GeminiFileCls @struct &&
                         fullPath != @struct.fullPath &&
                         size == @struct.size &&
                         sha1 == @struct.sha1;
-            }
+            }*/
 
             public bool EqualSize(object obj)
             {
@@ -239,8 +271,8 @@ namespace DailyWallpaper.Tools
                 other.extName = String.Copy(extName);
                 other.fullPath = String.Copy(fullPath);
                 other.dir = String.Copy(dir);
-                other.sha1 = String.Copy(sha1);
-                other.md5 = String.Copy(md5);
+                /*other.sha1 = String.Copy(sha1);
+                other.md5 = String.Copy(md5);*/
                 other.hash = String.Copy(hash);
                 other.lastMtime = String.Copy(lastMtime);
                 other.crtTime = String.Copy(crtTime);
@@ -336,7 +368,7 @@ namespace DailyWallpaper.Tools
             return tmp;
         }
 
-        public static async Task<List<GeminiFileCls>> ForceGetHashGeminiFileClsList(
+        /*public static async Task<List<GeminiFileCls>> ForceGetHashGeminiFileClsList(
             List<GeminiFileCls> li, CancellationToken token, bool calcSHA1 = false, bool calcMD5 = false)
         {
             var ret = new List<GeminiFileCls>();
@@ -372,7 +404,7 @@ namespace DailyWallpaper.Tools
                 ret.Add(tmp);
             }
             return ret;
-        }
+        }*/
         public List<string> GetAllControlledFolders()
         {
             var temp = controlledFolderAll;
@@ -540,6 +572,17 @@ namespace DailyWallpaper.Tools
             return o is IList &&
                    o.GetType().IsGenericType &&
                    o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(List<>));
+        }
+
+
+        public static void SaveOperationHistoryInfo<T>(string pathName, List<T> list,
+            MODE m, STEP s, bool ignore = false, 
+            long size = 0, Action<bool, string> action = null)
+        {               
+            if (list.OfType<GeminiFileCls>().Any())
+                list.OfType<GeminiFileCls>().ToList().
+                    ForEach(i => i.SetModeStepIgnoreFile(m, s, ignore, size));
+            SaveOperationHistory(pathName, list, action);
         }
 
         public static void SaveOperationHistory<T>(string pathName, List<T> list, 
