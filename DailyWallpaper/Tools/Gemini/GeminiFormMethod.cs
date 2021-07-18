@@ -71,6 +71,8 @@ namespace DailyWallpaper
                 else
                 {
                     var gfl = (List<GeminiFileCls>)listFromFile;
+                    if (gfl.Count < 1)
+                        return;
                     folders =
                         (from i in gfl
                         select i.fullPath).ToList();
