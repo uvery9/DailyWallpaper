@@ -209,18 +209,25 @@ namespace DailyWallpaper.Helpers
         
         public static Version GetVerSion()
         {
-            var file = Path.Combine(Path.GetDirectoryName(
-                            Assembly.GetExecutingAssembly().Location), "GIT-VERSION");
-            if (File.Exists(file))
+            try
             {
-                using (var fs = new StreamReader(file))
+                var file = Path.Combine(Path.GetDirectoryName(
+                                            Assembly.GetExecutingAssembly().Location), "GIT-VERSION");
+                if (File.Exists(file))
                 {
-                    var input = fs.ReadLine();
-                    var stripped = Regex.Replace(input, @"[^0-9\.]", "");
-                    return new Version(stripped);
+                    using (var fs = new StreamReader(file))
+                    {
+                        var input = fs.ReadLine();
+                        var stripped = Regex.Replace(input, @"[^0-9\.]", "");
+                        return new Version(stripped);
+                    }
                 }
+                return new Version("1.5.0.2");
             }
-            return new Version("1.5.2");
+            catch
+            {
+                return new Version("1.4.0.4");
+            }
         }
         private static Version StringOrFile2Version(string input)
         {
