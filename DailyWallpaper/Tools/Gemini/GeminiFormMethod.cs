@@ -43,16 +43,6 @@ namespace DailyWallpaper
 {
     partial class GeminiForm
     {
-        private enum LoadFileStep
-        {
-            NO_LOAD,
-            STEP_1_ALL_FILES,
-            STEP_2_FILES_TO_STRUCT,
-            STEP_3_FAST_COMPARE,
-            STEP_4_COMPARE_HASH,
-            DEFAULT,
-            ERROR
-        }
         private void LoadGeminiFileFileToListView(string path)
         {
             try
@@ -85,13 +75,70 @@ namespace DailyWallpaper
                         (from i in gfl
                         select i.fullPath).ToList();
                     targetFolder1TextBox.Text = FileList2MaxCommonPathInTextBox(folders);
+                    var mode = gfl.First().mode;
+                    switch (mode)
+                    {
+                        case MODE.MD5:
+                            fileMD5CheckBox.Checked = true;
+                            fileSHA1CheckBox.Checked = false;
+                            fileExtNameCheckBox.Checked = true;
+                            fileNameCheckBox.Checked = false;
+                            break;
+                        case MODE.SHA1:
+                            fileMD5CheckBox.Checked = false;
+                            fileSHA1CheckBox.Checked = true;
+                            fileExtNameCheckBox.Checked = true;
+                            fileNameCheckBox.Checked = false;
+                            break;
+                        case MODE.NAME:
+                            fileMD5CheckBox.Checked = false;
+                            fileSHA1CheckBox.Checked = false;
+                            fileExtNameCheckBox.Checked = false;
+                            fileNameCheckBox.Checked = true;
+                            break;
+                        case MODE.EXT:
+                            fileMD5CheckBox.Checked = false;
+                            fileSHA1CheckBox.Checked = false;
+                            fileExtNameCheckBox.Checked = true;
+                            fileNameCheckBox.Checked = false;
+                            break;
+                        default:
+                            break;
+                    }
+                    var len = gfl.First().ignoreLittleFileSize;
+                    string sizeInTextBox;
+                    if (len > 1024 * 1024 * 1024)
+                    {
+                        sizeInTextBox = "" + len / 1024 / 1024 / 1024;
+                        ignoreFileSizecomboBox.SelectedIndex = 3;
+                    }
+                    else if (len > 1024 * 1024)
+                    {
+                        sizeInTextBox = ""+ len / 1024 / 1024;
+                        ignoreFileSizecomboBox.SelectedIndex = 2;
+                    }
+                    else if (len > 1024)
+                    {
+                        sizeInTextBox = "" + len / 1024;
+                        ignoreFileSizecomboBox.SelectedIndex = 1;
+                    }
+                    else
+                    {
+                        sizeInTextBox = "" + len;
+                        ignoreFileSizecomboBox.SelectedIndex = 0;
+                    }
+                    ignoreFileSizeTextBox.Text = sizeInTextBox;
+
+                    ignoreFileCheckBox.Checked = gfl.First().ignoreLittleFile;
+                    if (op == LoadFileStep.DEFAULT)
+                        op = gfl.First().step;
                     StartAnalyzeStep(op, gfL: gfl);
                 }
                 
             }
             catch (Exception ex)
             {
-                CWriteLine($"xml -> Struct failed: {ex.Message}");
+                CWriteLine($"!!! LoadGeminiFileFileToListView failed: {ex.Message}");
             }
         }
 
@@ -293,7 +340,7 @@ namespace DailyWallpaper
                     }
                     if (op <= LoadFileStep.STEP_2_FILES_TO_STRUCT)
                         SaveOperationHistoryInfo($"step2-filesToStruct_1-{fldname}.xml", geminiFileClsList1,
-                            GetCurrentMode(), STEP.STEP_2, ignoreFileCheckBox.Checked, minimumFileLimit);
+                            GetCurrentMode(), LoadFileStep.STEP_2_FILES_TO_STRUCT, ignoreFileCheckBox.Checked, minimumFileLimit);
                     List<GeminiFileCls> sameListNoDup;
                     var mode = SetCompareMode();
                     if (!IsSkip(op, LoadFileStep.STEP_3_FAST_COMPARE))
@@ -318,8 +365,8 @@ namespace DailyWallpaper
                     }
 
                     if (op <= LoadFileStep.STEP_3_FAST_COMPARE)
-                        SaveOperationHistoryInfo($"step3-FastCompare-{fldname}.xml", sameListNoDup, GetCurrentMode(), STEP.STEP_3, 
-                            ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
+                        SaveOperationHistoryInfo($"step3-FastCompare-{fldname}.xml", sameListNoDup, GetCurrentMode(),
+                            LoadFileStep.STEP_3_FAST_COMPARE, ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
 
                     if (fileMD5CheckBox.Checked || fileSHA1CheckBox.Checked)
                     {
@@ -368,8 +415,8 @@ namespace DailyWallpaper
 
                         }
                         if (op <= LoadFileStep.STEP_4_COMPARE_HASH)
-                            SaveOperationHistoryInfo($"step4-CompareHash-{fldname}.xml", sameListNoDup, GetCurrentMode(), STEP.STEP_4,
-                            ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
+                            SaveOperationHistoryInfo($"step4-CompareHash-{fldname}.xml", sameListNoDup, GetCurrentMode(),
+                                LoadFileStep.STEP_4_COMPARE_HASH, ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
                     }
 
                     // Color by Group.
@@ -390,8 +437,8 @@ namespace DailyWallpaper
                 scanRes = true;
                 /*WriteToXmlFile("GeminiListLatest.xml",
                         geminiFileClsListForLV);*/
-                SaveOperationHistoryInfo($"GeminiListLatest-{fldname}.xml", geminiFileClsListForLV, GetCurrentMode(), STEP.STEP_LATEST,
-                            ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
+                SaveOperationHistoryInfo($"GeminiListLatest-{fldname}.xml", geminiFileClsListForLV, GetCurrentMode(),
+                    LoadFileStep.DEFAULT, ignoreFileCheckBox.Checked, minimumFileLimit, SaveOpHisRes);
             }
             catch (OperationCanceledException e)
             {

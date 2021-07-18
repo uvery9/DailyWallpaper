@@ -86,14 +86,17 @@ namespace DailyWallpaper.Tools
         {
             T Clone();
         }
-        public enum STEP
+        public enum LoadFileStep
         {
-            STEP_1,
-            STEP_2,
-            STEP_3,
-            STEP_4,
-            STEP_LATEST
+            NO_LOAD,
+            STEP_1_ALL_FILES,
+            STEP_2_FILES_TO_STRUCT,
+            STEP_3_FAST_COMPARE,
+            STEP_4_COMPARE_HASH,
+            DEFAULT,
+            ERROR
         }
+
         public enum MODE
         {
             MD5,
@@ -115,7 +118,7 @@ namespace DailyWallpaper.Tools
             public string crtTime;
             public string lastMtime;
             public MODE mode;
-            public STEP step;
+            public LoadFileStep step;
             public bool ignoreLittleFile;
             public long ignoreLittleFileSize;
             public Color color;
@@ -127,7 +130,7 @@ namespace DailyWallpaper.Tools
             public string extName;
             public long size;
             
-            public void SetModeStepIgnoreFile(MODE m, STEP s, bool ignore = false, long size = 0)
+            public void SetModeStepIgnoreFile(MODE m, LoadFileStep s, bool ignore = false, long size = 0)
             {
                 mode = m;
                 step = s;
@@ -575,7 +578,7 @@ namespace DailyWallpaper.Tools
 
 
         public static void SaveOperationHistoryInfo<T>(string pathName, List<T> list,
-            MODE m, STEP s, bool ignore = false, 
+            MODE m, LoadFileStep s, bool ignore = false, 
             long size = 0, Action<bool, string> action = null)
         {               
             if (list.OfType<GeminiFileCls>().Any())
