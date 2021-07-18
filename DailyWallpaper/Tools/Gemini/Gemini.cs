@@ -106,6 +106,7 @@ namespace DailyWallpaper.Tools
         {
             
             public int index;
+            private bool @checked;
             public string name;
             public string fullPath;
             public string sizeStr;
@@ -113,20 +114,18 @@ namespace DailyWallpaper.Tools
             public string hash;
             public string crtTime;
             public string lastMtime;
-            /*public string sha1;
-            public string md5;*/
-            
-            public bool bigFile = false;
-            public string dir;
-            public string extName;
-            public long size;
-            public Color color;
-            private bool @checked;
-            
             public MODE mode;
             public STEP step;
             public bool ignoreLittleFile;
             public long ignoreLittleFileSize;
+            public Color color;
+            /*public string sha1;
+            public string md5;*/
+
+            public bool bigFile = false;
+            public string dir;
+            public string extName;
+            public long size;
             
             public void SetModeStepIgnoreFile(MODE m, STEP s, bool ignore = false, long size = 0)
             {
