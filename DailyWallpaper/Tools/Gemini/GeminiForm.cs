@@ -682,6 +682,10 @@ namespace DailyWallpaper
                 }
                 i++;
                 int hashSizeLimit = 100;
+                if (!File.Exists(it.fullPath))
+                {
+                    continue;
+                }
                 if (it.size < hashSizeLimit * 1024 * 1024 || updateBigFile)
                 {
                     await UpdateHash(tmp, it);
