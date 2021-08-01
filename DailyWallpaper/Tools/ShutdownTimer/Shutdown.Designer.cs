@@ -97,7 +97,7 @@ namespace DailyWallpaper.Tools.ShutdownTimer
             // textBox2
             // 
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox2.Location = new System.Drawing.Point(259, 190);
+            this.textBox2.Location = new System.Drawing.Point(199, 190);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(90, 21);
@@ -107,12 +107,13 @@ namespace DailyWallpaper.Tools.ShutdownTimer
             // timeLeftTextBox
             // 
             this.timeLeftTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.timeLeftTextBox.Location = new System.Drawing.Point(364, 190);
+            this.timeLeftTextBox.Location = new System.Drawing.Point(295, 190);
             this.timeLeftTextBox.Name = "timeLeftTextBox";
             this.timeLeftTextBox.ReadOnly = true;
-            this.timeLeftTextBox.Size = new System.Drawing.Size(88, 21);
+            this.timeLeftTextBox.Size = new System.Drawing.Size(157, 21);
             this.timeLeftTextBox.TabIndex = 9;
-            this.timeLeftTextBox.Text = "00:00:00";
+            this.timeLeftTextBox.Text = "00:00:00 (17:52)";
+            this.timeLeftTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // clearButton
             // 

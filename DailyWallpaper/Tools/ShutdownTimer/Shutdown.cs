@@ -24,7 +24,7 @@ namespace DailyWallpaper.Tools.ShutdownTimer
             timerTextBox.Text = "30";
             Icon = Properties.Resources.Sd32x32;
             _console = new TextBoxCons(new ConsWriter(consTextBox));
-            timeLeftTextBox.Text = "00:00:00";
+            timeLeftTextBox.Text = "00:00:00 (00:00)";
             UpdateTimeLeftCallerTimerInit();
         }
 
@@ -46,9 +46,15 @@ namespace DailyWallpaper.Tools.ShutdownTimer
             }
         }
 
+        private void TimerSetError()
+        {
+            // timerTextBox.Text = "30";
+            _console.WriteLine("! 时间设置错误, 范围为7天: 1~168(小时) 或 1~604,800(分钟).");
+        }
+
         private void shutdownButton_Click(object sender, EventArgs e)
         {
-            if (int.TryParse(timerTextBox.Text, out int ret)) {
+            if (int.TryParse(timerTextBox.Text, out int ret) && ret <= 604800) {
                 var raw_ret = ret;
                 string unit;
                 if (timerComboBox.SelectedIndex == 0)
@@ -58,6 +64,11 @@ namespace DailyWallpaper.Tools.ShutdownTimer
                 }
                 else
                 {
+                    if (ret > 168)
+                    {
+                        TimerSetError();
+                        return;
+                    }
                     ret *= 3600; // hours
                     unit = "小时";
                 }
@@ -65,7 +76,7 @@ namespace DailyWallpaper.Tools.ShutdownTimer
                     System.Diagnostics.Process.Start("shutdown.exe", " -a");
                 var cmd = string.Format(" -s -t {0}", ret);
                 shutdownTime = DateTime.Now.AddSeconds(ret);
-                _console.WriteLine($"> {raw_ret} {unit}后关机, 关机时间: {shutdownTime:H:mm}");
+                _console.WriteLine($"> {raw_ret} {unit}后关机, 关机时间: {shutdownTime:HH:mm}");
                 _console.WriteLine("> CMD: shutdown.exe " + cmd);
                 shutdownTimeSet = true;
                 _updateTimer.Enabled = true;
@@ -73,7 +84,7 @@ namespace DailyWallpaper.Tools.ShutdownTimer
             }
             else
             {
-                timerTextBox.Text = "输入有误";
+                TimerSetError();
             }
         }
 
@@ -108,6 +119,7 @@ namespace DailyWallpaper.Tools.ShutdownTimer
 
         private void UpdateShutdownTimeLeft_Elapsed(object sender, ElapsedEventArgs e)
         {
+            Application.DoEvents();
             if (shutdownTimeSet && Visible)
             {
                 var timeLeft = (int)(shutdownTime - DateTime.Now).TotalSeconds;
@@ -116,19 +128,14 @@ namespace DailyWallpaper.Tools.ShutdownTimer
                 var mins = timeLeft / 60;
                 timeLeft -= mins * 60;
                 var secs = timeLeft;
-                var timeLeftStr = $"{hours:D2}:{mins:D2}:{secs:D2}";
+                var timeLeftStr = $"{hours:D2}:{mins:D2}:{secs:D2} ({shutdownTime:HH:mm})";
                 timeLeftTextBox.Text = timeLeftStr;
             }
-            //if (!Visible)
-            //{
-            //    // MessageBox.Show("Not Visible");
-            //    _console.WriteLine($"{DateTime.Now}: No Visible");
-            //}
         }
 
         private void timerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            shutdownButton.PerformClick();
+            // shutdownButton.PerformClick();
         }
 
         private void Shutdown_VisibleChanged(object sender, EventArgs e)
