@@ -32,6 +32,7 @@ namespace DailyWallpaper.View
         private NotifyIcon _notifyIcon;
         private bool iStextFromFileNew = true;
         private HashCalc.HashCalcForm _hashWin;
+        private Tools.ShutdownTimer.Shutdown _shutdownTimer = null;
 
         public OptionsView()
         {
@@ -68,20 +69,22 @@ namespace DailyWallpaper.View
             _hashWin = new HashCalc.HashCalcForm();
             _hashWin.selfFromClosing = false;
             _hashWin.FormClosing += _hashWindow_FormClosing;
+            _shutdownTimer = new Tools.ShutdownTimer.Shutdown();
+            _shutdownTimer.FormClosing += _shutdownTimer_FormClosing;
         }
         private void LaterCheckUpdate()
         {
-            var updateTimer = new System.Timers.Timer
+            var _updateTimer = new System.Timers.Timer
             {
                 Interval = 1000 * 60 * 5, // 5mins LATER,
                 AutoReset = true,
                 Enabled = true
             };
             // _timer.
-            updateTimer.Elapsed += updatetimer_Elapsed;
-            updateTimer.Start();
+            _updateTimer.Elapsed += _updateTimer_Elapsed;
+            _updateTimer.Start();
         }
-        public void updatetimer_Elapsed(object sender, ElapsedEventArgs e)
+        public void _updateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             CheckUpdate(click: false);
             ((System.Timers.Timer)sender).Enabled = false;
@@ -482,6 +485,14 @@ namespace DailyWallpaper.View
             }
         }
 
+        private void _shutdownTimer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                _shutdownTimer.Hide();
+            }
+        }
 
         private void _hashWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -998,15 +1009,15 @@ namespace DailyWallpaper.View
 
         private void UpdateExitIniTimer()
         {
-            var updateTimer = new System.Timers.Timer
+            var _updateTimer = new System.Timers.Timer
             {
                 Interval = 1000 * 60 * 30, // 30mins,
                 AutoReset = true,
                 Enabled = true
             };
             // _timer.
-            updateTimer.Elapsed += exitIniTimerElapsed;
-            updateTimer.Start();
+            _updateTimer.Elapsed += exitIniTimerElapsed;
+            _updateTimer.Start();
         }
         public void exitIniTimerElapsed(object sender, ElapsedEventArgs e)
         {
@@ -1238,5 +1249,11 @@ namespace DailyWallpaper.View
         {
             new Tools.VideoEditorForm().Show();
         }
+
+        private void shutdownTimerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //new Tools.ShutdownTimer.Shutdown().Show();
+            _shutdownTimer.Show();
+    }
     }
 }
