@@ -21,7 +21,8 @@ namespace DailyWallpaper.Tools.ShutdownTimer
         {
             InitializeComponent();
             timerComboBox.SelectedIndex = 0; // mins
-            timerTextBox.Text = "30";        
+            timerTextBox.Text = "30";
+            Icon = Properties.Resources.Sd32x32;
             _console = new TextBoxCons(new ConsWriter(consTextBox));
             timeLeftTextBox.Text = "00:00:00";
             UpdateTimeLeftCallerTimerInit();
@@ -60,6 +61,8 @@ namespace DailyWallpaper.Tools.ShutdownTimer
                     ret *= 3600; // hours
                     unit = "小时";
                 }
+                if (shutdownTimeSet)
+                    System.Diagnostics.Process.Start("shutdown.exe", " -a");
                 var cmd = string.Format(" -s -t {0}", ret);
                 shutdownTime = DateTime.Now.AddSeconds(ret);
                 _console.WriteLine($"> {raw_ret} {unit}后关机, 关机时间: {shutdownTime:H:mm}");

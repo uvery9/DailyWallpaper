@@ -151,6 +151,9 @@
   <data name="icon32x32_timer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\icon32x32_timer.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Sd32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\res\Sd32x32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Ve32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\res\Ve32x32.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
