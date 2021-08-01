@@ -763,19 +763,19 @@ namespace DailyWallpaper.View
                     return;
                     // throw new ArgumentException("Starting directory is a null reference or an empty string: path");
                 }
-                foreach (var d in Directory.EnumerateDirectories(path, "*Notepad*"))
+                foreach (var d in Directory.EnumerateDirectories(path, "*Notepad*", SearchOption.AllDirectories))
                 {
-                    ScanDirsFindNotepadPP(d, action);
-                }
-                if (path.Contains("Notepad++"))
-                {
-                    var npexe = Path.Combine(path, "notepad++.exe");
-                    if (File.Exists(npexe))
+                    if (d.Contains("Notepad++"))
                     {
-                        action(true, npexe);
-                        // action(false, $">>>FOUND NOTDPAD++exe {npexe}");
-                        return;
+                        var npexe = Path.Combine(d, "notepad++.exe");
+                        if (File.Exists(npexe))
+                        {
+                            action(true, npexe);
+                            // action(false, $">>>FOUND NOTDPAD++exe {npexe}");
+                            return;
+                        }
                     }
+                    ScanDirsFindNotepadPP(d, action);
                 }
             }
             catch (UnauthorizedAccessException) { }

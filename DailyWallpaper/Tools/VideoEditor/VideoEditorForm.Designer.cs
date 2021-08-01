@@ -32,15 +32,15 @@ namespace DailyWallpaper.Tools
             this.panel1 = new System.Windows.Forms.Panel();
             this.videoEditorConsTextBox = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.clearButton = new System.Windows.Forms.Button();
+            this.stopButton = new System.Windows.Forms.Button();
+            this.startButton = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startButton = new System.Windows.Forms.Button();
-            this.stopButton = new System.Windows.Forms.Button();
-            this.clearButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -78,6 +78,36 @@ namespace DailyWallpaper.Tools
             this.panel2.Size = new System.Drawing.Size(111, 340);
             this.panel2.TabIndex = 1;
             // 
+            // clearButton
+            // 
+            this.clearButton.Location = new System.Drawing.Point(20, 17);
+            this.clearButton.Name = "clearButton";
+            this.clearButton.Size = new System.Drawing.Size(75, 27);
+            this.clearButton.TabIndex = 0;
+            this.clearButton.TabStop = false;
+            this.clearButton.Text = "Clear";
+            this.clearButton.UseVisualStyleBackColor = true;
+            // 
+            // stopButton
+            // 
+            this.stopButton.Location = new System.Drawing.Point(20, 198);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(75, 27);
+            this.stopButton.TabIndex = 0;
+            this.stopButton.TabStop = false;
+            this.stopButton.Text = "Stop";
+            this.stopButton.UseVisualStyleBackColor = true;
+            // 
+            // startButton
+            // 
+            this.startButton.Location = new System.Drawing.Point(14, 275);
+            this.startButton.Name = "startButton";
+            this.startButton.Size = new System.Drawing.Size(90, 44);
+            this.startButton.TabIndex = 0;
+            this.startButton.Text = "Start";
+            this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.startButton_Click);
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.pictureBox1);
@@ -86,13 +116,6 @@ namespace DailyWallpaper.Tools
             this.panel3.Size = new System.Drawing.Size(847, 166);
             this.panel3.TabIndex = 2;
             // 
-            // panel4
-            // 
-            this.panel4.Location = new System.Drawing.Point(3, 208);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(847, 238);
-            this.panel4.TabIndex = 3;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
@@ -100,6 +123,13 @@ namespace DailyWallpaper.Tools
             this.pictureBox1.Size = new System.Drawing.Size(841, 160);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            // 
+            // panel4
+            // 
+            this.panel4.Location = new System.Drawing.Point(3, 208);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(847, 238);
+            this.panel4.TabIndex = 3;
             // 
             // menuStrip1
             // 
@@ -125,35 +155,6 @@ namespace DailyWallpaper.Tools
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(67, 28);
             this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // startButton
-            // 
-            this.startButton.Location = new System.Drawing.Point(14, 275);
-            this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(90, 44);
-            this.startButton.TabIndex = 0;
-            this.startButton.Text = "Start";
-            this.startButton.UseVisualStyleBackColor = true;
-            // 
-            // stopButton
-            // 
-            this.stopButton.Location = new System.Drawing.Point(20, 198);
-            this.stopButton.Name = "stopButton";
-            this.stopButton.Size = new System.Drawing.Size(75, 27);
-            this.stopButton.TabIndex = 0;
-            this.stopButton.TabStop = false;
-            this.stopButton.Text = "Stop";
-            this.stopButton.UseVisualStyleBackColor = true;
-            // 
-            // clearButton
-            // 
-            this.clearButton.Location = new System.Drawing.Point(20, 17);
-            this.clearButton.Name = "clearButton";
-            this.clearButton.Size = new System.Drawing.Size(75, 27);
-            this.clearButton.TabIndex = 0;
-            this.clearButton.TabStop = false;
-            this.clearButton.Text = "Clear";
-            this.clearButton.UseVisualStyleBackColor = true;
             // 
             // VideoEditorForm
             // 
