@@ -30,7 +30,6 @@ namespace DailyWallpaper.Tools
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.videoEditorConsTextBox = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.clearButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
@@ -38,6 +37,7 @@ namespace DailyWallpaper.Tools
             this.panel3 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.consRichTextBox = new System.Windows.Forms.RichTextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,23 +50,12 @@ namespace DailyWallpaper.Tools
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.videoEditorConsTextBox);
+            this.panel1.Controls.Add(this.consRichTextBox);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Location = new System.Drawing.Point(0, 449);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(853, 346);
             this.panel1.TabIndex = 0;
-            // 
-            // videoEditorConsTextBox
-            // 
-            this.videoEditorConsTextBox.Location = new System.Drawing.Point(3, 3);
-            this.videoEditorConsTextBox.Multiline = true;
-            this.videoEditorConsTextBox.Name = "videoEditorConsTextBox";
-            this.videoEditorConsTextBox.ReadOnly = true;
-            this.videoEditorConsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.videoEditorConsTextBox.Size = new System.Drawing.Size(730, 340);
-            this.videoEditorConsTextBox.TabIndex = 0;
-            this.videoEditorConsTextBox.TabStop = false;
             // 
             // panel2
             // 
@@ -131,9 +120,17 @@ namespace DailyWallpaper.Tools
             this.panel4.Size = new System.Drawing.Size(847, 238);
             this.panel4.TabIndex = 3;
             // 
+            // consRichTextBox
+            // 
+            this.consRichTextBox.Location = new System.Drawing.Point(3, 3);
+            this.consRichTextBox.Name = "consRichTextBox";
+            this.consRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.consRichTextBox.Size = new System.Drawing.Size(730, 340);
+            this.consRichTextBox.TabIndex = 0;
+            this.consRichTextBox.Text = "";
+            // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,
@@ -169,7 +166,6 @@ namespace DailyWallpaper.Tools
             this.Name = "VideoEditorForm";
             this.Text = "VideoEditor";
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -183,7 +179,6 @@ namespace DailyWallpaper.Tools
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TextBox videoEditorConsTextBox;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
@@ -194,5 +189,6 @@ namespace DailyWallpaper.Tools
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Button clearButton;
+        private System.Windows.Forms.RichTextBox consRichTextBox;
     }
 }

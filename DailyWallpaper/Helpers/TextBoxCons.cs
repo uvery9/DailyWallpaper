@@ -53,10 +53,17 @@ namespace DailyWallpaper
     [DebuggerStepThrough]
     public class ConsWriter : TextWriter
     {
-        private TextBox textbox;
-        public ConsWriter(TextBox textbox)
+        private TextBoxBase textbox;
+        // private TextBox textbox;
+        // private TextBoxBase richTextBox;
+        public ConsWriter(TextBox tb)
         {
-            this.textbox = textbox;
+            textbox = tb;
+        }
+
+        public ConsWriter(RichTextBox rtb)
+        {
+            textbox = rtb;
         }
 
         public /*override*/ void WriteC(char value)
