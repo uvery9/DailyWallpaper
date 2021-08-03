@@ -11,6 +11,7 @@ ref/
 *.zip
 Output/
 DailyWallpaperComponents.wxs
+Todo*
 
 # User-specific files
 *.suo

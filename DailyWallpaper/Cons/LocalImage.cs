@@ -182,7 +182,7 @@ namespace DailyWallpaper
 				}	
 			}
 			List<string> files = new List<string>();
-			foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+			foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
 			{
 				// Console.WriteLine($"file: {file}");
 				if (this.old_files != null && this.old_files.Contains(file)){
@@ -211,7 +211,7 @@ namespace DailyWallpaper
 							// validateImageData = false will be super fast.
 							using (var img = Image.FromStream(stream, false, false)) 
 							{
-								if (img.Width > 1900 && (img.Width + 0.0 / img.Height > 1.4))
+								if (img.Width > 1900 && ((double)img.Width / img.Height > 1.4))
 								{
 									files.Add(file);
 									if (print) { Console.WriteLine(file + ": " + length + "KB"); }
