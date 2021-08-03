@@ -20,6 +20,10 @@ after_build:
     
     set /P GIT_TAG=<OUTPUTFILE.TXT
     
+    git tag -l -n10 --points-at HEAD > GIT_TAG_MSG.TXT
+    
+    set /P GIT_TAG_MSG=<GIT_TAG_MSG.TXT
+    
     cd DailyWallpaper\bin\Release\
     
     7z a DailyWallpaper.Protable.zip .
@@ -52,7 +56,7 @@ artifacts:
 
 deploy:
   release: pre--%GIT_TAG%
-  description: " NEED ADD "
+  description: " %GIT_TAG_MSG% "
   provider: GitHub
   auth_token:
     secure:  jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD
