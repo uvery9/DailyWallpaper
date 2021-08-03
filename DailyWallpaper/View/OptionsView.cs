@@ -37,6 +37,7 @@ namespace DailyWallpaper.View
         public OptionsView()
         {
             InitializeComponent();
+            _ini = ConfigIni.GetInstance();
             UpdateTranslation();
 
             WindowState = FormWindowState.Minimized;
@@ -143,6 +144,7 @@ namespace DailyWallpaper.View
 
             Icon_LocalPathSetting.Text = TranslationHelper.Get("Icon_LocalPathSetting");
             Icon_LocalPathSetting.Click += _Icon_LocalPathSettingMenuItem_Click;
+            Icon_LocalPathSetting.ToolTipText = _ini.Read("localPathSetting", "Local") ?? "NULL";
 
             Icon_Spotlight.Text =
                     TranslationHelper.Get("Icon_Spotlight");
@@ -653,6 +655,7 @@ namespace DailyWallpaper.View
                 {
                     // MessageBox.Show("You selected: " + dialog.FileName);
                     _ini.UpdateIniItem("localPathSetting", dialog.FileName, "Local");
+                    Icon_LocalPathSetting.ToolTipText = dialog.FileName;
                     ShowNotification("", $"{TranslationHelper.Get("Notify_LocalPathSetting")} {dialog.FileName}");
                 }
             }
@@ -860,7 +863,6 @@ namespace DailyWallpaper.View
         }
         private void InitializeCheckedAndTimer()
         {
-            _ini = ConfigIni.GetInstance();
             _timerHelper = TimerHelper.GetInstance(233, timer_Elapsed);
             textFromHoursTextBox = "3";
             if (_ini.EqualsIgnoreCase("bing", "yes", "Online"))
