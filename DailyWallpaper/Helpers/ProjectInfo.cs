@@ -287,6 +287,12 @@ namespace DailyWallpaper.Helpers
                 }
                 if (e.Error == null)
                 {
+                    // Clean old .completed txt
+                    var completedDir = Path.GetDirectoryName(wx.completed);
+                    foreach (var completedTxt in Directory.EnumerateFiles(completedDir, "*.completed", SearchOption.TopDirectoryOnly))
+                    {
+                        File.Delete(Path.Combine(completedDir, completedTxt));
+                    }
                     using (FileStream fs = File.Create(wx.completed))
                     {
                         byte[] info = new UTF8Encoding(true).GetBytes($"Downloaded {wx.file} at {DateTime.Now}.");
