@@ -14,7 +14,7 @@
 
     <Feature Id="ProductFeature" Title="DailyWallpaper.Installer" Level="1">
       <ComponentGroupRef Id="DailyWallpaperComponents" />
-      <ComponentRef Id="ApplicationShortcutDesktop" />
+      <!--<ComponentRef Id="ApplicationShortcutDesktop" />-->
       <ComponentRef Id="ApplicationShortcutProgramMenu" />
     </Feature>
 
