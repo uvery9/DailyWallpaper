@@ -36,7 +36,7 @@
             KeyPath="yes" />
         </Component>
       </Directory>
-      <Directory Id="DesktopFolder" Name="Desktop">
+      <!--<Directory Id="DesktopFolder" Name="Desktop">
         <Component Id="ApplicationShortcutDesktop" Guid="22fe6a14-e8bd-4b98-8780-8ac9e4cfbf4d">
           <Shortcut Id="ApplicationDesktopShortcut"
                     Name="DailyWallpaper"
@@ -52,7 +52,7 @@
             Value="1"
             KeyPath="yes" />
         </Component>
-      </Directory>
+      </Directory>-->
       <Directory Id="ProgramFiles64Folder">
         <Directory Id="INSTALLFOLDER" Name="DailyWallpaper" />
       </Directory>
