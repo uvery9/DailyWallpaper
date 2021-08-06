@@ -1000,7 +1000,7 @@ namespace DailyWallpaper.View
             
             void LaterSetWallpaperWhenStart() 
             {
-                Thread.Sleep(1000 * 60 * 10); // 10min later
+                Thread.Sleep(1000 * 60 * 1); // 1min later
                 Task.Run(() => {
                     DailyWallpaperConsSetWallpaper(silent: true);
                     _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
