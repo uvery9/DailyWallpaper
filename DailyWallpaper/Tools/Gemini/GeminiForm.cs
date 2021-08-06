@@ -41,7 +41,7 @@ namespace DailyWallpaper
         private Regex regex;
         private int nameColumnHeaderWidth = 0;
         private int modifiedTimeColumnHeaderWidth = 0;
-        private List<GeminiCEFCls> geminiCEFStructList = new List<GeminiCEFCls>();
+        private List<GeminiCEFCls> geminiCEFClsList = new List<GeminiCEFCls>();
 
         private List<string> targetFolder1History = new List<string>();
         private List<string> targetFolder2History = new List<string>();
@@ -864,9 +864,9 @@ namespace DailyWallpaper
             {
                 ListViewOperate(resultListView, ListViewOP.ADDRANGE, items: items.ToArray());
             }
-            CWriteLine($">>> Found {geminiCEFStructList.Count:N0} empty folder(s).");
-            SetSummaryBoxText($"Summay: Found {geminiCEFStructList.Count:N0} duplicate files.",
-                geminiCEFStructList.Count);
+            CWriteLine($">>> Found {geminiCEFClsList.Count:N0} empty folder(s).");
+            SetSummaryBoxText($"Summay: Found {geminiCEFClsList.Count:N0} duplicate files.",
+                geminiCEFClsList.Count);
         }
 
         // Thanks to João Angelo
@@ -907,7 +907,7 @@ namespace DailyWallpaper
                 _tasks.Add(taskCef);
                 await taskCef;
                 cefScanRes = true;
-                UpdateEmptyFoldersToLV(geminiCEFStructList, token);
+                UpdateEmptyFoldersToLV(geminiCEFClsList, token);
                 selectAllToolStripMenuItem.PerformClick();
                 CWriteLine($">>> Finished Analyze Operation");
             }
@@ -943,7 +943,7 @@ namespace DailyWallpaper
             {
                 return;
             }
-            geminiCEFStructList.Clear();
+            geminiCEFClsList.Clear();
             RecurseScanDirCEF(path, _source.Token);
         }
 
@@ -1897,7 +1897,7 @@ namespace DailyWallpaper
 
         private void saveResultListToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (cleanEmptyFolderModeToolStripMenuItem.Checked && geminiCEFStructList.Count < 1)
+            if (cleanEmptyFolderModeToolStripMenuItem.Checked && geminiCEFClsList.Count < 1)
             {
                 CWriteLine("--- No Empty folder, do not need to save to file.");
                 return;
@@ -1964,7 +1964,7 @@ namespace DailyWallpaper
                     {
                         Task.Run(() => {
                             WriteToXmlFile(saveFileDialog.FileName,
-                            geminiCEFStructList);
+                            geminiCEFClsList);
                         });
                     }
                     else

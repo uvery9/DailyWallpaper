@@ -852,16 +852,16 @@ namespace DailyWallpaper
                     }
                 }
                 var tmpL = new List<GeminiCEFCls>();
-                foreach (var item in geminiCEFStructList)
+                foreach (var item in geminiCEFClsList)
                 {
                     if (Directory.Exists(item.fullPath))
                     {
                         tmpL.Add(item);
                     }
                 }
-                geminiCEFStructList = tmpL;
-                UpdateEmptyFoldersToLV(geminiCEFStructList, _sourceCEF.Token);
-                UpdateCEFCheckedFromLV(geminiCEFStructList);
+                geminiCEFClsList = tmpL;
+                UpdateEmptyFoldersToLV(geminiCEFClsList, _sourceCEF.Token);
+                UpdateCEFCheckedFromLV(geminiCEFClsList);
                 cefScanRes = false;
             });
             _tasks.Add(deleteCEF);
@@ -909,8 +909,8 @@ namespace DailyWallpaper
                     geminiCEF.fullPath = dir;
                     geminiCEF.Checked = false;
                     geminiCEF.lastMtime = lastMtime;
-                    geminiCEFStructList.Add(geminiCEF);
-                    if (print && geminiCEFStructList.Count < 50)
+                    geminiCEFClsList.Add(geminiCEF);
+                    if (print && geminiCEFClsList.Count < 50)
                         CWriteLine($"... Found empty folder: {dir}");
                     /*else
                     {
@@ -1373,25 +1373,25 @@ namespace DailyWallpaper
             undoToolStripMenuItem.Enabled = false;
             if (op == MultipleSelectOperations.REVERSE_ELECTION)
             {
-                geminiCEFStructList = UpdateCEFCheckedFromLV(geminiCEFStructList);
+                geminiCEFClsList = UpdateCEFCheckedFromLV(geminiCEFClsList);
             }
-            if (geminiCEFStructList.Count < 1)
+            if (geminiCEFClsList.Count < 1)
             {
                 return;
             }
             if (op == MultipleSelectOperations.CHECK_ALL)
             {
-                geminiCEFStructList.ForEach(item => item.Checked = true);
+                geminiCEFClsList.ForEach(item => item.Checked = true);
             }
             else if (op == MultipleSelectOperations.UNCHECK_ALL)
             {
-                geminiCEFStructList.ForEach(item => item.Checked = false);
+                geminiCEFClsList.ForEach(item => item.Checked = false);
             }
             else if (op == MultipleSelectOperations.REVERSE_ELECTION)
             {
-                geminiCEFStructList.ForEach(item => item.Checked = !item.Checked);
+                geminiCEFClsList.ForEach(item => item.Checked = !item.Checked);
             }
-            RestoreCEFListViewChoice(geminiCEFStructList, _source.Token);
+            RestoreCEFListViewChoice(geminiCEFClsList, _source.Token);
 
 
         }
