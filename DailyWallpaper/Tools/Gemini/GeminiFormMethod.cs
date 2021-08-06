@@ -823,34 +823,33 @@ namespace DailyWallpaper
             var deleteCEF = Task.Run(() => {
                 int printCnt = 0;
                 bool printWait = false;
-                foreach (var item in resultListView.Items)
-                {
-                    if (_sourceCEF.Token.IsCancellationRequested)
-                    {
-                        _sourceCEF.Token.ThrowIfCancellationRequested();
-                    }
-                    var it = (ListViewItem)item;
-                    var fullPathLV = it.SubItems["name"].Text;
-                    if (it.Checked && Directory.Exists(fullPathLV))
-                    {
-                        printCnt++;
-                        if (printCnt < 50)
-                            CWriteLine($"delete ###  {fullPathLV}");
-                        else
+                resultListView.Items.OfType<ListViewItem>().ToList().
+                    ForEach(it => {
+                        if (_sourceCEF.Token.IsCancellationRequested)
                         {
-                            if (!printWait)
-                            {
-                                CWriteLine($">>> deleting, please waiting...");
-                                printWait = true;
-                            }
+                            _sourceCEF.Token.ThrowIfCancellationRequested();
                         }
-                            
-                        FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
-                        deleteOrRecycleBin.Checked ?
-                        RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
-                        UICancelOption.DoNothing);
-                    }
-                }
+                        var fullPathLV = it.SubItems["name"].Text;
+                        //  && Directory.Exists(fullPathLV)
+                        if (it.Checked)
+                        {
+                            printCnt++;
+                            if (printCnt < 30)
+                                CWriteLine($"delete ###  {fullPathLV}");
+                            else
+                            {
+                                if (!printWait)
+                                {
+                                    CWriteLine($">>> deleting, please waiting...");
+                                    printWait = true;
+                                }
+                            }
+                            FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
+                            deleteOrRecycleBin.Checked ?
+                            RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
+                            UICancelOption.DoNothing);
+                        }
+                    });
                 var tmpL = new List<GeminiCEFCls>();
                 foreach (var item in geminiCEFClsList)
                 {
@@ -910,7 +909,7 @@ namespace DailyWallpaper
                     geminiCEF.Checked = false;
                     geminiCEF.lastMtime = lastMtime;
                     geminiCEFClsList.Add(geminiCEF);
-                    if (print && geminiCEFClsList.Count < 50)
+                    if (print && geminiCEFClsList.Count < 30)
                         CWriteLine($"... Found empty folder: {dir}");
                     /*else
                     {
@@ -1392,8 +1391,6 @@ namespace DailyWallpaper
                 geminiCEFClsList.ForEach(item => item.Checked = !item.Checked);
             }
             RestoreCEFListViewChoice(geminiCEFClsList, _source.Token);
-
-
         }
 
         private bool GeminiFileClsListREForEach(GeminiFileCls item, 
@@ -1451,26 +1448,38 @@ namespace DailyWallpaper
             return ret;
         }
 
-        private void RestoreCEFListViewChoice(List<GeminiCEFCls> gcefl, CancellationToken token)
+        private void RestoreCEFListViewChoice(List<GeminiCEFCls> cefList, CancellationToken token)
         {
             if (resultListView.Items.Count > 0)
             {
-                foreach (var item in resultListView.Items)
-                {
-                    var it = (System.Windows.Forms.ListViewItem)item;
-                    var fullPathLV = it.SubItems["name"].Text;
-                    foreach (var gcef in gcefl)
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            token.ThrowIfCancellationRequested();
-                        }
-                        if (Directory.Exists(gcef.fullPath) && fullPathLV.Equals(gcef.fullPath))
-                        {
-                            it.Checked = gcef.Checked;
-                        }
-                    }
-                }
+                CWriteLine($">>> Updating ListView...");
+                SetSummaryBoxText($"Updating ListView...", 1);
+
+                resultListView.Items.OfType<ListViewItem>().ToList().
+                    ForEach(it => {
+                        var fullPathLV = it.SubItems["name"].Text;
+                        cefList.ForEach(cef => {
+                            if (token.IsCancellationRequested)
+                            {
+                                CWriteLine(">>> You cancel update ListView.");
+                                SetSummaryBoxText("You cancel update ListView", 1);
+                                token.ThrowIfCancellationRequested();
+                            }
+                            Application.DoEvents();
+                            // Directory.Exists(cef.fullPath) && 
+                            if (fullPathLV.Equals(cef.fullPath))
+                            {
+                                it.Checked = cef.Checked;
+                            }
+                        });
+                    });
+                /*var checkCnt =
+                (from it in geminiCEFClsList
+                 where it.Checked
+                 select it).Count();*/
+                CWriteLine($">>> You have selected {resultListView.CheckedItems.Count} empty folders");
+                SetSummaryBoxText($"You have selected {resultListView.CheckedItems.Count:N0} file(s).", 
+                    resultListView.CheckedItems.Count);
             }
         }
 
