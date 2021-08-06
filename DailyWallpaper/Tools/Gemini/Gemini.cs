@@ -72,7 +72,7 @@ namespace DailyWallpaper.Tools
             };
         }
 
-        public struct GeminiCEFStruct
+        public class GeminiCEFCls
         {
             private bool @checked;
             public string name;

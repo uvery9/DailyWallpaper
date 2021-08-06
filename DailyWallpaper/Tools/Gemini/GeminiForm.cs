@@ -41,7 +41,7 @@ namespace DailyWallpaper
         private Regex regex;
         private int nameColumnHeaderWidth = 0;
         private int modifiedTimeColumnHeaderWidth = 0;
-        private List<GeminiCEFStruct> geminiCEFStructList = new List<GeminiCEFStruct>();
+        private List<GeminiCEFCls> geminiCEFStructList = new List<GeminiCEFCls>();
 
         private List<string> targetFolder1History = new List<string>();
         private List<string> targetFolder2History = new List<string>();
@@ -839,7 +839,7 @@ namespace DailyWallpaper
             }
         }
 
-        private void UpdateEmptyFoldersToLV(List<GeminiCEFStruct> gcefl, CancellationToken token)
+        private void UpdateEmptyFoldersToLV(List<GeminiCEFCls> gcefl, CancellationToken token)
         {
             ListViewOperate(resultListView, ListViewOP.CLEAR);
             if (gcefl.Count < 1)
@@ -1797,11 +1797,11 @@ namespace DailyWallpaper
 
         }
 
-        private List<GeminiCEFStruct> UpdateCEFChecked(List<GeminiCEFStruct> gcefl)
+        private List<GeminiCEFCls> UpdateCEFCheckedFromLV(List<GeminiCEFCls> gcefl)
         {
             if (resultListView.Items.Count > 0 && gcefl.Count > 0)
             {
-                var tmpL = new List<GeminiCEFStruct>();
+                var tmpL = new List<GeminiCEFCls>();
                 foreach (var item in resultListView.Items)
                 {
                     var it = ((ListViewItem)item);

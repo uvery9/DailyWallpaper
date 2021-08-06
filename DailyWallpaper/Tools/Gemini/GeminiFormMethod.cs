@@ -851,7 +851,7 @@ namespace DailyWallpaper
                         UICancelOption.DoNothing);
                     }
                 }
-                var tmpL = new List<GeminiCEFStruct>();
+                var tmpL = new List<GeminiCEFCls>();
                 foreach (var item in geminiCEFStructList)
                 {
                     if (Directory.Exists(item.fullPath))
@@ -861,7 +861,7 @@ namespace DailyWallpaper
                 }
                 geminiCEFStructList = tmpL;
                 UpdateEmptyFoldersToLV(geminiCEFStructList, _sourceCEF.Token);
-                UpdateCEFChecked(geminiCEFStructList);
+                UpdateCEFCheckedFromLV(geminiCEFStructList);
                 cefScanRes = false;
             });
             _tasks.Add(deleteCEF);
@@ -904,7 +904,7 @@ namespace DailyWallpaper
                     {
                         lastMtime = ex.Message;
                     }
-                    var geminiCEF = new GeminiCEFStruct();
+                    var geminiCEF = new GeminiCEFCls();
                     geminiCEF.name = dir;
                     geminiCEF.fullPath = dir;
                     geminiCEF.Checked = false;
@@ -1366,55 +1366,34 @@ namespace DailyWallpaper
 
         private void MultipleSelectOperationsActionCEF(MultipleSelectOperations op)
         {
-            var mpCEFTask = Task.Run(() => {
-                if (resultListView.Items.Count < 1)
-                {
-                    return;
-                }
-                undoToolStripMenuItem.Enabled = true;
-                // geminiCEFStructListRedo
-                if (op == MultipleSelectOperations.REVERSE_ELECTION)
-                {
-                    geminiCEFStructList = UpdateCEFChecked(geminiCEFStructList)
-                        ?? geminiCEFStructList;
-                }
-                var tmpGfl = new List<GeminiCEFStruct>();
-                if (geminiCEFStructList.Count < 1)
-                {
-                    return;
-                }
-                foreach (var item in geminiCEFStructList)
-                {
-                    var tmp = item;
-                    if (op == MultipleSelectOperations.REVERSE_ELECTION)
-                    {
-                        if (item.Checked)
-                        {
-                            tmp.Checked = false;
-                        }
-                        else
-                        {
-                            tmp.Checked = true;
-                        }
-                    }
-                    else if (op == MultipleSelectOperations.CHECK_ALL)
-                    {
-                        tmp.Checked = true;
-                    }
-                    else if (op == MultipleSelectOperations.UNCHECK_ALL)
-                    {
-                        tmp.Checked = false;
-                    }
-                    tmpGfl.Add(tmp);
-                }
-                if (tmpGfl.Count < 1)
-                {
-                    return;
-                }
-                geminiCEFStructList = tmpGfl;
-                RestoreCEFListViewChoice(geminiCEFStructList, _source.Token);
-            });
-            _tasks.Add(mpCEFTask);
+            if (resultListView.Items.Count < 1)
+            {
+                return;
+            }
+            undoToolStripMenuItem.Enabled = false;
+            if (op == MultipleSelectOperations.REVERSE_ELECTION)
+            {
+                geminiCEFStructList = UpdateCEFCheckedFromLV(geminiCEFStructList);
+            }
+            if (geminiCEFStructList.Count < 1)
+            {
+                return;
+            }
+            if (op == MultipleSelectOperations.CHECK_ALL)
+            {
+                geminiCEFStructList.ForEach(item => item.Checked = true);
+            }
+            else if (op == MultipleSelectOperations.UNCHECK_ALL)
+            {
+                geminiCEFStructList.ForEach(item => item.Checked = false);
+            }
+            else if (op == MultipleSelectOperations.REVERSE_ELECTION)
+            {
+                geminiCEFStructList.ForEach(item => item.Checked = !item.Checked);
+            }
+            RestoreCEFListViewChoice(geminiCEFStructList, _source.Token);
+
+
         }
 
         private bool GeminiFileClsListREForEach(GeminiFileCls item, 
@@ -1472,7 +1451,7 @@ namespace DailyWallpaper
             return ret;
         }
 
-        private void RestoreCEFListViewChoice(List<GeminiCEFStruct> gcefl, CancellationToken token)
+        private void RestoreCEFListViewChoice(List<GeminiCEFCls> gcefl, CancellationToken token)
         {
             if (resultListView.Items.Count > 0)
             {
