@@ -816,15 +816,35 @@ namespace DailyWallpaper
             if (!cefScanRes)
             {
                 btnAnalyze.PerformClick();
+                CWriteLine($">>> Check and click again.");
+                return;
             }
+            _sourceCEF = new CancellationTokenSource();
             var deleteCEF = Task.Run(() => {
+                int printCnt = 0;
+                bool printWait = false;
                 foreach (var item in resultListView.Items)
                 {
-                    var it = (System.Windows.Forms.ListViewItem)item;
+                    if (_sourceCEF.Token.IsCancellationRequested)
+                    {
+                        _sourceCEF.Token.ThrowIfCancellationRequested();
+                    }
+                    var it = (ListViewItem)item;
                     var fullPathLV = it.SubItems["name"].Text;
                     if (it.Checked && Directory.Exists(fullPathLV))
                     {
-                        CWriteLine($"delete ###  {fullPathLV}");
+                        printCnt++;
+                        if (printCnt < 50)
+                            CWriteLine($"delete ###  {fullPathLV}");
+                        else
+                        {
+                            if (!printWait)
+                            {
+                                CWriteLine($">>> deleting, please waiting...");
+                                printWait = true;
+                            }
+                        }
+                            
                         FileSystem.DeleteDirectory(fullPathLV, UIOption.OnlyErrorDialogs,
                         deleteOrRecycleBin.Checked ?
                         RecycleOption.DeletePermanently : RecycleOption.SendToRecycleBin,
@@ -840,7 +860,7 @@ namespace DailyWallpaper
                     }
                 }
                 geminiCEFStructList = tmpL;
-                UpdateEmptyFoldersToLV(geminiCEFStructList, _source.Token);
+                UpdateEmptyFoldersToLV(geminiCEFStructList, _sourceCEF.Token);
                 UpdateCEFChecked(geminiCEFStructList);
                 cefScanRes = false;
             });
@@ -868,7 +888,7 @@ namespace DailyWallpaper
             }
         }
 
-        private void EmptyJudgeCEF(string dir)
+        private void EmptyJudgeCEF(string dir, bool print = true)
         {
             var entries = Directory.EnumerateFileSystemEntries(dir);
             if (!entries.Any())
@@ -890,7 +910,12 @@ namespace DailyWallpaper
                     geminiCEF.Checked = false;
                     geminiCEF.lastMtime = lastMtime;
                     geminiCEFStructList.Add(geminiCEF);
-                    CWriteLine($"... Found empty folder: {dir}");
+                    if (print && geminiCEFStructList.Count < 50)
+                        CWriteLine($"... Found empty folder: {dir}");
+                    /*else
+                    {
+                        CWriteLine($"... Found empty folder, please waiting: {dir}");
+                    }*/
                 }
                 catch (UnauthorizedAccessException) { }
                 catch (DirectoryNotFoundException) { }

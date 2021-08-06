@@ -30,6 +30,7 @@ namespace DailyWallpaper
         private TextBoxCons _console;
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private CancellationTokenSource _source = new CancellationTokenSource();
+        private CancellationTokenSource _sourceCEF;
         private CancellationTokenSource reIndexTokenSrc = null;
         private CancellationTokenSource hashTokenSrc = null;
 
@@ -774,7 +775,7 @@ namespace DailyWallpaper
                     }
                     ScanEmptyDirsProtectMode(d, token);
                 }
-                EmptyJudgeCEF(dir);
+                EmptyJudgeCEF(dir, print: true);
             }
             catch (UnauthorizedAccessException) { }
         }
@@ -810,7 +811,7 @@ namespace DailyWallpaper
                 {
                     if (regex.IsMatch(path))
                     {
-                        EmptyJudgeCEF(path);
+                        EmptyJudgeCEF(path, print:true);
                         return;
                     }
                 }
@@ -824,7 +825,7 @@ namespace DailyWallpaper
                         }
                         if (path.Contains(filter))
                         {
-                            EmptyJudgeCEF(path);
+                            EmptyJudgeCEF(path, print: true);
                             continue;
                         }
                     }
