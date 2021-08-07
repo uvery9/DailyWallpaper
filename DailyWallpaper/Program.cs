@@ -23,12 +23,21 @@ namespace DailyWallpaper
                 .GetType().GUID
                 .ToString();
             // Use the assembly GUID as the name of the mutex which we use to detect if an application instance is already running
-            using (System.Threading.Mutex mutex = new System.Threading.Mutex(false, mutexName, out bool createdNew))
+            using (System.Threading.Mutex mutex = new Mutex(false, mutexName, out bool createdNew))
             {
                 if (!createdNew)
                 {
-                    var result = MessageBox.Show("Only allow one instance. \r\nPress \"Cancel\": restart.", "Confirmation", MessageBoxButtons.OKCancel);
-                    if (result == DialogResult.Cancel)
+
+                    var locale = System.Globalization.CultureInfo.CurrentUICulture;
+                    // private static readonly CultureInfo CurrentCultureInfo = CultureInfo.GetCultureInfo("zh-CN");
+                    // private static readonly CultureInfo CurrentCultureInfo = CultureInfo.GetCultureInfo("en");
+                    var buttonOK = MessageBoxButtons.OK.ToString();
+                    if (locale.ToString().ToLower().Contains("zh-cn"))
+                        buttonOK = "确定";
+                    var name = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+                    var result = MessageBox.Show($"Only allow one instance. \r\nPress \"{buttonOK}\" to restart.",
+                        $"{name}", MessageBoxButtons.OKCancel); // Confirmation
+                    if (result == DialogResult.OK)
                     {
                         foreach (Process proc in Process.GetProcesses())
                         {
