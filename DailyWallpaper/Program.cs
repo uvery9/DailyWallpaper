@@ -23,7 +23,7 @@ namespace DailyWallpaper
                 .GetType().GUID
                 .ToString();
             // Use the assembly GUID as the name of the mutex which we use to detect if an application instance is already running
-            using (System.Threading.Mutex mutex = new Mutex(false, mutexName, out bool createdNew))
+            using (Mutex mutex = new Mutex(false, mutexName, out bool createdNew))
             {
                 if (!createdNew)
                 {
