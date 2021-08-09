@@ -6,7 +6,7 @@
 
 **[DailyWallpaper Website](https://github.com/JaredDC/DailyWallpaper)**
 
-[DailyWallpaper Website for China People](https://gitee.com/imtvip/DailyWallpaper)
+[DailyWallpaper Website for Chinese](https://gitee.com/imtvip/DailyWallpaper)
 
 
 [![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaper/releases/latest)
