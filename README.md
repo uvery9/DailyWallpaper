@@ -13,6 +13,13 @@
 
 [![Latest](https://img.shields.io/badge/Click-Download_Latest-important)](https://ci.appveyor.com/project/JaredDC/dailywallpaper/build/artifacts)
 
+## How to build
+1. Pull from github(git command will be use in project)
+2. Open DailyWallpaper.sln
+3. Set Release x64
+4. Build solution
+5. bin\Release\DailyWallpaper.exe is your need.
+6. DailyWallpaper.Installer will generate DailyWallpaper.Installer.msi. Build for yourself do not need it.
 
 ## User Interface
 
