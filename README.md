@@ -1,5 +1,5 @@
 # DailyWallpaper
-### Change the wallpaper daily from Bing,Spotlight or LocalPath
+### Change the wallpaper daily from Bing,Spotlight or LocalPath (Only for Windows X64)
 <img src="https://user-images.githubusercontent.com/42594123/123645736-289d0480-d859-11eb-80f3-8e1094bc29fd.png" width="100">  
 
 **[DailyWallpaper Website](https://github.com/JaredDC/DailyWallpaper)**
