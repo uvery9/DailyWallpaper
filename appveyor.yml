@@ -20,9 +20,7 @@ after_build:
     
     set /P GIT_TAG=<OUTPUTFILE.TXT
     
-    git tag -l -n10 --points-at HEAD > GIT_TAG_MSG.TXT
-    
-    set /P GIT_TAG_MSG=<GIT_TAG_MSG.TXT
+
     
     cd DailyWallpaper\bin\Release\
     
@@ -53,6 +51,14 @@ artifacts:
   name: DailyWallpaper.Installer.Hash
 - path: OUTPUT\*.zip.sha256
   name: DailyWallpaper.Protable.Hash
+
+
+# scripts to run before deployment
+before_deploy:
+- cmd:   
+    git tag -l -n10 --points-at HEAD > GIT_TAG_MSG.TXT
+    
+    set /P GIT_TAG_MSG=<GIT_TAG_MSG.TXT
 
 deploy:
   release: pre--%GIT_TAG%
