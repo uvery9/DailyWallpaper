@@ -149,7 +149,7 @@ namespace DailyWallpaper.Tools.ShutdownTimer
             this.Controls.Add(this.panel1);
             this.Name = "Shutdown";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Shutdown";
+            this.Text = "Shutdown Timer";
             this.VisibleChanged += new System.EventHandler(this.Shutdown_VisibleChanged);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

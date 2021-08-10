@@ -60,11 +60,12 @@ namespace DailyWallpaper.View
             this.videoEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_HashCalc = new System.Windows.Forms.ToolStripMenuItem();
             this.geminiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.shutdownTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.shutdownTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dateCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -246,7 +247,8 @@ namespace DailyWallpaper.View
             this.videoEditorToolStripMenuItem,
             this.Icon_HashCalc,
             this.geminiToolStripMenuItem,
-            this.shutdownTimerToolStripMenuItem});
+            this.shutdownTimerToolStripMenuItem,
+            this.dateCalculatorToolStripMenuItem});
             this.Icon_Toolbox.Name = "Icon_Toolbox";
             resources.ApplyResources(this.Icon_Toolbox, "Icon_Toolbox");
             // 
@@ -274,6 +276,12 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this.geminiToolStripMenuItem, "geminiToolStripMenuItem");
             this.geminiToolStripMenuItem.Click += new System.EventHandler(this.geminiToolStripMenuItem_Click);
             // 
+            // shutdownTimerToolStripMenuItem
+            // 
+            this.shutdownTimerToolStripMenuItem.Name = "shutdownTimerToolStripMenuItem";
+            resources.ApplyResources(this.shutdownTimerToolStripMenuItem, "shutdownTimerToolStripMenuItem");
+            this.shutdownTimerToolStripMenuItem.Click += new System.EventHandler(this.shutdownTimerToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
@@ -298,11 +306,11 @@ namespace DailyWallpaper.View
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
-            // shutdownTimerToolStripMenuItem
+            // dateCalculatorToolStripMenuItem
             // 
-            this.shutdownTimerToolStripMenuItem.Name = "shutdownTimerToolStripMenuItem";
-            resources.ApplyResources(this.shutdownTimerToolStripMenuItem, "shutdownTimerToolStripMenuItem");
-            this.shutdownTimerToolStripMenuItem.Click += new System.EventHandler(this.shutdownTimerToolStripMenuItem_Click);
+            this.dateCalculatorToolStripMenuItem.Name = "dateCalculatorToolStripMenuItem";
+            resources.ApplyResources(this.dateCalculatorToolStripMenuItem, "dateCalculatorToolStripMenuItem");
+            this.dateCalculatorToolStripMenuItem.Click += new System.EventHandler(this.dateCalculatorToolStripMenuItem_Click);
             // 
             // OptionsView
             // 
@@ -349,5 +357,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem geminiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem videoEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shutdownTimerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dateCalculatorToolStripMenuItem;
     }
 }

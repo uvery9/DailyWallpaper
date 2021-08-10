@@ -1257,5 +1257,10 @@ namespace DailyWallpaper.View
             //new Tools.ShutdownTimer.Shutdown().Show();
             _shutdownTimer.Show();
     }
+
+        private void dateCalculatorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new DateCnt().Show();
+        }
     }
 }
