@@ -163,10 +163,10 @@ namespace DailyWallpaper
             // 
             // timeDiffTextBox
             // 
-            this.timeDiffTextBox.Location = new System.Drawing.Point(376, 185);
+            this.timeDiffTextBox.Location = new System.Drawing.Point(360, 185);
             this.timeDiffTextBox.Name = "timeDiffTextBox";
             this.timeDiffTextBox.ReadOnly = true;
-            this.timeDiffTextBox.Size = new System.Drawing.Size(282, 28);
+            this.timeDiffTextBox.Size = new System.Drawing.Size(298, 28);
             this.timeDiffTextBox.TabIndex = 20;
             this.timeDiffTextBox.Text = "1 yr 2 mo 20 day(s), 445 days";
             this.timeDiffTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;

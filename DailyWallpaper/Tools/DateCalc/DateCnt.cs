@@ -47,7 +47,11 @@ namespace DailyWallpaper
         {
             if (timeDiffCheckBox.Checked)
             {
-                var days = (int)(rightDateTimePicker.Value - dateTimePickerOri.Value).TotalDays;
+                var daysDiff = (int)(rightDateTimePicker.Value - dateTimePickerOri.Value).TotalDays;
+                var positiveOrNegative =
+                    daysDiff < 0
+                    ? "- " : "";
+                var days = Math.Abs(daysDiff);
                 string y = "";
                 string m = "";
                 var totalDays = "";
@@ -66,7 +70,7 @@ namespace DailyWallpaper
                     days -= days / 30 * 30;
                 }
                 string d = $"{days} day(s)";
-                timeDiffTextBox.Text = $" {y + m + d}{totalDays}";
+                timeDiffTextBox.Text = $" {positiveOrNegative + y + m + d}{totalDays}";
             }
             if (addSubCheckBox.Checked)
             {
