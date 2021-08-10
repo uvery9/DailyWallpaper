@@ -1084,7 +1084,10 @@ namespace DailyWallpaper.View
                                 "Update Downloaded, click me to install.",
                                 timeout: 20000,
                                 clickEvent:
-                                () => Process.Start(msg));
+                                () => { 
+                                    Process.Start(msg);
+                                    Icon_Quit.PerformClick();
+                                });
                 }
             }
             if (click)
