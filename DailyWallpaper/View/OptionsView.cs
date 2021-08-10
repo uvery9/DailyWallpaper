@@ -124,9 +124,9 @@ namespace DailyWallpaper.View
 
             Icon_Bing.Text =
                     TranslationHelper.Get("Icon_Bing");
-            Icon_Bing.ToolTipText =
+            /*Icon_Bing.ToolTipText =
                     string.Format(TranslationHelper.Get("Icon_FeatureTit"), 
-                    TranslationHelper.Get("Icon_Bing"));
+                    TranslationHelper.Get("Icon_Bing"));*/
 
             Icon_AlwaysDownLoadBingPicture.Text =
                     "    " + TranslationHelper.Get("Icon_AlwaysDownLoadBingPicture");
@@ -142,9 +142,9 @@ namespace DailyWallpaper.View
             Icon_SkipToday.Click += Icon_SkipToday_Click;
 
             Icon_LocalPath.Text = TranslationHelper.Get("Icon_LocalPath");
-            Icon_LocalPath.ToolTipText =
+            /*Icon_LocalPath.ToolTipText =
                     string.Format(TranslationHelper.Get("Icon_FeatureTit"),
-                    TranslationHelper.Get("Icon_LocalPath"));
+                    TranslationHelper.Get("Icon_LocalPath"));*/
 
             Icon_LocalPathSetting.Text = TranslationHelper.Get("Icon_LocalPathSetting");
             Icon_LocalPathSetting.Click += _Icon_LocalPathSettingMenuItem_Click;
@@ -152,9 +152,9 @@ namespace DailyWallpaper.View
 
             Icon_Spotlight.Text =
                     TranslationHelper.Get("Icon_Spotlight");
-            Icon_Spotlight.ToolTipText =
+            /*Icon_Spotlight.ToolTipText =
                     string.Format(TranslationHelper.Get("Icon_FeatureTit"),
-                    TranslationHelper.Get("Icon_Spotlight"));
+                    TranslationHelper.Get("Icon_Spotlight"));*/
 
             Icon_DisableShortcutKeys.Text =
                     TranslationHelper.Get("Icon_DisableShortcutKeys");
@@ -897,6 +897,15 @@ namespace DailyWallpaper.View
                 Icon_BingNotAddWaterMark.Checked = false;
             }
 
+            Icon_SkipToday.Checked = false;
+            if (DateTime.TryParse(_ini.Read("bingSkipToday", "Online"), out DateTime ret))
+            {
+                if (ret.DayOfYear.Equals(DateTime.Today.DayOfYear))
+                {
+                    Icon_SkipToday.Checked = true;
+                }
+            }
+
             if (AutoStartupHelper.IsAutorun())
             {
                 Icon_RunAtStartup.Checked = true;
@@ -1276,10 +1285,13 @@ namespace DailyWallpaper.View
             if (it.Checked)
             {
                 it.Checked = false;
+                _ini.UpdateIniItem("bingSkipToday", "NULL", "Online");
             }
             else
             {
                 it.Checked = true;
+                _ini.UpdateIniItem("bingSkipToday", DateTime.Today.ToString("yyyy-MM-dd"), "Online");
+                Icon_ChangeWallpaper.PerformClick();
             }
         }
     }

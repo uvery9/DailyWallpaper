@@ -106,7 +106,15 @@ namespace DailyWallpaper
                 }
             }
             var choiceList = new List<string>();
-            if (iniFile.EqualsIgnoreCase("bing", "yes", "Online"))
+            bool bingSkipToday = false;
+            if (DateTime.TryParse(iniFile.Read("bingSkipToday", "Online"), out DateTime ret))
+            {
+                if (ret.DayOfYear.Equals(DateTime.Today.DayOfYear))
+                {
+                    bingSkipToday = true;
+                }
+            }
+            if (iniFile.EqualsIgnoreCase("bing", "yes", "Online") && !bingSkipToday)
             {
                 choiceList.Add("bing");
             }
