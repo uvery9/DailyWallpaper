@@ -61,11 +61,12 @@ namespace DailyWallpaper.View
             this.Icon_HashCalc = new System.Windows.Forms.ToolStripMenuItem();
             this.geminiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shutdownTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dateCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.dateCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_SkipToday = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,7 +130,8 @@ namespace DailyWallpaper.View
             // 
             this.Icon_Bing.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Icon_AlwaysDownLoadBingPicture,
-            this.Icon_BingNotAddWaterMark});
+            this.Icon_BingNotAddWaterMark,
+            this.Icon_SkipToday});
             this.Icon_Bing.Name = "Icon_Bing";
             resources.ApplyResources(this.Icon_Bing, "Icon_Bing");
             this.Icon_Bing.Click += new System.EventHandler(this.Icon_Bing_Click);
@@ -282,6 +284,12 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this.shutdownTimerToolStripMenuItem, "shutdownTimerToolStripMenuItem");
             this.shutdownTimerToolStripMenuItem.Click += new System.EventHandler(this.shutdownTimerToolStripMenuItem_Click);
             // 
+            // dateCalculatorToolStripMenuItem
+            // 
+            this.dateCalculatorToolStripMenuItem.Name = "dateCalculatorToolStripMenuItem";
+            resources.ApplyResources(this.dateCalculatorToolStripMenuItem, "dateCalculatorToolStripMenuItem");
+            this.dateCalculatorToolStripMenuItem.Click += new System.EventHandler(this.dateCalculatorToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
@@ -306,11 +314,10 @@ namespace DailyWallpaper.View
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
-            // dateCalculatorToolStripMenuItem
+            // Icon_SkipToday
             // 
-            this.dateCalculatorToolStripMenuItem.Name = "dateCalculatorToolStripMenuItem";
-            resources.ApplyResources(this.dateCalculatorToolStripMenuItem, "dateCalculatorToolStripMenuItem");
-            this.dateCalculatorToolStripMenuItem.Click += new System.EventHandler(this.dateCalculatorToolStripMenuItem_Click);
+            this.Icon_SkipToday.Name = "Icon_SkipToday";
+            resources.ApplyResources(this.Icon_SkipToday, "Icon_SkipToday");
             // 
             // OptionsView
             // 
@@ -358,5 +365,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem videoEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shutdownTimerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dateCalculatorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Icon_SkipToday;
     }
 }

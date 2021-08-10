@@ -159,16 +159,22 @@
     <value>314, 6</value>
   </data>
   <data name="Icon_AlwaysDownLoadBingPicture.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 34</value>
+    <value>270, 34</value>
   </data>
   <data name="Icon_AlwaysDownLoadBingPicture.Text" xml:space="preserve">
     <value>总是下载Bing图片</value>
   </data>
   <data name="Icon_BingNotAddWaterMark.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 34</value>
+    <value>270, 34</value>
   </data>
   <data name="Icon_BingNotAddWaterMark.Text" xml:space="preserve">
     <value>增加Bing水印</value>
+  </data>
+  <data name="Icon_SkipToday.Size" type="System.Drawing.Size, System.Drawing">
+    <value>270, 34</value>
+  </data>
+  <data name="Icon_SkipToday.Text" xml:space="preserve">
+    <value>Skip Today</value>
   </data>
   <data name="Icon_Bing.Size" type="System.Drawing.Size, System.Drawing">
     <value>317, 30</value>
@@ -525,6 +531,12 @@
   <data name="&gt;&gt;shutdownTimerToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;dateCalculatorToolStripMenuItem.Name" xml:space="preserve">
+    <value>dateCalculatorToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;dateCalculatorToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;toolStripMenuItem4.Name" xml:space="preserve">
     <value>toolStripMenuItem4</value>
   </data>
@@ -549,10 +561,10 @@
   <data name="&gt;&gt;_notifyIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;dateCalculatorToolStripMenuItem.Name" xml:space="preserve">
-    <value>dateCalculatorToolStripMenuItem</value>
+  <data name="&gt;&gt;Icon_SkipToday.Name" xml:space="preserve">
+    <value>Icon_SkipToday</value>
   </data>
-  <data name="&gt;&gt;dateCalculatorToolStripMenuItem.Type" xml:space="preserve">
+  <data name="&gt;&gt;Icon_SkipToday.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

@@ -137,6 +137,10 @@ namespace DailyWallpaper.View
                     "    " + TranslationHelper.Get("Icon_BingNotAddWaterMark");
             Icon_BingNotAddWaterMark.Click += Icon_BingNotAddWaterMark_Click;
 
+            Icon_SkipToday.Text =
+                    "    " + TranslationHelper.Get("Icon_SkipToday");
+            Icon_SkipToday.Click += Icon_SkipToday_Click;
+
             Icon_LocalPath.Text = TranslationHelper.Get("Icon_LocalPath");
             Icon_LocalPath.ToolTipText =
                     string.Format(TranslationHelper.Get("Icon_FeatureTit"),
@@ -1264,6 +1268,19 @@ namespace DailyWallpaper.View
         private void dateCalculatorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new DateCnt().Show();
+        }
+
+        private void Icon_SkipToday_Click(object sender, EventArgs e)
+        {
+            var it = Icon_SkipToday;
+            if (it.Checked)
+            {
+                it.Checked = false;
+            }
+            else
+            {
+                it.Checked = true;
+            }
         }
     }
 }
