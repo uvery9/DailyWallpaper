@@ -4,16 +4,13 @@
 
 <img src="https://user-images.githubusercontent.com/42594123/123645736-289d0480-d859-11eb-80f3-8e1094bc29fd.png" width="100">  
 
-**[DailyWallpaper Website](https://github.com/JaredDC/DailyWallpaper)**
+**[DailyWallpaper Github](https://github.com/JaredDC/DailyWallpaper)**
 
-[DailyWallpaper Website for Chinese](https://gitee.com/imtvip/DailyWallpaper)
-
-
-[![license](https://img.shields.io/github/license/JaredDC/DailyWallpaperUI)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaper/releases/latest)
+[DailyWallpaper Gitee for Chinese](https://gitee.com/imtvip/DailyWallpaper)
 
 [![AppVeyor](https://img.shields.io/appveyor/build/JaredDC/dailywallpaper)](https://ci.appveyor.com/project/JaredDC/dailywallpaper) 
-
 [![Latest](https://img.shields.io/badge/Click-Download_Latest-important)](https://ci.appveyor.com/project/JaredDC/dailywallpaper/build/artifacts)
+[![GitHub release](https://img.shields.io/github/v/release/JaredDC/DailyWallpaperUI?style=plastic)](https://github.com/JaredDC/DailyWallpaper/releases/latest)
 
 ## How to build
 1. Pull from github(git command will be use in project)
