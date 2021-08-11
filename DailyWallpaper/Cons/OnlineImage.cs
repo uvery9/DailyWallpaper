@@ -52,6 +52,7 @@ namespace DailyWallpaper
             // var file_name = string.Concat(filename.Split(Path.GetInvalidFileNameChars()));
             // replace illegal characters with _
             var file_name = string.Join("_", bingImg.Copyright.Split(Path.GetInvalidFileNameChars()));
+            file_name = file_name.Replace("©", "by");
             string wallpaper = Path.Combine(path, file_name + ".jpg");
             var wallpaperWMK = Path.Combine(path, file_name + "-WMK.jpg");
             if (print)

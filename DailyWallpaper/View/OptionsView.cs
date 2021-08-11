@@ -194,7 +194,7 @@ namespace DailyWallpaper.View
             });
 
             Icon_CheckUpdate.Text = TranslationHelper.Get("Icon_CheckUpdate");
-
+            Icon_DeleteCurrentWallpaper.Text = TranslationHelper.Get("Icon_DeleteCurrentWallpaper");
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
@@ -238,7 +238,7 @@ namespace DailyWallpaper.View
                     res = DailyWallpaperCons.GetInstance().ShowDialog();
                 }
 
-                System.Threading.Thread.Sleep(500);
+                Thread.Sleep(500);
                 if (!res)
                 {
                     setWallpaperSucceed = false;
@@ -250,10 +250,12 @@ namespace DailyWallpaper.View
                 else
                 {
                     setWallpaperSucceed = true;
+                    var wp = _ini.Read("WALLPAPER", "LOG");
                     if (!silent)
                         ShowNotification("",
                             string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"),
-                            Environment.NewLine + $"{_ini.Read("WALLPAPER", "LOG")}") );
+                            Environment.NewLine + $"{wp}") );
+                    Icon_DeleteCurrentWallpaper.ToolTipText = "CurrWP: " + wp;
                 }
             }
             catch
@@ -1292,6 +1294,26 @@ namespace DailyWallpaper.View
                 it.Checked = true;
                 _ini.UpdateIniItem("bingSkipToday", DateTime.Today.ToString("yyyy-MM-dd"), "Online");
                 Icon_ChangeWallpaper.PerformClick();
+            }
+        }
+
+        private void Icon_DeleteCurrentWallpaper_Click(object sender, EventArgs e)
+        {
+            try {
+                var wp = _ini.Read("WALLPAPER", "LOG");
+                if (File.Exists(wp))
+                {
+                    File.Delete(wp);
+                    if (_ini.EqualsIgnoreCase("WallpaperType", "bing", "LOG"))
+                        Icon_SkipToday.PerformClick();
+                    Icon_ChangeWallpaper.PerformClick();
+                }
+                /*else
+                {
+                    MessageBox.Show($"WP doesn't exist: {wp}");
+                }*/
+            }
+            catch { 
             }
         }
     }

@@ -40,6 +40,7 @@ namespace DailyWallpaper.View
             this.Icon_Bing = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_AlwaysDownLoadBingPicture = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_BingNotAddWaterMark = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_SkipToday = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_LocalPath = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_LocalPathSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Spotlight = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +67,7 @@ namespace DailyWallpaper.View
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.Icon_SkipToday = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_DeleteCurrentWallpaper = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -148,6 +149,11 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this.Icon_BingNotAddWaterMark, "Icon_BingNotAddWaterMark");
             this.Icon_BingNotAddWaterMark.Click += new System.EventHandler(this.Icon_BingNotAddWaterMark_Click);
             // 
+            // Icon_SkipToday
+            // 
+            this.Icon_SkipToday.Name = "Icon_SkipToday";
+            resources.ApplyResources(this.Icon_SkipToday, "Icon_SkipToday");
+            // 
             // Icon_LocalPath
             // 
             this.Icon_LocalPath.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -202,6 +208,7 @@ namespace DailyWallpaper.View
             this.Icon_CheckUpdate,
             this.Icon_IssueAndFeedback,
             this.toolStripMenuItem5,
+            this.Icon_DeleteCurrentWallpaper,
             this.Icon_OpenConsole,
             this.Icon_About});
             this.Icon_Help.Name = "Icon_Help";
@@ -314,10 +321,11 @@ namespace DailyWallpaper.View
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
-            // Icon_SkipToday
+            // Icon_DeleteCurrentWallpaper
             // 
-            this.Icon_SkipToday.Name = "Icon_SkipToday";
-            resources.ApplyResources(this.Icon_SkipToday, "Icon_SkipToday");
+            this.Icon_DeleteCurrentWallpaper.Name = "Icon_DeleteCurrentWallpaper";
+            resources.ApplyResources(this.Icon_DeleteCurrentWallpaper, "Icon_DeleteCurrentWallpaper");
+            this.Icon_DeleteCurrentWallpaper.Click += new System.EventHandler(this.Icon_DeleteCurrentWallpaper_Click);
             // 
             // OptionsView
             // 
@@ -366,5 +374,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem shutdownTimerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dateCalculatorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem Icon_SkipToday;
+        private System.Windows.Forms.ToolStripMenuItem Icon_DeleteCurrentWallpaper;
     }
 }

@@ -163,6 +163,7 @@ namespace DailyWallpaper
             }
             // Fill is the best.
             Wallpaper.SetWallPaper(wallpaper, Wallpaper.PicturePosition.Fill);
+            iniFile.UpdateIniItem("WallpaperType", choice, "LOG");
             iniFile.UpdateIniItem("WALLPAPER", wallpaper, "LOG");
             iniFile.UpdateIniItem("WALLPAPERSetTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
             return true;
