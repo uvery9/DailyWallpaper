@@ -15,8 +15,7 @@ using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Threading;
-
-
+using Microsoft.VisualBasic.FileIO;
 
 namespace DailyWallpaper.View
 {
@@ -772,7 +771,8 @@ namespace DailyWallpaper.View
                     return;
                     // throw new ArgumentException("Starting directory is a null reference or an empty string: path");
                 }
-                foreach (var d in Directory.EnumerateDirectories(path, "*Notepad*", SearchOption.AllDirectories))
+                foreach (var d in Directory.EnumerateDirectories(path, "*Notepad*", 
+                    System.IO.SearchOption.AllDirectories))
                 {
                     if (d.Contains("Notepad++"))
                     {
@@ -1303,7 +1303,7 @@ namespace DailyWallpaper.View
                 var wp = _ini.Read("WALLPAPER", "LOG");
                 if (File.Exists(wp))
                 {
-                    File.Delete(wp);
+                    FileSystem.DeleteFile(wp, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
                     if (_ini.EqualsIgnoreCase("WallpaperType", "bing", "LOG"))
                         Icon_SkipToday.PerformClick();
                     Icon_ChangeWallpaper.PerformClick();
