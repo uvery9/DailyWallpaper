@@ -155,6 +155,18 @@
   <data name="Icon_Bing.Text" xml:space="preserve">
     <value>Bing</value>
   </data>
+  <data name="Icon_LocalPathSetting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>336, 34</value>
+  </data>
+  <data name="Icon_LocalPathSetting.Text" xml:space="preserve">
+    <value>Local Path Setting</value>
+  </data>
+  <data name="Icon_CleanUnqualifiedImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>336, 34</value>
+  </data>
+  <data name="Icon_CleanUnqualifiedImages.Text" xml:space="preserve">
+    <value>Clean Unqualified Pictures</value>
+  </data>
   <data name="Icon_LocalPath.Size" type="System.Drawing.Size, System.Drawing">
     <value>317, 30</value>
   </data>
@@ -190,45 +202,6 @@
   </data>
   <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
     <value>314, 6</value>
-  </data>
-  <data name="Icon_OpenOfficialWebsite.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_OpenOfficialWebsite.Text" xml:space="preserve">
-    <value>打开官网...</value>
-  </data>
-  <data name="Icon_CheckUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_CheckUpdate.Text" xml:space="preserve">
-    <value>检查更新</value>
-  </data>
-  <data name="Icon_IssueAndFeedback.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_IssueAndFeedback.Text" xml:space="preserve">
-    <value>问题反馈...</value>
-  </data>
-  <data name="toolStripMenuItem5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>327, 6</value>
-  </data>
-  <data name="Icon_DeleteCurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_DeleteCurrentWallpaper.Text" xml:space="preserve">
-    <value>Delete Current Wallpaper</value>
-  </data>
-  <data name="Icon_OpenConsole.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_OpenConsole.Text" xml:space="preserve">
-    <value>打开控制台</value>
-  </data>
-  <data name="Icon_About.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_About.Text" xml:space="preserve">
-    <value>关于</value>
   </data>
   <data name="Icon_Help.Size" type="System.Drawing.Size, System.Drawing">
     <value>317, 30</value>
@@ -293,11 +266,44 @@
   <data name="Icon_SkipToday.Text" xml:space="preserve">
     <value>Skip Today</value>
   </data>
-  <data name="Icon_LocalPathSetting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>265, 34</value>
+  <data name="Icon_OpenOfficialWebsite.Size" type="System.Drawing.Size, System.Drawing">
+    <value>330, 34</value>
   </data>
-  <data name="Icon_LocalPathSetting.Text" xml:space="preserve">
-    <value>Local Path Setting</value>
+  <data name="Icon_OpenOfficialWebsite.Text" xml:space="preserve">
+    <value>打开官网...</value>
+  </data>
+  <data name="Icon_CheckUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>330, 34</value>
+  </data>
+  <data name="Icon_CheckUpdate.Text" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="Icon_IssueAndFeedback.Size" type="System.Drawing.Size, System.Drawing">
+    <value>330, 34</value>
+  </data>
+  <data name="Icon_IssueAndFeedback.Text" xml:space="preserve">
+    <value>问题反馈...</value>
+  </data>
+  <data name="toolStripMenuItem5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>327, 6</value>
+  </data>
+  <data name="Icon_DeleteCurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
+    <value>330, 34</value>
+  </data>
+  <data name="Icon_DeleteCurrentWallpaper.Text" xml:space="preserve">
+    <value>Delete Current Wallpaper</value>
+  </data>
+  <data name="Icon_OpenConsole.Size" type="System.Drawing.Size, System.Drawing">
+    <value>330, 34</value>
+  </data>
+  <data name="Icon_OpenConsole.Text" xml:space="preserve">
+    <value>打开控制台</value>
+  </data>
+  <data name="Icon_About.Size" type="System.Drawing.Size, System.Drawing">
+    <value>330, 34</value>
+  </data>
+  <data name="Icon_About.Text" xml:space="preserve">
+    <value>关于</value>
   </data>
   <data name="Icon_Notepad.Size" type="System.Drawing.Size, System.Drawing">
     <value>274, 34</value>
@@ -498,6 +504,12 @@
   <data name="&gt;&gt;toolStripMenuItem5.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;Icon_DeleteCurrentWallpaper.Name" xml:space="preserve">
+    <value>Icon_DeleteCurrentWallpaper</value>
+  </data>
+  <data name="&gt;&gt;Icon_DeleteCurrentWallpaper.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;Icon_OpenConsole.Name" xml:space="preserve">
     <value>Icon_OpenConsole</value>
   </data>
@@ -576,10 +588,10 @@
   <data name="&gt;&gt;_notifyIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_DeleteCurrentWallpaper.Name" xml:space="preserve">
-    <value>Icon_DeleteCurrentWallpaper</value>
+  <data name="&gt;&gt;Icon_CleanUnqualifiedImages.Name" xml:space="preserve">
+    <value>Icon_CleanUnqualifiedImages</value>
   </data>
-  <data name="&gt;&gt;Icon_DeleteCurrentWallpaper.Type" xml:space="preserve">
+  <data name="&gt;&gt;Icon_CleanUnqualifiedImages.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

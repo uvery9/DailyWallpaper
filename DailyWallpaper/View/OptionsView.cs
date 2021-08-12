@@ -198,6 +198,7 @@ namespace DailyWallpaper.View
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
             Icon_Quit.Text = TranslationHelper.Get("Icon_Quit");
+            Icon_CleanUnqualifiedImages.Text = TranslationHelper.Get("Icon_CleanUnqualifiedImages");
         }
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -1313,7 +1314,83 @@ namespace DailyWallpaper.View
                     MessageBox.Show($"WP doesn't exist: {wp}");
                 }*/
             }
-            catch { 
+            catch { }
+        }
+
+        private void DelFileIgnoreError(string file)
+        {
+            
+            try
+            {
+                if (File.Exists(file))
+                {
+                    // FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    // File.Delete(file);
+                }
+                else
+                {
+                    
+                }
+            }
+            catch (Exception e){
+                // MessageBox.Show(e.Message + ":\r\n  " + file);
+            }
+        }
+
+        private void Icon_CleanUnqualifiedImages_Click(object sender, EventArgs e)
+        {
+            var path = _ini.Read("localPathSetting", "Local");
+            if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+            {
+                return;
+            }          
+            if (MessageBox.Show(TranslationHelper.Get("Notify_CleanUnqualifiedPicturesConfirm"), "Confirm", 
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
+                return;
+
+            List<string> files = new List<string>();
+            foreach (string file in Directory.EnumerateFiles(path, "*", System.IO.SearchOption.AllDirectories))
+            {
+                long length = new FileInfo(file).Length / 1024;
+                string file_low = file.ToLower();
+                if (file_low.EndsWith(".jpg") || file_low.EndsWith(".jpeg") || file_low.EndsWith(".png"))
+                {
+                    if (length < 100)
+                    {
+                        // File.Delete(Path.Combine());
+                        // delete file.
+                        files.Add(file);
+                    }
+                    else
+                    {
+                        // validateImageData = false will be super fast.
+                        using (var stream = File.OpenRead(file))
+                        {
+                            using (var img = Image.FromStream(stream, false, false))
+                            {
+                                if (img.Width > 1900 && ((double)img.Width / img.Height > 1.4))
+                                {
+                                    // files.Add(file);
+                                }
+                                else
+                                {
+                                    // delete file.
+                                    files.Add(file);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (files.Count > 0)
+            {
+                files.ForEach(file => DelFileIgnoreError(file));
+                MessageBox.Show($"Clean Unqualified Images [{files.Count}] finished.", "", MessageBoxButtons.OK);
+            } 
+            else
+            {
+                MessageBox.Show($"The pictures in the folder all meet the conditions.", "", MessageBoxButtons.OK);
             }
         }
     }
