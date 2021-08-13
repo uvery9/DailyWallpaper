@@ -199,6 +199,10 @@ namespace DailyWallpaper.View
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
             Icon_Quit.Text = TranslationHelper.Get("Icon_Quit");
             Icon_CleanUnqualifiedImages.Text = TranslationHelper.Get("Icon_CleanUnqualifiedImages");
+            var wp = _ini.Read("WALLPAPER", "LOG");
+            if (string.IsNullOrEmpty(wp))
+                wp = "NULL";
+            Icon_DeleteCurrentWallpaper.ToolTipText = "CurrWP: " +  wp;
         }
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
