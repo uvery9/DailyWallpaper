@@ -203,7 +203,11 @@ namespace DailyWallpaper.View
             if (string.IsNullOrEmpty(wp))
                 wp = "NULL";
             Icon_DeleteCurrentWallpaper.ToolTipText = "CurrWP: " +  wp;
+            shutdownTimerToolStripMenuItem.Text = TranslationHelper.Get("Icon_ShutdownTimer");
+            geminiToolStripMenuItem.Text = TranslationHelper.Get("Icon_Gemini");
+            dateCalculatorToolStripMenuItem.Text = TranslationHelper.Get("Icon_DateCalc");
         }
+
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Task.Run(() => { DailyWallpaperConsSetWallpaper(silent: true);
