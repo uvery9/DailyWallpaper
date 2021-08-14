@@ -106,6 +106,12 @@
     <Compile Include="Cons\OnlineImage.cs" />
     <Compile Include="Cons\Wallpaper.cs" />
     <Compile Include="Helpers\ShowProperties.cs" />
+    <Compile Include="Tools\CommonCMDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\CommonCMDForm.Designer.cs">
+      <DependentUpon>CommonCMDForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\DateCalc\DateCnt.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +178,9 @@
     <Compile Include="View\OptionsView.Designer.cs">
       <DependentUpon>OptionsView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Tools\CommonCMDForm.resx">
+      <DependentUpon>CommonCMDForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\DateCalc\DateCnt.resx">
       <DependentUpon>DateCnt.cs</DependentUpon>
     </EmbeddedResource>

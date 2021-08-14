@@ -155,18 +155,6 @@
   <data name="Icon_Bing.Text" xml:space="preserve">
     <value>Bing</value>
   </data>
-  <data name="Icon_LocalPathSetting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>336, 34</value>
-  </data>
-  <data name="Icon_LocalPathSetting.Text" xml:space="preserve">
-    <value>Local Path Setting</value>
-  </data>
-  <data name="Icon_CleanUnqualifiedImages.Size" type="System.Drawing.Size, System.Drawing">
-    <value>336, 34</value>
-  </data>
-  <data name="Icon_CleanUnqualifiedImages.Text" xml:space="preserve">
-    <value>Clean Unqualified Pictures</value>
-  </data>
   <data name="Icon_LocalPath.Size" type="System.Drawing.Size, System.Drawing">
     <value>317, 30</value>
   </data>
@@ -208,6 +196,48 @@
   </data>
   <data name="Icon_Help.Text" xml:space="preserve">
     <value>帮助</value>
+  </data>
+  <data name="Icon_CommonCommands.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 34</value>
+  </data>
+  <data name="Icon_CommonCommands.Text" xml:space="preserve">
+    <value>Common commands</value>
+  </data>
+  <data name="Icon_Notepad.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 34</value>
+  </data>
+  <data name="Icon_Notepad.Text" xml:space="preserve">
+    <value>NotePad++/记事本</value>
+  </data>
+  <data name="videoEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 34</value>
+  </data>
+  <data name="videoEditorToolStripMenuItem.Text" xml:space="preserve">
+    <value>Video Editor</value>
+  </data>
+  <data name="Icon_HashCalc.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 34</value>
+  </data>
+  <data name="Icon_HashCalc.Text" xml:space="preserve">
+    <value>Hash计算器</value>
+  </data>
+  <data name="geminiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 34</value>
+  </data>
+  <data name="geminiToolStripMenuItem.Text" xml:space="preserve">
+    <value>Gemini</value>
+  </data>
+  <data name="shutdownTimerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 34</value>
+  </data>
+  <data name="shutdownTimerToolStripMenuItem.Text" xml:space="preserve">
+    <value>Shutdown Timer</value>
+  </data>
+  <data name="dateCalculatorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>289, 34</value>
+  </data>
+  <data name="dateCalculatorToolStripMenuItem.Text" xml:space="preserve">
+    <value>Date Calculator</value>
   </data>
   <data name="Icon_Toolbox.Size" type="System.Drawing.Size, System.Drawing">
     <value>317, 30</value>
@@ -266,6 +296,18 @@
   <data name="Icon_SkipToday.Text" xml:space="preserve">
     <value>Skip Today</value>
   </data>
+  <data name="Icon_LocalPathSetting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>336, 34</value>
+  </data>
+  <data name="Icon_LocalPathSetting.Text" xml:space="preserve">
+    <value>Local Path Setting</value>
+  </data>
+  <data name="Icon_CleanUnqualifiedImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>336, 34</value>
+  </data>
+  <data name="Icon_CleanUnqualifiedImages.Text" xml:space="preserve">
+    <value>Clean Unqualified Pictures</value>
+  </data>
   <data name="Icon_OpenOfficialWebsite.Size" type="System.Drawing.Size, System.Drawing">
     <value>330, 34</value>
   </data>
@@ -304,42 +346,6 @@
   </data>
   <data name="Icon_About.Text" xml:space="preserve">
     <value>关于</value>
-  </data>
-  <data name="Icon_Notepad.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 34</value>
-  </data>
-  <data name="Icon_Notepad.Text" xml:space="preserve">
-    <value>NotePad++/记事本</value>
-  </data>
-  <data name="videoEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 34</value>
-  </data>
-  <data name="videoEditorToolStripMenuItem.Text" xml:space="preserve">
-    <value>Video Editor</value>
-  </data>
-  <data name="Icon_HashCalc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 34</value>
-  </data>
-  <data name="Icon_HashCalc.Text" xml:space="preserve">
-    <value>Hash计算器</value>
-  </data>
-  <data name="geminiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 34</value>
-  </data>
-  <data name="geminiToolStripMenuItem.Text" xml:space="preserve">
-    <value>Gemini</value>
-  </data>
-  <data name="shutdownTimerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 34</value>
-  </data>
-  <data name="shutdownTimerToolStripMenuItem.Text" xml:space="preserve">
-    <value>Shutdown Timer</value>
-  </data>
-  <data name="dateCalculatorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>274, 34</value>
-  </data>
-  <data name="dateCalculatorToolStripMenuItem.Text" xml:space="preserve">
-    <value>Date Calculator</value>
   </data>
   <metadata name="_notifyIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>195, 17</value>
@@ -436,6 +442,12 @@
     <value>Icon_LocalPathSetting</value>
   </data>
   <data name="&gt;&gt;Icon_LocalPathSetting.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Icon_CleanUnqualifiedImages.Name" xml:space="preserve">
+    <value>Icon_CleanUnqualifiedImages</value>
+  </data>
+  <data name="&gt;&gt;Icon_CleanUnqualifiedImages.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Icon_Spotlight.Name" xml:space="preserve">
@@ -588,10 +600,10 @@
   <data name="&gt;&gt;_notifyIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_CleanUnqualifiedImages.Name" xml:space="preserve">
-    <value>Icon_CleanUnqualifiedImages</value>
+  <data name="&gt;&gt;Icon_CommonCommands.Name" xml:space="preserve">
+    <value>Icon_CommonCommands</value>
   </data>
-  <data name="&gt;&gt;Icon_CleanUnqualifiedImages.Type" xml:space="preserve">
+  <data name="&gt;&gt;Icon_CommonCommands.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

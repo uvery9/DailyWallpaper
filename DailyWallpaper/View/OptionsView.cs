@@ -206,6 +206,7 @@ namespace DailyWallpaper.View
             shutdownTimerToolStripMenuItem.Text = TranslationHelper.Get("Icon_ShutdownTimer");
             geminiToolStripMenuItem.Text = TranslationHelper.Get("Icon_Gemini");
             dateCalculatorToolStripMenuItem.Text = TranslationHelper.Get("Icon_DateCalc");
+            Icon_CommonCommands.Text = TranslationHelper.Get("Icon_CommonCommands");
         }
 
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -1400,6 +1401,11 @@ namespace DailyWallpaper.View
             {
                 MessageBox.Show($"The pictures in the folder all meet the conditions.", "", MessageBoxButtons.OK);
             }
+        }
+
+        private void Icon_CommonCommands_Click(object sender, EventArgs e)
+        {
+            new Tools.CommonCMDForm().Show();
         }
     }
 }
