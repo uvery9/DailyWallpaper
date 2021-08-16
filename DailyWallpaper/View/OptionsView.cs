@@ -269,6 +269,10 @@ namespace DailyWallpaper.View
                             string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"),
                             Environment.NewLine + $"{wp}") );
                     Icon_DeleteCurrentWallpaper.ToolTipText = "CurrWP: " + wp;
+                    if (int.TryParse(_ini.Read("Timer"), out int timer))
+                    {
+                        _timerHelper.SetTimer(timer * 60, SetTimerAfter);
+                    }
                 }
             }
             catch
@@ -617,6 +621,7 @@ namespace DailyWallpaper.View
             {
                 Icon_LocalPath.Checked = false;
                 Icon_LocalPathSetting.Visible = false;
+                Icon_CleanUnqualifiedImages.Visible = false;
                 _ini.UpdateIniItem("localPath", "no", "Local");
                 _notifyIcon.ContextMenuStrip.Hide();
             }
@@ -624,6 +629,7 @@ namespace DailyWallpaper.View
             {
                 Icon_LocalPath.Checked = true;
                 Icon_LocalPathSetting.Visible = true;
+                Icon_CleanUnqualifiedImages.Visible = true;
                 _ini.UpdateIniItem("localPath", "yes", "Local");
                 _notifyIcon.ContextMenuStrip.Show();
             }
@@ -951,11 +957,13 @@ namespace DailyWallpaper.View
             {
                 Icon_LocalPath.Checked = true;
                 Icon_LocalPathSetting.Visible = true;
+                Icon_CleanUnqualifiedImages.Visible = true;
             }
             else
             {
                 Icon_LocalPath.Checked = false;
                 Icon_LocalPathSetting.Visible = false;
+                Icon_CleanUnqualifiedImages.Visible = false;
             }
 
             if (_ini.EqualsIgnoreCase("UseShortcutKeys", "yes"))
