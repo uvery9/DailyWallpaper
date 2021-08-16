@@ -146,7 +146,6 @@ namespace DailyWallpaper.View
                     TranslationHelper.Get("Icon_LocalPath"));*/
 
             Icon_LocalPathSetting.Text = TranslationHelper.Get("Icon_LocalPathSetting");
-            Icon_LocalPathSetting.Click += _Icon_LocalPathSettingMenuItem_Click;
             Icon_LocalPathSetting.ToolTipText = _ini.Read("localPathSetting", "Local") ?? "NULL";
 
             Icon_Spotlight.Text =
@@ -207,6 +206,11 @@ namespace DailyWallpaper.View
             geminiToolStripMenuItem.Text = TranslationHelper.Get("Icon_Gemini");
             dateCalculatorToolStripMenuItem.Text = TranslationHelper.Get("Icon_DateCalc");
             Icon_CommonCommands.Text = TranslationHelper.Get("Icon_CommonCommands");
+            Icon_SetDownloadFolder.Text = "    " + TranslationHelper.Get("Icon_SetDownloadFolder");
+            var dlPath = _ini.Read("downLoadSavePath", "Online");
+            if (string.IsNullOrEmpty(dlPath))
+                dlPath = "NULL";
+            Icon_SetDownloadFolder.ToolTipText = dlPath;
         }
 
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -886,12 +890,16 @@ namespace DailyWallpaper.View
                 Icon_Bing.Checked = true;
                 Icon_AlwaysDownLoadBingPicture.Visible = true;
                 Icon_BingNotAddWaterMark.Visible = true;
+                Icon_SkipToday.Visible = true;
+                Icon_SetDownloadFolder.Visible = true;
             }
             else
             {
                 Icon_Bing.Checked = false;
                 Icon_AlwaysDownLoadBingPicture.Visible = false;
                 Icon_BingNotAddWaterMark.Visible = false;
+                Icon_SkipToday.Visible = false;
+                Icon_SetDownloadFolder.Visible = false;
             }
 
             if (_ini.EqualsIgnoreCase("alwaysDLBingWallpaper", "yes", "Online"))
@@ -1226,6 +1234,8 @@ namespace DailyWallpaper.View
                 Icon_Bing.Checked = false;
                 Icon_AlwaysDownLoadBingPicture.Visible = false;
                 Icon_BingNotAddWaterMark.Visible = false;
+                Icon_SkipToday.Visible = false;
+                Icon_SetDownloadFolder.Visible = false;
                 /*Icon_BingSetting.Visible = false;
                 Icon_BingSetting.Enabled = false;*/
                 _ini.UpdateIniItem("bing", "no", "Online");
@@ -1237,6 +1247,8 @@ namespace DailyWallpaper.View
                 _ini.UpdateIniItem("bing", "yes", "Online");
                 Icon_AlwaysDownLoadBingPicture.Visible = true;
                 Icon_BingNotAddWaterMark.Visible = true;
+                Icon_SkipToday.Visible = true;
+                Icon_SetDownloadFolder.Visible = true;
                 /*Icon_BingSetting.Visible = true;
                 Icon_BingSetting.Enabled = true;*/
                 _notifyIcon.ContextMenuStrip.Show();
@@ -1406,6 +1418,35 @@ namespace DailyWallpaper.View
         private void Icon_CommonCommands_Click(object sender, EventArgs e)
         {
             new Tools.CommonCMDForm().Show();
+        }
+
+        private void Icon_SetDownloadFolder_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new CommonOpenFileDialog())
+            {
+                var downLoadSavePath = _ini.Read("downLoadSavePath", "Online");
+                if (!string.IsNullOrEmpty(downLoadSavePath) && !"null".Equals(downLoadSavePath.ToLower()) 
+                    && Directory.Exists(downLoadSavePath))
+                {
+                    dialog.InitialDirectory = downLoadSavePath;
+                }
+                else
+                {
+                    dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                }
+                dialog.IsFolderPicker = true;
+                dialog.EnsurePathExists = true;
+                dialog.Multiselect = false;
+                dialog.Title = TranslationHelper.Get("Icon_SetDownloadFolder");
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
+                {
+                    // MessageBox.Show("You selected: " + dialog.FileName);
+                    _ini.UpdateIniItem("downLoadSavePath", dialog.FileName, "Online");
+                    Icon_SetDownloadFolder.ToolTipText = dialog.FileName;
+                    ShowNotification("", $"{TranslationHelper.Get("Icon_SetDownloadFolder")}:  {dialog.FileName}");
+                }
+            }
         }
     }
 }
