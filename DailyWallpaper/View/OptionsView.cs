@@ -1031,7 +1031,7 @@ namespace DailyWallpaper.View
             _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
             LaterCheckUpdate();
             
-            void LaterSetWallpaperWhenStart() 
+            /*void LaterSetWallpaperWhenStart() 
             {
                 Thread.Sleep(1000 * 60 * 1); // 1min later
                 Task.Run(() => {
@@ -1039,7 +1039,7 @@ namespace DailyWallpaper.View
                     _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
                 });
             }
-            new Thread(LaterSetWallpaperWhenStart).Start();
+            new Thread(LaterSetWallpaperWhenStart).Start();*/
         }
 
         private void UpdateExitIniTimer()
