@@ -956,7 +956,6 @@ namespace DailyWallpaper
             }
             else
             {
-                // btnClear.PerformClick();
                 StartAnalyzeStep();
                 redoToolStripMenuItem.Enabled = false;
                 undoToolStripMenuItem.Enabled = false;

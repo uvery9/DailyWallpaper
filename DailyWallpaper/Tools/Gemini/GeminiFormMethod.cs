@@ -255,6 +255,8 @@ namespace DailyWallpaper
             EnableButton(btnAnalyze, false);
             var limit = SetMinimumFileLimit();
             var f1 = targetFolder1TextBox.Text;
+            UpdateTextAndIniFile("TargetFolder1", f1,
+                    targetFolder1History, targetFolder1TextBox, updateIni: true);
             string name;
             if (string.IsNullOrEmpty(f1) || !Directory.Exists(f1))
             {
