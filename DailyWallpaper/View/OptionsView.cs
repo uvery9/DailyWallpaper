@@ -1090,10 +1090,16 @@ namespace DailyWallpaper.View
         private void Icon_Quit_Click(object sender, EventArgs e)
         {
             _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(), "LOG");
- /*           _cefWindow.Dispose();
-            _consWindow.Dispose();
-            _notifyIcon.Dispose();*/
             Application.Exit();
+            // force Exit.
+            foreach (Process proc in Process.GetProcesses())
+            {
+                if (proc.ProcessName.Equals(Process.GetCurrentProcess().ProcessName))
+                {
+                    proc.Kill();
+                    break;
+                }
+            }            
         }
 
         private void Icon_DonateAndSupport_Click(object sender, EventArgs e)
