@@ -32,6 +32,7 @@ namespace DailyWallpaper.View
         private bool iStextFromFileNew = true;
         private HashCalc.HashCalcForm _hashWin;
         private Tools.ShutdownTimer.Shutdown _shutdownTimer = null;
+        private readonly string dateTimeFormat = "yyyy-MM-dd HH:mm";
 
         public OptionsView()
         {
@@ -216,7 +217,7 @@ namespace DailyWallpaper.View
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Task.Run(() => { DailyWallpaperConsSetWallpaper(silent: true);
-                _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
+                // _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
             });
         }
 
@@ -972,6 +973,37 @@ namespace DailyWallpaper.View
             }
 
             string timerStr = _ini.Read("Timer");
+            if (int.TryParse(timerStr, out int res))
+            {
+                if (!DateTime.TryParse(_ini.Read("NEXTAutoChangeWallpaperTime", "LOG"), out DateTime nextTime))
+                {
+                    // first time.
+                    nextTime = DateTime.Now.AddHours(res);
+                    _ini.UpdateIniItem("Info",
+                        $"{DateTime.Now.ToString(dateTimeFormat)}: NEXTAutoChangeWallpaperTime NULL", "LOG");
+                }
+                else
+                {
+                    _ini.UpdateIniItem("Info",
+                        $"NEXTAutoChangeWallpaperTime Parse Succeed.", "LOG");
+                }
+                var totalMins = (int)(nextTime - DateTime.Now).TotalMinutes;
+                if (totalMins < 0)
+                {
+                    // 5 minutes later update wallpaper
+                    _timerHelper.SetTimer(5, SetTimerAfter);
+                }
+                else
+                {
+                    _timerHelper.SetTimer(totalMins, SetTimerAfter);
+                }
+            }
+            else
+            {
+                _ini.UpdateIniItem("Timer", "6");
+                _timerHelper.SetTimer(6 * 60, SetTimerAfter);
+            }
+
             hoursTextBox.Enabled = false;
             if (timerStr.Equals("12"))
             {
@@ -992,51 +1024,8 @@ namespace DailyWallpaper.View
                 hoursTextBox.Text = timerStr;
                 textFromHoursTextBox = timerStr;
             }
-
-            if (int.TryParse(timerStr, out int res))
-            {
-                if (_ini.EqualsIgnoreCase("TimerSetWallpaper", "true", "LOG"))
-                {
-                    _timerHelper.SetTimer(res * 60, SetTimerAfter);
-                }
-                else
-                {
-                    if (!DateTime.TryParse(_ini.Read("appStartTime", "LOG"), out DateTime appStartTime))
-                    {
-                        // first time.
-                        appStartTime = DateTime.Now;
-                    }
-
-                    if (!DateTime.TryParse(_ini.Read("appExitTime", "LOG"), out DateTime appExitTime))
-                    {
-                        // first time.
-                        appExitTime = DateTime.Now;
-                    }
-
-                    var timeDiff = (int)(appExitTime - appStartTime).TotalMinutes;
-                    _ini.UpdateIniItem("LastExitSubStartTimeDiff", $"{timeDiff}mins", "Log");
-                    if (timeDiff > res * 60)
-                    {
-                        // something wrong. never mind.
-                        _timerHelper.SetTimer(res * 60, SetTimerAfter);
-                        _ini.UpdateIniItem("TimerNotWorkProperly ", $"{DateTime.Now.ToString()}");
-                    }
-                    else
-                    {
-                        // rest time = 60 * res - lastTimeNotFinishe.
-                        _timerHelper.SetTimer(res * 60 - timeDiff, SetTimerAfter);
-                    }
-
-                }
-            }
-            else
-            {
-                _ini.UpdateIniItem("Timer", "24");
-                _timerHelper.SetTimer(24 * 60, SetTimerAfter);
-            }
             // 30 mins period.
-            UpdateExitIniTimer();
-            _ini.UpdateIniItem("appStartTime", DateTime.Now.ToString(), "LOG");
+            // UpdateExitIniTimer();
             LaterCheckUpdate();
             
             /*void LaterSetWallpaperWhenStart() 
@@ -1050,6 +1039,7 @@ namespace DailyWallpaper.View
             new Thread(LaterSetWallpaperWhenStart).Start();*/
         }
 
+        /* 
         private void UpdateExitIniTimer()
         {
             var _updateTimer = new System.Timers.Timer
@@ -1062,16 +1052,16 @@ namespace DailyWallpaper.View
             _updateTimer.Elapsed += exitIniTimerElapsed;
             _updateTimer.Start();
         }
-        public void exitIniTimerElapsed(object sender, ElapsedEventArgs e)
+       public void exitIniTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(), "LOG");
         }
+        */
 
 
         void SetTimerAfter(int mins)
         {
-            var nextTime = DateTime.Now.AddMinutes(mins).ToString();
-            _ini.UpdateIniItem("NEXTAutoChageWallpaperTime", nextTime, "LOG");
+            var nextTime = DateTime.Now.AddMinutes(mins).ToString(dateTimeFormat);
+            _ini.UpdateIniItem("NEXTAutoChangeWallpaperTime", nextTime, "LOG");
             Icon_NextTime.Text = "NextTime: " + nextTime;
         }
         
@@ -1089,7 +1079,7 @@ namespace DailyWallpaper.View
 
         private void Icon_Quit_Click(object sender, EventArgs e)
         {
-            _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(), "LOG");
+            // _ini.UpdateIniItem("appExitTime", DateTime.Now.ToString(dateTimeFormat), "LOG");
             Application.Exit();
             // force Exit.
             foreach (Process proc in Process.GetProcesses())

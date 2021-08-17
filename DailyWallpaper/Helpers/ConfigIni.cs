@@ -128,8 +128,7 @@ namespace DailyWallpaper
             Write("localPathSetting", myPictures, "Local");
             Write("localPathScan", "AUTO", "Local");
             
-            Write("localPathMtime", "NULL", "LOG");
-            Write("TimerSetWallpaper", "false", "LOG");
+            // Write("localPathMtime", "NULL", "LOG");
         }
         
         private void PrintDict(Dictionary<string, string> dict)

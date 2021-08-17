@@ -139,10 +139,9 @@ namespace DailyWallpaper
 			{
 				if (DateTime.TryParse(ini.Read("localPathMtime", "LOG"), out DateTime iniMtime))
 				{
-					var localPathMtime = new FileInfo(this.path).LastWriteTime;
-					var timeDiff = Math.Abs((int)(localPathMtime - iniMtime).TotalSeconds);
-					Console.WriteLine($"timeDiff: {timeDiff}s.");
-					if (timeDiff > 20)
+					var timeDiff = Math.Abs((int)(new FileInfo(path).LastWriteTime - iniMtime).TotalMinutes);
+					Console.WriteLine($"Modify timeDiff: {timeDiff} min(s).");
+					if (timeDiff > 1)
 					{
 						return true;
 					}
@@ -253,7 +252,8 @@ namespace DailyWallpaper
 					{
 						Console.WriteLine("Updated: {0}", txtFile);
 					}
-					ini.UpdateIniItem("localPathMtime", new FileInfo(this.path).LastWriteTime.ToString(), "LOG");
+					ini.UpdateIniItem("localPathMtime", 
+						new FileInfo(path).LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
 				}
 			}
 			catch (ArgumentNullException e)
