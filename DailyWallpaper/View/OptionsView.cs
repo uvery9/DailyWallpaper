@@ -195,8 +195,9 @@ namespace DailyWallpaper.View
             Icon_CheckUpdate.Text = TranslationHelper.Get("Icon_CheckUpdate");
             Icon_DeleteCurrentWallpaper.Text = "  " + TranslationHelper.Get("Icon_DeleteCurrentWallpaper");
             Icon_LikeCurrentWallpaper.Text =   "  " + TranslationHelper.Get("Icon_LikeCurrentWallpaper");
+            var likeDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "[Like]");
+            Icon_LikeCurrentWallpaper.ToolTipText = "Copy to: " + likeDir;
             Icon_CurrentWallpaper.Text = TranslationHelper.Get("Icon_CurrentWallpaper");
-            Icon_CurrentWallpaper.Enabled = false;
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
@@ -1471,6 +1472,19 @@ namespace DailyWallpaper.View
                         ShowNotification("", $"Copy {fileName} to {likeDir}");
                     }
                         
+                }
+            }
+            catch { }
+        }
+
+        private void Icon_CurrentWallpaper_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var wp = _ini.Read("WALLPAPER", "LOG");
+                if (File.Exists(wp))
+                {
+                    Process.Start(wp);
                 }
             }
             catch { }
