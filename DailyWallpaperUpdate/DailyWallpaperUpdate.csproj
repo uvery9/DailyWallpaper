@@ -101,6 +101,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM copy $(TargetDir) $(SolutionDir)</PostBuildEvent>
+    <PostBuildEvent>cd $(ProjectDir)
+RMDIR /Q /S "..\OUTPUT"
+md "..\OUTPUT"
+copy "$(TargetDir)"  "..\OUTPUT" /y
+del "..\OUTPUT\DailyWallpaperUpdate.exe.xml*" 
+del "..\OUTPUT\DailyWallpaperUpdate.pdb" 
+set errorlevel=0</PostBuildEvent>
   </PropertyGroup>
 </Project>
