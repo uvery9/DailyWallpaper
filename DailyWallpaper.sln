@@ -4,9 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyWallpaper", "DailyWallpaper\DailyWallpaper.csproj", "{D60E24F0-FC47-4490-ACD6-3157C26AFF39}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2} = {C966CD3F-BC58-48B4-96C3-7476F50957B2}
+	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DailyWallpaper.Installer", "DailyWallpaper.Installer\DailyWallpaper.Installer.wixproj", "{739D071D-86AF-4EEE-A466-158AF76F64AB}"
 	ProjectSection(ProjectDependencies) = postProject
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2} = {C966CD3F-BC58-48B4-96C3-7476F50957B2}
 		{D60E24F0-FC47-4490-ACD6-3157C26AFF39} = {D60E24F0-FC47-4490-ACD6-3157C26AFF39}
 	EndProjectSection
 EndProject

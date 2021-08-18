@@ -84,7 +84,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)
-call "$(ProjectDir)fuck-appveyor.bat"
+call "$(ProjectDir)fuck-appveyor.bat" $(OutDir)
 REM powershell -file "$(SolutionDir)Scripts\update-version.ps1"
 "$(WIX)bin\heat" dir "$(SolutionDir)OUTPUT" -dr INSTALLFOLDER -cg DailyWallpaperComponents -gg -g1 -sf -srd -sreg -var "var.OutputDir" -out "$(ProjectDir)DailyWallpaperComponents.wxs"</PreBuildEvent>
   </PropertyGroup>

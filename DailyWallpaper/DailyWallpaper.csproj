@@ -259,7 +259,6 @@
     <None Include="res\icon32x32_exclamation.ico" />
     <None Include="res\icon32x32_good.ico" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
