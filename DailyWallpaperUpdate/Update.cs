@@ -178,6 +178,8 @@ namespace DailyWallpaperUpdate
                 dialog.Multiselect = false;
                 dialog.Title = "Select zip file"; // "XML files (*.xml)|*.xml";
                 dialog.Filters.Add(new CommonFileDialogFilter("zip file", "*.zip"));
+                dialog.Filters.Add(new CommonFileDialogFilter("All file", "*.*"));
+
                 // maybe add some log
 
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))

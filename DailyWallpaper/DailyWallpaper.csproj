@@ -264,7 +264,6 @@
     <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
 git describe --tags --abbrev=0  &gt; $(TargetDir)GIT-VERSION
 cd $(ProjectDir)
-md "..\OUTPUT"
 copy "..\OUTPUT" "$(TargetDir)"   /y
 set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
