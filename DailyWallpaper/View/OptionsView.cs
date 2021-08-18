@@ -871,10 +871,6 @@ namespace DailyWallpaper.View
             h24RadioButton = new RadioButton();
             h6RadioButton = new RadioButton();
             customRadioButton = new RadioButton();
-            h6RadioButton.CheckedChanged += h6RadioButton_CheckedChanged;
-            h12RadioButton.CheckedChanged += h12RadioButton_CheckedChanged;
-            h24RadioButton.CheckedChanged += h24RadioButton_CheckedChanged;
-            customRadioButton.CheckedChanged += customRadioButton_CheckedChanged;
 
             var panel = new Panel();
             panel.SuspendLayout(); // IS NOT DIFF ?
@@ -1031,6 +1027,10 @@ namespace DailyWallpaper.View
                 hoursTextBox.Text = timerStr;
                 textFromHoursTextBox = timerStr;
             }
+            h6RadioButton.CheckedChanged += h6RadioButton_CheckedChanged;
+            h12RadioButton.CheckedChanged += h12RadioButton_CheckedChanged;
+            h24RadioButton.CheckedChanged += h24RadioButton_CheckedChanged;
+            customRadioButton.CheckedChanged += customRadioButton_CheckedChanged;
             // 30 mins period.
             // UpdateExitIniTimer();
             LaterCheckUpdate();
