@@ -36,16 +36,16 @@ namespace DailyWallpaperUpdate
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.updateButton = new System.Windows.Forms.Button();
+            this.zipFileButton = new System.Windows.Forms.Button();
+            this.unzipPathButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // targetTextBox
             // 
             this.targetTextBox.Location = new System.Drawing.Point(140, 16);
             this.targetTextBox.Name = "targetTextBox";
-            this.targetTextBox.Size = new System.Drawing.Size(195, 28);
+            this.targetTextBox.Size = new System.Drawing.Size(229, 28);
             this.targetTextBox.TabIndex = 1;
             // 
             // zipFileTextBox
@@ -68,6 +68,7 @@ namespace DailyWallpaperUpdate
             this.updateConsTextBox.Multiline = true;
             this.updateConsTextBox.Name = "updateConsTextBox";
             this.updateConsTextBox.ReadOnly = true;
+            this.updateConsTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.updateConsTextBox.Size = new System.Drawing.Size(776, 199);
             this.updateConsTextBox.TabIndex = 0;
             this.updateConsTextBox.TabStop = false;
@@ -105,41 +106,42 @@ namespace DailyWallpaperUpdate
             this.textBox7.TabStop = false;
             this.textBox7.Text = "Unzip Path:";
             // 
-            // button1
+            // updateButton
             // 
-            this.button1.Location = new System.Drawing.Point(696, 10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(91, 36);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Update";
-            this.button1.UseVisualStyleBackColor = true;
+            this.updateButton.Location = new System.Drawing.Point(696, 10);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(91, 36);
+            this.updateButton.TabIndex = 0;
+            this.updateButton.Text = "Update";
+            this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Click += new System.EventHandler(this.updateButton_Click);
             // 
-            // button2
+            // zipFileButton
             // 
-            this.button2.Location = new System.Drawing.Point(696, 73);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(91, 27);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Browser";
-            this.button2.UseVisualStyleBackColor = true;
+            this.zipFileButton.Location = new System.Drawing.Point(696, 73);
+            this.zipFileButton.Name = "zipFileButton";
+            this.zipFileButton.Size = new System.Drawing.Size(91, 27);
+            this.zipFileButton.TabIndex = 3;
+            this.zipFileButton.Text = "Browser";
+            this.zipFileButton.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // unzipPathButton
             // 
-            this.button3.Location = new System.Drawing.Point(696, 130);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(92, 27);
-            this.button3.TabIndex = 5;
-            this.button3.Text = "Browser";
-            this.button3.UseVisualStyleBackColor = true;
+            this.unzipPathButton.Location = new System.Drawing.Point(696, 130);
+            this.unzipPathButton.Name = "unzipPathButton";
+            this.unzipPathButton.Size = new System.Drawing.Size(92, 27);
+            this.unzipPathButton.TabIndex = 5;
+            this.unzipPathButton.Text = "Browser";
+            this.unzipPathButton.UseVisualStyleBackColor = true;
             // 
             // Update
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(799, 402);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.unzipPathButton);
+            this.Controls.Add(this.zipFileButton);
+            this.Controls.Add(this.updateButton);
             this.Controls.Add(this.updateConsTextBox);
             this.Controls.Add(this.unzipPathTextBox);
             this.Controls.Add(this.zipFileTextBox);
@@ -164,9 +166,9 @@ namespace DailyWallpaperUpdate
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button updateButton;
+        private System.Windows.Forms.Button zipFileButton;
+        private System.Windows.Forms.Button unzipPathButton;
     }
 }
 

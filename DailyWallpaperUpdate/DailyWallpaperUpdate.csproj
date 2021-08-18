@@ -80,4 +80,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM copy $(TargetDir) $(SolutionDir)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
