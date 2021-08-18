@@ -35,15 +35,15 @@ namespace DailyWallpaperUpdate
                 Assembly.GetExecutingAssembly().Location), xmlFile);
             if (!File.Exists(xmlPath))
                 return new List<string>() { "DailyWallpaper.exe", "DailyWallpaper.Protable-latest.zip", "Some Path"};
-            updateConsTextBox.AppendText("> Found: " + xmlFile + " at :"+ Environment.NewLine 
-                + "    "+ new FileInfo(xmlPath).DirectoryName + Environment.NewLine);
+            AppendText("Found: " + xmlFile + " at :\r\n    " 
+                + new FileInfo(xmlPath).DirectoryName);
+
             var doc = new XmlDocument();
             doc.Load(xmlPath);
             var li = new List<string>();
             foreach (XmlNode node in doc.DocumentElement.ChildNodes)
             {
                 var text = node.InnerText;
-                // updateConsTextBox.AppendText(text + Environment.NewLine);
                 li.Add(text);
             }
             return li;
@@ -61,26 +61,40 @@ namespace DailyWallpaperUpdate
             { }
         }
 
+        private void AppendText(string s)
+        {
+            updateConsTextBox.AppendText($"\r\n> {s}" + Environment.NewLine);
+        }
+
         private void updateButton_Click(object sender, EventArgs e)
         {
             var zipFile = zipFileTextBox.Text;
             if (!File.Exists(zipFile))
                 return;
             var target = targetTextBox.Text;
-            updateConsTextBox.AppendText("\r\n> Try to kill process: " + target + Environment.NewLine);
+            AppendText("Try to kill process: " + target);
             foreach (Process proc in Process.GetProcesses())
             {
                 if (target.ToLower().Contains(proc.ProcessName.ToLower()))
                 {
-                    // updateConsTextBox.AppendText("> Kill: " + targetTextBox.Text + Environment.NewLine);
-                    updateConsTextBox.AppendText("\r\n> Kill: " + proc.ProcessName + Environment.NewLine);
+                    AppendText("Kill: " + proc.ProcessName);
                     proc.Kill();
                     break;
                 }
             }
             var unzipPath = unzipPathTextBox.Text;
-            updateConsTextBox.AppendText($"\r\n> Unzip {new FileInfo(zipFile).Name} to:\r\n    {unzipPath}" + Environment.NewLine);
+            AppendText($"Unzip { new FileInfo(zipFile).Name} to:\r\n    { unzipPath}");
+
             UnzipToPath(zipFile, unzipPath);
+
+            AppendText($"restart {target} ...");
+            target = Path.Combine(unzipPath, target);
+            if (File.Exists(target))
+            {
+                Process.Start(target);
+                AppendText($"restarted :\r\n    {target}");
+            }
+                
         }
     }
 }
