@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DailyWallpaperUpdate
 {
@@ -107,7 +108,9 @@ namespace DailyWallpaperUpdate
         {
             targetTextBox.ReadOnly = ro;
             zipFileTextBox.ReadOnly = ro;
-            unzipPathTextBox.ReadOnly = ro;    
+            unzipPathTextBox.ReadOnly = ro;
+            zipFileButton.Enabled = !ro;
+            unzipPathButton.Enabled = !ro;
         }
 
         private void readOnlyCheckBox_Click(object sender, EventArgs e)
@@ -119,6 +122,52 @@ namespace DailyWallpaperUpdate
             else
             {
                 SetReadOnly(false);
+            }
+        }
+
+        private void zipFileButton_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new CommonOpenFileDialog())
+            {
+                string zipDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(Assembly.
+                    GetExecutingAssembly().Location)))
+                {
+                    if (file.ToLower().EndsWith(".zip"))
+                    {
+                        zipDir = new FileInfo(file).DirectoryName;
+                        break;
+                    }
+                }
+                dialog.InitialDirectory = zipDir;
+                dialog.IsFolderPicker = false;
+                dialog.EnsureFileExists = true;
+                dialog.Multiselect = false;
+                dialog.Title = "Select zip file"; // "XML files (*.xml)|*.xml";
+                dialog.Filters.Add(new CommonFileDialogFilter("zip file", "*.zip"));
+                // maybe add some log
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
+                {
+                    zipFileTextBox.Text = dialog.FileName;
+                }
+            }
+        }
+
+        private void unzipPathButton_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new CommonOpenFileDialog())
+            {
+                dialog.InitialDirectory = Path.GetDirectoryName(Assembly.
+                    GetExecutingAssembly().Location);
+                dialog.IsFolderPicker = true;
+                dialog.Multiselect = false;
+                dialog.Title = "Select Unzip folder"; 
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
+                {
+                    unzipPathTextBox.Text = dialog.FileName;
+                }
             }
         }
     }

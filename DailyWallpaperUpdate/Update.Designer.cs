@@ -125,6 +125,7 @@ namespace DailyWallpaperUpdate
             this.zipFileButton.TabIndex = 3;
             this.zipFileButton.Text = "Browser";
             this.zipFileButton.UseVisualStyleBackColor = true;
+            this.zipFileButton.Click += new System.EventHandler(this.zipFileButton_Click);
             // 
             // unzipPathButton
             // 
@@ -134,6 +135,7 @@ namespace DailyWallpaperUpdate
             this.unzipPathButton.TabIndex = 5;
             this.unzipPathButton.Text = "Browser";
             this.unzipPathButton.UseVisualStyleBackColor = true;
+            this.unzipPathButton.Click += new System.EventHandler(this.unzipPathButton_Click);
             // 
             // readOnlyCheckBox
             // 
