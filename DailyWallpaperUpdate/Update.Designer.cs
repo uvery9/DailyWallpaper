@@ -39,6 +39,7 @@ namespace DailyWallpaperUpdate
             this.updateButton = new System.Windows.Forms.Button();
             this.zipFileButton = new System.Windows.Forms.Button();
             this.unzipPathButton = new System.Windows.Forms.Button();
+            this.readOnlyCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // targetTextBox
@@ -134,11 +135,23 @@ namespace DailyWallpaperUpdate
             this.unzipPathButton.Text = "Browser";
             this.unzipPathButton.UseVisualStyleBackColor = true;
             // 
+            // readOnlyCheckBox
+            // 
+            this.readOnlyCheckBox.AutoSize = true;
+            this.readOnlyCheckBox.Location = new System.Drawing.Point(393, 18);
+            this.readOnlyCheckBox.Name = "readOnlyCheckBox";
+            this.readOnlyCheckBox.Size = new System.Drawing.Size(115, 22);
+            this.readOnlyCheckBox.TabIndex = 6;
+            this.readOnlyCheckBox.Text = "Read Only";
+            this.readOnlyCheckBox.UseVisualStyleBackColor = true;
+            this.readOnlyCheckBox.Click += new System.EventHandler(this.readOnlyCheckBox_Click);
+            // 
             // Update
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(799, 402);
+            this.Controls.Add(this.readOnlyCheckBox);
             this.Controls.Add(this.unzipPathButton);
             this.Controls.Add(this.zipFileButton);
             this.Controls.Add(this.updateButton);
@@ -169,6 +182,7 @@ namespace DailyWallpaperUpdate
         private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.Button zipFileButton;
         private System.Windows.Forms.Button unzipPathButton;
+        private System.Windows.Forms.CheckBox readOnlyCheckBox;
     }
 }
 
