@@ -193,7 +193,10 @@ namespace DailyWallpaper.View
             });
 
             Icon_CheckUpdate.Text = TranslationHelper.Get("Icon_CheckUpdate");
-            Icon_DeleteCurrentWallpaper.Text = TranslationHelper.Get("Icon_DeleteCurrentWallpaper");
+            Icon_DeleteCurrentWallpaper.Text = "  " + TranslationHelper.Get("Icon_DeleteCurrentWallpaper");
+            Icon_LikeCurrentWallpaper.Text =   "  " + TranslationHelper.Get("Icon_LikeCurrentWallpaper");
+            Icon_CurrentWallpaper.Text = TranslationHelper.Get("Icon_CurrentWallpaper");
+            Icon_CurrentWallpaper.Enabled = false;
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
@@ -202,7 +205,7 @@ namespace DailyWallpaper.View
             var wp = _ini.Read("WALLPAPER", "LOG");
             if (string.IsNullOrEmpty(wp))
                 wp = "NULL";
-            Icon_DeleteCurrentWallpaper.ToolTipText = "CurrWP: " +  wp;
+            Icon_CurrentWallpaper.ToolTipText = TranslationHelper.Get("Icon_CurrentWallpaper") + ": " + wp;
             shutdownTimerToolStripMenuItem.Text = TranslationHelper.Get("Icon_ShutdownTimer");
             geminiToolStripMenuItem.Text = TranslationHelper.Get("Icon_Gemini");
             dateCalculatorToolStripMenuItem.Text = TranslationHelper.Get("Icon_DateCalc");
@@ -269,7 +272,7 @@ namespace DailyWallpaper.View
                         ShowNotification("",
                             string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"),
                             Environment.NewLine + $"{wp}") );
-                    Icon_DeleteCurrentWallpaper.ToolTipText = "CurrWP: " + wp;
+                    Icon_CurrentWallpaper.ToolTipText = TranslationHelper.Get("Icon_CurrentWallpaper") + ": " + wp;
                     if (int.TryParse(_ini.Read("Timer"), out int timer))
                     {
                         _timerHelper.SetTimer(timer * 60, SetTimerAfter);
@@ -1330,14 +1333,11 @@ namespace DailyWallpaper.View
                 if (File.Exists(wp))
                 {
                     FileSystem.DeleteFile(wp, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    ShowNotification("", $"Deleted {Path.GetFileName(wp)}");
                     if (_ini.EqualsIgnoreCase("WallpaperType", "bing", "LOG"))
                         Icon_SkipToday.PerformClick();
-                    Icon_ChangeWallpaper.PerformClick();
+                    Task.Run(() => DailyWallpaperConsSetWallpaper(silent: true));
                 }
-                /*else
-                {
-                    MessageBox.Show($"WP doesn't exist: {wp}");
-                }*/
             }
             catch { }
         }
@@ -1451,6 +1451,29 @@ namespace DailyWallpaper.View
                     ShowNotification("", $"{TranslationHelper.Get("Icon_SetDownloadFolder")}:  {dialog.FileName}");
                 }
             }
+        }
+
+        private void Icon_LikeCurrentWallpaper_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var wp = _ini.Read("WALLPAPER", "LOG");
+                if (File.Exists(wp))
+                {
+                    var likeDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "[Like]");
+                    if (!Directory.Exists(likeDir))
+                        Directory.CreateDirectory(likeDir);
+                    // FileSystem.DeleteFile(wp, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    var fileName = Path.GetFileName(wp);
+                    var destFile = Path.Combine(likeDir, fileName);
+                    if (!File.Exists(destFile)) {
+                        File.Copy(wp, destFile);
+                        ShowNotification("", $"Copy {fileName} to {likeDir}");
+                    }
+                        
+                }
+            }
+            catch { }
         }
     }
 }
