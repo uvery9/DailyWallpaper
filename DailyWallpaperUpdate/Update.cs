@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.IO.Compression;
 
 namespace DailyWallpaperUpdate
 {
@@ -20,8 +21,8 @@ namespace DailyWallpaperUpdate
         public Update()
         {
             InitializeComponent();
-            var li = ParseXml();
             Icon = Properties.Resources.Update;
+            var li = ParseXml();
             if (li.Count == 3)
             {
                 targetTextBox.Text = li[0];
@@ -56,14 +57,42 @@ namespace DailyWallpaperUpdate
             return li;
         }
 
-        private void UnzipToPath(string zipFile, string unzipPath)
+        private void UnzipToPath(string zipPath, string extractPath)
         {
             try
             {
-                if (!Directory.Exists(unzipPath))
-                    Directory.CreateDirectory(unzipPath);
-                // unzip zip to path
-            }
+                // Normalizes the path.
+                extractPath = Path.GetFullPath(extractPath);
+                if (!Directory.Exists(extractPath))
+                    Directory.CreateDirectory(extractPath);
+                // ZipFile.ExtractToDirectory(zipPath, extractPath); can not overwrite.
+                
+                // Ensures that the last character on the extraction path
+                // is the directory separator char.
+                // Without this, a malicious zip file could try to traverse outside of the expected
+                // extraction path.
+                if (!extractPath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                    extractPath += Path.DirectorySeparatorChar;
+
+                using (var archive = ZipFile.OpenRead(zipPath))
+                {
+                    foreach (var file in archive.Entries)
+                    {
+                        // if (file.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+
+                        // Gets the full path to ensure that relative segments are removed.
+                        updateConsTextBox.AppendText($". {file.Name}" + Environment.NewLine);
+                        string dest = Path.GetFullPath(Path.Combine(extractPath, file.FullName));
+                        if (File.Exists(dest))
+                            File.Delete(dest);
+
+                        // Ordinal match is safest, case-sensitive volumes can be mounted within volumes that
+                        // are case-insensitive.
+                        if (dest.StartsWith(extractPath, StringComparison.Ordinal))
+                            file.ExtractToFile(dest);
+                    }
+                }
+        }
             catch (UnauthorizedAccessException)
             { }
         }
@@ -75,12 +104,12 @@ namespace DailyWallpaperUpdate
 
         private void updateButton_Click(object sender, EventArgs e)
         {
-            var zipFile = zipFileTextBox.Text;
-            var unzipPath = unzipPathTextBox.Text;
-            if (!File.Exists(zipFile))
+            var zipPath = zipFileTextBox.Text;
+            var extractPath = unzipPathTextBox.Text;
+            if (!File.Exists(zipPath))
                 return;
             var target = targetTextBox.Text;
-            var targetPath = Path.Combine(unzipPath, target);
+            var targetPath = Path.Combine(extractPath, target);
             if (File.Exists(targetPath))
             {
                 AppendText("Try to kill process: " + target);
@@ -96,9 +125,9 @@ namespace DailyWallpaperUpdate
                 }
             }
 
-            AppendText($"Unzip { new FileInfo(zipFile).Name} to:\r\n    { unzipPath}");
+            AppendText($"Unzip { new FileInfo(zipPath).Name} to:\r\n    { extractPath}\r\n");
 
-            UnzipToPath(zipFile, unzipPath);
+            UnzipToPath(zipPath, extractPath);
 
             AppendText($"restart {target} ...");
             if (File.Exists(targetPath))

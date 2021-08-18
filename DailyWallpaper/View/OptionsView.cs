@@ -16,6 +16,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
+using System.Xml;
 
 namespace DailyWallpaper.View
 {
@@ -1126,8 +1127,20 @@ namespace DailyWallpaper.View
                     if (force)
                     {
                         // DailyWallpaper.Protable-latest.zip
-                        MessageBox.Show(msg);
-                        // unzip D:\jared\coding\DailyWallpaper\DailyWallpaper\bin\Debug\DailyWallpaper.Protable-latest.zip
+                        var dir = ProjectInfo.executingLocation;
+                        var xmlFile = Path.Combine(dir, "DailyWallpaperUpdate.exe.xml");
+                        if (File.Exists(xmlFile))
+                            File.Delete(xmlFile);
+                        using (XmlWriter writer = XmlWriter.Create(xmlFile))
+                        {
+                            writer.WriteStartElement("Update");
+                            writer.WriteElementString("target", ProjectInfo.exeName + ".exe");
+                            writer.WriteElementString("ZipFile", msg);
+                            writer.WriteElementString("UnzipPath", ProjectInfo.executingLocation);
+                            writer.WriteEndElement();
+                            writer.Flush();
+                        }
+                        Process.Start(Path.Combine(dir, "DailyWallpaperUpdate.exe"));
                     }
                     else
                     {

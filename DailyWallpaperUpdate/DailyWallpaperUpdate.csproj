@@ -44,6 +44,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -102,5 +104,9 @@ copy "$(TargetDir)"  "..\OUTPUT" /y
 del "..\OUTPUT\DailyWallpaperUpdate.exe.xml*" 
 del "..\OUTPUT\DailyWallpaperUpdate.pdb" 
 set errorlevel=0</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>taskkill /f /im $(TargetFileName)   /t &gt;nul 2&gt;nul
+set errorlevel=0</PreBuildEvent>
   </PropertyGroup>
 </Project>
