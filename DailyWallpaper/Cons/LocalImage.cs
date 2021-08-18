@@ -167,24 +167,16 @@ namespace DailyWallpaper
 			{
 				if (DateTime.TryParse(ini.Read("localPathMtime", "LOG"), out DateTime iniMtime))
 				{
-					// bug
 					var lastWriteTime = GetLastWriteTime(path);
 					var timeDiff = Math.Abs((int)(lastWriteTime - iniMtime).TotalMinutes);
 					Console.WriteLine($"lastWriteTime: {lastWriteTime:yyyy-MM-dd HH:mm:ss}");
 					Console.WriteLine($"Modify timeDiff: {timeDiff} min(s).");
-					if (timeDiff > 1)
-					{
-						return true;
-					}
-					else
+					if (timeDiff < 5)
 					{
 						return false;
 					}
 				}
-                else
-                {
-					return true;
-				}
+				return true;
 			}
 		}
 
