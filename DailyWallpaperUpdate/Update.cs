@@ -21,13 +21,17 @@ namespace DailyWallpaperUpdate
         {
             InitializeComponent();
             var li = ParseXml();
+            Icon = Properties.Resources.Update;
             if (li.Count == 3)
             {
                 targetTextBox.Text = li[0];
                 zipFileTextBox.Text = li[1];
                 unzipPathTextBox.Text = li[2];
-                readOnlyCheckBox.Checked = true;
-                SetReadOnly(true);
+                if (File.Exists(zipFileTextBox.Text))
+                {
+                    readOnlyCheckBox.Checked = true;
+                    SetReadOnly(true);
+                }
             }
         }
 

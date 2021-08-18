@@ -166,7 +166,7 @@ namespace DailyWallpaperUpdate
             this.Controls.Add(this.targetTextBox);
             this.Name = "Update";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "Update (Unzip)";
             this.ResumeLayout(false);
             this.PerformLayout();
 
