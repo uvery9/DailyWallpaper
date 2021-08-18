@@ -58,6 +58,7 @@ namespace DailyWallpaper.View
             this.Icon_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OpenOfficialWebsite = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_CheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_ForceUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_IssueAndFeedback = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_OpenConsole = new System.Windows.Forms.ToolStripMenuItem();
@@ -255,6 +256,7 @@ namespace DailyWallpaper.View
             this.Icon_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Icon_OpenOfficialWebsite,
             this.Icon_CheckUpdate,
+            this.Icon_ForceUpdate,
             this.Icon_IssueAndFeedback,
             this.toolStripMenuItem5,
             this.Icon_OpenConsole,
@@ -273,6 +275,12 @@ namespace DailyWallpaper.View
             this.Icon_CheckUpdate.Name = "Icon_CheckUpdate";
             resources.ApplyResources(this.Icon_CheckUpdate, "Icon_CheckUpdate");
             this.Icon_CheckUpdate.Click += new System.EventHandler(this.Icon_CheckUpdate_Click);
+            // 
+            // Icon_ForceUpdate
+            // 
+            this.Icon_ForceUpdate.Name = "Icon_ForceUpdate";
+            resources.ApplyResources(this.Icon_ForceUpdate, "Icon_ForceUpdate");
+            this.Icon_ForceUpdate.Click += new System.EventHandler(this.Icon_ForceUpdate_Click);
             // 
             // Icon_IssueAndFeedback
             // 
@@ -430,5 +438,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem Icon_LikeCurrentWallpaper;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem Icon_CurrentWallpaper;
+        private System.Windows.Forms.ToolStripMenuItem Icon_ForceUpdate;
     }
 }

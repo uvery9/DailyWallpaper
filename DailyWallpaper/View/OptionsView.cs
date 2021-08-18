@@ -194,10 +194,11 @@ namespace DailyWallpaper.View
 
             Icon_CheckUpdate.Text = TranslationHelper.Get("Icon_CheckUpdate");
             Icon_DeleteCurrentWallpaper.Text = "  " + TranslationHelper.Get("Icon_DeleteCurrentWallpaper");
-            Icon_LikeCurrentWallpaper.Text =   "  " + TranslationHelper.Get("Icon_LikeCurrentWallpaper");
+            Icon_LikeCurrentWallpaper.Text =   "  " + TranslationHelper.Get("Icon_LikeCurrentWallpaper");           
             var likeDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "[Like]");
             Icon_LikeCurrentWallpaper.ToolTipText = "Copy to: " + likeDir;
             Icon_CurrentWallpaper.Text = TranslationHelper.Get("Icon_CurrentWallpaper");
+            
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
@@ -216,6 +217,7 @@ namespace DailyWallpaper.View
             if (string.IsNullOrEmpty(dlPath))
                 dlPath = "NULL";
             Icon_SetDownloadFolder.ToolTipText = dlPath;
+            Icon_ForceUpdate.Text = TranslationHelper.Get("Icon_ForceUpdate");
         }
 
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -1488,6 +1490,11 @@ namespace DailyWallpaper.View
                 }
             }
             catch { }
+        }
+
+        private void Icon_ForceUpdate_Click(object sender, EventArgs e)
+        {
+            // update zip from github and Unzip.
         }
     }
 }
