@@ -120,7 +120,35 @@ namespace DailyWallpaper
 			}
 			txtFile = GenerateListFileName(this.path);
 			old_files = null;
-	}
+		}
+
+
+		private DateTime GetLastWriteTime(string path, List<DateTime> dateTimeList = null)
+		{
+			if (dateTimeList == null)
+				dateTimeList = new List<DateTime>();
+			if (String.IsNullOrEmpty(path))
+			{
+				throw new ArgumentException("Starting directory is a null reference or an empty string: dir");
+			}
+			try
+			{
+				foreach (var d in Directory.EnumerateDirectories(path, "*", SearchOption.AllDirectories))
+				{
+					if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
+					{
+						continue;
+					}
+					GetLastWriteTime(d, dateTimeList);
+				}
+				// new FileInfo(path).LastWriteTime
+				dateTimeList.Add(Directory.GetLastWriteTime(path));
+			}
+			catch (UnauthorizedAccessException) { }
+			dateTimeList.Sort();
+			dateTimeList.Reverse();
+			return dateTimeList.FirstOrDefault();
+		}
 
 		private bool ShoulditUpdate()
 		{
@@ -139,7 +167,10 @@ namespace DailyWallpaper
 			{
 				if (DateTime.TryParse(ini.Read("localPathMtime", "LOG"), out DateTime iniMtime))
 				{
-					var timeDiff = Math.Abs((int)(new FileInfo(path).LastWriteTime - iniMtime).TotalMinutes);
+					// bug
+					var lastWriteTime = GetLastWriteTime(path);
+					var timeDiff = Math.Abs((int)(lastWriteTime - iniMtime).TotalMinutes);
+					Console.WriteLine($"lastWriteTime: {lastWriteTime:yyyy-MM-dd HH:mm:ss}");
 					Console.WriteLine($"Modify timeDiff: {timeDiff} min(s).");
 					if (timeDiff > 1)
 					{
@@ -252,8 +283,8 @@ namespace DailyWallpaper
 					{
 						Console.WriteLine("Updated: {0}", txtFile);
 					}
-					ini.UpdateIniItem("localPathMtime", 
-						new FileInfo(path).LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
+					ini.UpdateIniItem("localPathMtime",
+						GetLastWriteTime(path).ToString("yyyy-MM-dd HH:mm:ss"), "LOG");
 				}
 			}
 			catch (ArgumentNullException e)
