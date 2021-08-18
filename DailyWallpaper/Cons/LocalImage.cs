@@ -52,7 +52,7 @@ namespace DailyWallpaper
 			var md5 = GetHash(path).Substring(0, 5);
 			var name = new DirectoryInfo(path).Name;
 			var imgListTxt = name + "-" + md5 + "-imgList.txt";
-			var saveDir = Path.Combine(Helpers.ProjectInfo.executingLocation, "imglist_dir");
+			var saveDir = Path.Combine(ProjectInfo.executingLocation, "imglist_dir");
 			if (!Directory.Exists(saveDir))
             {
 				Directory.CreateDirectory(saveDir);

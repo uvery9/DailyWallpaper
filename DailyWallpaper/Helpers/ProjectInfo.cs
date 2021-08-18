@@ -21,7 +21,7 @@ namespace DailyWallpaper.Helpers
         public static string email = "jared.dcx@gmail.com";
         public static string exeName = Assembly.GetExecutingAssembly().GetName().Name;
         public static string executingLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        public static string logFile = new System.IO.FileInfo(exeName + ".log.txt").FullName;
+        public static string logFile = new FileInfo(exeName + ".log.txt").FullName;
         private static string officalWebSiteGlobal = "https://github.com/JaredDC/DailyWallpaper";
         private static string officalWebSiteCHN = "https://gitee.com/imtvip/DailyWallpaper";
         private static string officalLatestGlobal = "https://github.com/JaredDC/DailyWallpaper/releases/latest";
@@ -234,40 +234,52 @@ namespace DailyWallpaper.Helpers
             var stripped = Regex.Replace(input, @"[^0-9\.]", "");
             return new Version(stripped);
         }
-        public static void CheckForUpdates(Action<bool, bool, string> action)
+        public static void CheckForUpdates(Action<bool, bool, string> action, bool force = false)
         {
             _ = Task.Run(() =>
               {
                   try
                   {
                       var json = DownloadJson("https://api.github.com/repos/JaredDC/DailyWallpaper/releases/latest");
-                      // "tag_name": "v1.7.0"
                       string tag_name = (string)json["tag_name"];
                       if (string.IsNullOrEmpty(tag_name))
                       {
                           action(false, false, "No tag_name");
                           return;
                       }
-                      
-                      var gitHubVersion = StringOrFile2Version(tag_name);
-                      var currentVersion = GetVerSion();
-                      if (currentVersion < gitHubVersion)
-                      {                      
-                          var msiUrl = (string)json["assets"][0]["browser_download_url"];
-                          if (string.IsNullOrEmpty(msiUrl))
+                      if (force)
+                      {
+                          var zipUrl = (string)json["assets"][2]["browser_download_url"];
+                          if (string.IsNullOrEmpty(zipUrl))
                           {
-                              action(false, false, "No msiUrl");
+                              action(false, false, "No zipUrl");
                               return;
                           }
-                          // string gitHubFileName = (string)json["assets"][0]["name"];
-                          DownloadFileAsync(msiUrl, tag_name, action);
+                          DownloadFileAsync(zipUrl, tag_name, action);
                           return;
                       }
                       else
                       {
-                          action(true, false, "No update.");
-                          return;
+                          var gitHubVersion = StringOrFile2Version(tag_name);
+                          var currentVersion = GetVerSion();
+                          if (currentVersion < gitHubVersion)
+                          {
+                              var msiUrl = (string)json["assets"][0]["browser_download_url"];
+                              if (string.IsNullOrEmpty(msiUrl))
+                              {
+                                  action(false, false, "No msiUrl");
+                                  return;
+                              }
+                              DownloadFileAsync(msiUrl, tag_name, action);
+                              return;
+                          }
+                          else
+                          {
+                              action(true, false, "No update.");
+                              return;
+                          }
                       }
+                      
                   }
                   catch (Exception e)
                   {
@@ -310,10 +322,10 @@ namespace DailyWallpaper.Helpers
         public static void DownloadFileAsync(string url, string tagName, Action<bool, bool, string> action, WebProxy webProxy = null)
         {
             WebClientEx ws = new WebClientEx();
-            /*            try
-                        {*/
             
             var gitHubFileName = "DailyWallpaper.Installer-latest.msi";
+            if (url.ToLower().EndsWith(".zip"))
+                gitHubFileName = "DailyWallpaper.Protable-latest.zip";
             var savePath = Path.Combine(Path.GetDirectoryName(
                             Assembly.GetExecutingAssembly().Location), gitHubFileName);
             ws.completed = savePath + "." + tagName + ".completed";

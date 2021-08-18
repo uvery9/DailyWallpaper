@@ -1108,7 +1108,7 @@ namespace DailyWallpaper.View
 
         }
 
-        private void CheckUpdate(bool click = true)
+        private void CheckUpdate(bool click = true, bool force = false)
         {
             void getResult(bool res, bool downloaded, string msg)
             {
@@ -1123,19 +1123,25 @@ namespace DailyWallpaper.View
                 }
                 if (downloaded && res || (click && downloaded && !res)) // true true = new download, false true = already downloaded.
                 {
-                    ShowNotification("",
-                                "Update Downloaded, click me to install.",
-                                timeout: 20000,
-                                clickEvent:
-                                () => { 
-                                    Process.Start(msg);
-                                    Icon_Quit.PerformClick();
-                                });
+                    if (force)
+                    {
+                        // DailyWallpaper.Protable-latest.zip
+                        MessageBox.Show(msg);
+                        // unzip D:\jared\coding\DailyWallpaper\DailyWallpaper\bin\Debug\DailyWallpaper.Protable-latest.zip
+                    }
+                    else
+                    {
+                        ShowNotification("", "Update Downloaded, click me to install.", timeout: 20000, clickEvent:
+                                                                                () => {
+                                                                                    Process.Start(msg);
+                                                                                    Icon_Quit.PerformClick();
+                                                                                });
+                    }
                 }
             }
             if (click)
                 ShowNotification("", "Checking update.");
-            ProjectInfo.CheckForUpdates(getResult);
+            ProjectInfo.CheckForUpdates(getResult, force);
         }
         private void Icon_CheckUpdate_Click(object sender, EventArgs e)
         {
@@ -1495,6 +1501,7 @@ namespace DailyWallpaper.View
         private void Icon_ForceUpdate_Click(object sender, EventArgs e)
         {
             // update zip from github and Unzip.
+            CheckUpdate(click: true, force: true);
         }
     }
 }

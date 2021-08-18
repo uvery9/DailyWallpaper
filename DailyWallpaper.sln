@@ -10,6 +10,8 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "DailyWallpaper.Installer", 
 		{D60E24F0-FC47-4490-ACD6-3157C26AFF39} = {D60E24F0-FC47-4490-ACD6-3157C26AFF39}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DailyWallpaperUpdate", "DailyWallpaperUpdate\DailyWallpaperUpdate.csproj", "{C966CD3F-BC58-48B4-96C3-7476F50957B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,18 @@ Global
 		{739D071D-86AF-4EEE-A466-158AF76F64AB}.Release|x64.Build.0 = Release|x64
 		{739D071D-86AF-4EEE-A466-158AF76F64AB}.Release|x86.ActiveCfg = Release|x86
 		{739D071D-86AF-4EEE-A466-158AF76F64AB}.Release|x86.Build.0 = Release|x86
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Debug|x64.Build.0 = Debug|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Debug|x86.Build.0 = Debug|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Release|x64.ActiveCfg = Release|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Release|x64.Build.0 = Release|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{C966CD3F-BC58-48B4-96C3-7476F50957B2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
