@@ -125,7 +125,7 @@ namespace DailyWallpaper
         {
             _updateTimer = new System.Timers.Timer
             {
-                Interval = 1000 * 5, // update by mins
+                Interval = 1000 * 60, // update by mins
                 AutoReset = true,
                 Enabled = false
             };
@@ -168,7 +168,10 @@ namespace DailyWallpaper
         private void DateCnt_VisibleChanged(object sender, EventArgs e)
         {
             if (Visible)
+            {
+                nowHMTextBox.Text = DateTime.Now.ToString("HH:mm");
                 _updateTimer.Enabled = true;
+            }
             else
                 _updateTimer.Enabled = false;
         }
