@@ -1145,7 +1145,15 @@ namespace DailyWallpaper.View
                             writer.WriteEndElement();
                             writer.Flush();
                         }
-                        Process.Start(Path.Combine(dir, "DailyWallpaperUpdate.exe"));
+                        var updater = Path.Combine(dir, "DailyWallpaperUpdate.exe");
+                        var updaterCp = Path.Combine(dir, "DailyWallpaperUpdate.cp.exe");
+                        if (File.Exists(updater))
+                        {
+                            File.Copy(updater, updaterCp, true);
+                            Process.Start(updaterCp);
+                        }
+                        else
+                            ShowNotification("", $"Updater doesn't exist: {updater}");
                     }
                     else
                     {
