@@ -1126,6 +1126,11 @@ namespace DailyWallpaper.View
                 {
                     if (force)
                     {
+                        if (!File.Exists(msg))
+                        {
+                            ShowNotification("", $"Zip doesn't exist: {msg}");
+                            return;
+                        }
                         // DailyWallpaper.Protable-latest.zip
                         var dir = ProjectInfo.executingLocation;
                         var xmlFile = Path.Combine(dir, "DailyWallpaperUpdate.exe.xml");
