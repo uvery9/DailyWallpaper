@@ -147,7 +147,12 @@ namespace DailyWallpaperUpdate
             AppendText($"restart {target} ...");
             if (File.Exists(targetPath))
             {
-                Process.Start(targetPath);
+                var info = new ProcessStartInfo()
+                {
+                    WorkingDirectory = new FileInfo(targetPath).DirectoryName,
+                    FileName = new FileInfo(targetPath).Name
+                };
+                Process.Start(info);
                 AppendText($"restarted :\r\n    {targetPath}");
             }
         }
