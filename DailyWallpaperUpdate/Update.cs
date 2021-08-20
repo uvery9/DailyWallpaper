@@ -89,15 +89,22 @@ namespace DailyWallpaperUpdate
                         // if (file.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
 
                         // Gets the full path to ensure that relative segments are removed.
-                        updateConsTextBox.AppendText($". {file.Name}" + Environment.NewLine);
-                        string dest = Path.GetFullPath(Path.Combine(extractPath, file.FullName));
-                        if (File.Exists(dest))
-                            File.Delete(dest);
+                        updateConsTextBox.AppendText($". {file.FullName}" + Environment.NewLine);
 
-                        // Ordinal match is safest, case-sensitive volumes can be mounted within volumes that
-                        // are case-insensitive.
-                        if (dest.StartsWith(extractPath, StringComparison.Ordinal))
-                            file.ExtractToFile(dest);
+                        string dest = Path.GetFullPath(Path.Combine(extractPath, file.FullName));
+                        if (string.IsNullOrEmpty(file.Name))
+                        {
+                            Directory.CreateDirectory(dest);
+                        }
+                        else
+                        {
+                            if (File.Exists(dest))
+                                File.Delete(dest);
+                            // Ordinal match is safest, case-sensitive volumes can be mounted within volumes that
+                            // are case-insensitive.
+                            if (dest.StartsWith(extractPath, StringComparison.Ordinal))
+                                file.ExtractToFile(dest);
+                        }
                     }
                 }
         }
