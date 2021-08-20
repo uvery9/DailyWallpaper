@@ -35,6 +35,9 @@
   <PropertyGroup>
     <ApplicationIcon>Update.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -98,11 +101,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>cd $(ProjectDir)
-RMDIR /Q /S "..\OUTPUT"
-md "..\OUTPUT"
-copy "$(TargetDir)"  "..\OUTPUT" /y
-del "..\OUTPUT\DailyWallpaperUpdate.exe.xml*" 
-del "..\OUTPUT\DailyWallpaperUpdate.pdb" 
+del "$(TargetDir)DailyWallpaperUpdate.pdb"
+del "$(TargetDir)DailyWallpaperUpdate.exe.xml*" 
+copy "$(TargetDir)"  "..\DailyWallpaper\$(OutDir)" /y
 set errorlevel=0</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
