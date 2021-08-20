@@ -1135,6 +1135,8 @@ namespace DailyWallpaper.View
                         var dir = ProjectInfo.executingLocation;
                         var updateName = "DailyWallpaperUpdate.exe";
                         var updaterFolder = Path.Combine(dir, "Update");
+                        if (!Directory.Exists(updaterFolder))
+                            return;
                         var xmlFile = Path.Combine(updaterFolder, updateName + ".xml");
                         if (File.Exists(xmlFile))
                             File.Delete(xmlFile);
