@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace DailyWallpaper
@@ -41,6 +42,7 @@ namespace DailyWallpaper
                     
             };
             addSubComboBox.SelectedIndexChanged += (_, e) => updateButton.PerformClick();
+            UpdateTimerInit();
         }
 
         private void updateButton_Click(object sender, EventArgs e)
@@ -96,7 +98,49 @@ namespace DailyWallpaper
                 addSubResTextBox.Text = $"{dest:yyyy/MM/dd ddd}";
                 // addSubResTextBox.Text = $"{dateTimePickerOri.Value:yyyy 年 MM 月 dd 日}";
                 
-            }          
+            }
+            
+            var now = DateTime.Now;
+            var targetHM = now.Date;
+            if (int.TryParse(targetHourTextBox.Text, out int th))
+                targetHM = targetHM.AddHours(th);
+            if (int.TryParse(targetMinsTextBox.Text, out int tm))
+                targetHM = targetHM.AddMinutes(tm);
+            if ((targetHM - now).TotalMinutes < 0)
+                targetHM = targetHM.AddDays(1);
+            var dif = (int)(targetHM - now).TotalMinutes;
+            
+            var difStr = "";
+            if (dif > 60)
+            {
+                difStr += "" + (dif / 60) + " h ";
+                dif -= dif / 60 * 60;
+            }
+            hmDiffTextBox.Text = $"{difStr}{dif} m";
+        }
+
+        private System.Timers.Timer _updateTimer;
+
+        private void UpdateTimerInit()
+        {
+            _updateTimer = new System.Timers.Timer
+            {
+                Interval = 1000 * 5, // update by mins
+                AutoReset = true,
+                Enabled = false
+            };
+            // _timer.
+            _updateTimer.Elapsed += UpdateTimer_Elapsed;
+            _updateTimer.Start();
+        }
+
+        private void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Application.DoEvents();
+            if (Visible)
+            {
+                nowHMTextBox.Text = DateTime.Now.ToString("HH:mm");
+            }
         }
 
         private void DateCntKeyDown(object sender, KeyEventArgs e)
@@ -119,6 +163,14 @@ namespace DailyWallpaper
         private void rightDateTimePicker_ValueChanged(object sender, EventArgs e)
         {
             updateButton.PerformClick();
+        }
+
+        private void DateCnt_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+                _updateTimer.Enabled = true;
+            else
+                _updateTimer.Enabled = false;
         }
     }
 }

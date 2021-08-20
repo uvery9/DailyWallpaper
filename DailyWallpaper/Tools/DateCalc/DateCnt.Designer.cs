@@ -44,6 +44,13 @@ namespace DailyWallpaper
             this.updateButton = new System.Windows.Forms.Button();
             this.addSubCheckBox = new System.Windows.Forms.CheckBox();
             this.timeDiffCheckBox = new System.Windows.Forms.CheckBox();
+            this.hmDiffTextBox = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.targetHourTextBox = new System.Windows.Forms.TextBox();
+            this.targetMinsTextBox = new System.Windows.Forms.TextBox();
+            this.nowHMTextBox = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // dateTimePickerOri
@@ -199,11 +206,89 @@ namespace DailyWallpaper
             this.timeDiffCheckBox.TabIndex = 22;
             this.timeDiffCheckBox.UseVisualStyleBackColor = true;
             // 
+            // hmDiffTextBox
+            // 
+            this.hmDiffTextBox.Location = new System.Drawing.Point(526, 51);
+            this.hmDiffTextBox.Name = "hmDiffTextBox";
+            this.hmDiffTextBox.ReadOnly = true;
+            this.hmDiffTextBox.Size = new System.Drawing.Size(100, 28);
+            this.hmDiffTextBox.TabIndex = 23;
+            // 
+            // textBox2
+            // 
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Location = new System.Drawing.Point(436, 54);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(19, 21);
+            this.textBox2.TabIndex = 23;
+            this.textBox2.Text = ":";
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // targetHourTextBox
+            // 
+            this.targetHourTextBox.Location = new System.Drawing.Point(403, 51);
+            this.targetHourTextBox.Name = "targetHourTextBox";
+            this.targetHourTextBox.Size = new System.Drawing.Size(32, 28);
+            this.targetHourTextBox.TabIndex = 23;
+            this.targetHourTextBox.Text = "12";
+            this.targetHourTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.targetHourTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ymdTextBox_KeyPress);
+            // 
+            // targetMinsTextBox
+            // 
+            this.targetMinsTextBox.Location = new System.Drawing.Point(461, 51);
+            this.targetMinsTextBox.Name = "targetMinsTextBox";
+            this.targetMinsTextBox.Size = new System.Drawing.Size(32, 28);
+            this.targetMinsTextBox.TabIndex = 23;
+            this.targetMinsTextBox.Text = "20";
+            this.targetMinsTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.targetMinsTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ymdTextBox_KeyPress);
+            // 
+            // nowHMTextBox
+            // 
+            this.nowHMTextBox.Location = new System.Drawing.Point(294, 51);
+            this.nowHMTextBox.Name = "nowHMTextBox";
+            this.nowHMTextBox.ReadOnly = true;
+            this.nowHMTextBox.Size = new System.Drawing.Size(60, 28);
+            this.nowHMTextBox.TabIndex = 23;
+            this.nowHMTextBox.Text = "09:45";
+            this.nowHMTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(369, 54);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(19, 21);
+            this.textBox1.TabIndex = 23;
+            this.textBox1.Text = "to";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox3
+            // 
+            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox3.Location = new System.Drawing.Point(499, 54);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
+            this.textBox3.Size = new System.Drawing.Size(19, 21);
+            this.textBox3.TabIndex = 23;
+            this.textBox3.Text = "=";
+            this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // DateCnt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(670, 271);
+            this.Controls.Add(this.targetMinsTextBox);
+            this.Controls.Add(this.targetHourTextBox);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.nowHMTextBox);
+            this.Controls.Add(this.hmDiffTextBox);
             this.Controls.Add(this.timeDiffCheckBox);
             this.Controls.Add(this.addSubCheckBox);
             this.Controls.Add(this.updateButton);
@@ -222,6 +307,7 @@ namespace DailyWallpaper
             this.Name = "DateCnt";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Date Calculator";
+            this.VisibleChanged += new System.EventHandler(this.DateCnt_VisibleChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,5 +330,12 @@ namespace DailyWallpaper
         private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.CheckBox addSubCheckBox;
         private System.Windows.Forms.CheckBox timeDiffCheckBox;
+        private System.Windows.Forms.TextBox hmDiffTextBox;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox targetHourTextBox;
+        private System.Windows.Forms.TextBox targetMinsTextBox;
+        private System.Windows.Forms.TextBox nowHMTextBox;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
