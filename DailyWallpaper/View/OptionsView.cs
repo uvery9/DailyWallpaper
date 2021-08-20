@@ -1133,7 +1133,9 @@ namespace DailyWallpaper.View
                         }
                         // DailyWallpaper.Protable-latest.zip
                         var dir = ProjectInfo.executingLocation;
-                        var xmlFile = Path.Combine(dir, "DailyWallpaperUpdate.exe.xml");
+                        var updateName = "DailyWallpaperUpdate.exe";
+                        var updaterFolder = Path.Combine(dir, "Update");
+                        var xmlFile = Path.Combine(updaterFolder, updateName + ".xml");
                         if (File.Exists(xmlFile))
                             File.Delete(xmlFile);
                         using (XmlWriter writer = XmlWriter.Create(xmlFile))
@@ -1145,15 +1147,17 @@ namespace DailyWallpaper.View
                             writer.WriteEndElement();
                             writer.Flush();
                         }
-                        var updater = Path.Combine(dir, "DailyWallpaperUpdate.exe");
-                        var updaterCp = Path.Combine(dir, "DailyWallpaperUpdate.cp.exe");
-                        if (File.Exists(updater))
+                        var updaterCp = Path.Combine(dir, "Update-copy");
+                        if (File.Exists(Path.Combine(updaterFolder, updateName)))
                         {
-                            File.Copy(updater, updaterCp, true);
-                            Process.Start(updaterCp);
+                            try
+                            {
+                                Directory.Delete(updaterCp, true);
+                            }
+                            catch { }
+                            Copy(updaterFolder, updaterCp);
+                            Process.Start(Path.Combine(updaterCp, updateName));
                         }
-                        else
-                            ShowNotification("", $"Updater doesn't exist: {updater}");
                     }
                     else
                     {
@@ -1169,6 +1173,17 @@ namespace DailyWallpaper.View
                 ShowNotification("", "Checking update.");
             ProjectInfo.CheckForUpdates(getResult, force);
         }
+        private void Copy(string sourceDir, string targetDir)
+        {
+            Directory.CreateDirectory(targetDir);
+
+            foreach (var file in Directory.EnumerateFiles(sourceDir))
+                File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)));
+
+            foreach (var directory in Directory.EnumerateDirectories(sourceDir))
+                Copy(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
+        }
+
         private void Icon_CheckUpdate_Click(object sender, EventArgs e)
         {
             CheckUpdate();

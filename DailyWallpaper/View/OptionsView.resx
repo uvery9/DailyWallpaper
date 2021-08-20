@@ -197,17 +197,17 @@
   <data name="Icon_OpenOfficialWebsite.Text" xml:space="preserve">
     <value>打开官网...</value>
   </data>
-  <data name="Icon_CheckUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_CheckUpdate.Text" xml:space="preserve">
-    <value>检查更新</value>
-  </data>
   <data name="Icon_ForceUpdate.Size" type="System.Drawing.Size, System.Drawing">
     <value>270, 34</value>
   </data>
   <data name="Icon_ForceUpdate.Text" xml:space="preserve">
     <value>Force Update</value>
+  </data>
+  <data name="Icon_CheckUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>270, 34</value>
+  </data>
+  <data name="Icon_CheckUpdate.Text" xml:space="preserve">
+    <value>检查更新</value>
   </data>
   <data name="Icon_IssueAndFeedback.Size" type="System.Drawing.Size, System.Drawing">
     <value>270, 34</value>
@@ -258,7 +258,7 @@
     <value>退出</value>
   </data>
   <data name="Icon_OptionsIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 451</value>
+    <value>318, 418</value>
   </data>
   <data name="&gt;&gt;Icon_OptionsIcon.Name" xml:space="preserve">
     <value>Icon_OptionsIcon</value>
@@ -561,12 +561,6 @@
   <data name="&gt;&gt;Icon_CheckUpdate.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_ForceUpdate.Name" xml:space="preserve">
-    <value>Icon_ForceUpdate</value>
-  </data>
-  <data name="&gt;&gt;Icon_ForceUpdate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;Icon_IssueAndFeedback.Name" xml:space="preserve">
     <value>Icon_IssueAndFeedback</value>
   </data>
@@ -662,6 +656,12 @@
   </data>
   <data name="&gt;&gt;_notifyIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Icon_ForceUpdate.Name" xml:space="preserve">
+    <value>Icon_ForceUpdate</value>
+  </data>
+  <data name="&gt;&gt;Icon_ForceUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>OptionsView</value>

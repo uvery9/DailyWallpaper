@@ -103,7 +103,7 @@
     <PostBuildEvent>cd $(ProjectDir)
 del "$(TargetDir)DailyWallpaperUpdate.pdb"
 del "$(TargetDir)DailyWallpaperUpdate.exe.xml*"
-set COPYDIR=..\DailyWallpaper\$(OutDir)
+set COPYDIR=..\DailyWallpaper\$(OutDir)Update
 
 if not exist %25COPYDIR%25 (
  md %25COPYDIR%25 )

@@ -32,6 +32,14 @@ namespace DailyWallpaperUpdate
                 {
                     readOnlyCheckBox.Checked = true;
                     SetReadOnly(true);
+                    foreach (var file in Directory.EnumerateFiles(new FileInfo(zipFileTextBox.Text).DirectoryName))
+                    {
+                        if (file.ToLower().EndsWith(".completed"))
+                        {
+                            AppendText($"Found: \r\n    {file}");
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -163,21 +171,14 @@ namespace DailyWallpaperUpdate
             using (var dialog = new CommonOpenFileDialog())
             {
                 string zipDir = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                foreach (var file in Directory.EnumerateFiles(Path.GetDirectoryName(Assembly.
-                    GetExecutingAssembly().Location)))
-                {
-                    if (file.ToLower().EndsWith(".zip"))
-                    {
-                        zipDir = new FileInfo(file).DirectoryName;
-                        break;
-                    }
-                }
+                if (File.Exists(zipFileTextBox.Text))
+                    zipDir = new FileInfo(zipFileTextBox.Text).DirectoryName;
                 dialog.InitialDirectory = zipDir;
                 dialog.IsFolderPicker = false;
                 dialog.EnsureFileExists = true;
                 dialog.Multiselect = false;
                 dialog.Title = "Select zip file"; // "XML files (*.xml)|*.xml";
-                dialog.Filters.Add(new CommonFileDialogFilter("zip file", "*.zip"));
+                dialog.Filters.Add(new CommonFileDialogFilter("zip file", "*.zip,*.completed"));
                 dialog.Filters.Add(new CommonFileDialogFilter("All file", "*.*"));
 
                 // maybe add some log

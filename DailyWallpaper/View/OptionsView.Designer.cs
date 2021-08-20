@@ -58,7 +58,6 @@ namespace DailyWallpaper.View
             this.Icon_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OpenOfficialWebsite = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_CheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
-            this.Icon_ForceUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_IssueAndFeedback = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_OpenConsole = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,6 +74,7 @@ namespace DailyWallpaper.View
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.Icon_ForceUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -256,7 +256,6 @@ namespace DailyWallpaper.View
             this.Icon_Help.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Icon_OpenOfficialWebsite,
             this.Icon_CheckUpdate,
-            this.Icon_ForceUpdate,
             this.Icon_IssueAndFeedback,
             this.toolStripMenuItem5,
             this.Icon_OpenConsole,
@@ -272,15 +271,11 @@ namespace DailyWallpaper.View
             // 
             // Icon_CheckUpdate
             // 
+            this.Icon_CheckUpdate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Icon_ForceUpdate});
             this.Icon_CheckUpdate.Name = "Icon_CheckUpdate";
             resources.ApplyResources(this.Icon_CheckUpdate, "Icon_CheckUpdate");
             this.Icon_CheckUpdate.Click += new System.EventHandler(this.Icon_CheckUpdate_Click);
-            // 
-            // Icon_ForceUpdate
-            // 
-            this.Icon_ForceUpdate.Name = "Icon_ForceUpdate";
-            resources.ApplyResources(this.Icon_ForceUpdate, "Icon_ForceUpdate");
-            this.Icon_ForceUpdate.Click += new System.EventHandler(this.Icon_ForceUpdate_Click);
             // 
             // Icon_IssueAndFeedback
             // 
@@ -383,6 +378,12 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this._notifyIcon, "_notifyIcon");
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
+            // 
+            // Icon_ForceUpdate
+            // 
+            this.Icon_ForceUpdate.Name = "Icon_ForceUpdate";
+            resources.ApplyResources(this.Icon_ForceUpdate, "Icon_ForceUpdate");
+            this.Icon_ForceUpdate.Click += new System.EventHandler(this.Icon_ForceUpdate_Click);
             // 
             // OptionsView
             // 
