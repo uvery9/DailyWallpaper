@@ -129,7 +129,7 @@ namespace DailyWallpaper.HashCalc
                 catch (Exception e)
                 {
                     action(false, $"ERROR {who}", null, e.Message);
-                    MessageBox.Show(e.Message);
+                    MessageBox.Show(e.ToString());
                 }
             }));
         }

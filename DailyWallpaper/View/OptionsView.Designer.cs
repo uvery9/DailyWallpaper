@@ -58,6 +58,10 @@ namespace DailyWallpaper.View
             this.Icon_Help = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OpenOfficialWebsite = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_CheckUpdate = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_RegularUpdate = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_ForceUpdate = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_CheckUpdateFrequency = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_AutoCheckUpdateFreq = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_IssueAndFeedback = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_OpenConsole = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,7 +78,6 @@ namespace DailyWallpaper.View
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.Icon_ForceUpdate = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -272,10 +275,35 @@ namespace DailyWallpaper.View
             // Icon_CheckUpdate
             // 
             this.Icon_CheckUpdate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Icon_ForceUpdate});
+            this.Icon_RegularUpdate,
+            this.Icon_ForceUpdate,
+            this.Icon_CheckUpdateFrequency});
             this.Icon_CheckUpdate.Name = "Icon_CheckUpdate";
             resources.ApplyResources(this.Icon_CheckUpdate, "Icon_CheckUpdate");
-            this.Icon_CheckUpdate.Click += new System.EventHandler(this.Icon_CheckUpdate_Click);
+            // 
+            // Icon_RegularUpdate
+            // 
+            this.Icon_RegularUpdate.Name = "Icon_RegularUpdate";
+            resources.ApplyResources(this.Icon_RegularUpdate, "Icon_RegularUpdate");
+            this.Icon_RegularUpdate.Click += new System.EventHandler(this.Icon_RegularUpdate_Click);
+            // 
+            // Icon_ForceUpdate
+            // 
+            this.Icon_ForceUpdate.Name = "Icon_ForceUpdate";
+            resources.ApplyResources(this.Icon_ForceUpdate, "Icon_ForceUpdate");
+            this.Icon_ForceUpdate.Click += new System.EventHandler(this.Icon_ForceUpdate_Click);
+            // 
+            // Icon_CheckUpdateFrequency
+            // 
+            this.Icon_CheckUpdateFrequency.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Icon_AutoCheckUpdateFreq});
+            this.Icon_CheckUpdateFrequency.Name = "Icon_CheckUpdateFrequency";
+            resources.ApplyResources(this.Icon_CheckUpdateFrequency, "Icon_CheckUpdateFrequency");
+            // 
+            // Icon_AutoCheckUpdateFreq
+            // 
+            this.Icon_AutoCheckUpdateFreq.Name = "Icon_AutoCheckUpdateFreq";
+            resources.ApplyResources(this.Icon_AutoCheckUpdateFreq, "Icon_AutoCheckUpdateFreq");
             // 
             // Icon_IssueAndFeedback
             // 
@@ -379,12 +407,6 @@ namespace DailyWallpaper.View
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
-            // Icon_ForceUpdate
-            // 
-            this.Icon_ForceUpdate.Name = "Icon_ForceUpdate";
-            resources.ApplyResources(this.Icon_ForceUpdate, "Icon_ForceUpdate");
-            this.Icon_ForceUpdate.Click += new System.EventHandler(this.Icon_ForceUpdate_Click);
-            // 
             // OptionsView
             // 
             resources.ApplyResources(this, "$this");
@@ -440,5 +462,8 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem Icon_CurrentWallpaper;
         private System.Windows.Forms.ToolStripMenuItem Icon_ForceUpdate;
+        private System.Windows.Forms.ToolStripMenuItem Icon_RegularUpdate;
+        private System.Windows.Forms.ToolStripMenuItem Icon_CheckUpdateFrequency;
+        private System.Windows.Forms.ToolStripMenuItem Icon_AutoCheckUpdateFreq;
     }
 }

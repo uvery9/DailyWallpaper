@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 using System.Xml;
+using System.Globalization;
 
 namespace DailyWallpaper.View
 {
@@ -74,11 +75,24 @@ namespace DailyWallpaper.View
             _shutdownTimer = new Tools.ShutdownTimer.Shutdown();
             _shutdownTimer.FormClosing += _shutdownTimer_FormClosing;
         }
-        private void LaterCheckUpdate()
+        private void LaterCheckUpdate(string autoCheckUpdateNextTime)
         {
+            double interval = 1000 * 60 * 5; // 5mins LATER,
+            if (DateTime.TryParseExact(autoCheckUpdateNextTime, dateTimeFormat, null, DateTimeStyles.None, out DateTime dateTime))
+            {
+                var now = DateTime.Now;
+                if ((dateTime - now).TotalDays > 1)
+                    return;
+                var tmp = (dateTime - DateTime.Now).TotalMilliseconds;
+                if (tmp > 0)
+                {
+                    interval = tmp;
+                }
+            }
+            // MessageBox.Show((interval / 1000 /60).ToString());
             var _updateTimer = new System.Timers.Timer
             {
-                Interval = 1000 * 60 * 5, // 5mins LATER,
+                Interval = interval, 
                 AutoReset = true,
                 Enabled = true
             };
@@ -89,6 +103,8 @@ namespace DailyWallpaper.View
         public void _updateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             CheckUpdate(click: false);
+            _ini.UpdateIniItem("AutoCheckUpdateNextTime", UpdateAutoCheckUpdateNextTime());
+            // MessageBox.Show("Check Update");
             ((System.Timers.Timer)sender).Enabled = false;
         }
 
@@ -114,11 +130,7 @@ namespace DailyWallpaper.View
             Icon_AutoChangeWallpaper.Text = "    "
                 + TranslationHelper.Get("Icon_AutoChangeWallpaper");
             Icon_AutoChangeWallpaper.TextAlign = ContentAlignment.MiddleRight;
-            //_Icon_EveryHoursAutoChangeMenuItem.DisplayStyle
 
-            // _Icon_EveryHoursAutoChangeMenuItem
-
-            // ooo
             Icon_AutoChangeWallpaper.DropDownItems.AddRange(new ToolStripItem[] {
             CustomHoursTextboxWithButtonAndUnit() 
             });
@@ -219,6 +231,16 @@ namespace DailyWallpaper.View
                 dlPath = "NULL";
             Icon_SetDownloadFolder.ToolTipText = dlPath;
             Icon_ForceUpdate.Text = TranslationHelper.Get("Icon_ForceUpdate");
+            Icon_RegularUpdate.Text = TranslationHelper.Get("Icon_RegularUpdate");
+            var oldFont = Icon_RegularUpdate.Font;
+            Icon_RegularUpdate.Font = new Font(oldFont.FontFamily, oldFont.Size, FontStyle.Bold);
+
+            Icon_AutoCheckUpdateFreq.Enabled = false;
+            Icon_AutoCheckUpdateFreq.Text = TranslationHelper.Get("Icon_AutoCheckUpdateFreq");
+            Icon_CheckUpdateFrequency.Text = TranslationHelper.Get("Icon_CheckUpdateFrequency");
+            Icon_CheckUpdateFrequency.DropDownItems.AddRange(new ToolStripItem[] {
+                UpdateFrequencyUnit()
+            });
         }
 
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -393,17 +415,8 @@ namespace DailyWallpaper.View
                 _notifyIcon.ContextMenuStrip.Close();
             }
         }
-        private void h12RadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (h12RadioButton.Checked)
-            {
-                _ini.UpdateIniItem("Timer", 12.ToString());
-                hoursTextBox.Enabled = false;
-                _notifyIcon.ContextMenuStrip.Close();
-                _timerHelper.SetTimer(12 * 60, SetTimerAfter);
-            }
-        }
-        private void h24RadioButton_CheckedChanged(object sender, EventArgs e)
+
+        private void hourRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (h24RadioButton.Checked)
             {
@@ -412,20 +425,21 @@ namespace DailyWallpaper.View
                 _notifyIcon.ContextMenuStrip.Close();
                 _timerHelper.SetTimer(24 * 60, SetTimerAfter);
             }
-        }
-        private void h6RadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (h6RadioButton.Checked)
+            else if (h6RadioButton.Checked)
             {
                 _ini.UpdateIniItem("Timer", 6.ToString());
                 hoursTextBox.Enabled = false;
                 _notifyIcon.ContextMenuStrip.Close();
                 _timerHelper.SetTimer(6 * 60, SetTimerAfter);
             }
-        }
-        private void customRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (customRadioButton.Checked)
+            else if(h12RadioButton.Checked)
+            {
+                _ini.UpdateIniItem("Timer", 12.ToString());
+                hoursTextBox.Enabled = false;
+                _notifyIcon.ContextMenuStrip.Close();
+                _timerHelper.SetTimer(12 * 60, SetTimerAfter);
+            }
+            else if (customRadioButton.Checked)
             {
                 hoursTextBox.Enabled = true;
                 if (!_ini.Read("Timer").Equals(textFromHoursTextBox))
@@ -435,7 +449,6 @@ namespace DailyWallpaper.View
                 int.TryParse(textFromHoursTextBox, out int res);
                 _timerHelper.SetTimer(res * 60, SetTimerAfter);
             }
-
         }
 
         private void ChangeIconStatus()
@@ -774,7 +787,7 @@ namespace DailyWallpaper.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Icon_Notepad_Click: " + ex.Message);
             }
         }
         private void ScanDirsFindNotepadPP(string path, Action<bool, string> action)
@@ -862,9 +875,9 @@ namespace DailyWallpaper.View
             panel.Controls.Add(radioButton);
             panel.Controls.Add(unitLabel);
         }
+
         private ToolStripControlHost CustomHoursTextboxWithButtonAndUnit()
         {
-            var backColor = SystemColors.Window;
             hoursTextBox = new TextBox();
 
             h12RadioButton = new RadioButton();
@@ -886,8 +899,8 @@ namespace DailyWallpaper.View
             // panel.TabIndex = 7;
             var panelHost = new ToolStripControlHost(panel)
             {
-                BackColor = backColor
-            };
+                BackColor = SystemColors.Window
+        };
 
             return panelHost;
         }
@@ -991,14 +1004,14 @@ namespace DailyWallpaper.View
                         $"NEXTAutoChangeWallpaperTime Parse Succeed.", "LOG");
                 }
                 var totalMins = (int)(nextTime - DateTime.Now).TotalMinutes;
-                if (totalMins < 0)
+                if (totalMins > 0)
                 {
-                    // 5 minutes later update wallpaper
-                    _timerHelper.SetTimer(5, SetTimerAfter);
+                    _timerHelper.SetTimer(totalMins, SetTimerAfter);
                 }
                 else
                 {
-                    _timerHelper.SetTimer(totalMins, SetTimerAfter);
+                    // 5 minutes later update wallpaper
+                    _timerHelper.SetTimer(5, SetTimerAfter);
                 }
             }
             else
@@ -1027,13 +1040,33 @@ namespace DailyWallpaper.View
                 hoursTextBox.Text = timerStr;
                 textFromHoursTextBox = timerStr;
             }
-            h6RadioButton.CheckedChanged += h6RadioButton_CheckedChanged;
-            h12RadioButton.CheckedChanged += h12RadioButton_CheckedChanged;
-            h24RadioButton.CheckedChanged += h24RadioButton_CheckedChanged;
-            customRadioButton.CheckedChanged += customRadioButton_CheckedChanged;
-            // 30 mins period.
-            // UpdateExitIniTimer();
-            LaterCheckUpdate();
+            h6RadioButton.CheckedChanged += hourRadioButton_CheckedChanged;
+            h12RadioButton.CheckedChanged += hourRadioButton_CheckedChanged;
+            h24RadioButton.CheckedChanged += hourRadioButton_CheckedChanged;
+            customRadioButton.CheckedChanged += hourRadioButton_CheckedChanged;
+
+            
+            everyDay.Checked = true;
+            var autoCheckUpdateFreq = _ini.Read("AutoCheckUpdateFreq");
+            if ("EveryDay".Equals(autoCheckUpdateFreq))
+            {
+                everyDay.Checked = true;
+            }
+            else if("EveryWeek".Equals(autoCheckUpdateFreq))
+            {
+                everyWeek.Checked = true;
+            }
+            else if ("EveryMonth".Equals(autoCheckUpdateFreq))
+            {
+                everyMonth.Checked = true;
+            }
+            everyDay.CheckedChanged += UpdateFrequency_CheckedChanged;
+            everyWeek.CheckedChanged += UpdateFrequency_CheckedChanged;
+            everyMonth.CheckedChanged += UpdateFrequency_CheckedChanged;
+            var autoCheckUpdateNextTime = _ini.Read("AutoCheckUpdateNextTime");
+            if (!string.IsNullOrEmpty(autoCheckUpdateNextTime))
+                Icon_AutoCheckUpdateFreq.ToolTipText = $"NextTime: {autoCheckUpdateNextTime}";
+            LaterCheckUpdate(autoCheckUpdateNextTime);
             
             /*void LaterSetWallpaperWhenStart() 
             {
@@ -1184,11 +1217,6 @@ namespace DailyWallpaper.View
 
             foreach (var directory in Directory.EnumerateDirectories(sourceDir))
                 Copy(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
-        }
-
-        private void Icon_CheckUpdate_Click(object sender, EventArgs e)
-        {
-            CheckUpdate();
         }
 
         private void Icon_IssueAndFeedback_Click(object sender, EventArgs e)
@@ -1546,5 +1574,94 @@ namespace DailyWallpaper.View
             // update zip from github and Unzip.
             CheckUpdate(click: true, force: true);
         }
+
+        private void Icon_RegularUpdate_Click(object sender, EventArgs e)
+        {
+            CheckUpdate();
+        }
+
+
+        private RadioButton everyDay;
+        private RadioButton everyWeek;
+        private RadioButton everyMonth;
+
+        private void AddDivIntoPanel(Panel panel,
+                                    RadioButton radioButton,
+                                    int height,
+                                    string buttonName,
+                                    string buttonStr
+                                    )
+        {
+            radioButton.Name = "radioButton" + buttonName;
+            radioButton.AutoSize = true;
+            radioButton.Location = new Point(3, height - 2);
+            radioButton.Text = "";
+            var column = (int)radioButton.Font.Size;
+            
+            var unitLabel = new Label() { 
+                Text = buttonStr,
+                Name = "unitLabel" + buttonName,
+                AutoSize = true,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Location = new Point(radioButton.Right + column, height)
+            };
+            // MessageBox.Show(radioButton.Width.ToString()); default is 104
+            panel.Controls.Add(radioButton);
+            panel.Controls.Add(unitLabel);
+        }
+
+        private ToolStripControlHost UpdateFrequencyUnit()
+        {
+            everyDay = new RadioButton();
+            everyWeek = new RadioButton();
+            everyMonth = new RadioButton();
+
+            var panel = new Panel();
+            panel.SuspendLayout(); // IS NOT DIFF ?
+            AddDivIntoPanel(panel, everyDay, 5, "Day", "Every Day   ");
+            AddDivIntoPanel(panel, everyWeek, 35, "Week", "Every Week  ");
+            AddDivIntoPanel(panel, everyMonth, 65, "Month", "Every Month");
+            panel.Name = "UpdateFrequencyUnit";
+            panel.AutoSize = true;
+            // panel.Size = new System.Drawing.Size(241, 37);
+            //MessageBox.Show(_Icon_Every24HoursMenuItem.); // 32, 19
+            // panel.TabIndex = 7;
+            var panelHost = new ToolStripControlHost(panel)
+            {
+                BackColor = SystemColors.Window
+            };
+            return panelHost;
+        }
+
+        private string UpdateAutoCheckUpdateNextTime()
+        {
+            var dest = new DateTime();
+            if (everyDay.Checked)
+            {
+                _ini.UpdateIniItem("AutoCheckUpdateFreq", "EveryDay");
+                dest = DateTime.Now.AddDays(1);
+            }
+            else if (everyWeek.Checked)
+            {
+                _ini.UpdateIniItem("AutoCheckUpdateFreq", "EveryWeek");
+                dest = DateTime.Now.AddDays(7);
+            }
+            else if (everyMonth.Checked)
+            {
+                _ini.UpdateIniItem("AutoCheckUpdateFreq", "EveryMonth");
+                dest = DateTime.Now.AddDays(30);
+            }
+            var destStr = $"{dest.ToString(dateTimeFormat)}";
+            Icon_AutoCheckUpdateFreq.ToolTipText = $"NextTime: {destStr}";
+            _ini.UpdateIniItem("AutoCheckUpdateNextTime", destStr);
+            return destStr;
+        }
+        private void UpdateFrequency_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateAutoCheckUpdateNextTime();
+        }
+
+
+
     }
 }

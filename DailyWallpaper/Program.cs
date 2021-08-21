@@ -76,7 +76,7 @@ namespace DailyWallpaper
             }
             catch (Exception exc)
             {
-                MessageBox.Show(exc.Message, "DailyWallpaper");
+                MessageBox.Show("Program.cs: " + exc, "DailyWallpaper");
             }
         }
         
