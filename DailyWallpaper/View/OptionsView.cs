@@ -1064,8 +1064,9 @@ namespace DailyWallpaper.View
             everyWeek.CheckedChanged += UpdateFrequency_CheckedChanged;
             everyMonth.CheckedChanged += UpdateFrequency_CheckedChanged;
             var autoCheckUpdateNextTime = _ini.Read("AutoCheckUpdateNextTime");
-            if (!string.IsNullOrEmpty(autoCheckUpdateNextTime))
-                Icon_AutoCheckUpdateFreq.ToolTipText = $"NextTime: {autoCheckUpdateNextTime}";
+            if (string.IsNullOrEmpty(autoCheckUpdateNextTime))
+                autoCheckUpdateNextTime = UpdateAutoCheckUpdateNextTime();
+            Icon_AutoCheckUpdateFreq.ToolTipText = $"NextTime: {autoCheckUpdateNextTime}";
             LaterCheckUpdate(autoCheckUpdateNextTime);
             
             /*void LaterSetWallpaperWhenStart() 
