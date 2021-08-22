@@ -1587,8 +1587,8 @@ namespace DailyWallpaper.View
         private RadioButton everyMonth;
 
         private void AddDivIntoPanel(Panel panel,
-                                    RadioButton radioButton,
                                     int height,
+                                    RadioButton radioButton,
                                     string buttonName,
                                     string buttonStr
                                     )
@@ -1619,9 +1619,9 @@ namespace DailyWallpaper.View
 
             var panel = new Panel();
             panel.SuspendLayout(); // IS NOT DIFF ?
-            AddDivIntoPanel(panel, everyDay, 5, "Day", "Every Day   ");
-            AddDivIntoPanel(panel, everyWeek, 35, "Week", "Every Week  ");
-            AddDivIntoPanel(panel, everyMonth, 65, "Month", "Every Month");
+            AddDivIntoPanel(panel, 5, everyDay,"Day", "Every Day   ");
+            AddDivIntoPanel(panel, 35, everyWeek, "Week", "Every Week  ");
+            AddDivIntoPanel(panel, 65, everyMonth, "Month", "Every Month");
             panel.Name = "UpdateFrequencyUnit";
             panel.AutoSize = true;
             // panel.Size = new System.Drawing.Size(241, 37);
