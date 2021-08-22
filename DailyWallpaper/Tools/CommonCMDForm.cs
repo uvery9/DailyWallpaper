@@ -41,8 +41,10 @@ namespace DailyWallpaper.Tools
             AppendText(1, "ipconfig | find \"IPv4\"", "Query the local IPv4 address");
             AppendText(2, "mysql -u root -p", "Log in to mysql");
             AppendText(3, "use first_db;", "Use the database");
-            AppendText(4, "tasklist | find \"DailyWall\"", "Find the process");
+            AppendText(4, "tasklist | find /I \"DailyWall\"", "Find the process");
             AppendText(5, "taskkill /f /im DailyWall*   /t", "Kill the process");
+            AppendText(6, "ping -n 4 127.0.0.1 > nul", "delay in .bat");
+            AppendText(7, "Slmgr –dli", "Check if Your Windows License is Retail, OEM, or Volume");
             cmdTextBox.AppendText(Environment.NewLine + Environment.NewLine  + " ### Record Common Commands to the file by yourself: " + 
                 Environment.NewLine + "    " + cmdFile);
             File.WriteAllText(cmdFile, cmdTextBox.Text, Encoding.UTF8);
