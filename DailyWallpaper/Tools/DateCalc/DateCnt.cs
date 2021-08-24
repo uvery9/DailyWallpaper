@@ -101,6 +101,7 @@ namespace DailyWallpaper
             }
             
             var now = DateTime.Now;
+            nowHMTextBox.Text = now.ToString("HH:mm");
             var targetHM = now.Date;
             if (int.TryParse(targetHourTextBox.Text, out int th))
                 targetHM = targetHM.AddHours(th);
