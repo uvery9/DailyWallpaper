@@ -14,6 +14,9 @@ using System.Windows.Forms;
 
 namespace DailyWallpaper.Tools
 {
+    // TODO:
+    // 1. find grep.exe, show url and return if no found.
+    // 2. remember folder, self defined grep.exe, args, string.
     public partial class GrepToolForm : Form
     {
         public GrepToolForm()
