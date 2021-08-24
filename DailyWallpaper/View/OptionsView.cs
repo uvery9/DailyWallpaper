@@ -1662,7 +1662,9 @@ namespace DailyWallpaper.View
             UpdateAutoCheckUpdateNextTime();
         }
 
-
-
+        private void Icon_GrepTool_Click(object sender, EventArgs e)
+        {
+            new Tools.GrepToolForm().Show();
+        }
     }
 }

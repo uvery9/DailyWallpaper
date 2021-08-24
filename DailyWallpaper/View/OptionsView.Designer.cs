@@ -78,6 +78,7 @@ namespace DailyWallpaper.View
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.Icon_GrepTool = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -337,7 +338,8 @@ namespace DailyWallpaper.View
             this.Icon_HashCalc,
             this.geminiToolStripMenuItem,
             this.shutdownTimerToolStripMenuItem,
-            this.dateCalculatorToolStripMenuItem});
+            this.dateCalculatorToolStripMenuItem,
+            this.Icon_GrepTool});
             this.Icon_Toolbox.Name = "Icon_Toolbox";
             resources.ApplyResources(this.Icon_Toolbox, "Icon_Toolbox");
             // 
@@ -407,6 +409,12 @@ namespace DailyWallpaper.View
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
+            // Icon_GrepTool
+            // 
+            this.Icon_GrepTool.Name = "Icon_GrepTool";
+            resources.ApplyResources(this.Icon_GrepTool, "Icon_GrepTool");
+            this.Icon_GrepTool.Click += new System.EventHandler(this.Icon_GrepTool_Click);
+            // 
             // OptionsView
             // 
             resources.ApplyResources(this, "$this");
@@ -465,5 +473,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem Icon_RegularUpdate;
         private System.Windows.Forms.ToolStripMenuItem Icon_CheckUpdateFrequency;
         private System.Windows.Forms.ToolStripMenuItem Icon_AutoCheckUpdateFreq;
+        private System.Windows.Forms.ToolStripMenuItem Icon_GrepTool;
     }
 }
