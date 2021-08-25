@@ -29,6 +29,7 @@ namespace DailyWallpaper.Helpers
         private static string newIssueGlobal = "https://github.com/JaredDC/DailyWallpaper/issues/new";
         private static string donationUrlGlobal   = "https://github.com/JaredDC/DailyWallpaper/tree/master/Donate";
         private static string donationUrlCHN = "https://gitee.com/imtvip/DailyWallpaper/tree/master/Donate";
+        private static string gitHubAPI = "https://api.github.com/repos/JaredDC/DailyWallpaper/releases/latest";
        /* private static Color backColor = 
             Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));*/
 
@@ -240,7 +241,7 @@ namespace DailyWallpaper.Helpers
               {
                   try
                   {
-                      var json = DownloadJson("https://api.github.com/repos/JaredDC/DailyWallpaper/releases/latest");
+                      var json = DownloadJson(gitHubAPI);
                       string tag_name = (string)json["tag_name"];
                       if (string.IsNullOrEmpty(tag_name))
                       {
