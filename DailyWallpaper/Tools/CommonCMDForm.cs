@@ -46,6 +46,8 @@ namespace DailyWallpaper.Tools
             AppendText(6, "ping -n 4 127.0.0.1 > nul", "delay in .bat");
             AppendText(7, "Slmgr –dli", "Check if Your Windows License is Retail, OEM, or Volume");
             AppendText(8, "\"C:\\Program Files\\Git\\usr\\bin\\grep.exe\" -i -r 'SOMEWORD' .", "grep find STRING recursively");
+            AppendText(9, "\"C:\\Program Files\\Git\\usr\\bin\\du.exe\" -sh $FOLDER", "Find total size of a directory");
+            AppendText(10, "\"C:\\Program Files\\Git\\usr\\bin\\du.exe\" -sh *", "Find total size of ecah item in a directory");
             cmdTextBox.AppendText(Environment.NewLine + Environment.NewLine  + " ### Record Common Commands to the file by yourself: " + 
                 Environment.NewLine + "    " + cmdFile);
             File.WriteAllText(cmdFile, cmdTextBox.Text, Encoding.UTF8);
