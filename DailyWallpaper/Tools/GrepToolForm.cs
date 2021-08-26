@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,8 +18,11 @@ namespace DailyWallpaper.Tools
     // TODO:
     // 1. find grep.exe, show url and return if no found.
     // 2. remember folder, self defined grep.exe, args, string.
+    // 3. fix grep utf-8
     public partial class GrepToolForm : Form
     {
+        private CancellationTokenSource _source;
+        private Process proc;
         public GrepToolForm()
         {
             InitializeComponent();
@@ -87,7 +91,13 @@ namespace DailyWallpaper.Tools
             rtb.AppendText(Environment.NewLine);
         }
 
-        
+        private void Finished(Color c, string msg)
+        {
+            LogWithColor(consRichTextBox, c,
+                    msg);
+            consRichTextBox.ScrollToCaret();
+        }
+
         private void runButton_Click(object sender, EventArgs e)
         {
             LogWithColor(consRichTextBox, Color.Green, "Start...");
@@ -96,8 +106,7 @@ namespace DailyWallpaper.Tools
             var targetFolder = targetFolderTextBox.Text;
             if (!File.Exists(grepBin))
             {
-                LogWithColor(consRichTextBox, Color.Red, 
-                    $"grep.exe must exist:\r\n    {grepBin}\r\nFinished with error...");
+                Finished(Color.Red, $"grep.exe must exist:\r\n    {grepBin}\r\nFinished with error...");
                 return;
             }
             grepBin = Path.GetFullPath(grepBin);
@@ -126,56 +135,65 @@ namespace DailyWallpaper.Tools
             LogWithColor(consRichTextBox, Color.Blue,
                 Environment.NewLine + $"\"{grepBin}\"" + arguments);
             consRichTextBox.ScrollToCaret();
+            _source = new CancellationTokenSource();
             Task.Run(() =>
             {
                 try
                 {
-                    using (var p = new Process())
+                    proc = new Process();
+                    proc.StartInfo = new ProcessStartInfo(grepBin)
                     {
-                        p.StartInfo = new ProcessStartInfo(grepBin)
-                        {
-                            WorkingDirectory = targetFolder,
-                            Arguments = arguments,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true,
-                        };
-                        bool line = false;
-                        p.OutputDataReceived += (_, data) =>
-                        {
-                            var printStr = data.Data;
-                            if (!help) {
-                                line = !line;
-                                // printStr.Replace(targetFolder, "");
-                                printStr += Environment.NewLine;
-                            }
-                            if (!line)
-                                LogWithColor(consRichTextBox, Color.Black, printStr);
-                            else
-                                LogWithColor(consRichTextBox, Color.Brown, printStr);
-                        };
-                        p.ErrorDataReceived += (_, data) =>
-                        {
-                            var printStr = data.Data;
-                            if (!help)
-                                printStr += Environment.NewLine;
-                            LogWithColor(consRichTextBox, Color.Red, printStr);
-                        };
-                        p.EnableRaisingEvents = true;
-                        p.Start();
-                        p.BeginOutputReadLine();
-                        p.BeginErrorReadLine();
-                        p.WaitForExit();
-                    }
-                    LogWithColor(consRichTextBox, Color.Green, "Finished...");
+                        WorkingDirectory = targetFolder,
+                        Arguments = arguments,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    };
+                    bool line = false;
+                    proc.OutputDataReceived += (_, data) =>
+                    {
+                        var printStr = data.Data;
+                        if (!help) {
+                            line = !line;
+                            // printStr.Replace(targetFolder, "");
+                            printStr += Environment.NewLine;
+                        }
+                        if (!line)
+                            LogWithColor(consRichTextBox, Color.Black, printStr);
+                        else
+                            LogWithColor(consRichTextBox, Color.Brown, printStr);
+                    };
+                    proc.ErrorDataReceived += (_, data) =>
+                    {
+                        var printStr = data.Data;
+                        if (!help)
+                            printStr += Environment.NewLine;
+                        LogWithColor(consRichTextBox, Color.Red, printStr);
+                    };
+                    proc.EnableRaisingEvents = true;
+                    proc.Start();
+                    proc.BeginOutputReadLine();
+                    proc.BeginErrorReadLine();
+                    proc.WaitForExit();
+                    if (_source.Token.IsCancellationRequested) // Not Work
+                    {
+                        proc.Kill();
+                        _source.Token.ThrowIfCancellationRequested();
+                    }                        
+                    Finished(Color.Green, "Finished...");
+                }
+                catch (InvalidOperationException ex) {
+                    if (!ex.ToString().Contains("Process.Kill"))
+                        throw;
+                    Finished(Color.DarkOrange, "Finished with cancel...");
+                    // Finished(Color.DarkOrange, ex.Message);
                 }
                 catch (Exception ex)
                 {
-
-                    // throw;
+                    // kill grep process
                     LogWithColor(consRichTextBox, Color.Red, ex.ToString());
-                    LogWithColor(consRichTextBox, Color.Red, "Finished with error...");
+                    Finished(Color.Red, "Finished with error...");
                 }
                 finally
                 {
@@ -183,17 +201,25 @@ namespace DailyWallpaper.Tools
                     "-------------------------------------------------------");
                 }
                     
-            });
+            }, _source.Token);
 
         }
 
         private void clearButton_Click(object sender, EventArgs e)
         {
-            consRichTextBox.Clear();
             if (stringTextBox.Text.Contains("$"))
                 stringTextBox.Clear();
             if (targetFolderTextBox.Text.Contains("$"))
                 targetFolderTextBox.Clear();
+            if (_source != null)
+            {
+                _source.Cancel();
+            }
+            if (proc!= null && !proc.HasExited)
+                proc.Kill();
+            else
+                consRichTextBox.Clear();
+
         }
 
 
