@@ -17,12 +17,15 @@ namespace DailyWallpaper.Tools
 {
     // TODO:
     // 1. find grep.exe, show url and return if no found.
-    // 2. remember folder, self defined grep.exe, args, string.
-    // 3. fix grep utf-8
+    // 2. fix grep utf-8
+
     public partial class GrepToolForm : Form
     {
         private CancellationTokenSource _source;
         private Process proc;
+        private ConfigIni m_ini = ConfigIni.GetInstance();
+        private bool clearable;
+
         public GrepToolForm()
         {
             InitializeComponent();
@@ -30,6 +33,19 @@ namespace DailyWallpaper.Tools
                 @"C:\Program Files\Git\usr\bin\grep.exe";
             argsTextBox.Text = "-I -i -r";
             // stringTextBox.Text = "SOMEWORD";
+            var grepBin = m_ini.Read("GrepBin", "GrepTool");
+            var targetFolder = m_ini.Read("TargetFolder", "GrepTool");
+            var args = m_ini.Read("Args", "GrepTool");
+            var string_ = m_ini.Read("String", "GrepTool");
+            if (!string.IsNullOrEmpty(grepBin))
+                grepLocationTextBox.Text = grepBin;
+            if (!string.IsNullOrEmpty(targetFolder))
+                targetFolderTextBox.Text = targetFolder;
+            if (!string.IsNullOrEmpty(args))
+                argsTextBox.Text = args;
+            if (!string.IsNullOrEmpty(string_))
+                stringTextBox.Text = string_;
+            clearable = true;
         }
 
         private void grepLocationButton_Click(object sender, EventArgs e)
@@ -50,6 +66,7 @@ namespace DailyWallpaper.Tools
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !string.IsNullOrEmpty(dialog.FileName))
                 {
                     grepLocationTextBox.Text = dialog.FileName;
+                    m_ini.UpdateIniItem("GrepBin", dialog.FileName, "GrepTool");
                 }
             }
         }
@@ -117,6 +134,9 @@ namespace DailyWallpaper.Tools
                 arguments = " " + argsTextBox.Text + $" \"{stringTextBox.Text}\" " + $"\"{targetFolder}\"";
                 targetFolder = Path.GetFullPath(targetFolder);
                 help = false;
+                m_ini.UpdateIniItem("TargetFolder", targetFolder, "GrepTool");
+                m_ini.UpdateIniItem("Args", argsTextBox.Text, "GrepTool");
+                m_ini.UpdateIniItem("String", stringTextBox.Text, "GrepTool");
             }
             else
             {
@@ -211,6 +231,13 @@ namespace DailyWallpaper.Tools
                 stringTextBox.Clear();
             if (targetFolderTextBox.Text.Contains("$"))
                 targetFolderTextBox.Clear();
+            if (clearable)
+            {
+                stringTextBox.Clear();
+                targetFolderTextBox.Clear();
+                clearable = false; // first
+            }
+                
             if (_source != null)
             {
                 _source.Cancel();
