@@ -1,6 +1,7 @@
 ﻿using DailyWallpaper.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -142,7 +143,23 @@ namespace DailyWallpaper
                     break;
 
                 case "Spotlight":
-                        wallpaper = new OnlineImage(iniFile).Spotlight();
+                    wallpaper = new OnlineImage(iniFile).Spotlight();
+                    var creationTime = new FileInfo(wallpaper).CreationTime;
+                    var dateTimeFormat = "yyyy-MM-dd HH:mm";
+                    if (DateTime.TryParseExact(iniFile.Read("SpotlightCreationTime", "Online"), 
+                        dateTimeFormat, null, DateTimeStyles.None, out DateTime lastCreationTime)) {
+                        if ((creationTime - lastCreationTime).TotalMinutes < 1)
+                        {
+                            Console.WriteLine("Spotlight doesn't update picture.");
+                            if (!bingSkipToday)
+                                wallpaper = new OnlineImage(iniFile).Bing(print: false);
+                            else
+                                wallpaper = null;
+                            break;
+                        }
+                    }
+                    iniFile.UpdateIniItem("SpotlightCreationTime",
+                        $"{creationTime.ToString(dateTimeFormat)}", "Online");
                     break;
 
                 case "localPath":
