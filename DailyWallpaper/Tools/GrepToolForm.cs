@@ -29,6 +29,7 @@ namespace DailyWallpaper.Tools
         public GrepToolForm()
         {
             InitializeComponent();
+            Icon = Properties.Resources.gt32x32;
             grepLocationTextBox.Text = 
                 @"C:\Program Files\Git\usr\bin\grep.exe";
             argsTextBox.Text = "-I -i -r";
