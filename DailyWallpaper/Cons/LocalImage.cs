@@ -171,7 +171,7 @@ namespace DailyWallpaper
 					var timeDiff = Math.Abs((int)(lastWriteTime - iniMtime).TotalMinutes);
 					Console.WriteLine($"lastWriteTime: {lastWriteTime:yyyy-MM-dd HH:mm:ss}");
 					Console.WriteLine($"Modify timeDiff: {timeDiff} min(s).");
-					if (timeDiff < 5)
+					if (timeDiff < 10)
 					{
 						return false;
 					}
@@ -320,60 +320,7 @@ namespace DailyWallpaper
 				return new List<string>();
 			}
 			
-		}
-		private void PrintList()
-		{
-			foreach (string file in this.files)
-			{
-				Console.WriteLine(file);
-			}
-		}
-		
-		// give up this feature
-		private void CopyTo()
-        {
-			if (ini.EqualsIgnoreCase("want2Copy", "yes", "Local"))
-			{
-				var copyFolder = ini.Read("copyFolder", "Local");
-				if (string.IsNullOrEmpty(copyFolder))
-                {
-					return;
-                }
-				string existListTxt = Path.Combine(copyFolder, "_existing_file_list.txt");
-				bool firstCopy = true;
-				if (File.Exists(existListTxt))
-				{
-					firstCopy = false;
-				}
-				var existList = new List<string>();
-				if (!Directory.Exists(copyFolder))
-				{
-					Directory.CreateDirectory(copyFolder);
-					Console.WriteLine($"Created copyFolder: {copyFolder}");
-				}
-				foreach (var fi in this.files)
-				{
-					var newFi = Path.Combine(copyFolder, new FileInfo(fi).Name);
-					if (!File.Exists(newFi))
-					{
-						File.Copy(fi, newFi);
-						// Console.WriteLine($"Copied to: {newFi}");
-					}
-					else
-					{
-						if (firstCopy)
-						{
-							existList.Add(fi);
-							Console.WriteLine($"File exists: {newFi}");
-						}
-					}
-				}
-				if (existList.Count > 0)
-				{
-					File.WriteAllLines(existListTxt, existList);
-				}
-			}
-		}
+		}	
 		
 		public string RandomSelectOne()
 		{
