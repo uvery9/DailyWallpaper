@@ -104,6 +104,7 @@ namespace DailyWallpaper.Tools
                 Invoke(new Action(() => LogWithColor(rtb, color, text)));
                 return;
             }
+            rtb.ScrollToCaret();
             rtb.SelectionColor = color;
             rtb.AppendText(text);
             rtb.AppendText(Environment.NewLine);
@@ -113,7 +114,6 @@ namespace DailyWallpaper.Tools
         {
             LogWithColor(consRichTextBox, c,
                     msg);
-            consRichTextBox.ScrollToCaret();
         }
 
         private void runButton_Click(object sender, EventArgs e)
@@ -155,7 +155,6 @@ namespace DailyWallpaper.Tools
             }
             LogWithColor(consRichTextBox, Color.Blue,
                 Environment.NewLine + $"\"{grepBin}\"" + arguments);
-            consRichTextBox.ScrollToCaret();
             _source = new CancellationTokenSource();
             Task.Run(() =>
             {
