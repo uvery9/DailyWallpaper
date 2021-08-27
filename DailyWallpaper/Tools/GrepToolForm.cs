@@ -30,8 +30,6 @@ namespace DailyWallpaper.Tools
         {
             InitializeComponent();
             Icon = Properties.Resources.gt32x32;
-            grepLocationTextBox.Text = 
-                @"C:\Program Files\Git\usr\bin\grep.exe";
             argsTextBox.Text = "-I -i -r";
             // stringTextBox.Text = "SOMEWORD";
             var grepBin = m_ini.Read("GrepBin", "GrepTool");
@@ -40,6 +38,8 @@ namespace DailyWallpaper.Tools
             var string_ = m_ini.Read("String", "GrepTool");
             if (!string.IsNullOrEmpty(grepBin))
                 grepLocationTextBox.Text = grepBin;
+            else
+                FindGrepBin(@"C:\", @"bin\grep.exe");
             if (!string.IsNullOrEmpty(targetFolder))
                 targetFolderTextBox.Text = targetFolder;
             if (!string.IsNullOrEmpty(args))
@@ -47,6 +47,47 @@ namespace DailyWallpaper.Tools
             if (!string.IsNullOrEmpty(string_))
                 stringTextBox.Text = string_;
             clearable = true;
+        }
+
+        private void FindGrepBin(string path, string target)
+        {
+            if (!Directory.Exists(path))
+                return;
+            LogWithColor(consRichTextBox, Color.Purple, $"{DateTime.Now:> HH:mm:ss}: Start.");
+            Task.Run(() =>
+            {
+                /*try
+                {
+                    var enumDirs = Directory.EnumerateDirectories(path, "*bin*", SearchOption.AllDirectories);
+                    foreach (var item in enumDirs)
+                    {
+                        Debug.WriteLine("==> " + item);
+                    }
+                }
+                catch { }*/
+                
+                var resList = Helpers.FindFile.FindIgnoreCaseAsync(path, target).Result;
+                var cnt = resList.Count;
+                if (cnt < 1)
+                {
+                    LogWithColor(consRichTextBox, Color.DarkOrange, $"{DateTime.Now:> HH:mm:ss}: No Found.");
+                    return;
+                }
+                else if (cnt == 1)
+                {
+                    var grepBin = resList[0];
+                    m_ini.UpdateIniItem("GrepBin", grepBin, "GrepTool");
+                    grepLocationTextBox.Text = grepBin;
+                }
+                else
+                {
+                    foreach (var res in resList)
+                    {
+                        LogWithColor(consRichTextBox, Color.Purple, ">>>    " + res);
+                    }
+                }
+                LogWithColor(consRichTextBox, Color.Purple, $"{DateTime.Now.ToString("> HH:mm:ss")}: End.");
+            });
         }
 
         private void grepLocationButton_Click(object sender, EventArgs e)
