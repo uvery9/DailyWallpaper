@@ -25,6 +25,7 @@ namespace DailyWallpaper.Tools
         private Process proc;
         private ConfigIni m_ini = ConfigIni.GetInstance();
         private bool clearable;
+        private CancellationTokenSource cancelSrc;
 
         public GrepToolForm()
         {
@@ -36,7 +37,7 @@ namespace DailyWallpaper.Tools
             var targetFolder = m_ini.Read("TargetFolder", "GrepTool");
             var args = m_ini.Read("Args", "GrepTool");
             var string_ = m_ini.Read("String", "GrepTool");
-            if (!string.IsNullOrEmpty(grepBin))
+            if (!string.IsNullOrEmpty(grepBin) && grepBin.ToLower().Contains("grep"))
                 grepLocationTextBox.Text = grepBin;
             else
                 FindGrepBin(@"C:\", @"bin\grep.exe");
@@ -65,8 +66,8 @@ namespace DailyWallpaper.Tools
                     }
                 }
                 catch { }*/
-                
-                var resList = Helpers.FindFile.FindIgnoreCaseAsync(path, target).Result;
+                cancelSrc = new CancellationTokenSource();
+                var resList = Helpers.FindFile.FindIgnoreCaseAsync(path, target, cancelSrc.Token).Result;
                 var cnt = resList.Count;
                 if (cnt < 1)
                 {
@@ -92,6 +93,12 @@ namespace DailyWallpaper.Tools
 
         private void grepLocateButton_Click(object sender, EventArgs e)
         {
+            if (cancelSrc != null)
+            {
+                cancelSrc.Cancel();
+                LogWithColor(consRichTextBox, Color.DarkOrange, $"{DateTime.Now:> HH:mm:ss}: Cancel auto finding grep.exe.");
+            }
+                
             using (var dialog = new CommonOpenFileDialog())
             {
                 string grepDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);

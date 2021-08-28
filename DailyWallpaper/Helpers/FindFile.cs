@@ -13,7 +13,8 @@ namespace DailyWallpaper.Helpers
     {
         // ignore case
 
-        public static async Task<List<string>> FindAsync(string path, string searchPattern, bool ignoreCase = false)
+        public static async Task<List<string>> FindAsync(string path, string searchPattern, 
+            bool ignoreCase = false, CancellationToken token = default)
         {
             if (!Directory.Exists(path))
                 return null;
@@ -27,13 +28,13 @@ namespace DailyWallpaper.Helpers
             Debug.WriteLine($"> searchPattern = {searchPattern}");
             Debug.WriteLine($"> pathPattern = {pathPattern}");
             return await Task.Run(() => ScanDirsRecursively(path, searchPattern, pathPattern,
-                    new CancellationTokenSource().Token, ignoreCase)
+                    token, ignoreCase)
                 );
         }
 
-        public static async Task<List<string>> FindIgnoreCaseAsync(string path, string searchPattern)
+        public static async Task<List<string>> FindIgnoreCaseAsync(string path, string searchPattern, CancellationToken token = default)
         {
-            return await FindAsync(path, searchPattern, ignoreCase: true);
+            return await FindAsync(path, searchPattern, ignoreCase: true, token);
         }
 
 
@@ -73,15 +74,15 @@ namespace DailyWallpaper.Helpers
                 }
             }
             catch (UnauthorizedAccessException) { }
-            catch (IOException e)
+            catch (IOException)
             {
-                // Debug.WriteLine("!!!>" + e.Message + path);
+                // Debug.WriteLine("!IOException>" + path);
             }
         }
 
 
-        private static List<string> ScanDirsRecursively(string dir, string searchPattern, string pathPattern, CancellationToken token, 
-            bool ignoreCase = false, List<string> resList = null)
+        private static List<string> ScanDirsRecursively(string dir, string searchPattern, string pathPattern, 
+            CancellationToken token, bool ignoreCase = false, List<string> resList = null)
         {
             if (String.IsNullOrEmpty(dir))
             {
@@ -91,10 +92,9 @@ namespace DailyWallpaper.Helpers
                 resList = new List<string>();
             try
             {
-                var enumDirs = Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly);
                 // var enumDirs = Directory.EnumerateDirectories(dir, "*bin*", SearchOption.AllDirectories);
                 // Debug.WriteLine("--->CNT=" + enumDirs.Count());
-                foreach (var d in enumDirs)
+                foreach (var d in Directory.EnumerateDirectories(dir)) // , "*", SearchOption.TopDirectoryOnly
                 {
                     // FUCK THE $RECYCLE.BIN
                     if (d.ToLower().Contains("$RECYCLE.BIN".ToLower()))
@@ -106,6 +106,10 @@ namespace DailyWallpaper.Helpers
                     }
                     ScanDirsRecursively(d, searchPattern, pathPattern, token, ignoreCase, resList);
                 }
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
                 if (dir.Contains(pathPattern) || (ignoreCase && dir.ToLower().Contains(pathPattern.ToLower())))
                 {
                     FindFileInCurrentFolder(dir, searchPattern, resList, ignoreCase);
@@ -113,6 +117,10 @@ namespace DailyWallpaper.Helpers
             }
             catch (UnauthorizedAccessException) { }
             catch (IOException) { }
+            catch (OperationCanceledException)
+            {
+                // Debug.WriteLine("> User Canceled.");
+            }
             return resList;
         }
 
