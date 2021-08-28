@@ -90,7 +90,7 @@ namespace DailyWallpaper.Tools
             });
         }
 
-        private void grepLocationButton_Click(object sender, EventArgs e)
+        private void grepLocateButton_Click(object sender, EventArgs e)
         {
             using (var dialog = new CommonOpenFileDialog())
             {

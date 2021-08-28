@@ -30,7 +30,7 @@ namespace DailyWallpaper.Tools
         private void InitializeComponent()
         {
             this.grepLocationTextBox = new System.Windows.Forms.TextBox();
-            this.grepLocationButton = new System.Windows.Forms.Button();
+            this.grepLocateButton = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.targetFolderTextBox = new System.Windows.Forms.TextBox();
             this.targetFolderTag = new System.Windows.Forms.TextBox();
@@ -48,18 +48,18 @@ namespace DailyWallpaper.Tools
             // 
             this.grepLocationTextBox.Location = new System.Drawing.Point(91, 23);
             this.grepLocationTextBox.Name = "grepLocationTextBox";
-            this.grepLocationTextBox.Size = new System.Drawing.Size(594, 28);
+            this.grepLocationTextBox.Size = new System.Drawing.Size(600, 28);
             this.grepLocationTextBox.TabIndex = 1;
             // 
-            // grepLocationButton
+            // grepLocateButton
             // 
-            this.grepLocationButton.Location = new System.Drawing.Point(693, 19);
-            this.grepLocationButton.Name = "grepLocationButton";
-            this.grepLocationButton.Size = new System.Drawing.Size(92, 32);
-            this.grepLocationButton.TabIndex = 1;
-            this.grepLocationButton.Text = "Location";
-            this.grepLocationButton.UseVisualStyleBackColor = true;
-            this.grepLocationButton.Click += new System.EventHandler(this.grepLocationButton_Click);
+            this.grepLocateButton.Location = new System.Drawing.Point(705, 19);
+            this.grepLocateButton.Name = "grepLocateButton";
+            this.grepLocateButton.Size = new System.Drawing.Size(80, 28);
+            this.grepLocateButton.TabIndex = 1;
+            this.grepLocateButton.Text = "Locate";
+            this.grepLocateButton.UseVisualStyleBackColor = true;
+            this.grepLocateButton.Click += new System.EventHandler(this.grepLocateButton_Click);
             // 
             // textBox2
             // 
@@ -77,7 +77,7 @@ namespace DailyWallpaper.Tools
             // 
             this.targetFolderTextBox.Location = new System.Drawing.Point(91, 70);
             this.targetFolderTextBox.Name = "targetFolderTextBox";
-            this.targetFolderTextBox.Size = new System.Drawing.Size(594, 28);
+            this.targetFolderTextBox.Size = new System.Drawing.Size(600, 28);
             this.targetFolderTextBox.TabIndex = 2;
             // 
             // targetFolderTag
@@ -176,7 +176,7 @@ namespace DailyWallpaper.Tools
             this.Controls.Add(this.runButton);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.targetFolderBrowserButton);
-            this.Controls.Add(this.grepLocationButton);
+            this.Controls.Add(this.grepLocateButton);
             this.Controls.Add(this.stringTag);
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.targetFolderTag);
@@ -197,7 +197,7 @@ namespace DailyWallpaper.Tools
         #endregion
 
         private System.Windows.Forms.TextBox grepLocationTextBox;
-        private System.Windows.Forms.Button grepLocationButton;
+        private System.Windows.Forms.Button grepLocateButton;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox targetFolderTextBox;
         private System.Windows.Forms.TextBox targetFolderTag;
