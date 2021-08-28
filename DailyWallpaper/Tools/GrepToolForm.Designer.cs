@@ -50,6 +50,7 @@ namespace DailyWallpaper.Tools
             this.grepLocationTextBox.Name = "grepLocationTextBox";
             this.grepLocationTextBox.Size = new System.Drawing.Size(600, 28);
             this.grepLocationTextBox.TabIndex = 1;
+            this.grepLocationTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.grepLocationTextBox_KeyDown);
             // 
             // grepLocateButton
             // 

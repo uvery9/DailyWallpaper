@@ -54,7 +54,10 @@ namespace DailyWallpaper.Tools
         {
             if (!Directory.Exists(path))
                 return;
-            LogWithColor(consRichTextBox, Color.Purple, $"{DateTime.Now:> HH:mm:ss}: Start.");
+            LogWithColor(consRichTextBox, Color.Purple, $"{DateTime.Now:> HH:mm:ss}: " + 
+                $"Start finding all \"{target}\" in \"{path}\"");
+            LogWithColor(consRichTextBox, Color.Purple, $"{DateTime.Now:> HH:mm:ss}: " +
+                $"Please wait patiently, Button \"Locate\" to Cancel...");
             Task.Run(() =>
             {
                 /*try
@@ -297,6 +300,21 @@ namespace DailyWallpaper.Tools
 
         }
 
-
+        private void grepLocationTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (sender is TextBox box)
+                {
+                    var path = box.Text.Trim();
+                    if (File.Exists(path))
+                    {
+                        m_ini.UpdateIniItem("GrepBin", path, "GrepTool");
+                        LogWithColor(consRichTextBox, Color.Black, $"Update GrepBin = \r\n    {path}");
+                    }
+                        
+                }
+            }
+        }
     }
 }
