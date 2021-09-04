@@ -169,6 +169,10 @@ namespace DailyWallpaper.Tools
 
         private void runButton_Click(object sender, EventArgs e)
         {
+            if (_source != null)
+            {
+                _source.Cancel();
+            }
             LogWithColor(consRichTextBox, Color.Green, "Start...");
             LogWithColor(consRichTextBox, Color.Blue, "Usage: $GREP -I -i -r \"SOMEWORD\" $TARGETFOLDER");
             var grepBin = grepLocationTextBox.Text;
@@ -181,6 +185,7 @@ namespace DailyWallpaper.Tools
             grepBin = Path.GetFullPath(grepBin);
             string arguments = " --help";
             bool help = true;
+            stringTextBox.Text = stringTextBox.Text.Trim();
             if (Directory.Exists(targetFolder) && !string.IsNullOrEmpty(stringTextBox.Text))
             {
                 arguments = " " + argsTextBox.Text + $" \"{stringTextBox.Text}\" " + $"\"{targetFolder}\"";
