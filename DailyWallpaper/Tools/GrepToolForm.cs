@@ -177,6 +177,8 @@ namespace DailyWallpaper.Tools
             LogWithColor(consRichTextBox, Color.Blue, "Usage: $GREP -I -i -r \"SOMEWORD\" $TARGETFOLDER");
             var grepBin = grepLocationTextBox.Text;
             var targetFolder = targetFolderTextBox.Text;
+            if (targetFolder.EndsWith("\\"))
+                targetFolderTextBox.Text = targetFolder.Substring(0, targetFolder.Length - 1);
             if (!File.Exists(grepBin))
             {
                 Finished(Color.Red, $"grep.exe must exist:\r\n    {grepBin}\r\nFinished with error...");
