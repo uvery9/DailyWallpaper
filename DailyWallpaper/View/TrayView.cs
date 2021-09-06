@@ -21,7 +21,7 @@ using System.Globalization;
 
 namespace DailyWallpaper.View
 {
-    public partial class OptionsView : Form
+    public partial class TrayView : Form
     {
         private TimerHelper _timerHelper;
         private string textFromHoursTextBox;
@@ -36,7 +36,7 @@ namespace DailyWallpaper.View
         private Tools.ShutdownTimer.Shutdown _shutdownTimer = null;
         private readonly string dateTimeFormat = "yyyy-MM-dd HH:mm";
 
-        public OptionsView()
+        public TrayView()
         {
             InitializeComponent();
             _ini = ConfigIni.GetInstance();

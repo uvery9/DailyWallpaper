@@ -1,7 +1,7 @@
 ﻿
 namespace DailyWallpaper.View
 {
-    partial class OptionsView
+    partial class TrayView
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace DailyWallpaper.View
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsView));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrayView));
             this.Icon_OptionsIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.Icon_dailyWallpaperTitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_ChangeWallpaper = new System.Windows.Forms.ToolStripMenuItem();
@@ -415,11 +415,11 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this.Icon_GrepTool, "Icon_GrepTool");
             this.Icon_GrepTool.Click += new System.EventHandler(this.Icon_GrepTool_Click);
             // 
-            // OptionsView
+            // TrayView
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Name = "OptionsView";
+            this.Name = "TrayView";
             this.Icon_OptionsIcon.ResumeLayout(false);
             this.ResumeLayout(false);
 
