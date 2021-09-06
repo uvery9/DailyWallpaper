@@ -179,11 +179,11 @@
     <Compile Include="View\ConsWindow.Designer.cs">
       <DependentUpon>ConsWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\TrayView.cs">
+    <Compile Include="View\OptionsView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\TrayView.Designer.cs">
-      <DependentUpon>TrayView.cs</DependentUpon>
+    <Compile Include="View\OptionsView.Designer.cs">
+      <DependentUpon>OptionsView.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Tools\CommonCMDForm.resx">
       <DependentUpon>CommonCMDForm.cs</DependentUpon>
@@ -222,8 +222,8 @@
     <EmbeddedResource Include="View\ConsWindow.resx">
       <DependentUpon>ConsWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\TrayView.resx">
-      <DependentUpon>TrayView.cs</DependentUpon>
+    <EmbeddedResource Include="View\OptionsView.resx">
+      <DependentUpon>OptionsView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="DailyWallpaper_TemporaryKey.pfx" />
