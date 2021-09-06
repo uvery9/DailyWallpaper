@@ -69,10 +69,9 @@ namespace DailyWallpaper
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                // OptionsView
-                // new ViewManager()
-                var opv = new OptionsView();
+                var opv = new TrayView();
                 Application.Run(opv);
+                // opv.firstInit = false;
             }
             catch (Exception exc)
             {

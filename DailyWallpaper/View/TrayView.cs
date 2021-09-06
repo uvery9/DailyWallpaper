@@ -21,7 +21,7 @@ using System.Globalization;
 
 namespace DailyWallpaper.View
 {
-    public partial class OptionsView : Form
+    public partial class TrayView : Form
     {
         private TimerHelper _timerHelper;
         private string textFromHoursTextBox;
@@ -35,17 +35,17 @@ namespace DailyWallpaper.View
         private HashCalc.HashCalcForm _hashWin;
         private Tools.ShutdownTimer.Shutdown _shutdownTimer = null;
         private readonly string dateTimeFormat = "yyyy-MM-dd HH:mm";
+        public bool firstInit = true;
 
-        public OptionsView()
+        public TrayView()
         {
             InitializeComponent();
+            SuspendLayout();
             _ini = ConfigIni.GetInstance();
             UpdateTranslation();
-
-            WindowState = FormWindowState.Minimized;
             ShowInTaskbar = false;
             FormClosing += OptionsForm_FormClosing;
-            Resize += OptionsForm_Resize;
+            // Resize += OptionsForm_Resize;
             Icon = Properties.Resources.icon32x32;
 
             _notifyIcon.Icon = Properties.Resources.icon32x32;
@@ -55,8 +55,25 @@ namespace DailyWallpaper.View
             _notifyIcon.Visible = true;
             // _notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
-            
             SeveralFormInit();
+            ResumeLayout(false);
+
+            // WindowState = FormWindowState.Minimized;
+            // Icon_Options.PerformClick();
+            /*
+             * IT SUCKS.
+             * Task.Run(()=> {
+                try
+                {
+                    this.Hide();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                    throw;
+                }
+                
+            });*/
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
         }
@@ -1068,7 +1085,7 @@ namespace DailyWallpaper.View
                 autoCheckUpdateNextTime = UpdateAutoCheckUpdateNextTime();
             Icon_AutoCheckUpdateFreq.ToolTipText = $"NextTime: {autoCheckUpdateNextTime}";
             LaterCheckUpdate(autoCheckUpdateNextTime);
-            
+
             /*void LaterSetWallpaperWhenStart() 
             {
                 Thread.Sleep(1000 * 60 * 1); // 1min later
@@ -1276,20 +1293,38 @@ namespace DailyWallpaper.View
 
         private void Icon_Options_Click(object sender, EventArgs e)
         {
-            Show();
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
+            if (Visible == false)
+            {
+                Show();
+                // WindowState = FormWindowState.Normal;
+                ShowInTaskbar = true;
+            }
+            else
+            {
+                Hide();
+            }
             // notifyIcon.Visible = false;
         }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            if (firstInit)
+                this.Visible = false;
+        }
+
         private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            /*if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                WindowState = FormWindowState.Minimized;
+                // WindowState = FormWindowState.Minimized;
                 // ShowInTaskbar = false;
-                // Hide();
-            }
+                Hide();
+                // MessageBox.Show("OptionsForm_FormClosing");
+            }*/
+            e.Cancel = true;
+            Hide();
         }
 
         private void OptionsForm_Resize(object sender, EventArgs e)
@@ -1298,7 +1333,8 @@ namespace DailyWallpaper.View
             {
                 // mynotifyicon.Visible = true;
                 // mynotifyicon.ShowBalloonTip(500);
-                this.Hide();
+                Hide();
+                MessageBox.Show("OptionsForm_Resize");
             }
             else if (FormWindowState.Normal == this.WindowState)
             {
