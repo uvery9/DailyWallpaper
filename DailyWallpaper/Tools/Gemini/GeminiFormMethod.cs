@@ -440,7 +440,6 @@ namespace DailyWallpaper
                 _tasks.Add(_task);
                 await _task;
                 // No Error, filesList is usable
-                scanRes = true;
                 /*WriteToXmlFile("GeminiListLatest.xml",
                         geminiFileClsListForLV);*/
                 SaveOperationHistoryInfo($"GeminiListLatest-{fldname}.xml", geminiFileClsListForLV, GetCurrentMode(),
@@ -448,7 +447,6 @@ namespace DailyWallpaper
             }
             catch (OperationCanceledException e)
             {
-                scanRes = false;
                 CWriteLine($"\r\n>>> OperationCanceledException: {e.Message}");
             }
             catch (AggregateException e)
@@ -457,7 +455,6 @@ namespace DailyWallpaper
             }
             catch (Exception e)
             {
-                scanRes = false;
                 CWriteLine($"\r\n RecurseScanDir throw exception message: {e}");
                 CWriteLine($"\r\n#----^^^  PLEASE CHECK, TRY TO CONTACT ME WITH THIS LOG.  ^^^----#");
             }
@@ -465,7 +462,7 @@ namespace DailyWallpaper
             {
                 geminiProgressBar.Visible = false;
                 GetCurrentScanStatus();
-                CWriteLine(">>> Analyse is over.");
+                CWriteLine(">>> Analyse is over.\r\n");
             }
             btnAnalyze.Enabled = true;
 
@@ -969,7 +966,7 @@ namespace DailyWallpaper
             catch (DirectoryNotFoundException) { }
         }
 
-        private void FindFilesWithProtectMode(string dir, List<string> filesList, CancellationToken token)
+        private void FindFilesWithProtectMode(string dir, List<string> filesList, FilterMode mode, CancellationToken token)
         {
             if (String.IsNullOrEmpty(dir))
             {
@@ -984,7 +981,7 @@ namespace DailyWallpaper
                     {
                         continue;
                     }
-                    if (FolderFilter(d, filterMode))
+                    if (FolderFilter(d, mode))
                     {
                         continue;
                     }
@@ -992,7 +989,7 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    FindFilesWithProtectMode(d, filesList, token);
+                    FindFilesWithProtectMode(d, filesList, mode, token);
                 }
                 FindFilesInDir(dir, filesList, token);
             }
@@ -1058,32 +1055,25 @@ namespace DailyWallpaper
             if (mode == FilterMode.GEN_FIND)
             {
                 regexCheckBox.Checked = false;
-                modeCheckBox.Checked = true;
+                findModeCheckBox.Checked = true;
             }
             if (mode == FilterMode.GEN_PROTECT)
             {
                 regexCheckBox.Checked = false;
-                modeCheckBox.Checked = false;
+                findModeCheckBox.Checked = false;
             }
             if (mode == FilterMode.REGEX_FIND)
             {
                 regexCheckBox.Checked = true;
-                modeCheckBox.Checked = true;
+                findModeCheckBox.Checked = true;
             }
             if (mode == FilterMode.REGEX_PROTECT)
             {
                 regexCheckBox.Checked = true;
-                modeCheckBox.Checked = false;
+                findModeCheckBox.Checked = false;
             }
         }
-        private void UpdateIniAndTextBox()
-        {
-            CWriteLine($"\r\n >>> FilterMode: {filterMode}");
-            UpdateFilterExampleText(filterMode);
-            gemini.ini.UpdateIniItem("FilterMode", filterMode.ToString(), "Gemini");
-        }
-
-
+        
         private delegate void ListViewOperateDelegate(System.Windows.Forms.ListView liv, ListViewOP op,
             ListViewItem item = null, bool ischeck = false,
             ListViewItem[] items = null, Action<bool, string> action = null);

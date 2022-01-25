@@ -34,11 +34,9 @@ namespace DailyWallpaper
         private CancellationTokenSource reIndexTokenSrc = null;
         private CancellationTokenSource hashTokenSrc = null;
 
-        private bool scanRes = false;
         private bool cefScanRes = false;
-        private List<string> pathFilter = new List<string>();
-        private string regexFilter;
-        private Regex regex;
+        private List<string> mPathFilter = new List<string>();
+        private Regex mRegex;
         private int nameColumnHeaderWidth = 0;
         private int modifiedTimeColumnHeaderWidth = 0;
         private List<GeminiCEFCls> geminiCEFClsList = new List<GeminiCEFCls>();
@@ -154,42 +152,43 @@ namespace DailyWallpaper
         private void SetUpFilterModeAndRegClick()
         {
             var fimode = gemini.ini.Read("FilterMode", "Gemini");
+            FilterMode mode;
             if (!string.IsNullOrEmpty(fimode))
             {
                 if (fimode.Equals("GEN_PROTECT"))
                 {
                     regexCheckBox.Checked = false;
-                    modeCheckBox.Checked = false;
-                    filterMode = FilterMode.GEN_PROTECT;
+                    findModeCheckBox.Checked = false;
+                    mode = FilterMode.GEN_PROTECT;
                 }
                 else if (fimode.Equals("REGEX_PROTECT"))
                 {
                     regexCheckBox.Checked = true;
-                    modeCheckBox.Checked = false;
-                    filterMode = FilterMode.REGEX_PROTECT;
+                    findModeCheckBox.Checked = false;
+                    mode = FilterMode.REGEX_PROTECT;
                 }
                 else if (fimode.Equals("REGEX_FIND"))
                 {
                     regexCheckBox.Checked = true;
-                    modeCheckBox.Checked = true;
-                    filterMode = FilterMode.REGEX_FIND;
+                    findModeCheckBox.Checked = true;
+                    mode = FilterMode.REGEX_FIND;
                 }
                 else
                 {
                     regexCheckBox.Checked = false;
-                    modeCheckBox.Checked = true;
-                    filterMode = FilterMode.GEN_FIND;
+                    findModeCheckBox.Checked = true;
+                    mode = FilterMode.GEN_FIND;
                 }
             }
             else
             {
                 regexCheckBox.Checked = false;
-                modeCheckBox.Checked = true;
-                filterMode = FilterMode.GEN_FIND;
+                findModeCheckBox.Checked = true;
+                mode = FilterMode.GEN_FIND;
             }
-            UpdateFilterExampleText(filterMode);
+            UpdateFilterExampleText(mode);
             regexCheckBox.Click += new EventHandler(regexCheckBox_Click);
-            modeCheckBox.Click += new EventHandler(modeCheckBox_Click);
+            findModeCheckBox.Click += new EventHandler(findModeCheckBox_Click);
         }
         private void BindHistory(System.Windows.Forms.TextBox tb, List<string> list)
         {
@@ -752,7 +751,7 @@ namespace DailyWallpaper
 
 
 
-        private void ScanEmptyDirsProtectMode(string dir, CancellationToken token)
+        private void ScanEmptyDirsProtectMode(string dir, FilterMode mode, CancellationToken token)
         {
             if (String.IsNullOrEmpty(dir))
             {
@@ -767,7 +766,7 @@ namespace DailyWallpaper
                     {
                         continue;
                     }
-                    if (FolderFilter(d, filterMode))
+                    if (FolderFilter(d, mode))
                     {
                         continue;
                     }
@@ -775,7 +774,7 @@ namespace DailyWallpaper
                     {
                         token.ThrowIfCancellationRequested();
                     }
-                    ScanEmptyDirsProtectMode(d, token);
+                    ScanEmptyDirsProtectMode(d, mode, token);
                 }
                 EmptyJudgeCEF(dir, print: true);
             }
@@ -811,7 +810,7 @@ namespace DailyWallpaper
                 }
                 if (re)
                 {
-                    if (regex.IsMatch(path))
+                    if (mRegex.IsMatch(path))
                     {
                         EmptyJudgeCEF(path, print: true);
                         return;
@@ -819,7 +818,7 @@ namespace DailyWallpaper
                 }
                 else
                 {
-                    foreach (var filter in pathFilter)
+                    foreach (var filter in mPathFilter)
                     {
                         if (token.IsCancellationRequested)
                         {
@@ -873,7 +872,7 @@ namespace DailyWallpaper
 
         // Thanks to João Angelo
         // https://stackoverflow.com/questions/2811509/c-sharp-remove-all-empty-subdirectories
-        private async void RecurseScanDirCEF(string path, CancellationToken token)
+        private async void RecurseScanDirCEF(string path, FilterMode mode, CancellationToken token)
         {
             //token.ThrowIfCancellationRequested();
             // DO NOT KNOW WHY D: DOESNOT WORK WHILE D:\ WORK.
@@ -892,17 +891,17 @@ namespace DailyWallpaper
                     // Set a variable to the My Documents path.
                     // string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); 
 
-                    if (filterMode == FilterMode.GEN_FIND && pathFilter.Count > 0)
+                    if (mode == FilterMode.GEN_FIND && mPathFilter.Count > 0)
                     {
                         ScanEmptyDirsFindMode(path, token, re: false);
                     }
-                    else if (filterMode == FilterMode.REGEX_FIND && regex != null)
+                    else if (mode == FilterMode.REGEX_FIND && mRegex != null)
                     {
                         ScanEmptyDirsFindMode(path, token, re: true);
                     }
                     else
                     {
-                        ScanEmptyDirsProtectMode(path, token);
+                        ScanEmptyDirsProtectMode(path, mode, token);
                     }
 
                 }, token);
@@ -941,12 +940,12 @@ namespace DailyWallpaper
                 CWriteLine("Invalid directory path: {0}" + path);
                 return;
             }
-            if (!SetFolderFilter(folderFilterTextBox.Text, print: true))
+            if (!UpdateFolderFindOrRegexFilter(folderFilterTextBox.Text, filterMode, print: true))
             {
                 return;
             }
             geminiCEFClsList.Clear();
-            RecurseScanDirCEF(path, _source.Token);
+            RecurseScanDirCEF(path, filterMode, _source.Token);
         }
 
         private void btnAnalyze_Click(object sender, EventArgs e)
@@ -1039,27 +1038,16 @@ namespace DailyWallpaper
                 }
                 return;
             }
-            /*if (filterMode == FilterMode.GEN_FIND && pathFilter.Count > 0)
-            {
-                FindFilesWithFindMode(path, filesList, token, re: false);
-            }
-            else if (filterMode == FilterMode.REGEX_FIND && regex != null)
-            {
-                FindFilesWithFindMode(path, filesList, token, re: true);
-            }
-            else
-            {*/
-            FindFilesWithProtectMode(path, filesList, token);
-            /*}*/
+            FindFilesWithProtectMode(path, filesList, filterMode, token);
         }
 
         private bool FolderFilter(string path, FilterMode mode)
         {
             if (mode == FilterMode.GEN_PROTECT)
             {
-                if (pathFilter.Count > 0)
+                if (mPathFilter.Count > 0)
                 {
-                    foreach (var filter in pathFilter)
+                    foreach (var filter in mPathFilter)
                     {
                         if (path.Contains(filter))
                         {
@@ -1070,11 +1058,11 @@ namespace DailyWallpaper
             }
             if (mode == FilterMode.REGEX_PROTECT)
             {
-                if (regex == null)
+                if (mRegex == null)
                 {
                     return false;
                 }
-                if (regex.IsMatch(path))
+                if (mRegex.IsMatch(path))
                 {
                     return true;
                 }
@@ -1155,13 +1143,13 @@ namespace DailyWallpaper
             {
                 if (sender is System.Windows.Forms.TextBox box)
                 {
-                    IsCmdInTextBox(folderFilterTextBox, box.Text);
+                    IsCmdInTextBox(folderFilterTextBox, box.Text, filterMode);
                 }
             }
         }
 
 
-        private bool IsCmdInTextBox(System.Windows.Forms.TextBox box, string cmd)
+        private bool IsCmdInTextBox(System.Windows.Forms.TextBox box, string cmd, FilterMode mode)
         {
             cmd = cmd.Trim();
 
@@ -1180,60 +1168,57 @@ namespace DailyWallpaper
             if (cmd.ToLower().Equals("find"))
             {
                 useCommand = true;
-                FilterMode fimode = filterMode;
                 if (regexCheckBox.Checked)
                 {
-                    if (filterMode == FilterMode.REGEX_FIND)
+                    if (mode == FilterMode.REGEX_FIND)
                     {
-                        fimode = FilterMode.REGEX_PROTECT;
+                        mode = FilterMode.REGEX_PROTECT;
                     }
-                    if (filterMode == FilterMode.REGEX_PROTECT)
+                    else if (mode == FilterMode.REGEX_PROTECT)
                     {
-                        fimode = FilterMode.REGEX_FIND;
+                        mode = FilterMode.REGEX_FIND;
                     }
                 }
                 else
                 {
-                    if (filterMode == FilterMode.GEN_FIND)
+                    if (mode == FilterMode.GEN_FIND)
                     {
-                        fimode = FilterMode.GEN_PROTECT;
+                        mode = FilterMode.GEN_PROTECT;
                     }
-                    if (filterMode == FilterMode.GEN_PROTECT)
+                    else if (mode == FilterMode.GEN_PROTECT)
                     {
-                        fimode = FilterMode.GEN_FIND;
+                        mode = FilterMode.GEN_FIND;
                     }
                 }
-                filterMode = fimode;
-                UpdateREAndModeCheckBox(filterMode);
+
+                UpdateREAndModeCheckBox(mode);
             }
             if (cmd.ToLower().Equals("re"))
             {
                 useCommand = true;
-                FilterMode fimode = filterMode;
-                if (modeCheckBox.Checked)
+                if (findModeCheckBox.Checked)
                 {
-                    if (filterMode == FilterMode.REGEX_FIND)
+                    if (mode == FilterMode.REGEX_FIND)
                     {
-                        fimode = FilterMode.GEN_FIND;
+                        mode = FilterMode.GEN_FIND;
                     }
-                    if (filterMode == FilterMode.GEN_FIND)
+                    else if (mode == FilterMode.GEN_FIND)
                     {
-                        fimode = FilterMode.REGEX_FIND;
+                        mode = FilterMode.REGEX_FIND;
                     }
                 }
                 else
                 {
-                    if (filterMode == FilterMode.GEN_PROTECT)
+                    if (mode == FilterMode.GEN_PROTECT)
                     {
-                        fimode = FilterMode.REGEX_PROTECT;
+                        mode = FilterMode.REGEX_PROTECT;
                     }
-                    if (filterMode == FilterMode.REGEX_PROTECT)
+                    else if (mode == FilterMode.REGEX_PROTECT)
                     {
-                        fimode = FilterMode.GEN_PROTECT;
+                        mode = FilterMode.GEN_PROTECT;
                     }
                 }
-                filterMode = fimode;
-                UpdateREAndModeCheckBox(filterMode);
+                UpdateREAndModeCheckBox(mode);
             }
             if (cmd.ToLower().Equals("help"))
             {
@@ -1367,41 +1352,39 @@ namespace DailyWallpaper
         /// <param name="text"></param>
         /// <param name="print"></param>
         /// <returns></returns>
-        private bool SetFolderFilter(string filter, bool print = false)
+        private bool UpdateFolderFindOrRegexFilter(string filter, FilterMode mode, bool print = false)
         {
-            pathFilter = new List<string>();
+            CWriteLine($">>> Using: {mode}");
+            mPathFilter = new List<string>();
+            mRegex = null;
             if (string.IsNullOrEmpty(filter))
             {
-                regexFilter = "";
-                regex = null;
-                CWriteLine($">>> Using: {filterMode}, but there is no valid filter value.");
+                CWriteLine($"! There is no valid filter value! ");
                 return true;
             }
-            CWriteLine($">>> Using: {filterMode}");
-            regexFilter = "";
+
             if (regexCheckBox.Checked)
             {
-                regexFilter = filter;
                 try
                 {
-                    regex = new Regex(regexFilter, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+                    mRegex = new Regex(filter, RegexOptions.IgnoreCase | RegexOptions.Compiled);
                 }
                 catch (Exception e)
                 {
-                    CWriteLine($"\r\n!!! filter ERROR: {regexFilter} illegal");
+                    CWriteLine($"\r\n!!! filter ERROR: {filter} illegal");
                     CWriteLine($"\r\n!!! ERROR: {e.Message}");
-                    regex = null;
+                    mRegex = null;
                     return false;
                 }
                 if (print)
                 {
-                    CWriteLine($"\r\nYou have set the regex filter: \" {regexFilter} \"");
+                    CWriteLine($"\r\nYou have set the regex filter: \" {filter} \"");
                 }
                 return true;
             }
             else
             {
-                pathFilter = StringToFilter(filter, print);
+                mPathFilter = StringToFilter(filter, print);
             }
             return true;
         }
@@ -1427,59 +1410,33 @@ namespace DailyWallpaper
         }
         private void regexCheckBox_Click(object sender, EventArgs e)
         {
-            if (regexCheckBox.Checked)
-            {
-                if (filterMode == FilterMode.GEN_FIND)
-                {
-                    filterMode = FilterMode.REGEX_FIND;
-                }
-                if (filterMode == FilterMode.GEN_PROTECT)
-                {
-                    filterMode = FilterMode.REGEX_PROTECT;
-                }
-            }
-            else
-            {
-                if (filterMode == FilterMode.REGEX_PROTECT)
-                {
-                    filterMode = FilterMode.GEN_PROTECT;
-                }
-                if (filterMode == FilterMode.REGEX_FIND)
-                {
-                    filterMode = FilterMode.GEN_FIND;
-                }
-            }
-            UpdateIniAndTextBox();
-
+            UpdateFilterModeByCheckBoxsAndIni();
         }
 
-        private void modeCheckBox_Click(object sender, EventArgs e)
+        private void findModeCheckBox_Click(object sender, EventArgs e)
         {
-            if (modeCheckBox.Checked)
-            {
-                if (filterMode == FilterMode.GEN_PROTECT)
-                {
-                    filterMode = FilterMode.GEN_FIND;
-                }
-                if (filterMode == FilterMode.REGEX_PROTECT)
-                {
-                    filterMode = FilterMode.REGEX_FIND;
-                }
-            }
-            else
-            {
-                if (filterMode == FilterMode.GEN_FIND)
-                {
-                    filterMode = FilterMode.GEN_PROTECT;
-                }
-                if (filterMode == FilterMode.REGEX_FIND)
-                {
-                    filterMode = FilterMode.REGEX_PROTECT;
-                }
-            }
-            UpdateIniAndTextBox();
+            UpdateFilterModeByCheckBoxsAndIni();
         }
 
+        private void UpdateFilterModeByCheckBoxsAndIni(bool updateInIni = true)
+        {
+            FilterMode mode;
+            var find = findModeCheckBox.Checked;
+            var reg = regexCheckBox.Checked;
+            if (reg && find)
+                mode = FilterMode.REGEX_FIND;
+            else if (!reg && find)
+                mode = FilterMode.GEN_FIND;
+            else if (reg && !find)
+                mode = FilterMode.REGEX_PROTECT;
+            else
+                mode = FilterMode.REGEX_FIND;
+            filterMode = mode;
+            CWriteLine($">>> FilterMode: {mode}");
+            UpdateFilterExampleText(mode);
+            if (updateInIni)
+                gemini.ini.UpdateIniItem("FilterMode", mode.ToString(), "Gemini");
+        }
 
         private void targetFolder1_DragDrop(object sender, DragEventArgs e)
         {
@@ -2094,13 +2051,18 @@ namespace DailyWallpaper
 
         private void updateButton_Click(object sender, EventArgs e)
         {
+            UpdateSelection(filterMode);
+        }
+
+        private void UpdateSelection(FilterMode mode)
+        {
             MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL, force: true);
             Task.Run(() =>
             {
-                CWriteLine($">>> Update start with {filterMode}...");
+                CWriteLine($">>> Update start with {mode}...");
                 geminiFileClsListForLVUndo = BackUpForUndoRedo(
                  geminiFileClsListForLV, undoToolStripMenuItem);
-                SetFolderFilter(folderFilterTextBox.Text);
+                UpdateFolderFindOrRegexFilter(folderFilterTextBox.Text, filterMode);
                 var updatedList = new List<GeminiFileCls>();
                 var selectList = new List<GeminiFileCls>();
                 var fldFilter = StringToFilter(targetFolderFilterTextBox.Text);
@@ -2114,34 +2076,61 @@ namespace DailyWallpaper
                 {
                     selectList = tpl.Item2;
                 }
-                if (pathFilter.Count > 0)
+                if (mPathFilter.Count > 0)
                 {
                     selectList.ForEach(it =>
                     {
-                        it.Checked = GeminiFileClsListGeneralForEach(it, pathFilter,
-                            find: filterMode == FilterMode.GEN_FIND);
+                        it.Checked = GeminiFileClsListGeneralForEach(it, mPathFilter,
+                            find: mode == FilterMode.GEN_FIND);
                     });
                 }
-                else if (regex != null)
+                else if (mRegex != null)
                 {
                     selectList.ForEach(it =>
                     {
-                        it.Checked = GeminiFileClsListREForEach(it, regex,
-                            find: filterMode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
+                        it.Checked = GeminiFileClsListREForEach(it, mRegex,
+                            find: mode == FilterMode.REGEX_FIND); // FilterMode.REGEX_PROTECT
                     });
                 }
                 updatedList.AddRange(selectList);
-
-                geminiFileClsListForLV = ListReColorByGroup(updatedList, SetCompareMode(), _source.Token);
+                geminiFileClsListForLV = ListReColorByGroup(
+                    UncheckedFilesNotInProtectFolder(updatedList), SetCompareMode(), _source.Token);
                 RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
 
                 var cnt =
                     (from i in geminiFileClsListForLV
                      where i.Checked == true
                      select i).Count();
-                CWriteLine($">>> {filterMode} selectd {cnt:N0} file(s).");
-                SetSummaryBoxText($"{filterMode} selectd {cnt:N0} file(s)", cnt);
+                CWriteLine($">>> {mode} selectd {cnt:N0} file(s).");
+                SetSummaryBoxText($"{mode} selectd {cnt:N0} file(s)", cnt);
             });
+        }
+
+        private List<GeminiFileCls> UncheckedFilesNotInProtectFolder(List<GeminiFileCls> gfl)
+        {
+            // group GeminiFileClsList
+            var filesInEnumGroup = GeminiFileClsList2IEnumerableGroup(gfl, SetCompareMode());
+            var resList = new List<GeminiFileCls>();
+
+            foreach (var item in filesInEnumGroup)
+            {
+                if (_source.Token.IsCancellationRequested)
+                {
+                    _source.Token.ThrowIfCancellationRequested();
+                }
+                // Prevent all files in the group from being deleted
+                if ((from i in item
+                     where i.Checked == true
+                     select i).Count().Equals(item.Count))
+                {
+                    var noSelectList = new List<GeminiFileCls>(item);
+                    noSelectList.ForEach(it => it.Checked = false);
+                    resList.AddRange(noSelectList);
+                    continue;
+                }
+                resList.AddRange(item);
+            }
+            return resList;
         }
 
         private void resultListView_MouseClick(object sender, MouseEventArgs e)
@@ -3089,15 +3078,20 @@ namespace DailyWallpaper
         {
             try
             {
-                var fld = resultListView.FocusedItem.SubItems["fullPath"].Text;
-                folderFilterTextBox.Text = Path.GetDirectoryName(fld);
+                var path = Path.GetDirectoryName(resultListView.FocusedItem.SubItems["fullPath"].Text);
+                folderFilterTextBox.Text = path;
+                CWriteLine("\r\n>>> " + selectFilesInThisFolderFirstToolStripMenuItem.Text + ", path =  " + path);
+
                 targetFolderFilterTextBox.Text = "";
-                modeCheckBox.Checked = true;
-                updateButton.PerformClick();
+                findModeCheckBox.Checked = true;
+                regexCheckBox.Checked = false;
+                UpdateFilterModeByCheckBoxsAndIni(false);
+                UpdateSelection(filterMode);
             }
             catch (Exception ee)
             {
                 CWriteLine("Just this folder: Check if ListView has item, " + ee.Message);
+
             }
         }
 
@@ -3161,13 +3155,15 @@ namespace DailyWallpaper
         {
             try
             {
-                var fld = resultListView.FocusedItem.SubItems["fullPath"].Text;
-                folderFilterTextBox.Text = Path.GetDirectoryName(fld);
-                targetFolderFilterTextBox.Text = "";
-                modeCheckBox.Checked = true;
-                CWriteLine("keepOnlyFilesInThisFolderToolStripMenuItem_Click: TODO!!!");
-                // updateButton.PerformClick();
+                var path = Path.GetDirectoryName(resultListView.FocusedItem.SubItems["fullPath"].Text);
+                folderFilterTextBox.Text = path;
+                CWriteLine("\r\n>>> " + keepOnlyFilesInThisFolderToolStripMenuItem.Text + ", path =  " + path);
 
+                targetFolderFilterTextBox.Text = "";
+                findModeCheckBox.Checked = false;
+                regexCheckBox.Checked = false;
+                UpdateFilterModeByCheckBoxsAndIni(false);
+                UpdateSelection(filterMode);
             }
             catch (Exception ee)
             {
@@ -3175,10 +3171,7 @@ namespace DailyWallpaper
             }
         }
 
-        private void keepFile()
-        {
 
-        }
 
     }
 }

@@ -1441,7 +1441,7 @@ namespace DailyWallpaper.View
                     
                 }
             }
-            catch (Exception e){
+            catch (Exception _){
                 // MessageBox.Show(e.Message + ":\r\n  " + file);
             }
         }
