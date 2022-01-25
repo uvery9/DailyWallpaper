@@ -3146,11 +3146,22 @@ namespace DailyWallpaper
             }            
         }
 
+        private void keepOnlyFilesInThisFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var fld = resultListView.FocusedItem.SubItems["fullPath"].Text;
+                folderFilterTextBox.Text = Path.GetDirectoryName(fld);
+                targetFolderFilterTextBox.Text = "";
+                modeCheckBox.Checked = true;
+                CWriteLine("keepOnlyFilesInThisFolderToolStripMenuItem_Click: TODO!!!");
+                // updateButton.PerformClick();
 
-
-
-
-
-            
+            }
+            catch (Exception ee)
+            {
+                CWriteLine("Just this folder: Check if ListView has item, " + ee.Message);
+            }
+        }
     }
 }

@@ -74,11 +74,12 @@ namespace DailyWallpaper.View
             this.geminiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shutdownTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dateCalculatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_GrepTool = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.Icon_DonateAndSupport = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_Quit = new System.Windows.Forms.ToolStripMenuItem();
             this._notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.Icon_GrepTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.Icon_EmptyRecycleBin = new System.Windows.Forms.ToolStripMenuItem();
             this.Icon_OptionsIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -339,7 +340,8 @@ namespace DailyWallpaper.View
             this.geminiToolStripMenuItem,
             this.shutdownTimerToolStripMenuItem,
             this.dateCalculatorToolStripMenuItem,
-            this.Icon_GrepTool});
+            this.Icon_GrepTool,
+            this.Icon_EmptyRecycleBin});
             this.Icon_Toolbox.Name = "Icon_Toolbox";
             resources.ApplyResources(this.Icon_Toolbox, "Icon_Toolbox");
             // 
@@ -385,6 +387,12 @@ namespace DailyWallpaper.View
             resources.ApplyResources(this.dateCalculatorToolStripMenuItem, "dateCalculatorToolStripMenuItem");
             this.dateCalculatorToolStripMenuItem.Click += new System.EventHandler(this.dateCalculatorToolStripMenuItem_Click);
             // 
+            // Icon_GrepTool
+            // 
+            this.Icon_GrepTool.Name = "Icon_GrepTool";
+            resources.ApplyResources(this.Icon_GrepTool, "Icon_GrepTool");
+            this.Icon_GrepTool.Click += new System.EventHandler(this.Icon_GrepTool_Click);
+            // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
@@ -409,11 +417,11 @@ namespace DailyWallpaper.View
             this._notifyIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseClick);
             this._notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this._notifyIcon_MouseDoubleClick);
             // 
-            // Icon_GrepTool
+            // Icon_EmptyRecycleBin
             // 
-            this.Icon_GrepTool.Name = "Icon_GrepTool";
-            resources.ApplyResources(this.Icon_GrepTool, "Icon_GrepTool");
-            this.Icon_GrepTool.Click += new System.EventHandler(this.Icon_GrepTool_Click);
+            this.Icon_EmptyRecycleBin.Name = "Icon_EmptyRecycleBin";
+            resources.ApplyResources(this.Icon_EmptyRecycleBin, "Icon_EmptyRecycleBin");
+            this.Icon_EmptyRecycleBin.Click += new System.EventHandler(this.Icon_EmptyRecycleBin_Click);
             // 
             // TrayView
             // 
@@ -474,5 +482,6 @@ namespace DailyWallpaper.View
         private System.Windows.Forms.ToolStripMenuItem Icon_CheckUpdateFrequency;
         private System.Windows.Forms.ToolStripMenuItem Icon_AutoCheckUpdateFreq;
         private System.Windows.Forms.ToolStripMenuItem Icon_GrepTool;
+        private System.Windows.Forms.ToolStripMenuItem Icon_EmptyRecycleBin;
     }
 }

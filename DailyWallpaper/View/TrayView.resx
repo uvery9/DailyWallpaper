@@ -126,277 +126,283 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Icon_dailyWallpaperTitleToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_dailyWallpaperTitleToolStripMenuItem.Text" xml:space="preserve">
     <value>DailyWallpaper by JaredDC</value>
+  </data>
+  <data name="Icon_CurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
+    <value>277, 26</value>
+  </data>
+  <data name="Icon_CurrentWallpaper.Text" xml:space="preserve">
+    <value>Current Wallpaper</value>
+  </data>
+  <data name="toolStripMenuItem6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>274, 6</value>
+  </data>
+  <data name="Icon_LikeCurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
+    <value>277, 26</value>
+  </data>
+  <data name="Icon_LikeCurrentWallpaper.Text" xml:space="preserve">
+    <value>Like Current Wallpaper</value>
+  </data>
+  <data name="Icon_DeleteCurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
+    <value>277, 26</value>
+  </data>
+  <data name="Icon_DeleteCurrentWallpaper.Text" xml:space="preserve">
+    <value>Delete Current Wallpaper</value>
   </data>
   <data name="Icon_ChangeWallpaper.ShortcutKeyDisplayString" xml:space="preserve">
     <value>(双击托盘图标)</value>
   </data>
   <data name="Icon_ChangeWallpaper.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_ChangeWallpaper.Text" xml:space="preserve">
     <value>更换壁纸</value>
   </data>
+  <data name="Icon_NextTime.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="Icon_NextTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>163, 26</value>
+  </data>
+  <data name="Icon_NextTime.Text" xml:space="preserve">
+    <value>NextTime</value>
+  </data>
   <data name="Icon_AutoChangeWallpaper.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_AutoChangeWallpaper.Text" xml:space="preserve">
     <value>自动更换壁纸间隔</value>
   </data>
   <data name="toolStripMenuItem2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>314, 6</value>
+    <value>270, 6</value>
+  </data>
+  <data name="Icon_AlwaysDownLoadBingPicture.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="Icon_AlwaysDownLoadBingPicture.Text" xml:space="preserve">
+    <value>总是下载Bing图片</value>
+  </data>
+  <data name="Icon_BingNotAddWaterMark.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="Icon_BingNotAddWaterMark.Text" xml:space="preserve">
+    <value>增加Bing水印</value>
+  </data>
+  <data name="Icon_SkipToday.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="Icon_SkipToday.Text" xml:space="preserve">
+    <value>Skip Today</value>
+  </data>
+  <data name="Icon_SetDownloadFolder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 26</value>
+  </data>
+  <data name="Icon_SetDownloadFolder.Text" xml:space="preserve">
+    <value>Set Download Folder</value>
   </data>
   <data name="Icon_Bing.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_Bing.Text" xml:space="preserve">
     <value>Bing</value>
   </data>
+  <data name="Icon_LocalPathSetting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 26</value>
+  </data>
+  <data name="Icon_LocalPathSetting.Text" xml:space="preserve">
+    <value>Local Path Setting</value>
+  </data>
+  <data name="Icon_CleanUnqualifiedImages.Size" type="System.Drawing.Size, System.Drawing">
+    <value>281, 26</value>
+  </data>
+  <data name="Icon_CleanUnqualifiedImages.Text" xml:space="preserve">
+    <value>Clean Unqualified Pictures</value>
+  </data>
   <data name="Icon_LocalPath.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_LocalPath.Text" xml:space="preserve">
     <value>本地文件夹</value>
   </data>
   <data name="Icon_Spotlight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_Spotlight.Text" xml:space="preserve">
     <value>Windows聚焦</value>
   </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>314, 6</value>
+    <value>270, 6</value>
   </data>
   <data name="Icon_Options.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_Options.Text" xml:space="preserve">
     <value>选项...</value>
   </data>
   <data name="Icon_DisableShortcutKeys.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_DisableShortcutKeys.Text" xml:space="preserve">
     <value>禁用快捷键</value>
   </data>
   <data name="Icon_RunAtStartup.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_RunAtStartup.Text" xml:space="preserve">
     <value>启动时自动运行</value>
   </data>
   <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>314, 6</value>
+    <value>270, 6</value>
+  </data>
+  <data name="Icon_OpenOfficialWebsite.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 26</value>
+  </data>
+  <data name="Icon_OpenOfficialWebsite.Text" xml:space="preserve">
+    <value>打开官网...</value>
+  </data>
+  <data name="Icon_RegularUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>226, 26</value>
+  </data>
+  <data name="Icon_RegularUpdate.Text" xml:space="preserve">
+    <value>Regular Update</value>
+  </data>
+  <data name="Icon_ForceUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>226, 26</value>
+  </data>
+  <data name="Icon_ForceUpdate.Text" xml:space="preserve">
+    <value>Force Update</value>
+  </data>
+  <data name="Icon_AutoCheckUpdateFreq.Size" type="System.Drawing.Size, System.Drawing">
+    <value>314, 26</value>
+  </data>
+  <data name="Icon_AutoCheckUpdateFreq.Text" xml:space="preserve">
+    <value>Auto Check Update Frequency</value>
+  </data>
+  <data name="Icon_CheckUpdateFrequency.Size" type="System.Drawing.Size, System.Drawing">
+    <value>226, 26</value>
+  </data>
+  <data name="Icon_CheckUpdateFrequency.Text" xml:space="preserve">
+    <value>Update Frequency</value>
+  </data>
+  <data name="Icon_CheckUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 26</value>
+  </data>
+  <data name="Icon_CheckUpdate.Text" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="Icon_IssueAndFeedback.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 26</value>
+  </data>
+  <data name="Icon_IssueAndFeedback.Text" xml:space="preserve">
+    <value>问题反馈...</value>
+  </data>
+  <data name="toolStripMenuItem5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>164, 6</value>
+  </data>
+  <data name="Icon_OpenConsole.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 26</value>
+  </data>
+  <data name="Icon_OpenConsole.Text" xml:space="preserve">
+    <value>打开控制台</value>
+  </data>
+  <data name="Icon_About.Size" type="System.Drawing.Size, System.Drawing">
+    <value>167, 26</value>
+  </data>
+  <data name="Icon_About.Text" xml:space="preserve">
+    <value>关于</value>
   </data>
   <data name="Icon_Help.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_Help.Text" xml:space="preserve">
     <value>帮助</value>
   </data>
   <data name="Icon_CommonCommands.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="Icon_CommonCommands.Text" xml:space="preserve">
     <value>Common commands</value>
   </data>
   <data name="Icon_Notepad.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="Icon_Notepad.Text" xml:space="preserve">
     <value>NotePad++/记事本</value>
   </data>
   <data name="videoEditorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="videoEditorToolStripMenuItem.Text" xml:space="preserve">
     <value>Video Editor</value>
   </data>
   <data name="Icon_HashCalc.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="Icon_HashCalc.Text" xml:space="preserve">
     <value>Hash计算器</value>
   </data>
   <data name="geminiToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="geminiToolStripMenuItem.Text" xml:space="preserve">
     <value>Gemini</value>
   </data>
   <data name="shutdownTimerToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="shutdownTimerToolStripMenuItem.Text" xml:space="preserve">
     <value>Shutdown Timer</value>
   </data>
   <data name="dateCalculatorToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="dateCalculatorToolStripMenuItem.Text" xml:space="preserve">
     <value>Date Calculator</value>
   </data>
   <data name="Icon_GrepTool.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 34</value>
+    <value>243, 26</value>
   </data>
   <data name="Icon_GrepTool.Text" xml:space="preserve">
     <value>Grep Tool</value>
   </data>
+  <data name="Icon_EmptyRecycleBin.Size" type="System.Drawing.Size, System.Drawing">
+    <value>243, 26</value>
+  </data>
+  <data name="Icon_EmptyRecycleBin.Text" xml:space="preserve">
+    <value>Empty RecycleBin</value>
+  </data>
   <data name="Icon_Toolbox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_Toolbox.Text" xml:space="preserve">
     <value>工具箱</value>
   </data>
   <data name="toolStripMenuItem4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>314, 6</value>
+    <value>270, 6</value>
   </data>
   <data name="Icon_DonateAndSupport.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_DonateAndSupport.Text" xml:space="preserve">
     <value>捐助支持...</value>
   </data>
   <data name="Icon_Quit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>317, 30</value>
+    <value>273, 24</value>
   </data>
   <data name="Icon_Quit.Text" xml:space="preserve">
     <value>退出</value>
   </data>
   <data name="Icon_OptionsIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>318, 451</value>
+    <value>274, 368</value>
   </data>
   <data name="&gt;&gt;Icon_OptionsIcon.Name" xml:space="preserve">
     <value>Icon_OptionsIcon</value>
   </data>
   <data name="&gt;&gt;Icon_OptionsIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Icon_CurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_CurrentWallpaper.Text" xml:space="preserve">
-    <value>Current Wallpaper</value>
-  </data>
-  <data name="toolStripMenuItem6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>327, 6</value>
-  </data>
-  <data name="Icon_LikeCurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_LikeCurrentWallpaper.Text" xml:space="preserve">
-    <value>Like Current Wallpaper</value>
-  </data>
-  <data name="Icon_DeleteCurrentWallpaper.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 34</value>
-  </data>
-  <data name="Icon_DeleteCurrentWallpaper.Text" xml:space="preserve">
-    <value>Delete Current Wallpaper</value>
-  </data>
-  <data name="Icon_NextTime.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="Icon_NextTime.Size" type="System.Drawing.Size, System.Drawing">
-    <value>193, 34</value>
-  </data>
-  <data name="Icon_NextTime.Text" xml:space="preserve">
-    <value>NextTime</value>
-  </data>
-  <data name="Icon_AlwaysDownLoadBingPicture.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 34</value>
-  </data>
-  <data name="Icon_AlwaysDownLoadBingPicture.Text" xml:space="preserve">
-    <value>总是下载Bing图片</value>
-  </data>
-  <data name="Icon_BingNotAddWaterMark.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 34</value>
-  </data>
-  <data name="Icon_BingNotAddWaterMark.Text" xml:space="preserve">
-    <value>增加Bing水印</value>
-  </data>
-  <data name="Icon_SkipToday.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 34</value>
-  </data>
-  <data name="Icon_SkipToday.Text" xml:space="preserve">
-    <value>Skip Today</value>
-  </data>
-  <data name="Icon_SetDownloadFolder.Size" type="System.Drawing.Size, System.Drawing">
-    <value>290, 34</value>
-  </data>
-  <data name="Icon_SetDownloadFolder.Text" xml:space="preserve">
-    <value>Set Download Folder</value>
-  </data>
-  <data name="Icon_LocalPathSetting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>336, 34</value>
-  </data>
-  <data name="Icon_LocalPathSetting.Text" xml:space="preserve">
-    <value>Local Path Setting</value>
-  </data>
-  <data name="Icon_CleanUnqualifiedImages.Size" type="System.Drawing.Size, System.Drawing">
-    <value>336, 34</value>
-  </data>
-  <data name="Icon_CleanUnqualifiedImages.Text" xml:space="preserve">
-    <value>Clean Unqualified Pictures</value>
-  </data>
-  <data name="Icon_OpenOfficialWebsite.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_OpenOfficialWebsite.Text" xml:space="preserve">
-    <value>打开官网...</value>
-  </data>
-  <data name="Icon_CheckUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_CheckUpdate.Text" xml:space="preserve">
-    <value>检查更新</value>
-  </data>
-  <data name="Icon_RegularUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_RegularUpdate.Text" xml:space="preserve">
-    <value>Regular Update</value>
-  </data>
-  <data name="Icon_ForceUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_ForceUpdate.Text" xml:space="preserve">
-    <value>Force Update</value>
-  </data>
-  <data name="Icon_CheckUpdateFrequency.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_CheckUpdateFrequency.Text" xml:space="preserve">
-    <value>Update Frequency</value>
-  </data>
-  <data name="Icon_AutoCheckUpdateFreq.Size" type="System.Drawing.Size, System.Drawing">
-    <value>373, 34</value>
-  </data>
-  <data name="Icon_AutoCheckUpdateFreq.Text" xml:space="preserve">
-    <value>Auto Check Update Frequency</value>
-  </data>
-  <data name="Icon_IssueAndFeedback.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_IssueAndFeedback.Text" xml:space="preserve">
-    <value>问题反馈...</value>
-  </data>
-  <data name="toolStripMenuItem5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>267, 6</value>
-  </data>
-  <data name="Icon_OpenConsole.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_OpenConsole.Text" xml:space="preserve">
-    <value>打开控制台</value>
-  </data>
-  <data name="Icon_About.Size" type="System.Drawing.Size, System.Drawing">
-    <value>270, 34</value>
-  </data>
-  <data name="Icon_About.Text" xml:space="preserve">
-    <value>关于</value>
   </data>
   <metadata name="_notifyIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>195, 17</value>
@@ -414,15 +420,18 @@
     <value>49</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>9, 18</value>
+    <value>8, 15</value>
   </data>
   <data name="$this.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>800, 450</value>
+    <value>711, 375</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 2, 3, 2</value>
+  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
@@ -681,6 +690,12 @@
   <data name="&gt;&gt;dateCalculatorToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;Icon_GrepTool.Name" xml:space="preserve">
+    <value>Icon_GrepTool</value>
+  </data>
+  <data name="&gt;&gt;Icon_GrepTool.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;toolStripMenuItem4.Name" xml:space="preserve">
     <value>toolStripMenuItem4</value>
   </data>
@@ -705,10 +720,10 @@
   <data name="&gt;&gt;_notifyIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;Icon_GrepTool.Name" xml:space="preserve">
-    <value>Icon_GrepTool</value>
+  <data name="&gt;&gt;Icon_EmptyRecycleBin.Name" xml:space="preserve">
+    <value>Icon_EmptyRecycleBin</value>
   </data>
-  <data name="&gt;&gt;Icon_GrepTool.Type" xml:space="preserve">
+  <data name="&gt;&gt;Icon_EmptyRecycleBin.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">

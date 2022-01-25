@@ -18,6 +18,7 @@ using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 using System.Xml;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace DailyWallpaper.View
 {
@@ -222,6 +223,7 @@ namespace DailyWallpaper.View
                 wp = "NULL";
             Icon_CurrentWallpaper.ToolTipText = TranslationHelper.Get("Icon_CurrentWallpaper") + ": " + wp;
             shutdownTimerToolStripMenuItem.Text = TranslationHelper.Get("Icon_ShutdownTimer");
+            Icon_EmptyRecycleBin.Text = TranslationHelper.Get("Icon_EmptyRecycleBin");
             geminiToolStripMenuItem.Text = TranslationHelper.Get("Icon_Gemini");
             dateCalculatorToolStripMenuItem.Text = TranslationHelper.Get("Icon_DateCalc");
             Icon_CommonCommands.Text = TranslationHelper.Get("Icon_CommonCommands");
@@ -1665,6 +1667,37 @@ namespace DailyWallpaper.View
         private void Icon_GrepTool_Click(object sender, EventArgs e)
         {
             new Tools.GrepToolForm().Show();
+        }
+
+        private void Icon_EmptyRecycleBin_Click(object sender, EventArgs e)
+        {
+            DialogResult result;
+            result = MessageBox.Show("Are you sure you want to delete all the items in recycle bin", "Clear recycle bin", MessageBoxButtons.YesNo);
+
+            // If accepted, continue with the cleaning
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    // Execute the method with the required parameters
+                    uint IsSuccess = SHEmptyRecycleBin(IntPtr.Zero, null, RecycleFlags.SHRB_NOCONFIRMATION);
+                    
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("The recycle bin couldn't be recycled" + ex.Message, "Clear recycle bin", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                }
+            }
+
+        }
+
+        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
+        static extern uint SHEmptyRecycleBin(IntPtr hwnd, string pszRootPath, RecycleFlags dwFlags);
+        enum RecycleFlags : int
+        {
+            SHRB_NOCONFIRMATION = 0x00000001, // Don't ask for confirmation
+            SHRB_NOPROGRESSUI = 0x00000001, // Don't show progress
+            SHRB_NOSOUND = 0x00000004 // Don't make sound when the action is executed
         }
     }
 }
