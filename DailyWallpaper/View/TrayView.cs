@@ -50,13 +50,13 @@ namespace DailyWallpaper.View
             Icon = Properties.Resources.icon32x32;
 
             _notifyIcon.Icon = Properties.Resources.icon32x32;
-            _notifyIcon.Text = 
+            _notifyIcon.Text =
                 string.Format(TranslationHelper.Get("Icon_ToolTip"), ProjectInfo.GetVerSion());
 
             _notifyIcon.Visible = true;
             // _notifyIcon.BalloonTipClicked += notifyIcon_BalloonTipClicked;
             _notifyIcon.MouseUp += notifyIcon_MouseUp;
-            
+
             SeveralFormInit();
             InitializeCheckedAndTimer();
             TryToUseGithubInCN();
@@ -93,7 +93,7 @@ namespace DailyWallpaper.View
             // MessageBox.Show((interval / 1000 /60).ToString());
             var _updateTimer = new System.Timers.Timer
             {
-                Interval = interval, 
+                Interval = interval,
                 AutoReset = true,
                 Enabled = true
             };
@@ -118,7 +118,7 @@ namespace DailyWallpaper.View
 
             Icon_ChangeWallpaper.Text = TranslationHelper.Get("Icon_ChangeWallpaper");
             Icon_ChangeWallpaper.ToolTipText = TranslationHelper.Get("Icon_ChangeWallpaperTit");
-            
+
             var defFont = Icon_HashCalc.Font; // default font so little.
             Icon_ChangeWallpaper.Font = new Font(defFont.Name, defFont.Size + 1, FontStyle.Bold);
             Icon_ChangeWallpaper.ShowShortcutKeys = true;
@@ -133,7 +133,7 @@ namespace DailyWallpaper.View
             Icon_AutoChangeWallpaper.TextAlign = ContentAlignment.MiddleRight;
 
             Icon_AutoChangeWallpaper.DropDownItems.AddRange(new ToolStripItem[] {
-            CustomHoursTextboxWithButtonAndUnit() 
+            CustomHoursTextboxWithButtonAndUnit()
             });
 
             Icon_Bing.Text =
@@ -178,7 +178,8 @@ namespace DailyWallpaper.View
 
             Icon_DonateAndSupport.Text = TranslationHelper.Get("Icon_DonateAndSupport");
             Icon_DonateAndSupport.Click +=
-                    (e, s) => {
+                    (e, s) =>
+                    {
                         Process.Start(ProjectInfo.DonationUrl);
                         ShowNotification("", TranslationHelper.Get("Notify_ThanksForDonation"));
                     };
@@ -187,7 +188,7 @@ namespace DailyWallpaper.View
             Icon_Notepad.Text =
                     TranslationHelper.Get("Icon_Notepad");
             Icon_Notepad.ShortcutKeyDisplayString = "(Middle)";
-                  
+
             Icon_Notepad.Click +=
                     Icon_Notepad_Click;
 
@@ -208,11 +209,11 @@ namespace DailyWallpaper.View
 
             Icon_CheckUpdate.Text = TranslationHelper.Get("Icon_CheckUpdate");
             Icon_DeleteCurrentWallpaper.Text = "  " + TranslationHelper.Get("Icon_DeleteCurrentWallpaper");
-            Icon_LikeCurrentWallpaper.Text =   "  " + TranslationHelper.Get("Icon_LikeCurrentWallpaper");           
+            Icon_LikeCurrentWallpaper.Text = "  " + TranslationHelper.Get("Icon_LikeCurrentWallpaper");
             var likeDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "[Like]");
             Icon_LikeCurrentWallpaper.ToolTipText = "Copy to: " + likeDir;
             Icon_CurrentWallpaper.Text = TranslationHelper.Get("Icon_CurrentWallpaper");
-            
+
             Icon_OpenConsole.Text = TranslationHelper.Get("Icon_ShowLog");
             Icon_About.Text = TranslationHelper.Get("Icon_About");
             Icon_RunAtStartup.Text = TranslationHelper.Get("Icon_RunAtStartup");
@@ -247,7 +248,9 @@ namespace DailyWallpaper.View
 
         public void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Task.Run(() => { DailyWallpaperConsSetWallpaper(silent: true);
+            Task.Run(() =>
+            {
+                DailyWallpaperConsSetWallpaper(silent: true);
                 // _ini.UpdateIniItem("TimerSetWallpaper", "true", "LOG");
             });
         }
@@ -266,7 +269,7 @@ namespace DailyWallpaper.View
                 if (IsNoneSelected())
                 {
                     if (!silent)
-                        ShowNotification("", TranslationHelper.Get("Notify_AtLeastSelectOneFeature"), 
+                        ShowNotification("", TranslationHelper.Get("Notify_AtLeastSelectOneFeature"),
                             isError: true);
                     return;
                 }
@@ -287,7 +290,7 @@ namespace DailyWallpaper.View
                 if (!res)
                 {
                     setWallpaperSucceed = false;
-                    if (!silent) 
+                    if (!silent)
                         ShowNotification("",
                             string.Format(TranslationHelper.Get("Notify_SetWallpaper_Failed"), Environment.NewLine));
 
@@ -299,7 +302,7 @@ namespace DailyWallpaper.View
                     if (!silent)
                         ShowNotification("",
                             string.Format(TranslationHelper.Get("Notify_SetWallpaper_Succeed"),
-                            Environment.NewLine + $"{wp}") );
+                            Environment.NewLine + $"{wp}"));
                     Icon_CurrentWallpaper.ToolTipText = TranslationHelper.Get("Icon_CurrentWallpaper") + ": " + wp;
                     if (int.TryParse(_ini.Read("Timer"), out int timer))
                     {
@@ -434,7 +437,7 @@ namespace DailyWallpaper.View
                 _notifyIcon.ContextMenuStrip.Close();
                 _timerHelper.SetTimer(6 * 60, SetTimerAfter);
             }
-            else if(h12RadioButton.Checked)
+            else if (h12RadioButton.Checked)
             {
                 _ini.UpdateIniItem("Timer", 12.ToString());
                 hoursTextBox.Enabled = false;
@@ -481,7 +484,7 @@ namespace DailyWallpaper.View
         {
             Task.Run(() => DailyWallpaperConsSetWallpaper());
         }
-        
+
         private void notifyIcon_BalloonTipClicked(object sender, EventArgs e)
         {
             var wallpaper = _ini.Read("WALLPAPER", "LOG");
@@ -814,7 +817,7 @@ namespace DailyWallpaper.View
                     return;
                     // throw new ArgumentException("Starting directory is a null reference or an empty string: path");
                 }
-                foreach (var d in Directory.EnumerateDirectories(path, "*Notepad*", 
+                foreach (var d in Directory.EnumerateDirectories(path, "*Notepad*",
                     System.IO.SearchOption.AllDirectories))
                 {
                     if (d.Contains("Notepad++"))
@@ -902,7 +905,7 @@ namespace DailyWallpaper.View
             var panelHost = new ToolStripControlHost(panel)
             {
                 BackColor = SystemColors.Window
-        };
+            };
 
             return panelHost;
         }
@@ -966,8 +969,8 @@ namespace DailyWallpaper.View
             if (_ini.EqualsIgnoreCase("Spotlight", "yes", "Online"))
             {
                 Icon_Spotlight.Checked = true;
-            } 
-            else if(_ini.EqualsIgnoreCase("Spotlight", "no", "Online"))
+            }
+            else if (_ini.EqualsIgnoreCase("Spotlight", "no", "Online"))
             {
                 Icon_Spotlight.Checked = false;
             }
@@ -1047,14 +1050,14 @@ namespace DailyWallpaper.View
             h24RadioButton.CheckedChanged += hourRadioButton_CheckedChanged;
             customRadioButton.CheckedChanged += hourRadioButton_CheckedChanged;
 
-            
+
             everyDay.Checked = true;
             var autoCheckUpdateFreq = _ini.Read("AutoCheckUpdateFreq");
             if ("EveryDay".Equals(autoCheckUpdateFreq))
             {
                 everyDay.Checked = true;
             }
-            else if("EveryWeek".Equals(autoCheckUpdateFreq))
+            else if ("EveryWeek".Equals(autoCheckUpdateFreq))
             {
                 everyWeek.Checked = true;
             }
@@ -1070,7 +1073,7 @@ namespace DailyWallpaper.View
                 autoCheckUpdateNextTime = UpdateAutoCheckUpdateNextTime();
             Icon_AutoCheckUpdateFreq.ToolTipText = $"NextTime: {autoCheckUpdateNextTime}";
             LaterCheckUpdate(autoCheckUpdateNextTime);
-            
+
             /*void LaterSetWallpaperWhenStart() 
             {
                 Thread.Sleep(1000 * 60 * 1); // 1min later
@@ -1107,13 +1110,13 @@ namespace DailyWallpaper.View
             _ini.UpdateIniItem("NEXTAutoChangeWallpaperTime", nextTime, "LOG");
             Icon_NextTime.Text = "NextTime: " + nextTime;
         }
-        
+
         private RadioButton h12RadioButton;
         private RadioButton h24RadioButton;
         private RadioButton h6RadioButton;
         private RadioButton customRadioButton;
         private TextBox hoursTextBox;
-        
+
 
         private void panelToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1132,7 +1135,7 @@ namespace DailyWallpaper.View
                     proc.Kill();
                     break;
                 }
-            }            
+            }
         }
 
         private void Icon_DonateAndSupport_Click(object sender, EventArgs e)
@@ -1200,7 +1203,8 @@ namespace DailyWallpaper.View
                     else
                     {
                         ShowNotification("", "Update Downloaded, click me to install.", timeout: 20000, clickEvent:
-                                                                                () => {
+                                                                                () =>
+                                                                                {
                                                                                     Process.Start(msg);
                                                                                     Icon_Quit.PerformClick();
                                                                                 });
@@ -1386,7 +1390,7 @@ namespace DailyWallpaper.View
         {
             //new Tools.ShutdownTimer.Shutdown().Show();
             _shutdownTimer.Show();
-    }
+        }
 
         private void dateCalculatorToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1411,7 +1415,8 @@ namespace DailyWallpaper.View
 
         private void Icon_DeleteCurrentWallpaper_Click(object sender, EventArgs e)
         {
-            try {
+            try
+            {
                 var wp = _ini.Read("WALLPAPER", "LOG");
                 if (File.Exists(wp))
                 {
@@ -1427,7 +1432,7 @@ namespace DailyWallpaper.View
 
         private void DelFileIgnoreError(string file)
         {
-            
+
             try
             {
                 if (File.Exists(file))
@@ -1438,10 +1443,11 @@ namespace DailyWallpaper.View
                 }
                 else
                 {
-                    
+
                 }
             }
-            catch (Exception _){
+            catch (Exception _)
+            {
                 // MessageBox.Show(e.Message + ":\r\n  " + file);
             }
         }
@@ -1452,8 +1458,8 @@ namespace DailyWallpaper.View
             if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
             {
                 return;
-            }          
-            if (MessageBox.Show(TranslationHelper.Get("Notify_CleanUnqualifiedPicturesConfirm"), "Confirm", 
+            }
+            if (MessageBox.Show(TranslationHelper.Get("Notify_CleanUnqualifiedPicturesConfirm"), "Confirm",
                 MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
                 return;
 
@@ -1495,7 +1501,7 @@ namespace DailyWallpaper.View
             {
                 files.ForEach(file => DelFileIgnoreError(file));
                 MessageBox.Show($"Clean Unqualified Images [{files.Count}] finished.", "", MessageBoxButtons.OK);
-            } 
+            }
             else
             {
                 MessageBox.Show($"The pictures in the folder all meet the conditions.", "", MessageBoxButtons.OK);
@@ -1512,7 +1518,7 @@ namespace DailyWallpaper.View
             using (var dialog = new CommonOpenFileDialog())
             {
                 var downLoadSavePath = _ini.Read("downLoadSavePath", "Online");
-                if (!string.IsNullOrEmpty(downLoadSavePath) && !"null".Equals(downLoadSavePath.ToLower()) 
+                if (!string.IsNullOrEmpty(downLoadSavePath) && !"null".Equals(downLoadSavePath.ToLower())
                     && Directory.Exists(downLoadSavePath))
                 {
                     dialog.InitialDirectory = downLoadSavePath;
@@ -1549,11 +1555,12 @@ namespace DailyWallpaper.View
                     // FileSystem.DeleteFile(wp, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
                     var fileName = Path.GetFileName(wp);
                     var destFile = Path.Combine(likeDir, fileName);
-                    if (!File.Exists(destFile)) {
+                    if (!File.Exists(destFile))
+                    {
                         File.Copy(wp, destFile);
                         ShowNotification("", $"Copy {fileName} to {likeDir}");
                     }
-                        
+
                 }
             }
             catch { }
@@ -1600,8 +1607,9 @@ namespace DailyWallpaper.View
             radioButton.Location = new Point(3, height - 2);
             radioButton.Text = "";
             var column = (int)radioButton.Font.Size;
-            
-            var unitLabel = new Label() { 
+
+            var unitLabel = new Label()
+            {
                 Text = buttonStr,
                 Name = "unitLabel" + buttonName,
                 AutoSize = true,
@@ -1621,7 +1629,7 @@ namespace DailyWallpaper.View
 
             var panel = new Panel();
             panel.SuspendLayout(); // IS NOT DIFF ?
-            AddDivIntoPanel(panel, 5, everyDay,"Day", "Every Day   ");
+            AddDivIntoPanel(panel, 5, everyDay, "Day", "Every Day   ");
             AddDivIntoPanel(panel, 35, everyWeek, "Week", "Every Week  ");
             AddDivIntoPanel(panel, 65, everyMonth, "Month", "Every Month");
             panel.Name = "UpdateFrequencyUnit";
@@ -1671,23 +1679,24 @@ namespace DailyWallpaper.View
 
         private void Icon_EmptyRecycleBin_Click(object sender, EventArgs e)
         {
-            DialogResult result;
-            result = MessageBox.Show("Are you sure you want to delete all the items in recycle bin", "Clear recycle bin", MessageBoxButtons.YesNo);
+            // DialogResult result;
+            //result = MessageBox.Show("Are you sure you want to delete all the items in recycle bin", "Clear recycle bin", MessageBoxButtons.YesNo);
 
             // If accepted, continue with the cleaning
-            if (result == DialogResult.Yes)
+            // if (result == DialogResult.Yes)
+            //{
+            try
             {
-                try
-                {
-                    // Execute the method with the required parameters
-                    uint IsSuccess = SHEmptyRecycleBin(IntPtr.Zero, null, RecycleFlags.SHRB_NOCONFIRMATION);
-                    
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("The recycle bin couldn't be recycled" + ex.Message, "Clear recycle bin", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                }
+                // Execute the method with the required parameters
+                uint res = SHEmptyRecycleBin(IntPtr.Zero, null, RecycleFlags.SHRB_NOCONFIRMATION);
+                if (res == 0 || res == 0x8000FFFF)
+                    ShowNotification("", "Empty RecycleBin succeeded."); // 0x8000FFFF RecycleBin is Empty.
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("The recycle bin couldn't be recycled" + ex.Message, "Clear recycle bin", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+            // }
 
         }
 
