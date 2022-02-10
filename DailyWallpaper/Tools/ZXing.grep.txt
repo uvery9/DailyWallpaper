@@ -1,0 +1,7 @@
+./v2rayN/Handler/QRCodeHelper.cs:using ZXing;
+./v2rayN/Handler/QRCodeHelper.cs:using ZXing.QrCode;
+./v2rayN/Handler/QRCodeHelper.cs:                    ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.M, // 纠错级别
+./v2rayN/Tool/Utils.cs:using ZXing;
+./v2rayN/Tool/Utils.cs:using ZXing.Common;
+./v2rayN/Tool/Utils.cs:using ZXing.QrCode;
+./v2rayN/v2rayN.csproj:    <PackageReference Include="ZXing.Net">

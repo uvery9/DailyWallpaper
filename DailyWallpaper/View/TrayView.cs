@@ -225,6 +225,7 @@ namespace DailyWallpaper.View
             Icon_CurrentWallpaper.ToolTipText = TranslationHelper.Get("Icon_CurrentWallpaper") + ": " + wp;
             shutdownTimerToolStripMenuItem.Text = TranslationHelper.Get("Icon_ShutdownTimer");
             Icon_EmptyRecycleBin.Text = TranslationHelper.Get("Icon_EmptyRecycleBin");
+            Icon_ScanQRCode.Text = TranslationHelper.Get("Icon_ScanQRCode");
             geminiToolStripMenuItem.Text = TranslationHelper.Get("Icon_Gemini");
             dateCalculatorToolStripMenuItem.Text = TranslationHelper.Get("Icon_DateCalc");
             Icon_CommonCommands.Text = TranslationHelper.Get("Icon_CommonCommands");
@@ -1707,6 +1708,20 @@ namespace DailyWallpaper.View
             SHRB_NOCONFIRMATION = 0x00000001, // Don't ask for confirmation
             SHRB_NOPROGRESSUI = 0x00000001, // Don't show progress
             SHRB_NOSOUND = 0x00000004 // Don't make sound when the action is executed
+        }
+
+        private void Icon_ScanQRCode_Click(object sender, EventArgs e)
+        {
+            var title = TranslationHelper.Get("Icon_ScanQRCode");
+            var qrCode = Utils.ScanScreen();
+            if (!String.IsNullOrEmpty(qrCode))
+            {
+                Clipboard.SetText(qrCode);
+                MessageBox.Show(TranslationHelper.Get("Notify_ScanResult") + "\r\n" + qrCode + "\r\n\r\n" +
+                    TranslationHelper.Get("Notify_CopiedToClipboard"), title);
+            }
+            else
+                MessageBox.Show(TranslationHelper.Get("Notify_QRCodeNotDetected"), title);
         }
     }
 }
