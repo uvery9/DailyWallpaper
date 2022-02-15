@@ -1691,7 +1691,7 @@ namespace DailyWallpaper.View
                 // Execute the method with the required parameters
                 uint res = SHEmptyRecycleBin(IntPtr.Zero, null, RecycleFlags.SHRB_NOCONFIRMATION);
                 if (res == 0 || res == 0x8000FFFF)
-                    ShowNotification("", "Empty RecycleBin succeeded."); // 0x8000FFFF RecycleBin is Empty.
+                    ShowNotification("", TranslationHelper.Get("Notify_EmptyRecycleBinSucceed")); // 0x8000FFFF RecycleBin is Empty.
             }
             catch (Exception ex)
             {
