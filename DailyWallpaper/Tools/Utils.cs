@@ -57,6 +57,32 @@ namespace DailyWallpaper
             return string.Empty;
         }
 
+        public static Image GenerateQRCodeImage(string strContent)
+        {
+            try
+            {
+                QrCodeEncodingOptions options = new QrCodeEncodingOptions
+                {
+                    CharacterSet = "UTF-8",
+                    DisableECI = true, // Extended Channel Interpretation (ECI) 主要用于特殊的字符集。并不是所有的扫描器都支持这种编码。
+                    ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.M, // ErrorCorrection level
+                    Width = 500,
+                    Height = 500,
+                    Margin = 1
+                };
+                BarcodeWriter writer = new BarcodeWriter
+                {
+                    Format = BarcodeFormat.QR_CODE,
+                    Options = options
+                };
+                return writer.Write(strContent);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
     }
 }
 
