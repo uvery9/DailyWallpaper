@@ -34,7 +34,26 @@ namespace DailyWallpaper
                             int marginTop = (int)((double)fullImage.Height * i / 2.5 / MAX_TRY);
                             Rectangle cropRect = new Rectangle(marginLeft, marginTop, fullImage.Width - marginLeft * 2, fullImage.Height - marginTop * 2);
                             Bitmap target = new Bitmap(screen.Bounds.Width, screen.Bounds.Height);
-                            double imageScale = (double)screen.Bounds.Width / (double)cropRect.Width;
+                            using (Graphics g = Graphics.FromImage(target))
+                            {
+                                g.DrawImage(fullImage, new Rectangle(0, 0, target.Width, target.Height),
+                                                cropRect,
+                                                GraphicsUnit.Pixel);
+                            }
+                            //target.Save("DAILYWALLPAPER.SCANQRCODE." + i + ".jpg");
+                            BitmapLuminanceSource source = new BitmapLuminanceSource(target);
+                            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+                            QRCodeReader reader = new QRCodeReader();
+                            Result result = reader.decode(bitmap);
+                            if (result != null)
+                            {
+                                return result.Text;
+                            }
+                        }
+                        for (int i = 0; i < 1; i++)
+                        {
+                            Rectangle cropRect = new Rectangle(0, 0, fullImage.Width, fullImage.Height);
+                            Bitmap target = new Bitmap(screen.Bounds.Width, screen.Bounds.Height);
                             using (Graphics g = Graphics.FromImage(target))
                             {
                                 g.DrawImage(fullImage, new Rectangle(0, 0, target.Width, target.Height),
@@ -42,7 +61,7 @@ namespace DailyWallpaper
                                                 GraphicsUnit.Pixel);
                             }
                             var gray = MakeGrayscale3(target);
-                            // target.Save("DAILYWALLPAPER.SCANQRCODE." + i + ".jpg");
+                            //gray.Save("DAILYWALLPAPER.SCANQRCODE.GRAY.jpg");
                             BitmapLuminanceSource source = new BitmapLuminanceSource(gray);
                             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                             QRCodeReader reader = new QRCodeReader();

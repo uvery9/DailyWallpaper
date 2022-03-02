@@ -16,9 +16,10 @@
 1. Pull from github(git command will be use in project)
 2. Open DailyWallpaper.sln
 3. Set Release x64
-4. Build solution
-5. bin\Release\DailyWallpaper.exe is your need.
-6. DailyWallpaper.Installer will generate DailyWallpaper.Installer.msi. Build for yourself do not need it.
+4. Install Wix Tool and Extension for DailyWallpaper.Installer
+5. Build solution
+6. bin\Release\DailyWallpaper.exe is your need.
+7. DailyWallpaper.Installer will generate DailyWallpaper.Installer.msi. Build for yourself do not need it.
 
 ## User Interface
 
@@ -39,7 +40,6 @@ There may be many syntax errors in the **Translations.config**, help me improve 
 **icon will change cause the status**
 
 <img src="https://user-images.githubusercontent.com/42594123/123614575-0d210200-d837-11eb-8c4f-f9d960bee1e8.png" alt="icon_status" style="zoom: 20%;" />
-
 
 
 
