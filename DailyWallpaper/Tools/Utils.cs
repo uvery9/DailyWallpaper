@@ -3,6 +3,7 @@ using System.Drawing;
 using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
+using System.Drawing.Imaging;
 
 namespace DailyWallpaper
 {
@@ -40,8 +41,9 @@ namespace DailyWallpaper
                                                 cropRect,
                                                 GraphicsUnit.Pixel);
                             }
+                            var gray = MakeGrayscale3(target);
                             // target.Save("DAILYWALLPAPER.SCANQRCODE." + i + ".jpg");
-                            BitmapLuminanceSource source = new BitmapLuminanceSource(target);
+                            BitmapLuminanceSource source = new BitmapLuminanceSource(gray);
                             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                             QRCodeReader reader = new QRCodeReader();
                             Result result = reader.decode(bitmap);
@@ -55,6 +57,62 @@ namespace DailyWallpaper
             }
             catch { }
             return string.Empty;
+        }
+
+        public static Image ConvertToGrayScale(Image srce)
+        {
+            Bitmap bmp = new Bitmap(srce.Width, srce.Height);
+            using (Graphics gr = Graphics.FromImage(bmp))
+            {
+                var matrix = new float[][] {
+                    new float[] { 0.299f, 0.299f, 0.299f, 0, 0 },
+                    new float[] { 0.587f, 0.587f, 0.587f, 0, 0 },
+                    new float[] { 0.114f, 0.114f, 0.114f, 0, 0 },
+                    new float[] { 0,      0,      0,      1, 0 },
+                    new float[] { 0,      0,      0,      0, 1 }
+                };
+                var ia = new ImageAttributes();
+                ia.SetColorMatrix(new ColorMatrix(matrix));
+                var rc = new Rectangle(0, 0, srce.Width, srce.Height);
+                gr.DrawImage(srce, rc, 0, 0, srce.Width, srce.Height, GraphicsUnit.Pixel, ia);
+                return bmp;
+            }
+        }
+
+        public static Bitmap MakeGrayscale3(Bitmap original)
+        {
+            //create a blank bitmap the same size as original
+            Bitmap newBitmap = new Bitmap(original.Width, original.Height);
+
+            //get a graphics object from the new image
+            using (Graphics g = Graphics.FromImage(newBitmap))
+            {
+
+                //create the grayscale ColorMatrix
+                ColorMatrix colorMatrix = new ColorMatrix(
+                   new float[][]
+                   {
+             new float[] {.3f, .3f, .3f, 0, 0},
+             new float[] {.59f, .59f, .59f, 0, 0},
+             new float[] {.11f, .11f, .11f, 0, 0},
+             new float[] {0, 0, 0, 1, 0},
+             new float[] {0, 0, 0, 0, 1}
+                   });
+
+                //create some image attributes
+                using (ImageAttributes attributes = new ImageAttributes())
+                {
+
+                    //set the color matrix attribute
+                    attributes.SetColorMatrix(colorMatrix);
+
+                    //draw the original image on the new image
+                    //using the grayscale color matrix
+                    g.DrawImage(original, new Rectangle(0, 0, original.Width, original.Height),
+                                0, 0, original.Width, original.Height, GraphicsUnit.Pixel, attributes);
+                }
+            }
+            return newBitmap;
         }
 
         public static Image GenerateQRCodeImage(string strContent)
