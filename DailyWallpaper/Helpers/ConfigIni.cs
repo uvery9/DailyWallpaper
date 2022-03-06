@@ -128,6 +128,10 @@ namespace DailyWallpaper
             Write("localPathSetting", myPictures, "Local");
             Write("localPathScan", "AUTO", "Local");
             
+            Write("SameFileMD5", "True", "Gemini");
+            Write("SameFileExtName", "True", "Gemini");
+            Write("SameFileName", "False", "Gemini");
+            
             // Write("localPathMtime", "NULL", "LOG");
         }
         
