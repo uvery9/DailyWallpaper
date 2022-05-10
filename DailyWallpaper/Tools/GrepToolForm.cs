@@ -60,15 +60,6 @@ namespace DailyWallpaper.Tools
                 $"Please wait patiently, Button \"Locate\" to Cancel...");
             Task.Run(() =>
             {
-                /*try
-                {
-                    var enumDirs = Directory.EnumerateDirectories(path, "*bin*", SearchOption.AllDirectories);
-                    foreach (var item in enumDirs)
-                    {
-                        Debug.WriteLine("==> " + item);
-                    }
-                }
-                catch { }*/
                 cancelSrc = new CancellationTokenSource();
                 var resList = Helpers.FindFile.FindIgnoreCaseAsync(path, target, cancelSrc.Token).Result;
                 var cnt = resList.Count;
