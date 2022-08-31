@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -10,23 +9,22 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using DailyWallpaper.Tools;
 using System.Diagnostics;
-using System.Collections;
-using static DailyWallpaper.Tools.Gemini;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Reflection;
 using ListViewItem = System.Windows.Forms.ListViewItem;
 using ListView = System.Windows.Forms.ListView;
+using DailyWallpaper.Tools.Gemini;
+using static DailyWallpaper.Tools.GeminiUtils;
 // using System.Linq;
 
 namespace DailyWallpaper
 {
     public partial class GeminiForm : Form, IDisposable
     {
-        private Gemini gemini;
+        private GeminiUtils gemini;
         private TextBoxCons _console;
         private string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private CancellationTokenSource _source = new CancellationTokenSource();
@@ -56,6 +54,9 @@ namespace DailyWallpaper
         private Color themeColor = Color.FromArgb(250, 234, 192);
         private Color themeColorClean = Color.ForestGreen;
         // private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
+
+        // REGEX: 正则或一般匹配模式
+        // FIND:查找或保护
         private enum FilterMode : int
         {
             REGEX_FIND,
@@ -81,7 +82,7 @@ namespace DailyWallpaper
             targetFolder2TextBox.KeyDown += targetFolder2_KeyDown;
             folderFilterTextBox.KeyDown += folderFilterTextBox_KeyDown;
             Icon = Properties.Resources.GE32X32;
-            gemini = new Gemini();
+            gemini = new GeminiUtils();
             _console = new TextBoxCons(new ConsWriter(tbConsole));
 
             IgnoreThreadingEx();
@@ -190,7 +191,7 @@ namespace DailyWallpaper
             regexCheckBox.Click += new EventHandler(regexCheckBox_Click);
             findModeCheckBox.Click += new EventHandler(findModeCheckBox_Click);
         }
-        private void BindHistory(System.Windows.Forms.TextBox tb, List<string> list)
+        private void BindHistory(TextBox tb, List<string> list)
         {
             tb.AutoCompleteCustomSource.Clear();
             tb.AutoCompleteCustomSource.AddRange(list.ToArray());
@@ -479,7 +480,7 @@ namespace DailyWallpaper
             string tip = "";
             if (ignoreFileCheckBox.Checked)
             {
-                tip = $" larger than {Len2Str(limit)}";
+                tip = $" larger than {FileUtils.Len2Str(limit)}";
             }
             CWriteLine($">>> folder1{tip}: {cnt1:N0}");
             CWriteLine($">>> folder2{tip}: {cnt2:N0}");
@@ -903,7 +904,6 @@ namespace DailyWallpaper
                     {
                         ScanEmptyDirsProtectMode(path, mode, token);
                     }
-
                 }, token);
                 _tasks.Add(taskCef);
                 await taskCef;
@@ -1393,19 +1393,19 @@ namespace DailyWallpaper
         {
             if (mode == FilterMode.GEN_FIND)
             {
-                filterExample.Text = " Using General Find mode";
+                filterExample.Text = " Using General-Find mode";
             }
             if (mode == FilterMode.GEN_PROTECT)
             {
-                filterExample.Text = " Using General Protect mode";
+                filterExample.Text = " Using General-Protect mode";
             }
             if (mode == FilterMode.REGEX_FIND)
             {
-                filterExample.Text = " Using Regex Find mode";
+                filterExample.Text = " Using Regex-Find mode";
             }
             if (mode == FilterMode.REGEX_PROTECT)
             {
-                filterExample.Text = " Using Regex Protect mode";
+                filterExample.Text = " Using Regex-Protect mode";
             }
         }
         private void regexCheckBox_Click(object sender, EventArgs e)
@@ -1430,7 +1430,7 @@ namespace DailyWallpaper
             else if (reg && !find)
                 mode = FilterMode.REGEX_PROTECT;
             else
-                mode = FilterMode.REGEX_FIND;
+                mode = FilterMode.GEN_PROTECT;
             filterMode = mode;
             CWriteLine($">>> FilterMode: {mode}");
             UpdateFilterExampleText(mode);
@@ -2118,19 +2118,54 @@ namespace DailyWallpaper
                 {
                     _source.Token.ThrowIfCancellationRequested();
                 }
-                // Prevent all files in the group from being deleted
+                // 防止选择同组的所有文件(除非处于选择模式) Prevent all files in the group from being deleted
                 if ((from i in item
                      where i.Checked == true
                      select i).Count().Equals(item.Count))
                 {
                     var noSelectList = new List<GeminiFileCls>(item);
-                    noSelectList.ForEach(it => it.Checked = false);
+                    var longest = findLongestDirItem(item);
+                    if (longest != null)
+                        noSelectList.ForEach(it =>
+                        {
+                            if (it.fullPath == longest.fullPath)
+                                it.Checked = false;
+                        }
+                        );
+                    else
+                        noSelectList.ForEach(it => { it.Checked = false; });
                     resList.AddRange(noSelectList);
                     continue;
                 }
                 resList.AddRange(item);
             }
             return resList;
+        }
+
+        private bool isGeneralFindMode()
+        {
+            if (findModeCheckBox.Checked && !regexCheckBox.Checked)
+                return true;
+            return false;
+        }
+
+        // 找到路径最长的那个, 即, 保护子文件夹中的文件
+        private GeminiFileCls findLongestDirItem(List<GeminiFileCls> list)
+        {
+            try
+            {
+                if (!isGeneralFindMode() || list == null || list.Count < 2)
+                    return null;
+                var des = list.OrderByDescending(s => s.dir).ToList();
+                // 表明是最长的, 保留路径最长的
+                if (des[0].dir != des[1].dir)
+                    return des[0];
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private void resultListView_MouseClick(object sender, MouseEventArgs e)
@@ -2309,7 +2344,7 @@ namespace DailyWallpaper
 
         private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileOrDirectory(FileOP.COPY_FULLPATH);
+            OperateFileOrDirectory(FileOP.COPY_FULLPATH);
         }
 
         private void notProtectFilesInGrpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2698,15 +2733,15 @@ namespace DailyWallpaper
 
         private void openDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileOrDirectory(FileOP.OPENDIR);
+            OperateFileOrDirectory(FileOP.OPENDIR);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileOrDirectory(FileOP.OPEN);
+            OperateFileOrDirectory(FileOP.OPEN);
         }
 
-        private void OpenFileOrDirectory(FileOP op)
+        private void OperateFileOrDirectory(FileOP op)
         {
             string fullPath;
             string fileName;
@@ -2739,15 +2774,13 @@ namespace DailyWallpaper
                     }
                     else if (op == FileOP.DELETE)
                     {
-                        FileSystem.DeleteFile(fullPath, UIOption.OnlyErrorDialogs,
-                            RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
+                        FileSystem.DeleteFile(fullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
                         CWriteLine($"... Send {fullPath} to RecycleBin");
                         cleanUpButton.PerformClick();
                     }
                     else if (op == FileOP.PROPERTIES)
                     {
-                        // Thanks to
-                        // https://stackoverflow.com/questions/1936682/how-do-i-display-a-files-properties-dialog-from-c
+                        // Thanks to https://stackoverflow.com/questions/1936682/how-do-i-display-a-files-properties-dialog-from-c
                         ShowProperties.ShowFileProperties(fullPath);
                     }
                     else if (op == FileOP.COPY_FILENAME)
@@ -2755,28 +2788,48 @@ namespace DailyWallpaper
                         if (!string.IsNullOrEmpty(fileName))
                         {
                             Clipboard.SetText(fileName);
-                            CWriteLine("... Copied file name to Clipboard.");
+                            CWriteLine($"... Copied file name to Clipboard:\r\n    {fileName}");
                         }
                     }
                     else if (op == FileOP.COPY_FULLPATH)
                     {
                         Clipboard.SetText(fullPath);
-                        CWriteLine("... Copied full path to Clipboard.");
+                        CWriteLine($"... Copied full path to Clipboard: \r\n    {fullPath}");
                     }
+                    else if (op == FileOP.RENAME)
+                    {
+                        var newFile = FileUtils.RenameFileInUI(fullPath);
+                        if (File.Exists(newFile))
+                        {
+                            // 更新到视图
+                            resultListView.FocusedItem.SubItems["fullPath"].Text = newFile;
+                            resultListView.FocusedItem.SubItems["name"].Text = Path.GetFileName(newFile);
 
+                            // 更新到列表
+                            GeminiFileCls.updateNewPathToList(geminiFileClsListForLV, fullPath, newFile);
+                            CWriteLine($"... Rename file to {newFile}.");
+                        }
+                        else if (!String.IsNullOrEmpty(newFile))
+                        {
+                            CWriteLine($"!!! Rename file failed: {newFile}.");
+                        }
+                    }
 
                 }
                 catch (Exception ex)
                 {
                     CWriteLine($"!!! {ex.Message}");
                 }
-
+            }
+            else
+            {
+                CWriteLine($"!!! file does not exist: {fullPath}");
             }
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileOrDirectory(FileOP.DELETE);
+            OperateFileOrDirectory(FileOP.DELETE);
         }
 
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2789,7 +2842,7 @@ namespace DailyWallpaper
               Further substantiating the case that the dialog is not reusable, Process Explorer and SQL 
             Server Configuration Manager both re-implement the dialog, rather than showing the services.msc version.
               Related: How do I open properties box for individual services from command line or link?*/
-            OpenFileOrDirectory(FileOP.PROPERTIES);
+            OperateFileOrDirectory(FileOP.PROPERTIES);
         }
 
         // unselect and select all will flush.
@@ -2887,7 +2940,7 @@ namespace DailyWallpaper
 
         private void copyFileNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileOrDirectory(FileOP.COPY_FILENAME);
+            OperateFileOrDirectory(FileOP.COPY_FILENAME);
         }
 
         private bool deleteKey = false;
@@ -3061,6 +3114,7 @@ namespace DailyWallpaper
             folderFilterTextBox.Text = "";
         }
 
+        // TODO: 只选择这个文件夹里的内容???
         private void justThisFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -3081,7 +3135,6 @@ namespace DailyWallpaper
                 var path = Path.GetDirectoryName(resultListView.FocusedItem.SubItems["fullPath"].Text);
                 folderFilterTextBox.Text = path;
                 CWriteLine("\r\n>>> " + selectFilesInThisFolderFirstToolStripMenuItem.Text + ", path =  " + path);
-
                 targetFolderFilterTextBox.Text = "";
                 findModeCheckBox.Checked = true;
                 regexCheckBox.Checked = false;
@@ -3158,7 +3211,6 @@ namespace DailyWallpaper
                 var path = Path.GetDirectoryName(resultListView.FocusedItem.SubItems["fullPath"].Text);
                 folderFilterTextBox.Text = path;
                 CWriteLine("\r\n>>> " + keepOnlyFilesInThisFolderToolStripMenuItem.Text + ", path =  " + path);
-
                 targetFolderFilterTextBox.Text = "";
                 findModeCheckBox.Checked = false;
                 regexCheckBox.Checked = false;
@@ -3171,7 +3223,19 @@ namespace DailyWallpaper
             }
         }
 
+        private void renameFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OperateFileOrDirectory(FileOP.RENAME);
+        }
 
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

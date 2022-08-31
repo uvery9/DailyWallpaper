@@ -48,7 +48,7 @@ namespace DailyWallpaper.Tools
             AppendText(8, "\"C:\\Program Files\\Git\\usr\\bin\\du.exe\" -sh $FOLDER", "Find total size of a directory");
             AppendText(9, "\"C:\\Program Files\\Git\\usr\\bin\\du.exe\" -sh *", "Find total size of each item in a directory");
             AppendText(10, "\"C:\\Program Files\\Git\\usr\\bin\\grep.exe\" --ignore-case --binary-files=without-match -r 'SOMEWORD' . \r\n"
-                + @"   grep --ignore-case --exclude-dir={build,.gradle,.idea} --include=\*.{kt,java,xml} -I -r 'SOMEWORD' . > ../_grep.SOMEWORD.txt ", "grep find STRING recursively");
+                + @"   grep --ignore-case --exclude-dir={build,.gradle,.idea} --include=\*.{kt,java,xml,gradle} -I -r 'SOMEWORD' . > ../_grep.SOMEWORD.txt ", "grep find STRING recursively");
             cmdTextBox.AppendText(Environment.NewLine + Environment.NewLine  + " ### Record Common Commands to the file by yourself: " + 
                 Environment.NewLine + "    " + cmdFile);
             File.WriteAllText(cmdFile, cmdTextBox.Text, Encoding.UTF8);

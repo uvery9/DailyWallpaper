@@ -114,6 +114,7 @@
     <Compile Include="Cons\OnlineImage.cs" />
     <Compile Include="Cons\Wallpaper.cs" />
     <Compile Include="Helpers\ShowProperties.cs" />
+    <Compile Include="Tools\FileUtils.cs" />
     <Compile Include="Tools\CommonCMDForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,11 +127,13 @@
     <Compile Include="Tools\DateCalc\DateCnt.Designer.cs">
       <DependentUpon>DateCnt.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tools\Gemini\GeminiCEFCls.cs" />
+    <Compile Include="Tools\Gemini\GeminiFileCls.cs" />
     <Compile Include="Tools\Gemini\GeminiFormMethod.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Tools\Gemini\ListViewColumnSorter.cs" />
-    <Compile Include="Tools\Gemini\Gemini.cs" />
+    <Compile Include="Tools\Gemini\GeminiUtils.cs" />
     <Compile Include="Tools\Gemini\GeminiForm.cs">
       <SubType>Form</SubType>
     </Compile>

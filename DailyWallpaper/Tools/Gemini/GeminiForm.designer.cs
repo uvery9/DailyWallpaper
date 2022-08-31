@@ -58,18 +58,13 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFileNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyFullPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
             this.calcHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.justThisFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.protectThisFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keepOnlyFilesInThisFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectFilesInThisFolderFirstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-            this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,6 +118,8 @@
             this.reverseElectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.protectThisFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listViewContextMenuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fileModeGroupBox.SuspendLayout();
@@ -405,30 +402,27 @@
             this.openToolStripMenuItem,
             this.openDirectoryToolStripMenuItem,
             this.refreshToolStripMenuItem,
-            this.toolStripMenuItem7,
-            this.copyFileNameToolStripMenuItem,
-            this.copyFullPathToolStripMenuItem,
             this.toolStripMenuItem9,
             this.calcHashToolStripMenuItem,
             this.justThisFolderToolStripMenuItem,
-            this.protectThisFolderToolStripMenuItem,
             this.keepOnlyFilesInThisFolderToolStripMenuItem,
             this.selectFilesInThisFolderFirstToolStripMenuItem,
-            this.toolStripMenuItem5,
-            this.cutToolStripMenuItem,
-            this.copyToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.copyFileNameToolStripMenuItem,
+            this.copyFullPathToolStripMenuItem,
             this.toolStripMenuItem6,
             this.deleteToolStripMenuItem,
             this.renameFileToolStripMenuItem,
             this.toolStripMenuItem4,
             this.propertiesToolStripMenuItem});
             this.listViewContextMenuStrip.Name = "listViewContextMenuStrip";
-            this.listViewContextMenuStrip.Size = new System.Drawing.Size(284, 394);
+            this.listViewContextMenuStrip.Size = new System.Drawing.Size(286, 316);
             // 
             // openToolStripMenuItem
             // 
+            this.openToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(285, 24);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -445,11 +439,6 @@
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(280, 6);
             // 
             // copyFileNameToolStripMenuItem
             // 
@@ -473,29 +462,23 @@
             // calcHashToolStripMenuItem
             // 
             this.calcHashToolStripMenuItem.Name = "calcHashToolStripMenuItem";
-            this.calcHashToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
-            this.calcHashToolStripMenuItem.Text = "Calc Hash";
+            this.calcHashToolStripMenuItem.Size = new System.Drawing.Size(285, 24);
+            this.calcHashToolStripMenuItem.Text = "Calculate Hash";
             this.calcHashToolStripMenuItem.Click += new System.EventHandler(this.calcHashToolStripMenuItem_Click);
             // 
             // justThisFolderToolStripMenuItem
             // 
             this.justThisFolderToolStripMenuItem.Name = "justThisFolderToolStripMenuItem";
-            this.justThisFolderToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
-            this.justThisFolderToolStripMenuItem.Text = "Just this folder";
+            this.justThisFolderToolStripMenuItem.Size = new System.Drawing.Size(285, 24);
+            this.justThisFolderToolStripMenuItem.Text = "Select only in this folder";
             this.justThisFolderToolStripMenuItem.Click += new System.EventHandler(this.justThisFolderToolStripMenuItem_Click);
-            // 
-            // protectThisFolderToolStripMenuItem
-            // 
-            this.protectThisFolderToolStripMenuItem.Name = "protectThisFolderToolStripMenuItem";
-            this.protectThisFolderToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
-            this.protectThisFolderToolStripMenuItem.Text = "Protect this folder";
-            this.protectThisFolderToolStripMenuItem.Click += new System.EventHandler(this.protectThisFolderToolStripMenuItem_Click);
             // 
             // keepOnlyFilesInThisFolderToolStripMenuItem
             // 
+            this.keepOnlyFilesInThisFolderToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.keepOnlyFilesInThisFolderToolStripMenuItem.Name = "keepOnlyFilesInThisFolderToolStripMenuItem";
-            this.keepOnlyFilesInThisFolderToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
-            this.keepOnlyFilesInThisFolderToolStripMenuItem.Text = "keep only files in this folder";
+            this.keepOnlyFilesInThisFolderToolStripMenuItem.Size = new System.Drawing.Size(285, 24);
+            this.keepOnlyFilesInThisFolderToolStripMenuItem.Text = "Keep only files in this folder";
             this.keepOnlyFilesInThisFolderToolStripMenuItem.Click += new System.EventHandler(this.keepOnlyFilesInThisFolderToolStripMenuItem_Click);
             // 
             // selectFilesInThisFolderFirstToolStripMenuItem
@@ -505,23 +488,6 @@
             this.selectFilesInThisFolderFirstToolStripMenuItem.Text = "Select files in this folder first";
             this.selectFilesInThisFolderFirstToolStripMenuItem.Click += new System.EventHandler(this.selectFilesInThisFolderFirstToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(280, 6);
-            // 
-            // cutToolStripMenuItem
-            // 
-            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
-            this.cutToolStripMenuItem.Text = "Cut";
-            // 
-            // copyToolStripMenuItem
-            // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
-            this.copyToolStripMenuItem.Text = "Copy";
-            // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
@@ -529,8 +495,9 @@
             // 
             // deleteToolStripMenuItem
             // 
+            this.deleteToolStripMenuItem.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(285, 24);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
@@ -539,6 +506,7 @@
             this.renameFileToolStripMenuItem.Name = "renameFileToolStripMenuItem";
             this.renameFileToolStripMenuItem.Size = new System.Drawing.Size(283, 24);
             this.renameFileToolStripMenuItem.Text = "Rename";
+            this.renameFileToolStripMenuItem.Click += new System.EventHandler(this.renameFileToolStripMenuItem_Click);
             // 
             // toolStripMenuItem4
             // 
@@ -1050,6 +1018,18 @@
             this.usageToolStripMenuItem.Text = "Usage";
             this.usageToolStripMenuItem.Click += new System.EventHandler(this.usageToolStripMenuItem_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(280, 6);
+            // 
+            // protectThisFolderToolStripMenuItem
+            // 
+            this.protectThisFolderToolStripMenuItem.Name = "protectThisFolderToolStripMenuItem";
+            this.protectThisFolderToolStripMenuItem.Size = new System.Drawing.Size(285, 24);
+            this.protectThisFolderToolStripMenuItem.Text = "Protect this folder";
+            this.protectThisFolderToolStripMenuItem.Click += new System.EventHandler(this.protectThisFolderToolStripMenuItem_Click);
+            // 
             // GeminiForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -1161,15 +1141,11 @@
         private System.Windows.Forms.ToolStripMenuItem renameFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem calcHashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyFileNameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
         private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
         private System.Windows.Forms.TextBox targetFolderFilterTextBox;
@@ -1179,8 +1155,9 @@
         private System.Windows.Forms.ToolStripMenuItem justThisFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem9;
         private System.Windows.Forms.ToolStripMenuItem selectFilesInThisFolderFirstToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem protectThisFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem updateHashFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem keepOnlyFilesInThisFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem protectThisFolderToolStripMenuItem;
     }
 }
