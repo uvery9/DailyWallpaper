@@ -1148,12 +1148,8 @@ namespace DailyWallpaper
 
             // update geminiFileClsListForLV
             geminiFileClsListForLVUndo = geminiFileClsListForLV;
-            undoToolStripMenuItem.Enabled = true;
             ConvertGeminiFileClsListAndListView(ref geminiFileClsListForLV, liv, 
                 toListView: false, token: _source.Token);*/
-            geminiFileClsListForLVUndo = BackUpForUndoRedo(
-                 geminiFileClsListForLV, undoToolStripMenuItem);
-
             var updatedList = new List<GeminiFileCls>();
             var selectList = new List<GeminiFileCls>();
             var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, !force);
@@ -1293,73 +1289,13 @@ namespace DailyWallpaper
 
             }
         }
-
-        // not good enough
-        /*private void MultipleSelectOperationsAction(
-            ListView liv, MultipleSelectOperations op)
-        {
-            if (liv.Items.Count < 1)
-            {
-                return;
-            }
-            geminiFileClsListForLVUndo = geminiFileClsListForLV;
-            undoToolStripMenuItem.Enabled = true;
-            var mpTask = Task.Run(() => {
-                try
-                {
-                    if (op == MultipleSelectOperations.REVERSE_ELECTION)
-                    {
-                        geminiFileClsListForLV = UpdateGFLChecked(geminiFileClsListForLV)
-                            ?? geminiFileClsListForLV;
-                    }
-                    var tmpGfl = new List<GeminiFileCls>();
-                    foreach (var item in geminiFileClsListForLV)
-                    {
-                        var tmp = item;
-                        if (op == MultipleSelectOperations.REVERSE_ELECTION)
-                        {
-                            if (item.Checked)
-                            {
-                                tmp.Checked = false;
-                            }
-                            else
-                            {
-                                tmp.Checked = true;
-                            }
-                        }
-                        else if (op == MultipleSelectOperations.CHECK_ALL)
-                        {
-                            tmp.Checked = true;
-                        }
-                        else if (op == MultipleSelectOperations.UNCHECK_ALL)
-                        {
-                            tmp.Checked = false;
-                        }
-                        tmpGfl.Add(tmp);
-                    }
-                    if (tmpGfl.Count < 1)
-                    {
-                        return;
-                    }
-                    geminiFileClsListForLV = tmpGfl;
-                    RestoreListViewChoiceInvoke(liv, geminiFileClsListForLV, _source.Token);
-                }
-                catch (Exception ex)
-                {
-                    CWriteLine($"{ex}");
-                    CWriteLine($"{ex.Message}");
-                }
-            });
-            _tasks.Add(mpTask);
-        }*/
-
+        
         private void MultipleSelectOperationsActionCEF(MultipleSelectOperations op)
         {
             if (resultListView.Items.Count < 1)
             {
                 return;
             }
-            undoToolStripMenuItem.Enabled = false;
             if (op == MultipleSelectOperations.REVERSE_ELECTION)
             {
                 geminiCEFClsList = UpdateCEFCheckedFromLV(geminiCEFClsList);
@@ -1501,23 +1437,23 @@ namespace DailyWallpaper
             }
         }
 
-        private delegate void RestoreListViewChoiceInvokeDele(ListView liv, List<GeminiFileCls> gfl,
+        private delegate void ShowChoiceToListViewInvokeDele(ListView liv, List<GeminiFileCls> gfl,
             CancellationToken token, bool indexChange = false, Action<bool, string> action = default);
 
 
-        private void RestoreListViewChoice(List<GeminiFileCls> gfl, ListView liv,
+        private void ShowChoiceToListView(List<GeminiFileCls> gfl, ListView liv,
            CancellationToken token)
         {
             ConvertGeminiFileClsListAndListView(ref gfl,
                         liv, toListView: true, token: token);
         }
 
-        private void RestoreListViewChoiceInvoke(ListView liv, List<GeminiFileCls> gfl,
+        private void ShowChoiceToListViewInvoke(ListView liv, List<GeminiFileCls> gfl,
             CancellationToken token, bool indexChange = false, Action<bool, string> action = default)
         {
             if (liv.InvokeRequired)
             {
-                var f = new RestoreListViewChoiceInvokeDele(RestoreListViewChoiceInvoke);
+                var f = new ShowChoiceToListViewInvokeDele(ShowChoiceToListViewInvoke);
                 liv.Invoke(f, new object[] { liv, gfl, token, indexChange, action });
             }
             else
@@ -1611,8 +1547,6 @@ namespace DailyWallpaper
             ref List<GeminiFileCls> gfL, CancellationToken token)
         {
             ListViewOperate(liv, ListViewOP.CLEAR);
-            undoToolStripMenuItem.Enabled = false;
-            redoToolStripMenuItem.Enabled = false;
             var tmpL = new List<GeminiFileCls>();
             if (gfL.Count > 0)
             {

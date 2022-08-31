@@ -49,8 +49,6 @@ namespace DailyWallpaper
         private ListViewColumnSorter lvwColumnSorter;
         private List<string> deleteList = new List<string>();
         private List<GeminiFileCls> geminiFileClsListForLV = new List<GeminiFileCls>();
-        private List<GeminiFileCls> geminiFileClsListForLVUndo = new List<GeminiFileCls>();
-        private List<GeminiFileCls> geminiFileClsListForLVRedo = new List<GeminiFileCls>();
         private Color themeColor = Color.FromArgb(250, 234, 192);
         private Color themeColorClean = Color.ForestGreen;
         // private System.Windows.Forms.ToolTip m_lvToolTip = new System.Windows.Forms.ToolTip();
@@ -114,8 +112,6 @@ namespace DailyWallpaper
             // auto delete empty folder after remove.
             autocleanEmptyFoldersToolStripMenuItem.Checked = true;
             notProtectFilesInGrpToolStripMenuItem.Checked = false;
-            undoToolStripMenuItem.Enabled = false;
-            redoToolStripMenuItem.Enabled = false;
 
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -143,8 +139,6 @@ namespace DailyWallpaper
             nameColumnHeaderWidth = nameColumnHeader.Width;
             modifiedTimeColumnHeaderWidth = modifiedTimeColumnHeader.Width;
             ConvertToCEFMode(cleanEmptyFolderModeToolStripMenuItem.Checked);
-            /*if (!cleanEmptyFolderModeToolStripMenuItem.Checked)
-                m_lvToolTip.SetToolTip(resultListView, "Gemini");*/
         }
 
         /// <summary>
@@ -222,8 +216,6 @@ namespace DailyWallpaper
             try
             {
                 _source = new CancellationTokenSource();
-                redoToolStripMenuItem.Enabled = false;
-                undoToolStripMenuItem.Enabled = false;
                 deleteList.Clear();
                 // resultListView.Invoke(
                 //new MethodInvoker(delegate () {
@@ -958,8 +950,6 @@ namespace DailyWallpaper
             else
             {
                 StartAnalyzeStep();
-                redoToolStripMenuItem.Enabled = false;
-                undoToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -1958,8 +1948,6 @@ namespace DailyWallpaper
             {
                 try
                 {
-                    redoToolStripMenuItem.Enabled = false;
-                    undoToolStripMenuItem.Enabled = false;
                     // custQuery is an IEnumerable<IGrouping<string, Customer>>
                     if (geminiFileClsListForLV.Count < 1)
                     {
@@ -2012,8 +2000,6 @@ namespace DailyWallpaper
                                 Debug.WriteLine($">>> Clean-UP Finished: {msg}");
                             }
                         }
-                        /*RestoreListViewChoiceInvoke(resultListView, 
-                            geminiFileClsListForLV, , indexChange: true, action: GetRet);*/
 
                         // geminiFileClsListForLV will not be modify, if toListView is true.
                         ConvertGeminiFileClsListAndListView(ref geminiFileClsListForLV,
@@ -2057,8 +2043,6 @@ namespace DailyWallpaper
             Task.Run(() =>
             {
                 CWriteLine($">>> Update start with {mode}...");
-                geminiFileClsListForLVUndo = BackUpForUndoRedo(
-                 geminiFileClsListForLV, undoToolStripMenuItem);
                 UpdateFolderFindOrRegexFilter(folderFilterTextBox.Text, filterMode);
                 var updatedList = new List<GeminiFileCls>();
                 var selectList = new List<GeminiFileCls>();
@@ -2092,7 +2076,7 @@ namespace DailyWallpaper
                 updatedList.AddRange(selectList);
                 geminiFileClsListForLV = ListReColorByGroup(
                     UncheckedFilesNotInProtectFolder(updatedList), SetCompareMode(), _source.Token);
-                RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
+                ShowChoiceToListView(geminiFileClsListForLV, resultListView, _source.Token);
 
                 var cnt =
                     (from i in geminiFileClsListForLV
@@ -2286,58 +2270,7 @@ namespace DailyWallpaper
                 }
             }
         }
-
-
-        private List<GeminiFileCls> BackUpForUndoRedo(List<GeminiFileCls> gfl,
-            ToolStripMenuItem tm)
-        {
-            /*var li =
-                (from i in gfl
-                select i).ToList();*/
-            tm.Enabled = true;
-            return gfl.ConvertAll(gf => gf.Clone());
-        }
-
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
-            {
-
-            }
-            else
-            {
-                if (geminiFileClsListForLVUndo.Count > 0)
-                {
-                    geminiFileClsListForLVRedo = BackUpForUndoRedo(
-                        geminiFileClsListForLV, redoToolStripMenuItem);
-                    geminiFileClsListForLV = geminiFileClsListForLVUndo;
-                    RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
-                    undoToolStripMenuItem.Enabled = false;
-                }
-            }
-
-        }
-
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (cleanEmptyFolderModeToolStripMenuItem.Checked)
-            {
-
-            }
-            else
-            {
-                if (geminiFileClsListForLVRedo.Count > 0)
-                {
-                    geminiFileClsListForLVUndo = BackUpForUndoRedo(
-                        geminiFileClsListForLV, undoToolStripMenuItem);
-                    geminiFileClsListForLV = geminiFileClsListForLVRedo;
-                    RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
-                    redoToolStripMenuItem.Enabled = false;
-                    undoToolStripMenuItem.Enabled = false;
-                }
-            }
-        }
-
+       
 
         private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2399,8 +2332,6 @@ namespace DailyWallpaper
             try
             {
                 var fldFilter = StringToFilter(targetFolderFilterTextBox.Text, true);
-                geminiFileClsListForLVUndo = BackUpForUndoRedo(
-                    geminiFileClsListForLV, undoToolStripMenuItem);
                 MultipleSelectOpAction(resultListView, MultipleSelectOperations.UNCHECK_ALL, force: true);
 
                 var updatedList = new List<GeminiFileCls>();
@@ -2455,7 +2386,7 @@ namespace DailyWallpaper
                 // CWriteLine($">>> loop: God chose {cntInLoop:N0} file(s).");
                 CWriteLine($">>> God chose {cnt:N0} file(s).");
                 SetSummaryBoxText($"God chose {cnt:N0} file(s).", cnt);
-                RestoreListViewChoice(geminiFileClsListForLV, resultListView, _source.Token);
+                ShowChoiceToListView(geminiFileClsListForLV, resultListView, _source.Token);
             }
             catch (UnauthorizedAccessException) { }
             catch (FileNotFoundException) { }
@@ -2983,14 +2914,7 @@ namespace DailyWallpaper
             {
                 loadListViewFromFileToolStripMenuItem.PerformClick();
             }
-            else if (e.KeyData == (Keys.Z | Keys.Control))
-            {
-                undoToolStripMenuItem.PerformClick();
-            }
-            else if (e.KeyData == (Keys.Y | Keys.Control))
-            {
-                redoToolStripMenuItem.PerformClick();
-            }
+            
         }
 
         private void resultListView_DragDrop(object sender, DragEventArgs e)
@@ -3224,15 +3148,8 @@ namespace DailyWallpaper
         {
             OperateFileOrDirectory(FileOP.RENAME);
         }
-
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+       
+    
+        
     }
 }
