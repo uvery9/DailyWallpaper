@@ -1678,9 +1678,6 @@ namespace DailyWallpaper
             targetFolder2TextBox.AllowDrop = false;
 
             btnStop.PerformClick();
-            btnStop.PerformClick();
-            btnStop.PerformClick();
-
             Hide();
 
             Task.Run(() =>
@@ -2804,10 +2801,10 @@ namespace DailyWallpaper
                             // 更新到视图
                             resultListView.FocusedItem.SubItems["fullPath"].Text = newFile;
                             resultListView.FocusedItem.SubItems["name"].Text = Path.GetFileName(newFile);
-
                             // 更新到列表
                             GeminiFileCls.updateNewPathToList(geminiFileClsListForLV, fullPath, newFile);
                             CWriteLine($"... Rename file to {newFile}.");
+                            cleanUpButton.PerformClick();
                         }
                         else if (!String.IsNullOrEmpty(newFile))
                         {
