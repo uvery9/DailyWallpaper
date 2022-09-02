@@ -77,7 +77,6 @@
             this.geminiProgressBar = new System.Windows.Forms.ProgressBar();
             this.summaryTextBox = new System.Windows.Forms.TextBox();
             this.fileModeGroupBox = new System.Windows.Forms.GroupBox();
-            this.fileExtNameCheckBox = new System.Windows.Forms.CheckBox();
             this.fileNameCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ignoreFileSizeTextBox = new System.Windows.Forms.TextBox();
@@ -585,7 +584,6 @@
             // 
             // fileModeGroupBox
             // 
-            this.fileModeGroupBox.Controls.Add(this.fileExtNameCheckBox);
             this.fileModeGroupBox.Controls.Add(this.fileNameCheckBox);
             this.fileModeGroupBox.Controls.Add(this.panel1);
             this.fileModeGroupBox.Location = new System.Drawing.Point(831, 3);
@@ -597,26 +595,15 @@
             this.fileModeGroupBox.TabStop = false;
             this.fileModeGroupBox.Text = "File Mode";
             // 
-            // fileExtNameCheckBox
-            // 
-            this.fileExtNameCheckBox.AutoSize = true;
-            this.fileExtNameCheckBox.Location = new System.Drawing.Point(144, 22);
-            this.fileExtNameCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.fileExtNameCheckBox.Name = "fileExtNameCheckBox";
-            this.fileExtNameCheckBox.Size = new System.Drawing.Size(181, 19);
-            this.fileExtNameCheckBox.TabIndex = 1;
-            this.fileExtNameCheckBox.Text = "Same File extension";
-            this.fileExtNameCheckBox.UseVisualStyleBackColor = true;
-            // 
             // fileNameCheckBox
             // 
             this.fileNameCheckBox.AutoSize = true;
             this.fileNameCheckBox.Location = new System.Drawing.Point(5, 22);
             this.fileNameCheckBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.fileNameCheckBox.Name = "fileNameCheckBox";
-            this.fileNameCheckBox.Size = new System.Drawing.Size(141, 19);
+            this.fileNameCheckBox.Size = new System.Drawing.Size(133, 19);
             this.fileNameCheckBox.TabIndex = 0;
-            this.fileNameCheckBox.Text = "Same File Name";
+            this.fileNameCheckBox.Text = "Same filename";
             this.fileNameCheckBox.UseVisualStyleBackColor = true;
             // 
             // panel1
@@ -697,7 +684,7 @@
             this.fileSizeCheckBox.Size = new System.Drawing.Size(197, 19);
             this.fileSizeCheckBox.TabIndex = 0;
             this.fileSizeCheckBox.TabStop = false;
-            this.fileSizeCheckBox.Text = "Same File Size (Base)";
+            this.fileSizeCheckBox.Text = "Same file size (Base)";
             this.fileSizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // fileMD5CheckBox
@@ -1067,7 +1054,6 @@
         private System.Windows.Forms.CheckBox fileSizeCheckBox;
         private System.Windows.Forms.CheckBox fileSHA1CheckBox;
         private System.Windows.Forms.CheckBox fileMD5CheckBox;
-        private System.Windows.Forms.CheckBox fileExtNameCheckBox;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox ignoreFileCheckBox;
         private System.Windows.Forms.ComboBox ignoreFileSizecomboBox;

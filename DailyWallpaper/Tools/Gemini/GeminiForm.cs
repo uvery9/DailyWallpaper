@@ -423,7 +423,7 @@ namespace DailyWallpaper
             {
                 mode = GeminiCompareMode.NameAndSize;
             }
-            else if (fileExtNameCheckBox.Checked)
+            else
             {
                 mode = GeminiCompareMode.ExtAndSize;
             }
@@ -1485,18 +1485,15 @@ namespace DailyWallpaper
             fileSizeCheckBox.Enabled = false;
 
             // if no ini, just filename and filesize.
-            fileNameCheckBox.Checked = true;
-            fileExtNameCheckBox.Checked = false;
+            fileNameCheckBox.Checked = false;
             fileMD5CheckBox.Checked = false;
             fileSHA1CheckBox.Checked = false;
 
             ReadFileSameModeFromIni("SameFileName", fileNameCheckBox);
-            ReadFileSameModeFromIni("SameFileExtName", fileExtNameCheckBox);
             ReadFileSameModeFromIni("SameFileMD5", fileMD5CheckBox);
             ReadFileSameModeFromIni("SameFileSHA1", fileSHA1CheckBox);
 
             fileNameCheckBox.Click += fileNameCheckBox_Click;
-            fileExtNameCheckBox.Click += fileExtNameCheckBox_Click;
             fileMD5CheckBox.Click += fileMD5CheckBox_Click;
             fileSHA1CheckBox.Click += fileSHA1CheckBox_Click;
 
@@ -1543,16 +1540,12 @@ namespace DailyWallpaper
                 cb.Checked = false;
             }
         }
-        private void FileSameModeClick(string key, System.Windows.Forms.CheckBox cb,
-            string conflictKey = null, System.Windows.Forms.CheckBox cbConflict = null)
+        private void FileSameModeClick(string key, CheckBox cb,
+            string conflictKey = null, CheckBox cbConflict = null)
         {
             if (cb.Checked)
             {
                 cbConflict.Checked = false;
-            }
-            else
-            {
-
             }
             gemini.ini.UpdateIniItem(key, cb.Checked.ToString(), "Gemini");
             gemini.ini.UpdateIniItem(conflictKey, cbConflict.Checked.ToString(), "Gemini");
@@ -1560,12 +1553,7 @@ namespace DailyWallpaper
 
         private void fileNameCheckBox_Click(object sender, EventArgs e)
         {
-            FileSameModeClick("SameFileName", fileNameCheckBox, "SameFileExtName", fileExtNameCheckBox);
-        }
-
-        private void fileExtNameCheckBox_Click(object sender, EventArgs e)
-        {
-            FileSameModeClick("SameFileExtName", fileExtNameCheckBox, "SameFileName", fileNameCheckBox);
+            gemini.ini.UpdateIniItem("SameFileName", fileNameCheckBox.Checked.ToString(), "Gemini");
         }
 
         private void fileMD5CheckBox_Click(object sender, EventArgs e)
@@ -1636,15 +1624,7 @@ namespace DailyWallpaper
 
         private void GetCurrentScanStatus()
         {
-            CWriteLine(">>> YOU HAVE CHOSEN THE FOLLOWING MODE, CHECK IF IT'S WHAT YOU WANT: ");
-            if (fileNameCheckBox.Checked)
-            {
-                CWriteLine("---- Same File Name mode.");
-            }
-            else if (fileExtNameCheckBox.Checked)
-            {
-                CWriteLine("---- Same File extension mode.");
-            }
+            CWriteLine(">>> YOU HAVE SELECTED THE FOLLOWING MODE, CHECK IF IT IS REQUIRED: ");
             if (fileMD5CheckBox.Checked)
             {
                 CWriteLine("---- Same MD5 mode.");
@@ -1652,6 +1632,14 @@ namespace DailyWallpaper
             else if (fileSHA1CheckBox.Checked)
             {
                 CWriteLine("---- Same SHA1 mode.");
+            }
+            else if (fileNameCheckBox.Checked)
+            {
+                CWriteLine("---- Same filename mode.");
+            }
+            else
+            {
+                CWriteLine("---- Same file extension mode.");
             }
             SetMinimumFileLimit(justPrint: true);
         }
@@ -2270,7 +2258,7 @@ namespace DailyWallpaper
                 }
             }
         }
-       
+
 
         private void copyFullPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -2914,7 +2902,7 @@ namespace DailyWallpaper
             {
                 loadListViewFromFileToolStripMenuItem.PerformClick();
             }
-            
+
         }
 
         private void resultListView_DragDrop(object sender, DragEventArgs e)
@@ -3148,8 +3136,8 @@ namespace DailyWallpaper
         {
             OperateFileOrDirectory(FileOP.RENAME);
         }
-       
-    
-        
+
+
+
     }
 }

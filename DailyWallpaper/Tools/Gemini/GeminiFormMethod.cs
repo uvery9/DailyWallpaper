@@ -79,25 +79,21 @@ namespace DailyWallpaper
                         case MODE.MD5:
                             fileMD5CheckBox.Checked = true;
                             fileSHA1CheckBox.Checked = false;
-                            fileExtNameCheckBox.Checked = true;
                             fileNameCheckBox.Checked = false;
                             break;
                         case MODE.SHA1:
                             fileMD5CheckBox.Checked = false;
                             fileSHA1CheckBox.Checked = true;
-                            fileExtNameCheckBox.Checked = true;
                             fileNameCheckBox.Checked = false;
                             break;
                         case MODE.NAME:
                             fileMD5CheckBox.Checked = false;
                             fileSHA1CheckBox.Checked = false;
-                            fileExtNameCheckBox.Checked = false;
                             fileNameCheckBox.Checked = true;
                             break;
                         case MODE.EXT:
                             fileMD5CheckBox.Checked = false;
                             fileSHA1CheckBox.Checked = false;
-                            fileExtNameCheckBox.Checked = true;
                             fileNameCheckBox.Checked = false;
                             break;
                         default:
@@ -468,9 +464,9 @@ namespace DailyWallpaper
                 return MODE.MD5;
             if (fileSHA1CheckBox.Checked)
                 return MODE.SHA1;
-            if (fileExtNameCheckBox.Checked)
-                return MODE.EXT;
-            return MODE.NAME; // if (fileNameCheckBox.Checked)
+            if (fileNameCheckBox.Checked)
+                return MODE.NAME;
+            return MODE.EXT;
         }
 
         private delegate void EnableButtonDelegate(Button b, bool enable);
@@ -713,7 +709,6 @@ namespace DailyWallpaper
 
                 fileMD5CheckBox.Enabled = false;
                 fileNameCheckBox.Enabled = false;
-                fileExtNameCheckBox.Enabled = false;
                 fileSHA1CheckBox.Enabled = false;
                 updateButton.Enabled = false;
                 ignoreFileCheckBox.Enabled = false;
@@ -742,7 +737,6 @@ namespace DailyWallpaper
 
                 fileMD5CheckBox.Enabled = true;
                 fileNameCheckBox.Enabled = true;
-                fileExtNameCheckBox.Enabled = true;
                 fileSHA1CheckBox.Enabled = true;
                 updateButton.Enabled = true;
                 ignoreFileCheckBox.Enabled = true;
