@@ -1988,7 +1988,6 @@ namespace DailyWallpaper
                                     resultListView.EnsureVisible(index);
                                 }
                                 CWriteLine($">>> Clean-UP Finished.");
-                                Debug.WriteLine($">>> Clean-UP Finished: {msg}");
                             }
                         }
 
@@ -2472,22 +2471,40 @@ namespace DailyWallpaper
             {
                 return;
             }
-            bool md5 = fileMD5CheckBox.Checked;
-            var s = md5 ? "MD5" : "SHA1";
-            var total = multi.Count;
-            CWriteLine($">>> Start calculating hash[{s}] for {total} file(s)");
-
-            SetProgressBarVisible(geminiProgressBar, true);
-            hashTokenSrc = new CancellationTokenSource();
-            var token = hashTokenSrc.Token;
-
             var fullPathList = new List<string>();
             foreach (ListViewItem item in multi)
             {
                 fullPathList.Add(item.SubItems["fullPath"].Text);
             }
+            CalcHashOfListOfFile(fullPathList);
+        }
 
-            void UpdateHashInLV(string fullPath, string hash)
+        private string findHashFromLV(ListView lv, string fullPath)
+        {
+            try
+            {
+                var list = lv.Items.OfType<ListViewItem>().ToList();
+                var find = list.Find(it => it.SubItems["fullPath"].Text == fullPath);
+                return find.SubItems["HASH"].Text;
+            }
+            catch (Exception)
+            {
+                return "ERROR";
+            }
+        }
+
+        private void CalcHashOfListOfFile(List<string> fullPathList)
+        {
+            if (fullPathList == null || fullPathList.Count < 1) return;
+            bool md5 = fileMD5CheckBox.Checked;
+            var s = md5 ? "MD5" : "SHA1";
+            var total = fullPathList.Count;
+            CWriteLine($">>> Start calculating hash[{s}] for {total} file(s)");
+
+            SetProgressBarVisible(geminiProgressBar, true);
+            hashTokenSrc = new CancellationTokenSource();
+            var token = hashTokenSrc.Token;
+            void UpdateHashToLV(string fullPath, string hash)
             {
                 resultListView.Items.OfType<ListViewItem>().ToList().ForEach(item =>
                 {
@@ -2533,7 +2550,7 @@ namespace DailyWallpaper
                                         return;
                                     }
                                 });
-                                UpdateHashInLV(fullPath, _hash);
+                                UpdateHashToLV(fullPath, _hash);
                                 cnt++;
                             }
                         }
@@ -2556,7 +2573,16 @@ namespace DailyWallpaper
                         }
                     }
                     SetText(summaryTextBox, $"Updated hash[{s}] for {total} file(s)", themeColorClean);
-                    CWriteLine($">>> Updated hash[{s}] for {total} file(s)");
+                    if (fullPathList.Count == 1)
+                    {
+                        var path = fullPathList[0];
+                        var hash = findHashFromLV(resultListView, path);
+                        CWriteLine($">>> Updated hash[{s}:{hash}] to file:\r\n    {path}");
+                    }
+                    else
+                    {
+                        CWriteLine($">>> Updated hash[{s}] for {total} file(s)");
+                    }
                 }
                 catch (Exception ee)
                 {
@@ -2567,75 +2593,80 @@ namespace DailyWallpaper
                 {
                     SetProgressBarVisible(geminiProgressBar, false);
                 }
-
             });
+
         }
 
-        private void CalcHashMenuClick(string fullPath, ListViewItem item, int total,
-            bool md5 = true, CancellationToken token = default)
+        private void CalcFileHash(string filePath)
         {
-            if (string.IsNullOrEmpty(fullPath) || !File.Exists(fullPath))
-            {
-                return;
-            }
-            void getRes(bool res, string who, string _hash, string costTimeOrMsg)
-            {
-                if (res)
-                {
-                    item.SubItems["HASH"].Text = _hash;
-                    item.ForeColor = Color.Blue;
-                    geminiFileClsListForLV.ForEach(i =>
-                    {
-                        if (i.fullPath.Equals(fullPath))
-                        {
-                            i.hash = _hash;
-                        }
-                    });
-                    /*if (cnt == total)
-                    {*/
-                    var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
-                    SetProgressBarVisible(geminiProgressBar, false);
-                    SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
-                    /*}*/
-                    /*var s = md5 ? "MD5" : "SHA1";
-                    CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");*/
-                }
-            }
-
-            Task.Run(async () =>
-            {
-                try
-                {
-                    SetProgressBarVisible(geminiProgressBar, true);
-                    void ProgressActionD(double i)
-                    {
-                        SetProgressMessage(geminiProgressBar, (int)i);
-                    }
-                    var progessDouble = new Progress<double>(ProgressActionD);
-                    if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
-                    {
-                        progessDouble = null;
-                    }
-                    if (md5)
-                    {
-                        await ComputeHashAsync(
-                            MD5.Create(), fullPath, token, "MD5", getRes, progessDouble);
-                    }
-                    else
-                    {
-                        await ComputeHashAsync(
-                            SHA1.Create(), fullPath, token, "SHA1", getRes, progessDouble);
-                    }
-
-                }
-                catch (Exception ee)
-                {
-                    CWriteLine("ComputeHashAsync: " + ee.Message);
-                }
-
-            });
-
+            CalcHashOfListOfFile(new List<string> { filePath });
         }
+
+        //private void CalcHashMenuClick(string fullPath, ListViewItem item, int total,
+        //    bool md5 = true, CancellationToken token = default)
+        //{
+        //    if (string.IsNullOrEmpty(fullPath) || !File.Exists(fullPath))
+        //    {
+        //        return;
+        //    }
+        //    void getRes(bool res, string who, string _hash, string costTimeOrMsg)
+        //    {
+        //        if (res)
+        //        {
+        //            item.SubItems["HASH"].Text = _hash;
+        //            item.ForeColor = Color.Blue;
+        //            geminiFileClsListForLV.ForEach(i =>
+        //            {
+        //                if (i.fullPath.Equals(fullPath))
+        //                {
+        //                    i.hash = _hash;
+        //                }
+        //            });
+        //            /*if (cnt == total)
+        //            {*/
+        //            var s = fileMD5CheckBox.Checked ? "MD5" : "SHA1";
+        //            SetProgressBarVisible(geminiProgressBar, false);
+        //            SetText(summaryTextBox, $"Updated {s}", Color.ForestGreen);
+        //            /*}*/
+        //            /*var s = md5 ? "MD5" : "SHA1";
+        //            CWriteLine($".. Update {s} [{_hash}] -> {fullPath}");*/
+        //        }
+        //    }
+
+        //    Task.Run(async () =>
+        //    {
+        //        try
+        //        {
+        //            SetProgressBarVisible(geminiProgressBar, true);
+        //            void ProgressActionD(double i)
+        //            {
+        //                SetProgressMessage(geminiProgressBar, (int)i);
+        //            }
+        //            var progessDouble = new Progress<double>(ProgressActionD);
+        //            if (new FileInfo(fullPath).Length < 100 * 1024 * 1024) // Too fast.
+        //            {
+        //                progessDouble = null;
+        //            }
+        //            if (md5)
+        //            {
+        //                await ComputeHashAsync(
+        //                    MD5.Create(), fullPath, token, "MD5", getRes, progessDouble);
+        //            }
+        //            else
+        //            {
+        //                await ComputeHashAsync(
+        //                    SHA1.Create(), fullPath, token, "SHA1", getRes, progessDouble);
+        //            }
+
+        //        }
+        //        catch (Exception ee)
+        //        {
+        //            CWriteLine("ComputeHashAsync: " + ee.Message);
+        //        }
+
+        //    });
+
+        //}
 
         private enum FileOP
         {
@@ -2647,7 +2678,9 @@ namespace DailyWallpaper
             OPENDIR,
             PROPERTIES,
             COPY_FILENAME,
-            COPY_FULLPATH
+            COPY_FULLPATH,
+            COPY_FOLDER_PATH,
+            CALC_HASH
         }
 
         private void openDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2660,90 +2693,91 @@ namespace DailyWallpaper
             OperateFileOrDirectory(FileOP.OPEN);
         }
 
+
         private void OperateFileOrDirectory(FileOP op)
         {
             string fullPath;
-            string fileName;
             try
             {
                 fullPath = resultListView.FocusedItem.SubItems["fullPath"].Text;
-                fileName = resultListView.FocusedItem.SubItems["name"].Text;
+                if (string.IsNullOrEmpty(fullPath) || !File.Exists(fullPath))
+                {
+                    CWriteLine($"!!! file does not exist: {fullPath}");
+                    return;
+                }
             }
             catch
             {
-                fullPath = null;
-                fileName = null;
-            }
-            if (string.IsNullOrEmpty(fullPath))
-            {
                 return;
             }
-            if (File.Exists(fullPath))
+            try
             {
-                try
+                if (op == FileOP.OPEN)
                 {
-                    if (op == FileOP.OPEN)
+                    Process.Start(fullPath);
+                }
+                else if (op == FileOP.OPENDIR)
+                {
+                    string argument = "/select, \"" + fullPath + "\"";
+                    Process.Start("explorer.exe", argument);
+                }
+                else if (op == FileOP.DELETE)
+                {
+                    FileSystem.DeleteFile(fullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
+                    CWriteLine($"... Send {fullPath} to RecycleBin");
+                    cleanUpButton.PerformClick();
+                }
+                else if (op == FileOP.PROPERTIES)
+                {
+                    // Thanks to https://stackoverflow.com/questions/1936682/how-do-i-display-a-files-properties-dialog-from-c
+                    ShowProperties.ShowFileProperties(fullPath);
+                }
+                else if (op == FileOP.COPY_FILENAME)
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(fullPath);
+                    Clipboard.SetText(fileName);
+                    CWriteLine($"... Copied file name to Clipboard:\r\n    {fileName}");
+                }
+                else if (op == FileOP.COPY_FULLPATH)
+                {
+                    Clipboard.SetText(fullPath);
+                    CWriteLine($"... Copied full path to Clipboard: \r\n    {fullPath}");
+                }
+                else if (op == FileOP.COPY_FOLDER_PATH)
+                {
+                    var folder = Path.GetDirectoryName(fullPath);
+                    Clipboard.SetText(folder);
+                    CWriteLine($"... Copied folder path to Clipboard: \r\n    {folder}");
+                }
+                else if (op == FileOP.RENAME)
+                {
+                    var newFile = FileUtils.RenameFileInUI(fullPath);
+                    if (File.Exists(newFile))
                     {
-                        Process.Start(fullPath);
-                    }
-                    else if (op == FileOP.OPENDIR)
-                    {
-                        string argument = "/select, \"" + fullPath + "\"";
-                        Process.Start("explorer.exe", argument);
-                    }
-                    else if (op == FileOP.DELETE)
-                    {
-                        FileSystem.DeleteFile(fullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin, UICancelOption.DoNothing);
-                        CWriteLine($"... Send {fullPath} to RecycleBin");
+                        // 更新到视图
+                        resultListView.FocusedItem.SubItems["fullPath"].Text = newFile;
+                        resultListView.FocusedItem.SubItems["name"].Text = Path.GetFileName(newFile);
+                        // 更新到列表
+                        GeminiFileCls.updateNewPathToList(geminiFileClsListForLV, fullPath, newFile);
+                        CWriteLine($"... Rename file to {newFile}.");
                         cleanUpButton.PerformClick();
                     }
-                    else if (op == FileOP.PROPERTIES)
+                    else if (!String.IsNullOrEmpty(newFile))
                     {
-                        // Thanks to https://stackoverflow.com/questions/1936682/how-do-i-display-a-files-properties-dialog-from-c
-                        ShowProperties.ShowFileProperties(fullPath);
+                        CWriteLine($"!!! Rename file failed: {newFile}.");
                     }
-                    else if (op == FileOP.COPY_FILENAME)
-                    {
-                        if (!string.IsNullOrEmpty(fileName))
-                        {
-                            Clipboard.SetText(fileName);
-                            CWriteLine($"... Copied file name to Clipboard:\r\n    {fileName}");
-                        }
-                    }
-                    else if (op == FileOP.COPY_FULLPATH)
-                    {
-                        Clipboard.SetText(fullPath);
-                        CWriteLine($"... Copied full path to Clipboard: \r\n    {fullPath}");
-                    }
-                    else if (op == FileOP.RENAME)
-                    {
-                        var newFile = FileUtils.RenameFileInUI(fullPath);
-                        if (File.Exists(newFile))
-                        {
-                            // 更新到视图
-                            resultListView.FocusedItem.SubItems["fullPath"].Text = newFile;
-                            resultListView.FocusedItem.SubItems["name"].Text = Path.GetFileName(newFile);
-                            // 更新到列表
-                            GeminiFileCls.updateNewPathToList(geminiFileClsListForLV, fullPath, newFile);
-                            CWriteLine($"... Rename file to {newFile}.");
-                            cleanUpButton.PerformClick();
-                        }
-                        else if (!String.IsNullOrEmpty(newFile))
-                        {
-                            CWriteLine($"!!! Rename file failed: {newFile}.");
-                        }
-                    }
-
                 }
-                catch (Exception ex)
+                else if (op == FileOP.CALC_HASH)
                 {
-                    CWriteLine($"!!! {ex.Message}");
+                    CalcFileHash(fullPath);
                 }
+
             }
-            else
+            catch (Exception ex)
             {
-                CWriteLine($"!!! file does not exist: {fullPath}");
+                CWriteLine($"!!! {ex.Message}");
             }
+
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2865,14 +2899,17 @@ namespace DailyWallpaper
         private bool selectAll = true;
         private void resultListView_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == Keys.F2 && resultListView.SelectedItems.Count > 0)
+            if (e.KeyData == Keys.F2)
             {
-                resultListView.LabelEdit = true;
-                resultListView.SelectedItems[0].BeginEdit();
+                OperateFileOrDirectory(FileOP.RENAME);
             }
             else if (e.KeyData == Keys.F5)
             {
                 cleanUpButton.PerformClick();
+            }
+            else if (e.KeyData == Keys.Enter)
+            {
+                OperateFileOrDirectory(FileOP.OPEN);
             }
             else if (e.KeyData == Keys.Delete)
             {
@@ -2902,6 +2939,18 @@ namespace DailyWallpaper
             else if (e.KeyData == (Keys.L | Keys.Control))
             {
                 loadListViewFromFileToolStripMenuItem.PerformClick();
+            }
+            else if (e.KeyData == (Keys.Alt | Keys.Enter))
+            {
+                OperateFileOrDirectory(FileOP.PROPERTIES);
+            }
+            else if (e.KeyData == (Keys.Control | Keys.H))
+            {
+                OperateFileOrDirectory(FileOP.CALC_HASH);
+            }
+            else if (e.KeyData == (Keys.Control | Keys.K))
+            {
+                keepOnlyFilesInThisFolder();
             }
 
         }
@@ -3116,6 +3165,11 @@ namespace DailyWallpaper
 
         private void keepOnlyFilesInThisFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            keepOnlyFilesInThisFolder();
+        }
+
+        private void keepOnlyFilesInThisFolder()
+        {
             try
             {
                 var path = Path.GetDirectoryName(resultListView.FocusedItem.SubItems["fullPath"].Text);
@@ -3129,7 +3183,7 @@ namespace DailyWallpaper
             }
             catch (Exception ee)
             {
-                CWriteLine("Just this folder: Check if ListView has item, " + ee.Message);
+                CWriteLine("keepOnlyFilesInThisFolder failed: " + ee.Message);
             }
         }
 
@@ -3138,7 +3192,9 @@ namespace DailyWallpaper
             OperateFileOrDirectory(FileOP.RENAME);
         }
 
-
-
+        private void copyFolderPathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OperateFileOrDirectory(FileOP.COPY_FOLDER_PATH);
+        }
     }
 }

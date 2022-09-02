@@ -187,7 +187,7 @@ namespace DailyWallpaper.View
             // open notepad++ / notepad
             Icon_Notepad.Text =
                     TranslationHelper.Get("Icon_Notepad");
-            Icon_Notepad.ShortcutKeyDisplayString = "(Middle)";
+            Icon_Notepad.ShortcutKeyDisplayString = "Middle-wheel";
 
             Icon_Notepad.Click +=
                     Icon_Notepad_Click;
