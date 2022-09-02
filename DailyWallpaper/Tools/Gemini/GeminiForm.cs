@@ -1925,6 +1925,8 @@ namespace DailyWallpaper
             CWriteLine(gemini.helpString);
         }
 
+
+        // TODO: 清理不存在项目之后,尝试滚动回原来的位置
         private void cleanUpButton_Click(object sender, EventArgs e)
         {
             if (resultListView.Items.Count > 0)
@@ -1966,7 +1968,6 @@ namespace DailyWallpaper
                         {
                             findex = 0;
                         }
-                        var index = Math.Max(findex - 2, 0);
                         geminiFileClsListForLV = ListReColorByGroup(geminiFileClsListForLV,
                             SetCompareMode(), _source.Token);
                         UpdateListView(resultListView, ref geminiFileClsListForLV, _source.Token);
@@ -1974,15 +1975,17 @@ namespace DailyWallpaper
                         {
                             if (ret)
                             {
-                                if (resultListView.Items.Count > 0 && deleteKey)
+                                var itemcount = resultListView.Items.Count;
+                                if (itemcount > 0)
                                 {
-                                    deleteKey = false;
+                                    var index = Math.Min(findex, itemcount - 1);
+                                    CWriteLine($">>> Try to scroll and select to index={index}.");
                                     resultListView.FocusedItem = resultListView.Items[index];
                                     resultListView.SelectedIndices.Clear();
                                     resultListView.Items[index].Selected = true;
                                     resultListView.Select();
-                                    resultListView.EnsureVisible(index);
                                     // This is the trick, EnsureVisible() is just as important.
+                                    resultListView.EnsureVisible(index);
                                 }
                                 CWriteLine($">>> Clean-UP Finished.");
                                 Debug.WriteLine($">>> Clean-UP Finished: {msg}");
@@ -2859,7 +2862,6 @@ namespace DailyWallpaper
             OperateFileOrDirectory(FileOP.COPY_FILENAME);
         }
 
-        private bool deleteKey = false;
         private bool selectAll = true;
         private void resultListView_KeyDown(object sender, KeyEventArgs e)
         {
@@ -2874,7 +2876,6 @@ namespace DailyWallpaper
             }
             else if (e.KeyData == Keys.Delete)
             {
-                deleteKey = true;
                 deleteToolStripMenuItem.PerformClick();
             }
             else if (e.KeyData == (Keys.A | Keys.Control))
