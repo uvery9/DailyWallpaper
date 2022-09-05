@@ -1717,11 +1717,12 @@ namespace DailyWallpaper.View
             if (!String.IsNullOrEmpty(qrCode))
             {
                 Clipboard.SetText(qrCode);
-                MessageBox.Show(TranslationHelper.Get("Notify_ScanResult") + "\r\n" + qrCode + "\r\n\r\n" +
-                    TranslationHelper.Get("Notify_CopiedToClipboard"), title);
+                var copiedToClipboartText = TranslationHelper.Get("Notify_ScanResult") + "\r\n" + qrCode + "\r\n" +
+                    TranslationHelper.Get("Notify_CopiedToClipboard");
+                ShowNotification("", copiedToClipboartText);
             }
             else
-                MessageBox.Show(TranslationHelper.Get("Notify_QRCodeNotDetected"), title);
+                ShowNotification("", $"{TranslationHelper.Get("Notify_QRCodeNotDetected")}");
         }
     }
 }
