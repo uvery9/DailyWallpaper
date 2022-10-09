@@ -44,7 +44,7 @@ namespace DailyWallpaper
                 ResetStdoutAndStderr();
                 return res;
             }
-            
+
             Console.WriteLine($"Set stdoutput and stderr to file: {logFile}");
             Console.WriteLine("Please be PATIENT, the result will not be lost.");
             using (var writer = new StreamWriter(logFile))
@@ -123,7 +123,7 @@ namespace DailyWallpaper
             {
                 choiceList.Add("Spotlight");
             }
-            if(iniFile.EqualsIgnoreCase("localPath", "yes", "Local"))
+            if (iniFile.EqualsIgnoreCase("localPath", "yes", "Local"))
             {
                 choiceList.Add("localPath");
             }
@@ -139,15 +139,16 @@ namespace DailyWallpaper
             switch (choice)
             {
                 case "bing":
-                        wallpaper = new OnlineImage(iniFile).Bing(print: false);
+                    wallpaper = new OnlineImage(iniFile).Bing(print: false);
                     break;
 
                 case "Spotlight":
                     wallpaper = new OnlineImage(iniFile).Spotlight();
                     var creationTime = new FileInfo(wallpaper).CreationTime;
                     var dateTimeFormat = "yyyy-MM-dd HH:mm";
-                    if (DateTime.TryParseExact(iniFile.Read("SpotlightCreationTime", "Online"), 
-                        dateTimeFormat, null, DateTimeStyles.None, out DateTime lastCreationTime)) {
+                    if (DateTime.TryParseExact(iniFile.Read("SpotlightCreationTime", "Online"),
+                        dateTimeFormat, null, DateTimeStyles.None, out DateTime lastCreationTime))
+                    {
                         if ((creationTime - lastCreationTime).TotalMinutes < 1)
                         {
                             Console.WriteLine("Spotlight doesn't update picture.");
@@ -158,20 +159,19 @@ namespace DailyWallpaper
                             break;
                         }
                     }
-                    iniFile.UpdateIniItem("SpotlightCreationTime",
-                        $"{creationTime.ToString(dateTimeFormat)}", "Online");
+                    iniFile.UpdateIniItem("SpotlightCreationTime", $"{creationTime.ToString(dateTimeFormat)}", "Online");
                     break;
 
                 case "localPath":
-                        var start = DateTime.Now;
-                        Console.WriteLine("Scan localPath, StartTime:" + start.ToString());
-                        // very cost time. show add async function.
-                        var localImage = new LocalImage(iniFile,
-                            iniFile.Read("localPathSetting", "Local"));
-                        wallpaper = localImage.RandomSelectOne();
-                        var end = DateTime.Now;
-                        Console.WriteLine("Scan localPath, EndTime:" + end.ToString());
-                        Console.WriteLine($"Scan localPath, Cost {(end - start).TotalSeconds}s:");                        
+                    var start = DateTime.Now;
+                    Console.WriteLine("Scan localPath, StartTime:" + start.ToString());
+                    // very cost time. show add async function.
+                    var localImage = new LocalImage(iniFile,
+                        iniFile.Read("localPathSetting", "Local"));
+                    wallpaper = localImage.RandomSelectOne();
+                    var end = DateTime.Now;
+                    Console.WriteLine("Scan localPath, EndTime:" + end.ToString());
+                    Console.WriteLine($"Scan localPath, Cost {(end - start).TotalSeconds}s:");
                     break;
             }
             if (!File.Exists(wallpaper))
