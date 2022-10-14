@@ -8,9 +8,9 @@
 
 [DailyWallpaper Gitee for Chinese](https://gitee.com/imtvip/DailyWallpaper)
 
-[![AppVeyor](https://img.shields.io/appveyor/build/uvery9/dailywallpaper)](https://ci.appveyor.com/project/uvery9/dailywallpaper) 
+[![AppVeyor](https://img.shields.io/appveyor/build/uvery9/DailyWallpaper?style=plastic)](https://ci.appveyor.com/project/uvery9/dailywallpaper) 
 [![Latest](https://img.shields.io/badge/Click-Download_Latest-important)](https://ci.appveyor.com/project/uvery9/dailywallpaper/build/artifacts)
-[![GitHub release](https://img.shields.io/github/v/release/uvery9/DailyWallpaperUI?style=plastic)](https://github.com/uvery9/DailyWallpaper/releases/latest)
+[![GitHub release](https://img.shields.io/github/v/release/uvery9/DailyWallpaper?style=plastic)](https://github.com/uvery9/DailyWallpaper/releases/latest)
 
 ## How to build
 1. Pull from github(git command will be use in project)
