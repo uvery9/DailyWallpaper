@@ -1,8 +1,8 @@
 environment:
-  STATIC_SITE_REPO: https://github.com/JaredDC/DailyWallpaper
+  STATIC_SITE_REPO: https://github.com/uvery9/DailyWallpaper
   TARGET_BRANCH: master
-  GIT_USER_EMAIL: jared.dcx@gmail.com
-  GIT_USER_NAME: JaredDC
+  GIT_USER_EMAIL: uvery6@gmail.com
+  GIT_USER_NAME: SimenR
 image: Visual Studio 2019
 configuration: Release
 test: off
