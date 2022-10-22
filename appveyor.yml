@@ -61,11 +61,11 @@ before_deploy:
     set /P GIT_TAG_MSG=<GIT_TAG_MSG.TXT
 
 deploy:
-  release: pre--%GIT_TAG%
+  release: APPVEYOR-%GIT_TAG%
   description: " %GIT_TAG_MSG% "
   provider: GitHub
   auth_token:
-    secure:  jjIUlINV2I/vxMzoH/jX11I6/rwEo237ELLgm37s3GdLQV3XkNbtVI/BVXjU4xSD
+    secure:  cbOU7dpfiZvoBfS3NHM4rU4Ge9lD7FFWbmjRQ8t+iaUPOC7eQnS+ldjZxiY/Hf9g
   artifact: DailyWallpaper.Installer, DailyWallpaper.Installer.Hash, DailyWallpaper.Protable, DailyWallpaper.Protable.Hash
   draft: true
   prerelease: false
