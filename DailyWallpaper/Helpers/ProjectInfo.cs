@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -9,7 +8,6 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Newtonsoft.Json;
 
 namespace DailyWallpaper.Helpers
@@ -22,14 +20,14 @@ namespace DailyWallpaper.Helpers
         public static string exeName = Assembly.GetExecutingAssembly().GetName().Name;
         public static string executingLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public static string logFile = new FileInfo(exeName + ".log.txt").FullName;
-        private static string officalWebSiteGlobal = "https://github.com/JaredDC/DailyWallpaper";
+        private static string officalWebSiteGlobal = "https://github.com/uvery9/DailyWallpaper";
         private static string officalWebSiteCHN = "https://gitee.com/imtvip/DailyWallpaper";
-        private static string officalLatestGlobal = "https://github.com/JaredDC/DailyWallpaper/releases/latest";
+        private static string officalLatestGlobal = "https://github.com/uvery9/DailyWallpaper/releases/latest";
         private static string newIssueCHN = "https://gitee.com/imtvip/DailyWallpaper/issues/new";
-        private static string newIssueGlobal = "https://github.com/JaredDC/DailyWallpaper/issues/new";
-        private static string donationUrlGlobal   = "https://github.com/JaredDC/DailyWallpaper/tree/master/Donate";
+        private static string newIssueGlobal = "https://github.com/uvery9/DailyWallpaper/issues/new";
+        private static string donationUrlGlobal   = "https://github.com/uvery9/DailyWallpaper/tree/master/Donate";
         private static string donationUrlCHN = "https://gitee.com/imtvip/DailyWallpaper/tree/master/Donate";
-        private static string gitHubAPI = "https://api.github.com/repos/JaredDC/DailyWallpaper/releases/latest";
+        private static string gitHubAPI = "https://api.github.com/repos/uvery9/DailyWallpaper/releases/latest";
        /* private static Color backColor = 
             Color.FromArgb(((int)(((byte)(254)))), ((int)(((byte)(243)))), ((int)(((byte)(214)))));*/
 
