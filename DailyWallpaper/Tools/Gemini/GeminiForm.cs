@@ -36,7 +36,7 @@ namespace DailyWallpaper
         private List<string> mPathFilter = new List<string>();
         private Regex mRegex;
         private int nameColumnHeaderWidth = 0;
-        private int modifiedTimeColumnHeaderWidth = 0;
+        private int mTimeEmptyFolderModeColumnHeaderWidth = 0;
         private List<GeminiCEFCls> geminiCEFClsList = new List<GeminiCEFCls>();
 
         private List<string> targetFolder1History = new List<string>();
@@ -131,13 +131,12 @@ namespace DailyWallpaper
 
         private void InitCEFOrDuplicateMode()
         {
-            cleanEmptyFolderModeToolStripMenuItem.Checked = false;
             if (gemini.ini.EqualsIgnoreCase("GeminiMode", "CEF", "Gemini"))
-            {
                 cleanEmptyFolderModeToolStripMenuItem.Checked = true;
-            }
+            else
+                cleanEmptyFolderModeToolStripMenuItem.Checked = false;
             nameColumnHeaderWidth = nameColumnHeader.Width;
-            modifiedTimeColumnHeaderWidth = modifiedTimeColumnHeader.Width;
+            mTimeEmptyFolderModeColumnHeaderWidth = modifiedTimeColumnHeader.Width;
             ConvertToCEFMode(cleanEmptyFolderModeToolStripMenuItem.Checked);
         }
 
@@ -696,19 +695,14 @@ namespace DailyWallpaper
             return tmp;
         }
 
-        public static void AddSubItem(System.Windows.Forms.ListViewItem i, string name, string text)
+        public static void AddSubItem(ListViewItem i, string name, string text)
         {
-            i.SubItems.Add(new System.Windows.Forms.ListViewItem.ListViewSubItem()
+            i.SubItems.Add(new ListViewItem.ListViewSubItem()
             { Name = name, Text = text });
         }
 
-        private void AddGroupTitleToListView()
-        {
-
-        }
-
-        delegate void SetTextCallBack(System.Windows.Forms.TextBox tb, string text, Color c = default);
-        private void SetText(System.Windows.Forms.TextBox tb, string text, Color c = default)
+        delegate void SetTextCallBack(TextBox tb, string text, Color c = default);
+        private void SetText(TextBox tb, string text, Color c = default)
         {
             if (tb.InvokeRequired)
             {
@@ -2758,7 +2752,7 @@ namespace DailyWallpaper
                         resultListView.FocusedItem.SubItems["fullPath"].Text = newFile;
                         resultListView.FocusedItem.SubItems["name"].Text = Path.GetFileName(newFile);
                         // 更新到列表
-                        GeminiFileCls.updateNewPathToList(geminiFileClsListForLV, fullPath, newFile);
+                        GeminiFileCls.UpdateNewPathToList(geminiFileClsListForLV, fullPath, newFile);
                         CWriteLine($"... Rename file to {newFile}.");
                         cleanUpButton.PerformClick();
                     }

@@ -724,7 +724,7 @@ namespace DailyWallpaper
 
                 geminiProgressBar.Visible = false;
                 nameColumnHeader.Width = (int)(1.5 * nameColumnHeaderWidth);
-                modifiedTimeColumnHeader.Width = (int)(1.5 * modifiedTimeColumnHeaderWidth);
+                modifiedTimeColumnHeader.Width = (int)(1.0 * mTimeEmptyFolderModeColumnHeaderWidth);
                 targetFolderFilterTextBox.Enabled = false;
 
             }
@@ -753,12 +753,11 @@ namespace DailyWallpaper
                 geminiProgressBar.Visible = true;
 
                 nameColumnHeader.Width = nameColumnHeaderWidth;
-                modifiedTimeColumnHeader.Width = modifiedTimeColumnHeaderWidth;
+                modifiedTimeColumnHeader.Width = 1;
                 targetFolderFilterTextBox.Enabled = true;
             }
         }
-        private void SelectFolder(string keyInIni, System.Windows.Forms.TextBox tx,
-            List<string> targetFolderHistory)
+        private void SelectFolder(string keyInIni, TextBox tx, List<string> targetFolderHistory)
         {
             using (var dialog = new CommonOpenFileDialog())
             {
@@ -800,6 +799,7 @@ namespace DailyWallpaper
             }
             gfl.Add(item);
         }
+
         private void DeleteCEF()
         {
             if (!cefScanRes)
@@ -1283,7 +1283,7 @@ namespace DailyWallpaper
 
             }
         }
-        
+
         private void MultipleSelectOperationsActionCEF(MultipleSelectOperations op)
         {
             if (resultListView.Items.Count < 1)
@@ -1528,12 +1528,6 @@ namespace DailyWallpaper
                 _tasks.Add(restoreTask);
 
             }
-
-        }
-
-        private void UpdateListViewForCleanUP(ListView liv,
-            ref List<GeminiFileCls> gfL, CancellationToken token)
-        {
 
         }
 

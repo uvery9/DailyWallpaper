@@ -72,9 +72,11 @@ public class Wallpaper
             Console.WriteLine("[" + bitmap.Width + "," + bitmap.Height + "]");
             SolidBrush brush = new SolidBrush(Color.White);
             Graphics graphics = Graphics.FromImage(bitmap);
-            StringFormat stringFormat = new StringFormat();
-            stringFormat.Alignment = StringAlignment.Center;
-            stringFormat.LineAlignment = StringAlignment.Center;
+            StringFormat stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
             graphics.DrawString(waterMark, font, brush, atpoint, stringFormat);
             graphics.Dispose();
             MemoryStream m = new MemoryStream();

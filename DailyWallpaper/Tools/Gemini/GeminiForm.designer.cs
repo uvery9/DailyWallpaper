@@ -230,7 +230,7 @@
             // targetFolder2TextBox
             // 
             this.targetFolder2TextBox.AllowDrop = true;
-            this.targetFolder2TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.targetFolder2TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.targetFolder2TextBox.Location = new System.Drawing.Point(96, 42);
             this.targetFolder2TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -255,7 +255,7 @@
             // targetFolder1TextBox
             // 
             this.targetFolder1TextBox.AllowDrop = true;
-            this.targetFolder1TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.targetFolder1TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.targetFolder1TextBox.Location = new System.Drawing.Point(96, 8);
             this.targetFolder1TextBox.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -370,12 +370,12 @@
             // modifiedTimeColumnHeader
             // 
             this.modifiedTimeColumnHeader.Text = "Modified Time";
-            this.modifiedTimeColumnHeader.Width = 156;
+            this.modifiedTimeColumnHeader.Width = 165;
             // 
             // extNameColumnHeader
             // 
             this.extNameColumnHeader.Text = "EXT";
-            this.extNameColumnHeader.Width = 66;
+            this.extNameColumnHeader.Width = 50;
             // 
             // sizeColumnHeader
             // 
@@ -385,7 +385,7 @@
             // dirColumnHeader
             // 
             this.dirColumnHeader.Text = "Directory";
-            this.dirColumnHeader.Width = 359;
+            this.dirColumnHeader.Width = 500;
             // 
             // hashColumnHeader
             // 
@@ -716,8 +716,8 @@
             // tbConsole
             // 
             this.tbConsole.AllowDrop = true;
-            this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.tbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbConsole.Location = new System.Drawing.Point(2, 3);
             this.tbConsole.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);

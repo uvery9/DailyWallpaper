@@ -91,7 +91,9 @@ namespace DailyWallpaper.Tools.Gemini
                 sizeStr = FileUtils.Len2Str(size);
                 lastMtime = new FileInfo(fullPath).LastWriteTime.ToString("yyyy/M/d H:mm");
                 crtTime = new FileInfo(fullPath).CreationTime.ToString("yyyy/M/d H:mm");
-                extName = Path.GetExtension(fullPath);
+                var ext = Path.GetExtension(fullPath);
+                if (ext.StartsWith(".")) ext = ext.Substring(1);
+                extName = ext;
             }
             catch
             {
@@ -101,13 +103,13 @@ namespace DailyWallpaper.Tools.Gemini
         public bool Checked { get => @checked; set => @checked = value; }
 
         // 不管错误,错误算球
-        public static void updateNewPathToList(List<GeminiFileCls> list, string oldPath, string newPath)
+        public static void UpdateNewPathToList(List<GeminiFileCls> list, string oldPath, string newPath)
         {
             try
             {
                 if (File.Exists(newPath))
                 {
-                    findAndUpdate(list, it => it.fullPath == oldPath, ret =>
+                    FindAndUpdate(list, it => it.fullPath == oldPath, ret =>
                     {
                         ret.fullPath = newPath;
                         ret.name = Path.GetFileName(newPath);
@@ -118,7 +120,7 @@ namespace DailyWallpaper.Tools.Gemini
         }
 
 
-        public static void findAndUpdate<T>(List<T> list, Func<T, bool> predicate, Action<T> update)
+        public static void FindAndUpdate<T>(List<T> list, Func<T, bool> predicate, Action<T> update)
         {
             if (list != null)
             {
