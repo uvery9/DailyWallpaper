@@ -1360,6 +1360,9 @@ namespace DailyWallpaper.View
         // There is a solution, but I don't want to use. Complicated my code.
         private void _notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
+            // fixme: why middle key equals middle button.
+            // seems windows11 disable taskbar MouseButtons.Middle
+            // MessageBox.Show($"CLICK ME: {e.Button}");
             if (e.Button == MouseButtons.Middle)
             {
                 Icon_Notepad.PerformClick();
