@@ -67,7 +67,7 @@ namespace DailyWallpaper
             this.yearTextBox.Name = "yearTextBox";
             this.yearTextBox.Size = new System.Drawing.Size(44, 28);
             this.yearTextBox.TabIndex = 1;
-            this.yearTextBox.Text = "10";
+            this.yearTextBox.Text = "0";
             this.yearTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.yearTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DateCntKeyDown);
             this.yearTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ymdTextBox_KeyPress);
@@ -111,7 +111,7 @@ namespace DailyWallpaper
             this.dayTextBox.Name = "dayTextBox";
             this.dayTextBox.Size = new System.Drawing.Size(44, 28);
             this.dayTextBox.TabIndex = 9;
-            this.dayTextBox.Text = "10";
+            this.dayTextBox.Text = "0";
             this.dayTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.dayTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DateCntKeyDown);
             this.dayTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ymdTextBox_KeyPress);
@@ -122,7 +122,7 @@ namespace DailyWallpaper
             this.monthTextBox.Name = "monthTextBox";
             this.monthTextBox.Size = new System.Drawing.Size(44, 28);
             this.monthTextBox.TabIndex = 10;
-            this.monthTextBox.Text = "10";
+            this.monthTextBox.Text = "0";
             this.monthTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.monthTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DateCntKeyDown);
             this.monthTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ymdTextBox_KeyPress);
