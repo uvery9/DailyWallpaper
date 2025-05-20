@@ -3,7 +3,7 @@ environment:
   TARGET_BRANCH: master
   GIT_USER_EMAIL: uvery6@gmail.com
   GIT_USER_NAME: SimenR
-image: Visual Studio 2019
+image: Visual Studio 2022
 configuration: Release
 test: off
 # nuget restore -verbosity detailed 

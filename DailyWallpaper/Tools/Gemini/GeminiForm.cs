@@ -322,14 +322,20 @@ namespace DailyWallpaper
                                     && it.hash.ToLower().Contains("NotCounting".ToLower()))
                                     {
                                         hashEmpty++;
-                                        CWriteLine(
+                                        if (hashEmpty % 8 == 0 || hashEmpty < 10)
+                                        {
+                                            CWriteLine(
                                             $"! [{hashEmpty}] Protect file without valid hash from being deleted: \r\n    {it.fullPath}");
+                                        }
                                         continue;
                                     }
                                     j++;
                                     if (j < 100)
                                     {
-                                        CWriteLine($"...... Deleting file: {it.fullPath}");
+                                        if (j % 4 == 0)
+                                        {
+                                            CWriteLine($"...... Deleting file: {it.fullPath}");
+                                        }
                                     }
                                     else
                                     {
