@@ -6,10 +6,15 @@ environment:
 image: Visual Studio 2022
 configuration: Release
 test: off
-# nuget restore -verbosity detailed 
+# nuget restore -verbosity detailed
+cache:
+- packages -> **\packages.config
+- '%USERPROFILE%\.nuget\packages -> **\project.json'
+
 before_build:
 - ps: >-
-     nuget restore
+# $env:GIT_TAG = git describe --always --tags --exclude latest
+     nuget restore -verbosity detailed
 build:
   parallel: true
   verbosity: minimal
